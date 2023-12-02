@@ -9,7 +9,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "vue": "^3.3.9"
+    "vue": "^3.3.9",
+    "bootstrap": "4.6.1"
   },
   "devDependencies": {
     "@codesandbox/vue-preview": "^0.1.1-alpha.16",
