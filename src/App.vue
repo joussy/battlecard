@@ -20,15 +20,20 @@
     <div class="row mt-3">
       <div class="col-md-6">
         <div class="d-flex justify-content-between align-items-center mb-3">
-          <h3 class="d-inline">Available fighters</h3>
+          <h3 class="d-inline">Fighters</h3>
           <button @click="expandAll()" class="d-inline btn btn-primary mb-3">
-            Collapse/Expand
+            <i class="bi bi-chevron-down"></i>
+            /
+            <i class="bi bi-chevron-right"></i>
+          </button>
+          <button @click="clear()" class="d-inline btn btn-primary mb-3">
+            <i class="bi bi-trash"></i>
           </button>
         </div>
         <div
           class="card"
           v-for="(boxer, index) in boxers"
-          :key="boxer.lastName"
+          :key="boxer.id"
         >
           <div
             class="card-header d-flex justify-content-between align-items-center"
@@ -43,7 +48,7 @@
                   boxer.collapsed ? 'bi-chevron-down' : 'bi-chevron-right'
                 "
               ></i>
-              {{ boxer.lastName }}
+              {{ getBoxerDisplayName(boxer) }}
             </span>
             <span>
               <span v-if="isInFightCard(boxer)" class="badge bg-success">
@@ -67,10 +72,10 @@
                 <li
                   class="list-group-item d-flex justify-content-between align-items-center"
                   v-for="opponent in getPotentialOpponents(boxer)"
-                  :key="opponent.lastName"
+                  :key="opponent.id"
                 >
                   <span>
-                    {{ opponent.lastName }} -
+                    {{ getBoxerDisplayName(opponent) }} -
                     <span
                       class="badge"
                       :class="
@@ -110,9 +115,9 @@
           </thead>
           <tbody>
             <tr v-for="(fight, index) in fightCard" :key="index">
-              <th scope="row">1</th>
-              <td>{{ fight.boxer1.lastName }}</td>
-              <td>{{ fight.boxer2.lastName }}</td>
+              <th scope="row"></th>
+              <td>{{ getBoxerDisplayName(fight.boxer1) }}</td>
+              <td>{{ getBoxerDisplayName(fight.boxer2) }}</td>
               <td>
                 <button
                   @click="removeFromFightCard(index)"
@@ -130,6 +135,7 @@
 </template>
 
 <script lang="ts">
+import {ref, Ref} from 'vue';
 interface Boxer {
   id: number;
   firstName: string;
@@ -181,10 +187,29 @@ ALI	Mohammed	0	H	56	CPB
 FRAIZER	Joe	0	F	57	CPB
       `.trim(),
     };
+    
+    // this.fightCard = JSON.parse(localStorage.getItem('fightCard') || "{}");
 
     return ret;
   },
-
+  mounted() {
+    if (localStorage.boxers) {
+      this.boxers = JSON.parse(localStorage.boxers) || [];
+    }
+    if (localStorage.fightCard) {
+      this.fightCard = JSON.parse(localStorage.fightCard) || [];
+    }
+  },
+  watch: {
+    boxers(newBoxers) {
+      localStorage.boxers = JSON.stringify(newBoxers);
+    },
+    fightCard:{
+    handler(newFightCard) {
+        localStorage.fightCard = JSON.stringify(newFightCard);
+    }, deep: true
+  }
+  },
   methods: {
     computeCanCompete(boxer1: Boxer, boxer2: Boxer) {
       // Logic to check if boxers can compete
@@ -237,7 +262,7 @@ FRAIZER	Joe	0	F	57	CPB
       var lines = [];
 
       for (var i = 0; i < allTextLines.length; i++) {
-        var data = allTextLines[i].split(/\t|,/);
+        var data = allTextLines[i].split(/\t|,|;/);
 
           var row: any = {};
           for (var j = 0; j < headers.length; j++) {
@@ -257,8 +282,7 @@ FRAIZER	Joe	0	F	57	CPB
       'weight',
       'club'
       ])
-      this.fightCard = [];
-      this.boxers = [];
+      this.clear();
       for (const [index, entry] of ret.entries()){
         this.boxers.push({
           id: index,  
@@ -284,6 +308,13 @@ FRAIZER	Joe	0	F	57	CPB
     },
     getNbFightsForBoxer(boxer: Boxer) {
       return this.fightCard.filter(f => f.boxer1.id == boxer.id || f.boxer2.id == boxer.id).length
+    },
+    getBoxerDisplayName(boxer: Boxer){
+      return `${boxer.lastName} ${boxer.firstName}`;
+    },
+    clear(): void{
+      this.boxers = [];
+      this.fightCard = [];
     }
   },
 };
