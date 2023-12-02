@@ -87,10 +87,10 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 export default {
   data() {
-    let ret = {
+    let ret: any = {
       boxers: [
         { name: "Boxer 1", weightClass: "Middleweight", experience: 15 },
         { name: "Boxer 2", weightClass: "Welterweight", experience: 10 },
@@ -107,33 +107,35 @@ export default {
     }
     for (let [index, boxer] of ret.boxers.entries()) {
       boxer.opponents = ret.boxers
-        .filter((b) => b.id != boxer.id && this.computeCanCompete(b, boxer))
-        .map((b) => b.id);
+        .filter(
+          (b: any) => b.id != boxer.id && this.computeCanCompete(b, boxer),
+        )
+        .map((b: any) => b.id);
     }
 
     return ret;
   },
   mounted() {},
   methods: {
-    computeCanCompete(boxer1, boxer2) {
+    computeCanCompete(boxer1: any, boxer2: any) {
       // Logic to check if boxers can compete
       return (
         boxer1.weightClass === boxer2.weightClass &&
         Math.abs(boxer1.experience - boxer2.experience) < 5
       );
     },
-    canCompete(boxer1, boxer2) {
+    canCompete(boxer1: any, boxer2: any) {
       // Logic to check if boxers can compete
-      return boxer1.opponents.some((o) => o == boxer2.id);
+      return boxer1.opponents.some((o: any) => o == boxer2.id);
     },
-    getPotentialOpponents(boxer) {
+    getPotentialOpponents(boxer: any) {
       // Return potential opponents for the given boxer
-      return this.boxers.filter((b) => b.name !== boxer.name);
+      return this.boxers.filter((b: any) => b.name !== boxer.name);
     },
-    addToFightCard(boxer1, boxer2) {
+    addToFightCard(boxer1: any, boxer2: any) {
       // Check if the fight already exists before adding to the fight card
       const exists = this.fightCard.some(
-        (fight) =>
+        (fight: any) =>
           (fight.boxer1.name === boxer1.name &&
             fight.boxer2.name === boxer2.name) ||
           (fight.boxer1.name === boxer2.name &&
@@ -144,13 +146,12 @@ export default {
         this.fightCard.push({ boxer1, boxer2 });
       }
     },
-    removeFromFightCard(index) {
+    removeFromFightCard(index: any): any {
       // Remove fight from the fight card
       this.fightCard.splice(index, 1);
     },
-    toggleCollapse(index) {
+    toggleCollapse(index: any) {
       this.boxers[index].collapsed = !this.boxers[index].collapsed;
-      // console.log(this.boxers[index].collapsed)
     },
     expandAll() {
       for (let [index, boxer] of this.boxers.entries()) {
