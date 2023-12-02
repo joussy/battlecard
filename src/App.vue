@@ -1,74 +1,90 @@
 <template>
-  <b-row>
-    <b-col>
-      <h1 class="mb-4">Boxing Matchup</h1>
-      <b-button @click="expandAll()">Collapse/Expand</b-button>
-      <b-card
-        v-for="(boxer, index) in boxers"
-        :key="boxer.name"
-        no-body
-        class="mb-2"
-      >
-        <b-card-header
-          header-tag="header"
-          role="tab"
-          @click="toggleCollapse(index)"
-        >
-          <b-icon
-            :icon="boxer.collapsed ? 'arrows-collapse' : 'chevron-expand'"
-          ></b-icon>
-          {{ boxer.name }}
-          <span class="badge bg-primary rounded-pill">{{
-            boxer.opponents.length
-          }}</span>
-        </b-card-header>
-        <b-collapse
-          :id="'collapse-' + index"
-          v-model="boxer.collapsed"
-          class="mt-2"
-        >
-          <b-card-body>
-            <ul class="list-group">
-              <li
-                class="list-group-item d-flex"
-                v-for="opponent in getPotentialOpponents(boxer)"
-                :key="opponent.name"
-              >
-                <span class="p-2 flex-grow-1">
-                  {{ opponent.name }} -
-                  <b-badge
-                    :variant="
-                      canCompete(boxer, opponent) ? 'success' : 'danger'
-                    "
-                  >
-                    {{
-                      canCompete(boxer, opponent) ? "Éligible" : "Non Éligible"
-                    }}
-                  </b-badge>
-                </span>
-                <b-button
-                  class="p-2"
-                  v-if="canCompete(boxer, opponent)"
-                  @click="addToFightCard(boxer, opponent)"
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6">
+        <h1 class="">Boxing Matchup</h1>
+        <button @click="expandAll()" class="btn btn-primary mb-3">
+          Collapse/Expand
+        </button>
+        <div class="card" v-for="(boxer, index) in boxers" :key="boxer.name">
+          <div
+            class="card-header"
+            role="tab"
+            @click="toggleCollapse(index)"
+            :class="{ collapsed: !boxer.collapsed }"
+          >
+            <i
+              class="bi"
+              :class="
+                boxer.collapsed ? 'bi-arrows-collapse' : 'bi-chevron-expand'
+              "
+            ></i>
+            {{ boxer.name }}
+            <span class="badge bg-primary rounded-pill">{{
+              boxer.opponents.length
+            }}</span>
+          </div>
+          <div
+            :id="'collapse-' + index"
+            v-show="!boxer.collapsed"
+            class="collapse"
+            :class="{ show: !boxer.collapsed }"
+          >
+            <div class="card-body">
+              <ul class="list-group">
+                <li
+                  class="list-group-item d-flex justify-content-between align-items-center"
+                  v-for="opponent in getPotentialOpponents(boxer)"
+                  :key="opponent.name"
                 >
-                  <b-icon icon="person-plus-fill"></b-icon>
-                </b-button>
-              </li>
-            </ul>
-          </b-card-body>
-        </b-collapse>
-      </b-card>
-    </b-col>
-    <b-col md="6">
-      <h2 class="mt-5">Fight Card</h2>
-      <b-list-group>
-        <b-list-group-item v-for="(fight, index) in fightCard" :key="index">
-          {{ fight.boxer1.name }} vs {{ fight.boxer2.name }}
-          <b-button @click="removeFromFightCard(index)">Remove</b-button>
-        </b-list-group-item>
-      </b-list-group>
-    </b-col>
-  </b-row>
+                  <span>
+                    {{ opponent.name }} -
+                    <span
+                      class="badge"
+                      :class="
+                        canCompete(boxer, opponent) ? 'bg-success' : 'bg-danger'
+                      "
+                    >
+                      {{
+                        canCompete(boxer, opponent)
+                          ? "Éligible"
+                          : "Non Éligible"
+                      }}
+                    </span>
+                  </span>
+                  <button
+                    v-if="canCompete(boxer, opponent)"
+                    @click="addToFightCard(boxer, opponent)"
+                    class="btn btn-primary"
+                  >
+                    <i class="bi bi-person-plus-fill"></i>
+                  </button>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <h2 class="mt-5">Fight Card</h2>
+        <ul class="list-group">
+          <li
+            v-for="(fight, index) in fightCard"
+            :key="index"
+            class="list-group-item"
+          >
+            {{ fight.boxer1.name }} vs {{ fight.boxer2.name }}
+            <button
+              @click="removeFromFightCard(index)"
+              class="btn btn-danger btn-sm ms-2"
+            >
+              Remove
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
