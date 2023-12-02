@@ -1,28 +1,60 @@
 <template>
-  <div class="container">
+  <div class="container mt-2">
     <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header"><i class="bi bi-gear-fill"></i>Options</div>
+          <div class="card-body">
+            <h5 class="card-title">
+              <i class="bi bi-clipboard mr-2"></i>Import from clipboard
+            </h5>
+            <p class="card-text">
+              <p>Nom | Prénom | Combats	|	Sexe | Poids | Club</p>
+              <textarea class="d-block w-50 mb-2" v-model="clipboard" />
+              <button class="btn btn-primary" @click="processClipboard()">Import</button>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row mt-3">
       <div class="col-md-6">
-        <h1 class="">Boxing Matchup</h1>
-        <button @click="expandAll()" class="btn btn-primary mb-3">
-          Collapse/Expand
-        </button>
-        <div class="card" v-for="(boxer, index) in boxers" :key="boxer.name">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h3 class="d-inline">Available fighters</h3>
+          <button @click="expandAll()" class="d-inline btn btn-primary mb-3">
+            Collapse/Expand
+          </button>
+        </div>
+        <div
+          class="card"
+          v-for="(boxer, index) in boxers"
+          :key="boxer.lastName"
+        >
           <div
-            class="card-header"
+            class="card-header d-flex justify-content-between align-items-center"
             role="tab"
             @click="toggleCollapse(index)"
             :class="{ collapsed: !boxer.collapsed }"
           >
-            <i
-              class="bi"
-              :class="
-                boxer.collapsed ? 'bi-arrows-collapse' : 'bi-chevron-expand'
-              "
-            ></i>
-            {{ boxer.name }}
-            <span class="badge bg-primary rounded-pill">{{
-              boxer.opponents.length
-            }}</span>
+            <span>
+              <i
+                class="bi"
+                :class="
+                  boxer.collapsed ? 'bi-chevron-down' : 'bi-chevron-right'
+                "
+              ></i>
+              {{ boxer.lastName }}
+            </span>
+            <span>
+              <span v-if="isInFightCard(boxer)" class="badge bg-success">
+                {{getNbFightsForBoxer(boxer) }}
+                <i class="bi bi-link"></i>
+              </span>
+              <span class="badge bg-secondary ml-2">
+                🥊
+                {{ boxer.opponents.length }}</span
+              >
+            </span>
           </div>
           <div
             :id="'collapse-' + index"
@@ -35,10 +67,10 @@
                 <li
                   class="list-group-item d-flex justify-content-between align-items-center"
                   v-for="opponent in getPotentialOpponents(boxer)"
-                  :key="opponent.name"
+                  :key="opponent.lastName"
                 >
                   <span>
-                    {{ opponent.name }} -
+                    {{ opponent.lastName }} -
                     <span
                       class="badge"
                       :class="
@@ -66,99 +98,193 @@
         </div>
       </div>
       <div class="col-md-6">
-        <h2 class="mt-5">Fight Card</h2>
-        <ul class="list-group">
-          <li
-            v-for="(fight, index) in fightCard"
-            :key="index"
-            class="list-group-item"
-          >
-            {{ fight.boxer1.name }} vs {{ fight.boxer2.name }}
-            <button
-              @click="removeFromFightCard(index)"
-              class="btn btn-danger btn-sm ms-2"
-            >
-              Remove
-            </button>
-          </li>
-        </ul>
+        <h3>Fight Card</h3>
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Red</th>
+              <th scope="col">Blue</th>
+              <th scope="col"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(fight, index) in fightCard" :key="index">
+              <th scope="row">1</th>
+              <td>{{ fight.boxer1.lastName }}</td>
+              <td>{{ fight.boxer2.lastName }}</td>
+              <td>
+                <button
+                  @click="removeFromFightCard(index)"
+                  class="btn btn-danger btn-sm ms-2"
+                >
+                  <i class="bi bi-person-dash-fill"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
+interface Boxer {
+  id: number;
+  firstName: string;
+  lastName: string;
+  birthDate: Date;
+  opponents: number[];
+  weight: number;
+  category: string;
+  club: string;
+  collapsed: boolean;
+  nbFights: number;
+  gender: Gender;
+}
+const enum Gender{
+  FEMALE,
+  MALE
+}
+interface Fight {
+  boxer1: Boxer;
+  boxer2: Boxer;
+}
+
+interface BoxingData {
+  fightCard: Fight[];
+  boxers: Boxer[];
+  clipboard: string;
+}
 export default {
   data() {
-    let ret: any = {
+    let ret: BoxingData = {
       boxers: [
-        { name: "Boxer 1", weightClass: "Middleweight", experience: 15 },
-        { name: "Boxer 2", weightClass: "Welterweight", experience: 10 },
-        { name: "New Boxer", weightClass: "Middleweight", experience: 18 },
-        { name: "Boxer 3", weightClass: "Lightweight", experience: 12 }, // Additional boxers
-        { name: "Boxer 4", weightClass: "Welterweight", experience: 13 },
-        { name: "Boxer 5", weightClass: "Heavyweight", experience: 20 },
-        { name: "Boxer 6", weightClass: "Middleweight", experience: 17 },
+        // new Boxer(1, "", "Boxer 1", new Date(), [], 1, 1, 1, 50, "", "CPB"), 
+        // new Boxer(2, "", "Boxer 2", new Date(), [], 1, 1, 1, 50, "", "CPB"),
+        // new Boxer(3, "", "Boxer 3", new Date(), [], 1, 1, 1, 50, "", "CPB"),
+        // new Boxer(4, "", "Boxer 4", new Date(), [], 1, 1, 1, 10, "", "CPB"),
+        // new Boxer(5, "", "Boxer 5", new Date(), [], 1, 1, 1, 50, "", "CPB"),
+        // new Boxer(6, "", "Boxer 6", new Date(), [], 1, 1, 1, 50, "", "CPB"),
       ],
       fightCard: [],
+      // Nom	Prénom	Combats		Sexe	Poids	Club
+      clipboard: `
+MALIK	Abdel	1	H	50	CPB
+SOLAAR	Claude	0	H	51	CPB
+LAMAR	Kendrik	2	H	52	CPB
+STARR	Joey	4	H	53	CPB
+MONTANA	Tony	0	H	90	CPB
+AMERICA	Captain	0	H	55	CPB
+ALI	Mohammed	0	H	56	CPB
+FRAIZER	Joe	0	F	57	CPB
+      `.trim(),
     };
-    for (let [index, boxer] of ret.boxers.entries()) {
-      boxer.id = index;
-    }
-    for (let [index, boxer] of ret.boxers.entries()) {
-      boxer.opponents = ret.boxers
-        .filter(
-          (b: any) => b.id != boxer.id && this.computeCanCompete(b, boxer),
-        )
-        .map((b: any) => b.id);
-    }
 
     return ret;
   },
-  mounted() {},
+
   methods: {
-    computeCanCompete(boxer1: any, boxer2: any) {
+    computeCanCompete(boxer1: Boxer, boxer2: Boxer) {
       // Logic to check if boxers can compete
-      return (
-        boxer1.weightClass === boxer2.weightClass &&
-        Math.abs(boxer1.experience - boxer2.experience) < 5
-      );
+      return Math.abs(boxer1.weight - boxer2.weight) < 5;
     },
-    canCompete(boxer1: any, boxer2: any) {
+    canCompete(boxer1: Boxer, boxer2: Boxer) {
       // Logic to check if boxers can compete
-      return boxer1.opponents.some((o: any) => o == boxer2.id);
+      return boxer1.opponents.some((o) => o == boxer2.id);
     },
-    getPotentialOpponents(boxer: any) {
+    getPotentialOpponents(boxer: Boxer) {
       // Return potential opponents for the given boxer
-      return this.boxers.filter((b: any) => b.name !== boxer.name);
+      return this.boxers.filter((b) => b.id !== boxer.id);
     },
-    addToFightCard(boxer1: any, boxer2: any) {
+    addToFightCard(boxer1: Boxer, boxer2: Boxer) {
       // Check if the fight already exists before adding to the fight card
       const exists = this.fightCard.some(
-        (fight: any) =>
-          (fight.boxer1.name === boxer1.name &&
-            fight.boxer2.name === boxer2.name) ||
-          (fight.boxer1.name === boxer2.name &&
-            fight.boxer2.name === boxer1.name),
+        (fight: Fight) =>
+          (fight.boxer1.id === boxer1.id && fight.boxer2.id === boxer2.id) ||
+          (fight.boxer1.id === boxer2.id && fight.boxer2.id === boxer1.id),
       );
 
       if (!exists) {
         this.fightCard.push({ boxer1, boxer2 });
       }
     },
-    removeFromFightCard(index: any): any {
+    removeFromFightCard(index: number): void {
       // Remove fight from the fight card
       this.fightCard.splice(index, 1);
     },
-    toggleCollapse(index: any) {
+    toggleCollapse(index: number): void {
       this.boxers[index].collapsed = !this.boxers[index].collapsed;
     },
     expandAll() {
+      let collapse = true;
+      if (this.boxers[0]?.collapsed) {
+        collapse = false;
+      }
       for (let [index, boxer] of this.boxers.entries()) {
-        this.toggleCollapse(index);
-        console.log(boxer.name);
+        this.boxers[index].collapsed = collapse; 
       }
     },
+    isInFightCard(boxer: Boxer) : boolean {
+      return this.getNbFightsForBoxer(boxer) > 0
+    },
+    tsvToJson(tsvText: string, headers: string[]): object {
+      //Split all the text into seperate lines on new lines and carriage return feeds
+      var allTextLines = tsvText.split(/\r\n|\n/);
+      //Split per line on tabs and commas
+      // var headers = allTextLines[0].split(/\t|,/);
+      var lines = [];
+
+      for (var i = 0; i < allTextLines.length; i++) {
+        var data = allTextLines[i].split(/\t|,/);
+
+          var row: any = {};
+          for (var j = 0; j < headers.length; j++) {
+            row[headers[j]] = data[j];
+          }
+          lines.push(row);
+      }
+
+      return lines;
+    },
+    processClipboard(){
+      let ret : any = this.tsvToJson(this.clipboard, [
+      'lastName',
+      'firstName',
+      'nbFights',
+      'gender',
+      'weight',
+      'club'
+      ])
+      this.fightCard = [];
+      this.boxers = [];
+      for (const [index, entry] of ret.entries()){
+        this.boxers.push({
+          id: index,  
+          lastName: entry.lastName, 
+          firstName: entry.firstName, 
+          birthDate: new Date(entry.birthDate), 
+          opponents: [], 
+          nbFights: parseInt(entry.nbFights),
+          category: "",
+          club: entry.club,
+          collapsed: true,
+          weight: parseInt(entry.weight),
+          gender: entry.gender == 'F' ? Gender.FEMALE : Gender.MALE
+        });
+      } 
+      for (let [index, boxer] of this.boxers.entries()) {
+        boxer.opponents = this.boxers
+          .filter(
+            (b) => b.id != boxer.id && this.computeCanCompete(b, boxer),
+          )
+          .map((b) => b.id);
+    }
+    },
+    getNbFightsForBoxer(boxer: Boxer) {
+      return this.fightCard.filter(f => f.boxer1.id == boxer.id || f.boxer2.id == boxer.id).length
+    }
   },
 };
 </script>
