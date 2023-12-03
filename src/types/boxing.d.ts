@@ -1,4 +1,3 @@
-
 export interface Boxer {
   id: number;
   firstName: string;
@@ -12,7 +11,7 @@ export interface Boxer {
   nbFights: number;
   gender: Gender;
 }
-export const enum Gender{
+export enum Gender{
   FEMALE,
   MALE
 }

@@ -136,33 +136,8 @@
 
 <script lang="ts">
 import {ref, Ref} from 'vue';
-interface Boxer {
-  id: number;
-  firstName: string;
-  lastName: string;
-  birthDate: Date;
-  opponents: number[];
-  weight: number;
-  category: string;
-  club: string;
-  collapsed: boolean;
-  nbFights: number;
-  gender: Gender;
-}
-const enum Gender{
-  FEMALE,
-  MALE
-}
-interface Fight {
-  boxer1: Boxer;
-  boxer2: Boxer;
-}
+import { Boxer, Gender, Fight, BoxingData }from './types/boxing.d'
 
-interface BoxingData {
-  fightCard: Fight[];
-  boxers: Boxer[];
-  clipboard: string;
-}
 export default {
   data() {
     let ret: BoxingData = {
