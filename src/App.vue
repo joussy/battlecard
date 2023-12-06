@@ -9,93 +9,71 @@
               <i class="bi bi-clipboard mr-2"></i>Import from clipboard
             </h5>
             <p class="card-text">
-              <p>Nom | Prénom | Combats	|	Sexe | Poids | Club</p>
-              <textarea class="d-block w-50 mb-2" v-model="clipboard" />
-              <button class="btn btn-primary" @click="processClipboard()">Import</button>
+            <p>Nom | Prénom | Combats | Sexe | Poids | Club</p>
+            <textarea class="d-block w-50 mb-2" v-model="clipboard" />
+            <button class="btn btn-primary" @click="processClipboard()">Import</button>
             </p>
           </div>
         </div>
       </div>
     </div>
     <div class="row mt-3">
-      <div class="col-md-6">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-          <h3 class="d-inline">Fighters</h3>
-          <button @click="expandAll()" class="d-inline btn btn-primary mb-3">
+      <div class="col-md-6 mb-3">
+        <div class="d-flex">
+          <h3 class="p-2 flex-grow-1">Fighters</h3>
+          <button @click="expandAll()" class="p-2 btn btn-primary mb-3 ml-2">
             <i class="bi bi-chevron-down"></i>
             /
             <i class="bi bi-chevron-right"></i>
           </button>
-          <button @click="clear()" class="d-inline btn btn-primary mb-3">
+          <button @click="clear()" class="p-2 btn btn-primary mb-3 ml-2">
             <i class="bi bi-trash"></i>
           </button>
         </div>
-        <div
-          class="card"
-          v-for="(boxer, index) in boxers"
-          :key="boxer.id"
-        >
-          <div
-            class="card-header d-flex justify-content-between align-items-center"
-            role="tab"
-            @click="toggleCollapse(index)"
-            :class="{ collapsed: !boxer.collapsed }"
-          >
-            <span>
-              <i
-                class="bi"
-                :class="
-                  boxer.collapsed ? 'bi-chevron-down' : 'bi-chevron-right'
-                "
-              ></i>
+        <div class="card" v-for="(boxer, index) in boxers" :key="boxer.id">
+          <div class="card-header d-flex" role="tab" @click="toggleCollapse(index)"
+            :class="{ collapsed: !boxer.collapsed }">
+            <span class="p-2 flex-grow-1">
+              <i class="bi" :class="boxer.collapsed ? 'bi-chevron-down' : 'bi-chevron-right'
+                "></i>
               {{ getBoxerDisplayName(boxer) }}
             </span>
-            <span>
+            <span class="p-2">
               <span v-if="isInFightCard(boxer)" class="badge bg-success">
-                {{getNbFightsForBoxer(boxer) }}
+                {{ getNbFightsForBoxer(boxer) }}
                 <i class="bi bi-link"></i>
               </span>
               <span class="badge bg-secondary ml-2">
                 🥊
-                {{ boxer.opponents.length }}</span
-              >
+                {{ boxer.opponents.length }}</span>
             </span>
           </div>
-          <div
-            :id="'collapse-' + index"
-            v-show="!boxer.collapsed"
-            class="collapse"
-            :class="{ show: !boxer.collapsed }"
-          >
+          <div :id="'collapse-' + index" v-show="!boxer.collapsed" class="collapse" :class="{ show: !boxer.collapsed }">
             <div class="card-body">
               <ul class="list-group">
-                <li
-                  class="list-group-item d-flex justify-content-between align-items-center"
-                  v-for="opponent in getPotentialOpponents(boxer)"
-                  :key="opponent.id"
-                >
+                <li class="list-group-item d-flex justify-content-between align-items-center"
+                  v-for="opponent in getPotentialOpponents(boxer)" :key="opponent.id">
                   <span>
                     {{ getBoxerDisplayName(opponent) }} -
-                    <span
-                      class="badge"
-                      :class="
-                        canCompete(boxer, opponent) ? 'bg-success' : 'bg-danger'
-                      "
-                    >
+                    <span class="badge" :class="canCompete(boxer, opponent) ? 'bg-success' : 'bg-danger'
+                      ">
                       {{
                         canCompete(boxer, opponent)
-                          ? "Éligible"
-                          : "Non Éligible"
+                        ? "Éligible"
+                        : "Non Éligible"
                       }}
                     </span>
                   </span>
-                  <button
-                    v-if="canCompete(boxer, opponent)"
-                    @click="addToFightCard(boxer, opponent)"
-                    class="btn btn-primary"
-                  >
-                    <i class="bi bi-person-plus-fill"></i>
-                  </button>
+                  <span>
+                    <button v-if="canCompete(boxer, opponent)" @click="addToFightCard(boxer, opponent)"
+                      class="btn btn-primary">
+                      <i class="bi bi-person-plus-fill"></i>
+                    </button>
+                    <button v-if="isCompeting(boxer, opponent)" @click="removeFromFightCardByIndex(boxer, opponent)"
+                      class="btn btn-primary">
+                      <i class="bi bi-person-plus-fill"></i>
+                    </button>
+                  </span>
                 </li>
               </ul>
             </div>
@@ -103,7 +81,7 @@
         </div>
       </div>
       <div class="col-md-6">
-        <h3>Fight Card</h3>
+        <h3 class="mb-4">Fight Card</h3>
         <table class="table">
           <thead>
             <tr>
@@ -119,10 +97,7 @@
               <td>{{ getBoxerDisplayName(fight.boxer1) }}</td>
               <td>{{ getBoxerDisplayName(fight.boxer2) }}</td>
               <td>
-                <button
-                  @click="removeFromFightCard(index)"
-                  class="btn btn-danger btn-sm ms-2"
-                >
+                <button @click="removeFromFightCardByIndex(index)" class="btn btn-danger btn-sm ms-2">
                   <i class="bi bi-person-dash-fill"></i>
                 </button>
               </td>
@@ -135,8 +110,8 @@
 </template>
 
 <script lang="ts">
-import {ref, Ref} from 'vue';
-import { Boxer, Gender, Fight, BoxingData }from './types/boxing.d'
+import { ref, Ref } from 'vue';
+import { Boxer, Gender, Fight, BoxingData } from './types/boxing.d'
 
 export default {
   data() {
@@ -162,7 +137,7 @@ ALI	Mohammed	0	H	56	CPB
 FRAIZER	Joe	0	F	57	CPB
       `.trim(),
     };
-    
+
     // this.fightCard = JSON.parse(localStorage.getItem('fightCard') || "{}");
 
     return ret;
@@ -179,11 +154,11 @@ FRAIZER	Joe	0	F	57	CPB
     boxers(newBoxers) {
       localStorage.boxers = JSON.stringify(newBoxers);
     },
-    fightCard:{
-    handler(newFightCard) {
+    fightCard: {
+      handler(newFightCard) {
         localStorage.fightCard = JSON.stringify(newFightCard);
-    }, deep: true
-  }
+      }, deep: true
+    }
   },
   methods: {
     computeCanCompete(boxer1: Boxer, boxer2: Boxer) {
@@ -194,23 +169,31 @@ FRAIZER	Joe	0	F	57	CPB
       // Logic to check if boxers can compete
       return boxer1.opponents.some((o) => o == boxer2.id);
     },
+    getFightId(boxer1: Boxer, boxer2: Boxer): number | null {
+      const index = this.fightCard.findIndex(
+        (fight: Fight) =>
+          (fight.boxer1.id === boxer1.id && fight.boxer2.id === boxer2.id) ||
+          (fight.boxer1.id === boxer2.id && fight.boxer2.id === boxer1.id),
+      );
+      return index < 0 ? null : index;
+    },
+    isCompeting(boxer1: Boxer, boxer2: Boxer): boolean {
+      const index = this.getFightId(boxer1, boxer2);
+
+      return index != null;
+    },
     getPotentialOpponents(boxer: Boxer) {
       // Return potential opponents for the given boxer
       return this.boxers.filter((b) => b.id !== boxer.id);
     },
     addToFightCard(boxer1: Boxer, boxer2: Boxer) {
       // Check if the fight already exists before adding to the fight card
-      const exists = this.fightCard.some(
-        (fight: Fight) =>
-          (fight.boxer1.id === boxer1.id && fight.boxer2.id === boxer2.id) ||
-          (fight.boxer1.id === boxer2.id && fight.boxer2.id === boxer1.id),
-      );
 
-      if (!exists) {
+      if (!this.isCompeting(boxer1, boxer2)) {
         this.fightCard.push({ boxer1, boxer2 });
       }
     },
-    removeFromFightCard(index: number): void {
+    removeFromFightCardByIndex(index: number): void {
       // Remove fight from the fight card
       this.fightCard.splice(index, 1);
     },
@@ -223,10 +206,16 @@ FRAIZER	Joe	0	F	57	CPB
         collapse = false;
       }
       for (let [index, boxer] of this.boxers.entries()) {
-        this.boxers[index].collapsed = collapse; 
+        this.boxers[index].collapsed = collapse;
       }
     },
-    isInFightCard(boxer: Boxer) : boolean {
+    removeFromFightCard(boxer1: Boxer, boxer2: Boxer) : void {
+      let index = this.getFightId(boxer1, boxer2);
+      if (index != null) {
+        this.removeFromFightCardByIndex(index);
+      }
+    },
+    isInFightCard(boxer: Boxer): boolean {
       return this.getNbFightsForBoxer(boxer) > 0
     },
     tsvToJson(tsvText: string, headers: string[]): object {
@@ -239,32 +228,32 @@ FRAIZER	Joe	0	F	57	CPB
       for (var i = 0; i < allTextLines.length; i++) {
         var data = allTextLines[i].split(/\t|,|;/);
 
-          var row: any = {};
-          for (var j = 0; j < headers.length; j++) {
-            row[headers[j]] = data[j];
-          }
-          lines.push(row);
+        var row: any = {};
+        for (var j = 0; j < headers.length; j++) {
+          row[headers[j]] = data[j];
+        }
+        lines.push(row);
       }
 
       return lines;
     },
-    processClipboard(){
-      let ret : any = this.tsvToJson(this.clipboard, [
-      'lastName',
-      'firstName',
-      'nbFights',
-      'gender',
-      'weight',
-      'club'
+    processClipboard() {
+      let ret: any = this.tsvToJson(this.clipboard, [
+        'lastName',
+        'firstName',
+        'nbFights',
+        'gender',
+        'weight',
+        'club'
       ])
       this.clear();
-      for (const [index, entry] of ret.entries()){
+      for (const [index, entry] of ret.entries()) {
         this.boxers.push({
-          id: index,  
-          lastName: entry.lastName, 
-          firstName: entry.firstName, 
-          birthDate: new Date(entry.birthDate), 
-          opponents: [], 
+          id: index,
+          lastName: entry.lastName,
+          firstName: entry.firstName,
+          birthDate: new Date(entry.birthDate),
+          opponents: [],
           nbFights: parseInt(entry.nbFights),
           category: "",
           club: entry.club,
@@ -272,22 +261,22 @@ FRAIZER	Joe	0	F	57	CPB
           weight: parseInt(entry.weight),
           gender: entry.gender == 'F' ? Gender.FEMALE : Gender.MALE
         });
-      } 
+      }
       for (let [index, boxer] of this.boxers.entries()) {
         boxer.opponents = this.boxers
           .filter(
             (b) => b.id != boxer.id && this.computeCanCompete(b, boxer),
           )
           .map((b) => b.id);
-    }
+      }
     },
     getNbFightsForBoxer(boxer: Boxer) {
       return this.fightCard.filter(f => f.boxer1.id == boxer.id || f.boxer2.id == boxer.id).length
     },
-    getBoxerDisplayName(boxer: Boxer){
+    getBoxerDisplayName(boxer: Boxer) {
       return `${boxer.lastName} ${boxer.firstName}`;
     },
-    clear(): void{
+    clear(): void {
       this.boxers = [];
       this.fightCard = [];
     }
