@@ -5,18 +5,17 @@
     "version": "0.2.0",
     "configurations": [
       {
-        "name": "Launch Vite DEV server",
+        "type": "msedge",
         "request": "launch",
-        "runtimeExecutable": "npx",
-        "runtimeArgs": [
-          "vite",
-        ],
-        "type": "node",
-        "serverReadyAction": {
-          "action": "debugWithChrome",
-          "pattern": "Local: http://localhost:([0-9]+)",
-          "uriFormat": "http://localhost:%s"
-        }
-      },
+        "name": "Debug",
+        "url": "http://localhost:5173",
+        // "skipFiles": ["${workspaceFolder}/node_modules/**/*.js"],
+        "webRoot": "${workspaceFolder}/src",
+        "sourceMapPathOverrides": {
+          "webpack:///./src/*": "${webRoot}/*"
+        },
+        "runtimeArgs": ["--remote-debugging-port=9222"],
+        "sourceMaps": true
+    }
     ],
   }
