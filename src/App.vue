@@ -65,13 +65,13 @@
                     </span>
                   </span>
                   <span>
-                    <button v-if="canCompete(boxer, opponent)" @click="addToFightCard(boxer, opponent)"
+                    <button v-if="canCompete(boxer, opponent) && !isCompeting(boxer, opponent)" @click="addToFightCard(boxer, opponent)"
                       class="btn btn-primary">
                       <i class="bi bi-person-plus-fill"></i>
                     </button>
-                    <button v-if="isCompeting(boxer, opponent)" @click="removeFromFightCardByIndex(boxer, opponent)"
+                    <button v-if="isCompeting(boxer, opponent)" @click="removeFromFightCard(boxer, opponent)"
                       class="btn btn-primary">
-                      <i class="bi bi-person-plus-fill"></i>
+                      <i class="bi bi-person-dash-fill"></i>
                     </button>
                   </span>
                 </li>
@@ -209,7 +209,7 @@ FRAIZER	Joe	0	F	57	CPB
         this.boxers[index].collapsed = collapse;
       }
     },
-    removeFromFightCard(boxer1: Boxer, boxer2: Boxer) : void {
+    removeFromFightCard(boxer1: Boxer, boxer2: Boxer): void {
       let index = this.getFightId(boxer1, boxer2);
       if (index != null) {
         this.removeFromFightCardByIndex(index);
