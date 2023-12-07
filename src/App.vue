@@ -20,25 +20,25 @@
     <div class="row">
       <div class="col-md-6 mb-3">
         <div class="d-flex">
-          <h3 class="p-2 flex-grow-1">Fighters</h3>
-          <button @click="expandAll()" class="p-2 btn btn-primary mb-3 ml-2">
+          <h3 class="flex-grow-1">Fighters</h3>
+          <button @click="expandAll()" class="btn btn-primary mb-3 ml-2">
             <i class="bi bi-chevron-down"></i>
             /
             <i class="bi bi-chevron-right"></i>
           </button>
-          <button @click="clear()" class="p-2 btn btn-primary mb-3 ml-2">
+          <button @click="clear()" class="btn btn-primary mb-3 ml-2">
             <i class="bi bi-trash"></i>
           </button>
         </div>
         <div class="card" v-for="(boxer, index) in boxers" :key="boxer.id">
           <div class="card-header d-flex" role="tab" @click="toggleCollapse(index)"
             :class="{ collapsed: !boxer.collapsed }">
-            <span class="p-2 flex-grow-1">
+            <span class="flex-grow-1">
               <i class="bi" :class="boxer.collapsed ? 'bi-chevron-down' : 'bi-chevron-right'
                 "></i>
               {{ getBoxerDisplayName(boxer) }}
             </span>
-            <span class="p-2">
+            <span>
               <span v-if="isInFightCard(boxer)" class="badge bg-success">
                 {{ getNbFightsForBoxer(boxer) }}
                 <i class="bi bi-link"></i>
@@ -51,9 +51,9 @@
           <div :id="'collapse-' + index" v-show="!boxer.collapsed" class="collapse" :class="{ show: !boxer.collapsed }">
             <div class="card-body">
               <ul class="list-group">
-                <li class="list-group-item d-flex justify-content-between align-items-center"
+                <li class="list-group-item d-flex"
                   v-for="opponent in getPotentialOpponents(boxer)" :key="opponent.id">
-                  <span>
+                  <span class="flex-grow-1">
                     {{ getBoxerDisplayName(opponent) }} -
                     <span class="badge" :class="canCompete(boxer, opponent) ? 'bg-success' : 'bg-danger'
                       ">
@@ -64,13 +64,13 @@
                       }}
                     </span>
                   </span>
-                  <span>
+                  <span class="">
                     <button v-if="canCompete(boxer, opponent) && !isCompeting(boxer, opponent)" @click="addToFightCard(boxer, opponent)"
-                      class="btn btn-success">
+                      class="btn btn-success btn-sm">
                       <i class="bi bi-person-plus-fill"></i>
                     </button>
                     <button v-if="isCompeting(boxer, opponent)" @click="removeFromFightCard(boxer, opponent)"
-                      class="btn btn-danger">
+                      class="btn btn-danger btn-sm">
                       <i class="bi bi-person-dash-fill"></i>
                     </button>
                   </span>
@@ -118,11 +118,6 @@ export default {
     let ret: BoxingData = {
       boxers: [
         // new Boxer(1, "", "Boxer 1", new Date(), [], 1, 1, 1, 50, "", "CPB"), 
-        // new Boxer(2, "", "Boxer 2", new Date(), [], 1, 1, 1, 50, "", "CPB"),
-        // new Boxer(3, "", "Boxer 3", new Date(), [], 1, 1, 1, 50, "", "CPB"),
-        // new Boxer(4, "", "Boxer 4", new Date(), [], 1, 1, 1, 10, "", "CPB"),
-        // new Boxer(5, "", "Boxer 5", new Date(), [], 1, 1, 1, 50, "", "CPB"),
-        // new Boxer(6, "", "Boxer 6", new Date(), [], 1, 1, 1, 50, "", "CPB"),
       ],
       fightCard: [],
       // Nom	Prénom	Combats		Sexe	Poids	Club
