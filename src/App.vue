@@ -1,7 +1,7 @@
 <template>
   <div class="container mt-2">
     <div class="row">
-      <div class="col-md-12">
+      <div class="col-md-12 mb-4">
         <div class="card">
           <div class="card-header"><i class="bi bi-gear-fill"></i>Options</div>
           <div class="card-body">
@@ -17,7 +17,7 @@
         </div>
       </div>
     </div>
-    <div class="row mt-3">
+    <div class="row">
       <div class="col-md-6 mb-3">
         <div class="d-flex">
           <h3 class="p-2 flex-grow-1">Fighters</h3>
@@ -66,11 +66,11 @@
                   </span>
                   <span>
                     <button v-if="canCompete(boxer, opponent) && !isCompeting(boxer, opponent)" @click="addToFightCard(boxer, opponent)"
-                      class="btn btn-primary">
+                      class="btn btn-success">
                       <i class="bi bi-person-plus-fill"></i>
                     </button>
                     <button v-if="isCompeting(boxer, opponent)" @click="removeFromFightCard(boxer, opponent)"
-                      class="btn btn-primary">
+                      class="btn btn-danger">
                       <i class="bi bi-person-dash-fill"></i>
                     </button>
                   </span>
