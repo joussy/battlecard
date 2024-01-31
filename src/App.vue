@@ -55,10 +55,10 @@
                   v-for="opponent in getPotentialOpponents(boxer)" :key="opponent.id">
                   <span class="flex-grow-1">
                     {{ getBoxerDisplayName(opponent) }} -
-                    <span class="badge" :class="canCompete(boxer, opponent) ? 'bg-success' : 'bg-danger'
+                    <span class="badge" :class="canCompete(boxer, opponent).length == 0 ? 'bg-success' : 'bg-danger'
                       ">
                       {{
-                        canCompete(boxer, opponent)
+                        canCompete(boxer, opponent).length == 0
                         ? "Éligible"
                         : "Non Éligible"
                       }}
@@ -112,14 +112,17 @@
 <script lang="ts">
 import { ref, Ref } from 'vue';
 import { Boxer, Gender, Fight, BoxingData } from './types/boxing.d'
+import { BeaModality } from './fightModality/BeaModality'
 
 export default {
+
   data() {
     let ret: BoxingData = {
       boxers: [
         // new Boxer(1, "", "Boxer 1", new Date(), [], 1, 1, 1, 50, "", "CPB"), 
       ],
       fightCard: [],
+      modality: new BeaModality(),
       // Nom	Prénom	Combats		Sexe	Poids	Club
       clipboard: `
 MALIK	Abdel	1	H	50	CPB
@@ -156,13 +159,14 @@ FRAIZER	Joe	0	F	57	CPB
     }
   },
   methods: {
-    computeCanCompete(boxer1: Boxer, boxer2: Boxer) {
-      // Logic to check if boxers can compete
-      return Math.abs(boxer1.weight - boxer2.weight) < 5;
+    computeCanCompete(boxer1: Boxer, boxer2: Boxer): boolean {
+      return this.modality.canCompete(boxer1, boxer2).length > 0;
+      // return Math.abs(boxer1.weight - boxer2.weight) < 5;
     },
-    canCompete(boxer1: Boxer, boxer2: Boxer) {
+    canCompete(boxer1: Boxer, boxer2: Boxer): string[] {
       // Logic to check if boxers can compete
-      return boxer1.opponents.some((o) => o == boxer2.id);
+      return this.modality.canCompete(boxer1, boxer2);
+      // return boxer1.opponents.some((o) => o == boxer2.id);
     },
     getFightId(boxer1: Boxer, boxer2: Boxer): number | null {
       const index = this.fightCard.findIndex(
@@ -260,7 +264,7 @@ FRAIZER	Joe	0	F	57	CPB
       for (let [index, boxer] of this.boxers.entries()) {
         boxer.opponents = this.boxers
           .filter(
-            (b) => b.id != boxer.id && this.computeCanCompete(b, boxer),
+            (b) => b.id != boxer.id
           )
           .map((b) => b.id);
       }

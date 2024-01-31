@@ -1,3 +1,5 @@
+import { IModality } from "../fightModality/IModality";
+
 export interface Boxer {
   id: number;
   firstName: string;
@@ -24,4 +26,5 @@ export interface BoxingData {
   fightCard: Fight[];
   boxers: Boxer[];
   clipboard: string;
+  modality: IModality;
 }
