@@ -55,17 +55,17 @@
                   v-for="opponent in getPotentialOpponents(boxer)" :key="opponent.id">
                   <span class="flex-grow-1">
                     {{ getBoxerDisplayName(opponent) }} -
-                    <span class="badge" :class="canCompete(boxer, opponent).length == 0 ? 'bg-success' : 'bg-danger'
+                    <span class="badge" :class="isEligible(boxer, opponent) ? 'bg-success' : 'bg-danger'
                       ">
                       {{
-                        canCompete(boxer, opponent).length == 0
+                        isEligible(boxer, opponent)
                         ? "Éligible"
                         : "Non Éligible"
                       }}
                     </span>
                   </span>
                   <span class="">
-                    <button v-if="canCompete(boxer, opponent) && !isCompeting(boxer, opponent)" @click="addToFightCard(boxer, opponent)"
+                    <button v-if="canCompete(boxer, opponent)" @click="addToFightCard(boxer, opponent)"
                       class="btn btn-success btn-sm">
                       <i class="bi bi-person-plus-fill"></i>
                     </button>
@@ -159,14 +159,14 @@ FRAIZER	Joe	0	F	57	CPB
     }
   },
   methods: {
-    computeCanCompete(boxer1: Boxer, boxer2: Boxer): boolean {
-      return this.modality.canCompete(boxer1, boxer2).length > 0;
-      // return Math.abs(boxer1.weight - boxer2.weight) < 5;
+    computeEligibility(boxer1: Boxer, boxer2: Boxer): boolean {
+      return this.modality.isEligible(boxer1, boxer2);
     },
-    canCompete(boxer1: Boxer, boxer2: Boxer): string[] {
-      // Logic to check if boxers can compete
-      return this.modality.canCompete(boxer1, boxer2);
-      // return boxer1.opponents.some((o) => o == boxer2.id);
+    isEligible(boxer1: Boxer, boxer2: Boxer): boolean {
+      return this.modality.isEligible(boxer1, boxer2);
+    },
+    canCompete(boxer1: Boxer, boxer2: Boxer): boolean {
+      return !this.isCompeting(boxer1, boxer2) && boxer1.id !== boxer2.id;
     },
     getFightId(boxer1: Boxer, boxer2: Boxer): number | null {
       const index = this.fightCard.findIndex(
