@@ -30,16 +30,25 @@
             <i class="bi bi-trash"></i>
           </button>
         </div>
-        <div class="card" v-for="(boxer, index) in boxers" :key="boxer.id">
+        <div class="card" v-for="(boxer, index) in boxers" :key="boxer.attributes.id">
           <div class="card-header d-flex" role="tab" @click="toggleCollapse(index)"
             :class="{ collapsed: !boxer.collapsed }">
             <span class="flex-grow-1">
               <i class="bi" :class="boxer.collapsed ? 'bi-chevron-down' : 'bi-chevron-right'
                 "></i>
+                <span class="ml-2 mr-1">
+                <img v-if="boxer.attributes.gender == Gender.MALE" src="./assets/icons/male.svg" />
+                <img v-if="boxer.attributes.gender == Gender.FEMALE" src="./assets/icons/female.svg" />
+            </span>
               {{ getBoxerDisplayName(boxer) }}
             </span>
             <span>
-              <span v-if="isInFightCard(boxer)" class="badge bg-success">
+              <span v-if="isInFightCard(boxer)" :class="'badge ' + 
+                (getNbFightsForBoxer(boxer) < 2 ? 'bg-success' : '') +
+                (getNbFightsForBoxer(boxer) == 2 ? 'bg-warning' : '') +
+                (getNbFightsForBoxer(boxer) > 2 ? 'bg-danger' : '')
+                
+                ">
                 {{ getNbFightsForBoxer(boxer) }}
                 <i class="bi bi-link"></i>
               </span>
@@ -51,25 +60,28 @@
           <div :id="'collapse-' + index" v-show="!boxer.collapsed" class="collapse" :class="{ show: !boxer.collapsed }">
             <div class="card-body">
               <ul class="list-group">
-                <li class="list-group-item d-flex"
-                  v-for="opponent in getPotentialOpponents(boxer)" :key="opponent.id">
+                <li class="list-group-item d-flex" v-for="opponent in boxer.opponents">
                   <span class="flex-grow-1">
-                    {{ getBoxerDisplayName(opponent) }} -
-                    <span class="badge" :class="isEligible(boxer, opponent) ? 'bg-success' : 'bg-danger'
-                      ">
-                      {{
-                        isEligible(boxer, opponent)
-                        ? "Éligible"
-                        : "Non Éligible"
-                      }}
+                    {{ getBoxerDisplayName(opponent.boxer) }}
+                    <span v-if="opponent.isEligible" class="badge bg-success">
+                      Éligible
+                    </span>
+                    <span v-for="modalityError in opponent.modalityErrors">
+                      <span v-if="modalityError.type == ModalityErrorType.WEIGHT">
+                        <img src="./assets/icons/scale.svg" />
+                      </span>
+                      <span v-if="modalityError.type == ModalityErrorType.AGE" class="badge bg-danger">Age</span>
+                      <span v-if="modalityError.type == ModalityErrorType.PRIZE_LIST">
+                        <img src="./assets/icons/medal.svg" />
+                      </span>
                     </span>
                   </span>
                   <span class="">
-                    <button v-if="canCompete(boxer, opponent)" @click="addToFightCard(boxer, opponent)"
+                    <button v-if="canCompete(boxer, opponent.boxer)" @click="addToFightCard(boxer, opponent.boxer)"
                       class="btn btn-success btn-sm">
                       <i class="bi bi-person-plus-fill"></i>
                     </button>
-                    <button v-if="isCompeting(boxer, opponent)" @click="removeFromFightCard(boxer, opponent)"
+                    <button v-if="isCompeting(boxer, opponent.boxer)" @click="removeFromFightCard(boxer, opponent.boxer)"
                       class="btn btn-danger btn-sm">
                       <i class="bi bi-person-dash-fill"></i>
                     </button>
@@ -89,18 +101,40 @@
               <th scope="col">Red</th>
               <th scope="col">Blue</th>
               <th scope="col"></th>
+              <th scope="col"></th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="(fight, index) in fightCard" :key="index">
-              <th scope="row"></th>
+              <th scope="row">{{ index + 1 }}</th>
               <td>{{ getBoxerDisplayName(fight.boxer1) }}</td>
               <td>{{ getBoxerDisplayName(fight.boxer2) }}</td>
+              <td>
+                <img v-if="fight.boxer1.attributes.gender == Gender.MALE" src="./assets/icons/male.svg" />
+                <img v-if="fight.boxer1.attributes.gender == Gender.FEMALE" src="./assets/icons/female.svg" />
+              </td>
               <td>
                 <button @click="removeFromFightCardByIndex(index)" class="btn btn-danger btn-sm ms-2">
                   <i class="bi bi-person-dash-fill"></i>
                 </button>
               </td>
+            </tr>
+          </tbody>
+        </table>
+        <h3 class="mb-4">Clubs</h3>
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">Club</th>
+              <th scope="col">Available</th>
+              <th scope="col">Fights</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(club, index) in getClubFighters()" :key="index">
+              <td>{{ club.clubName }}</td>
+              <td>{{ club.available }}</td>
+              <td>{{ club.selected }}</td>
             </tr>
           </tbody>
         </table>
@@ -111,9 +145,9 @@
 
 <script lang="ts">
 import { ref, Ref } from 'vue';
-import { Boxer, Gender, Fight, BoxingData } from './types/boxing.d'
+import { Boxer, Gender, Fight, BoxingData, Opponent, BoxingStorage, BoxerAttributes, ClubFighters } from './types/boxing.d'
+import { ModalityError, ModalityErrorType } from './types/modality.d'
 import { BeaModality } from './fightModality/BeaModality'
-
 export default {
 
   data() {
@@ -125,15 +159,17 @@ export default {
       modality: new BeaModality(),
       // Nom	Prénom	Combats		Sexe	Poids	Club
       clipboard: `
-MALIK	Abdel	1	H	50	CPB
-SOLAAR	Claude	0	H	51	CPB
-LAMAR	Kendrik	2	H	52	CPB
-STARR	Joey	4	H	53	CPB
-MONTANA	Tony	0	H	90	CPB
-AMERICA	Captain	0	H	55	CPB
-ALI	Mohammed	0	H	56	CPB
-FRAIZER	Joe	0	F	57	CPB
+MALIK	Abdel	1	H	50	Club1
+SOLAAR	Claude	2	H	51	Club2
+LAMAR	Kendrik	3	H	52	Club3
+STARR	Joey	4	H	53	Club4
+MONTANA	Tony	5	H	90	Club5
+AMERICA	Captain	6	H	55	Club6
+ALI	Mohammed	7	F	56	Club7
+FRAIZER	Joe	8	F	57	Club1
       `.trim(),
+      Gender: Gender,
+      ModalityErrorType: ModalityErrorType,
     };
 
     // this.fightCard = JSON.parse(localStorage.getItem('fightCard') || "{}");
@@ -141,38 +177,47 @@ FRAIZER	Joe	0	F	57	CPB
     return ret;
   },
   mounted() {
-    if (localStorage.boxers) {
-      this.boxers = JSON.parse(localStorage.boxers) || [];
-    }
-    if (localStorage.fightCard) {
-      this.fightCard = JSON.parse(localStorage.fightCard) || [];
+    // if (localStorage.boxers) {
+    //   this.boxers = JSON.parse(localStorage.boxers) || [];
+    //   this.boxers = this.boxers.map(b => b.opponents)
+    // }
+    // if (localStorage.fightCard) {
+    //   this.fightCard = JSON.parse(localStorage.fightCard) || [];
+    // }
+    if (localStorage.boxing) {
+      const boxingStorage: BoxingStorage = JSON.parse(localStorage.boxing) || {};
+      this.boxers = boxingStorage.boxers.map<Boxer>((b) => {
+        return { attributes: b, collapsed: true, opponents: [] } as Boxer;
+      });
+      this.computeBoxerOpponents();
     }
   },
   watch: {
-    boxers(newBoxers) {
-      localStorage.boxers = JSON.stringify(newBoxers);
+    boxers(newBoxers: Boxer[]) {
+      // let toStore = newBoxers.map<Boxer>((b) => {
+      //   let b1 = {...b};
+      //   b1.opponents = [];
+      //   return b1
+      // });
     },
-    fightCard: {
-      handler(newFightCard) {
-        localStorage.fightCard = JSON.stringify(newFightCard);
-      }, deep: true
-    }
+    // fightCard: {
+    //   handler(newFightCard) {
+    //     (localStorage.boxingStorage as BoxingStorage).fights
+    //   }, deep: true
+    // }
   },
   methods: {
-    computeEligibility(boxer1: Boxer, boxer2: Boxer): boolean {
-      return this.modality.isEligible(boxer1, boxer2);
-    },
-    isEligible(boxer1: Boxer, boxer2: Boxer): boolean {
-      return this.modality.isEligible(boxer1, boxer2);
+    getOpponentModalityErrors(boxer: Boxer, opponent: Boxer): ModalityError[] {
+      return this.modality.getModalityProblems(boxer.attributes, opponent.attributes);
     },
     canCompete(boxer1: Boxer, boxer2: Boxer): boolean {
-      return !this.isCompeting(boxer1, boxer2) && boxer1.id !== boxer2.id;
+      return !this.isCompeting(boxer1, boxer2);
     },
     getFightId(boxer1: Boxer, boxer2: Boxer): number | null {
       const index = this.fightCard.findIndex(
         (fight: Fight) =>
-          (fight.boxer1.id === boxer1.id && fight.boxer2.id === boxer2.id) ||
-          (fight.boxer1.id === boxer2.id && fight.boxer2.id === boxer1.id),
+          (fight.boxer1.attributes.id === boxer1.attributes.id && fight.boxer2.attributes.id === boxer2.attributes.id) ||
+          (fight.boxer1.attributes.id === boxer2.attributes.id && fight.boxer2.attributes.id === boxer1.attributes.id),
       );
       return index < 0 ? null : index;
     },
@@ -180,10 +225,6 @@ FRAIZER	Joe	0	F	57	CPB
       const index = this.getFightId(boxer1, boxer2);
 
       return index != null;
-    },
-    getPotentialOpponents(boxer: Boxer) {
-      // Return potential opponents for the given boxer
-      return this.boxers.filter((b) => b.id !== boxer.id);
     },
     addToFightCard(boxer1: Boxer, boxer2: Boxer) {
       // Check if the fight already exists before adding to the fight card
@@ -236,6 +277,19 @@ FRAIZER	Joe	0	F	57	CPB
 
       return lines;
     },
+    computeBoxerOpponents() {
+      for (let [index, boxer] of this.boxers.entries()) {
+        boxer.opponents = this.boxers
+          .map((b) => <Opponent>{
+            weightDifference: Math.abs(boxer.attributes.weight - b.attributes.weight),
+            boxer: b,
+            modalityErrors: this.getOpponentModalityErrors(boxer, b),
+            isEligible: this.getOpponentModalityErrors(boxer, b).length == 0
+          })
+          .filter(o =>
+            !o.modalityErrors.some(modalityError => [ModalityErrorType.SAME_CLUB, ModalityErrorType.SAME_ID, ModalityErrorType.OPPOSITE_GENDER].includes(modalityError.type)));
+      }
+    },
     processClipboard() {
       let ret: any = this.tsvToJson(this.clipboard, [
         'lastName',
@@ -248,32 +302,53 @@ FRAIZER	Joe	0	F	57	CPB
       this.clear();
       for (const [index, entry] of ret.entries()) {
         this.boxers.push({
-          id: index,
-          lastName: entry.lastName,
-          firstName: entry.firstName,
-          birthDate: new Date(entry.birthDate),
-          opponents: [],
-          nbFights: parseInt(entry.nbFights),
-          category: "",
-          club: entry.club,
           collapsed: true,
-          weight: parseInt(entry.weight),
-          gender: entry.gender == 'F' ? Gender.FEMALE : Gender.MALE
+          opponents: [],
+          attributes: {
+            id: index,
+            lastName: entry.lastName,
+            firstName: entry.firstName,
+            birthDate: new Date(entry.birthDate),
+            nbFights: parseInt(entry.nbFights),
+            category: "",
+            club: entry.club,
+            weight: parseInt(entry.weight),
+            gender: entry.gender == 'F' ? Gender.FEMALE : Gender.MALE
+          }
         });
       }
-      for (let [index, boxer] of this.boxers.entries()) {
-        boxer.opponents = this.boxers
-          .filter(
-            (b) => b.id != boxer.id
-          )
-          .map((b) => b.id);
-      }
+      this.computeBoxerOpponents();
     },
     getNbFightsForBoxer(boxer: Boxer) {
-      return this.fightCard.filter(f => f.boxer1.id == boxer.id || f.boxer2.id == boxer.id).length
+      return this.fightCard.filter(f => f.boxer1.attributes.id == boxer.attributes.id || f.boxer2.attributes.id == boxer.attributes.id).length
     },
     getBoxerDisplayName(boxer: Boxer) {
-      return `${boxer.lastName} ${boxer.firstName}`;
+      return `${boxer.attributes.lastName} ${boxer.attributes.firstName}`;
+    },
+    groupBy(list: any, keyGetter: (x: any) => any) : Map<any, any>{
+    const map = new Map();
+    list.forEach((item: any) => {
+         const key = keyGetter(item);
+         const collection = map.get(key);
+         if (!collection) {
+             map.set(key, [item]);
+         } else {
+             collection.push(item);
+         }
+    });
+    return map;
+  },
+    getClubFighters(): ClubFighters[] {
+      const clubs = this.groupBy(this.boxers, (x) => x.attributes.club);
+      const thisObj = this;
+      const clubFighters : ClubFighters[] = Array.from(clubs.keys()).map(function (clubKey: any) {
+        return {
+          available: clubs.get(clubKey).length,
+          selected: thisObj.fightCard.filter(f => f.boxer1.attributes.club == clubKey || f.boxer2.attributes.club == clubKey).length,
+          clubName: clubKey,
+        }
+        });
+      return clubFighters;
     },
     clear(): void {
       this.boxers = [];

@@ -1,18 +1,30 @@
 import { IModality } from "../fightModality/IModality";
 
 export interface Boxer {
+  attributes: BoxerAttributes;
+  opponents: Opponent[];
+  collapsed: boolean;
+}
+
+export interface BoxerAttributes {
   id: number;
   firstName: string;
   lastName: string;
   birthDate: Date;
-  opponents: number[];
   weight: number;
   category: string;
   club: string;
-  collapsed: boolean;
   nbFights: number;
   gender: Gender;
 }
+
+export interface Opponent {
+  boxer: Boxer;
+  modalityErrors: ModalityError[];
+  weightDifference: number;
+  isEligible: boolean;
+}
+
 export enum Gender{
   FEMALE,
   MALE
@@ -27,4 +39,17 @@ export interface BoxingData {
   boxers: Boxer[];
   clipboard: string;
   modality: IModality;
+  Gender: any;
+  ModalityErrorType: any;
+}
+
+export interface BoxingStorage {
+  boxers: BoxerAttributes[];
+  fights: Map<number, number>[];
+}
+
+export interface ClubFighters {
+  clubName: string;
+  available: number;
+  selected: number;
 }
