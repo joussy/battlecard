@@ -3,7 +3,7 @@
     <div class="row">
       <div class="col-md-12 mb-4">
         <div class="card">
-          <div class="card-header"><i class="bi bi-gear-fill"></i>Options</div>
+          <div class="card-header"><i class="bi bi-gear-fill mr-1"></i>Options</div>
           <div class="card-body">
             <h5 class="card-title">
               <i class="bi bi-clipboard mr-2"></i>Import from clipboard
@@ -21,12 +21,12 @@
       <div class="col-md-6 mb-3">
         <div class="d-flex">
           <h3 class="flex-grow-1">Fighters</h3>
-          <button @click="expandAll()" class="btn btn-primary mb-3 ml-2">
+          <button @click="expandAll()" class="btn btn-secondary mb-3 ml-2">
             <i class="bi bi-chevron-down"></i>
             /
             <i class="bi bi-chevron-right"></i>
           </button>
-          <button @click="clear()" class="btn btn-primary mb-3 ml-2">
+          <button @click="clear()" class="btn btn-danger mb-3 ml-2">
             <i class="bi bi-trash"></i>
           </button>
         </div>
@@ -43,12 +43,11 @@
               {{ getBoxerDisplayName(boxer) }}
             </span>
             <span>
-              <span v-if="isInFightCard(boxer)" :class="'badge ' + 
-                (getNbFightsForBoxer(boxer) < 2 ? 'bg-success' : '') +
-                (getNbFightsForBoxer(boxer) == 2 ? 'bg-warning' : '') +
-                (getNbFightsForBoxer(boxer) > 2 ? 'bg-danger' : '')
-                
-                ">
+              <span v-if="isInFightCard(boxer)" class="badge" :class="{ 
+                'bg-success': getNbFightsForBoxer(boxer) < 2,
+                'bg-warning': getNbFightsForBoxer(boxer) == 2,
+                'bg-danger': getNbFightsForBoxer(boxer) > 2
+              }">
                 {{ getNbFightsForBoxer(boxer) }}
                 <i class="bi bi-link"></i>
               </span>
@@ -60,12 +59,13 @@
           <div :id="'collapse-' + index" v-show="!boxer.collapsed" class="collapse" :class="{ show: !boxer.collapsed }">
             <div class="card-body">
               <ul class="list-group">
-                <li class="list-group-item d-flex" v-for="opponent in boxer.opponents">
+                <li class="list-group-item d-flex" :class="{'list-group-item-danger': !opponent.isEligible}"
+                 v-for="opponent in boxer.opponents">
                   <span class="flex-grow-1">
                     {{ getBoxerDisplayName(opponent.boxer) }}
-                    <span v-if="opponent.isEligible" class="badge bg-success">
+                    <!-- <span v-if="opponent.isEligible" class="badge bg-success">
                       Éligible
-                    </span>
+                    </span> -->
                     <span v-for="modalityError in opponent.modalityErrors">
                       <ModalityError :modalityError="modalityError"></ModalityError>
                     </span>
