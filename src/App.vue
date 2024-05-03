@@ -67,13 +67,7 @@
                       Éligible
                     </span>
                     <span v-for="modalityError in opponent.modalityErrors">
-                      <span v-if="modalityError.type == ModalityErrorType.WEIGHT">
-                        <img src="./assets/icons/scale.svg" />
-                      </span>
-                      <span v-if="modalityError.type == ModalityErrorType.AGE" class="badge bg-danger">Age</span>
-                      <span v-if="modalityError.type == ModalityErrorType.PRIZE_LIST">
-                        <img src="./assets/icons/medal.svg" />
-                      </span>
+                      <ModalityError :modalityError="modalityError"></ModalityError>
                     </span>
                   </span>
                   <span class="">
@@ -102,6 +96,7 @@
               <th scope="col">Blue</th>
               <th scope="col"></th>
               <th scope="col"></th>
+              <th scope="col"></th>
             </tr>
           </thead>
           <tbody>
@@ -114,6 +109,11 @@
                 <img v-if="fight.boxer1.attributes.gender == Gender.FEMALE" src="./assets/icons/female.svg" />
               </td>
               <td>
+                <span v-for="modalityError in fight.modalityErrors">
+                  <ModalityError :modalityError="modalityError"></ModalityError>
+              </span>
+              </td>
+              <td>
                 <button @click="removeFromFightCardByIndex(index)" class="btn btn-danger btn-sm ms-2">
                   <i class="bi bi-person-dash-fill"></i>
                 </button>
@@ -122,7 +122,7 @@
           </tbody>
         </table>
         <h3 class="mb-4">Clubs</h3>
-        <table class="table">
+        <table class="table table-sm">
           <thead>
             <tr>
               <th scope="col">Club</th>
@@ -148,8 +148,11 @@ import { ref, Ref } from 'vue';
 import { Boxer, Gender, Fight, BoxingData, Opponent, BoxingStorage, BoxerAttributes, ClubFighters } from './types/boxing.d'
 import { ModalityError, ModalityErrorType } from './types/modality.d'
 import { BeaModality } from './fightModality/BeaModality'
+import ModalityError from "./ModalityError.vue"
 export default {
-
+  components: {
+    ModalityError
+  },
   data() {
     let ret: BoxingData = {
       boxers: [
@@ -230,7 +233,7 @@ FRAIZER	Joe	8	F	57	Club1
       // Check if the fight already exists before adding to the fight card
 
       if (!this.isCompeting(boxer1, boxer2)) {
-        this.fightCard.push({ boxer1, boxer2 });
+        this.fightCard.push({ boxer1, boxer2, modalityErrors: this.getOpponentModalityErrors(boxer1, boxer2) });
       }
     },
     removeFromFightCardByIndex(index: number): void {

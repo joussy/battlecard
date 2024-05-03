@@ -1,4 +1,5 @@
 import { IModality } from "../fightModality/IModality";
+import { ModalityError } from "./modality";
 
 export interface Boxer {
   attributes: BoxerAttributes;
@@ -32,6 +33,7 @@ export enum Gender{
 export interface Fight {
   boxer1: Boxer;
   boxer2: Boxer;
+  modalityErrors: ModalityError[];
 }
 
 export interface BoxingData {
