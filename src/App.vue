@@ -162,14 +162,14 @@ export default {
       modality: new BeaModality(),
       // Nom	Prénom	Combats		Sexe	Poids	Club
       clipboard: `
-MALIK	Abdel	1	H	50	Club1
-SOLAAR	Claude	2	H	51	Club2
-LAMAR	Kendrik	3	H	52	Club3
+JOSHUA	Anthony	1	H	50	Club1
+FURY	Tyson	2	H	51	Club2
+TYSON	Mike	3	H	52	Club3
 STARR	Joey	4	H	53	Club4
 MONTANA	Tony	5	H	90	Club5
-AMERICA	Captain	6	H	55	Club6
-ALI	Mohammed	7	F	56	Club7
-FRAIZER	Joe	8	F	57	Club1
+NICOLSON	Skye	6	H	55	Club6
+TAYLOR	Katie	7	F	56	Club7
+SERRANO	Amanda	8	F	57	Club1
       `.trim(),
       Gender: Gender,
       ModalityErrorType: ModalityErrorType,
