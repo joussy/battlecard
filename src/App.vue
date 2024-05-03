@@ -52,9 +52,9 @@
                 {{ getNbFightsForBoxer(boxer) }}
                 <i class="bi bi-link"></i>
               </span>
-              <span class="badge bg-secondary ml-2">
+              <span class="badge bg-light ml-2">
                 🥊
-                {{ boxer.opponents.length }}</span>
+                {{ boxer.opponents.filter(o => o.isEligible).length }}/{{ boxer.opponents.length }}</span>
             </span>
           </div>
           <div :id="'collapse-' + index" v-show="!boxer.collapsed" class="collapse" :class="{ show: !boxer.collapsed }">
@@ -167,7 +167,7 @@ FURY	Tyson	2	H	51	Club2
 TYSON	Mike	3	H	52	Club3
 STARR	Joey	4	H	53	Club4
 MONTANA	Tony	5	H	90	Club5
-NICOLSON	Skye	6	H	55	Club6
+NICOLSON	Skye	6	F	55	Club6
 TAYLOR	Katie	7	F	56	Club7
 SERRANO	Amanda	8	F	57	Club1
       `.trim(),
