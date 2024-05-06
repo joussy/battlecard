@@ -5,7 +5,6 @@
     "vscode": {
       "extensions": [
 		"Vue.volar",
-		"Vue.vscode-typescript-vue-plugin",
 		"ms-edgedevtools.vscode-edge-devtools"
 	]
     }
