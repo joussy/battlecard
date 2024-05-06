@@ -15,7 +15,6 @@ export default {
     props: ['modalityError'],
     data() {
         return {
-            count: 0,
             ModalityErrorType: ModalityErrorType,
         }
     }
