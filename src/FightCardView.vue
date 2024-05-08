@@ -40,11 +40,11 @@ import { ref, Ref } from 'vue';
 import { Boxer, Gender, Fight, BoxingData, Opponent, BoxingStorage, BoxerAttributes, ClubFighters } from './types/boxing.d'
 import { ModalityError, ModalityErrorType } from './types/modality.d'
 import { BeaModality } from './fightModality/BeaModality'
-import ModalityError from "./ModalityError.vue"
+import ModalityErrorView from "./ModalityErrorView.vue"
 export default {
   props: ['fightCard'],
   components: {
-    ModalityError
+    ModalityErrorView
   },
   data() {
     return {
@@ -54,8 +54,11 @@ export default {
   methods: {
     getBoxerDisplayName(boxer: Boxer) {
       return `${boxer.attributes.lastName} ${boxer.attributes.firstName}`;
-
-    }
+    },
+    removeFromFightCardByIndex(index: number): void {
+      // Remove fight from the fight card
+      this.fightCard.splice(index, 1);
+    },
   }
 }
 </script>

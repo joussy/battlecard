@@ -99,14 +99,14 @@ import { ref, Ref } from 'vue';
 import { Boxer, Gender, Fight, BoxingData, Opponent, BoxingStorage, BoxerAttributes, ClubFighters } from './types/boxing.d'
 import { ModalityError, ModalityErrorType } from './types/modality.d'
 import { BeaModality } from './fightModality/BeaModality'
-import ModalityError from "./ModalityError.vue"
-import FightCard from "./FightCard.vue"
-import ClubStatistics from "./ClubStatistics.vue"
+import ModalityErrorView from "./ModalityErrorView.vue"
+import FightCardView from "./FightCardView.vue"
+import ClubStatisticsView from "./ClubStatisticsView.vue"
 export default {
   components: {
-    ModalityError,
-    FightCard,
-    ClubStatistics
+    ModalityErrorView,
+    FightCardView,
+    ClubStatisticsView
   },
   data() {
     let ret: BoxingData = {
