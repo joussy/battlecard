@@ -87,8 +87,8 @@
         </div>
       </div>
       <div class="col-md-6">
-        <FightCard :fightCard="fightCard"></FightCard>
-        <ClubStatistics :boxers="boxers" :fightCard="fightCard"></ClubStatistics>
+        <FightCardView :fightCard="fightCard"></FightCardView>
+        <ClubStatisticsView :boxers="boxers" :fightCard="fightCard"></ClubStatisticsView>
       </div>
     </div>
   </div>
