@@ -59,10 +59,11 @@
           <div :id="'collapse-' + index" v-show="!boxer.collapsed" class="collapse" :class="{ show: !boxer.collapsed }">
             <div class="card-body">
               <ul class="list-group">
-                <li class="list-group-item d-flex" :class="{'list-group-item-danger': !opponent.isEligible}"
+                <li class="list-group-item d-flex"
                  v-for="opponent in boxer.opponents">
                   <span class="flex-grow-1">
-                    {{ getBoxerDisplayName(opponent.boxer) }}
+                    <span class="mr-1" :class="{'	text-danger': !opponent.isEligible}">{{ getBoxerDisplayName(opponent.boxer) }}
+                    </span>
                     <!-- <span v-if="opponent.isEligible" class="badge bg-success">
                       Éligible
                     </span> -->
@@ -245,7 +246,8 @@ SERRANO	Amanda	8	F	57	Club1
             isEligible: this.getOpponentModalityErrors(boxer, b).length == 0
           })
           .filter(o =>
-            !o.modalityErrors.some(modalityError => [ModalityErrorType.SAME_CLUB, ModalityErrorType.SAME_ID, ModalityErrorType.OPPOSITE_GENDER].includes(modalityError.type)));
+            !o.modalityErrors.some(modalityError => [ModalityErrorType.SAME_CLUB, ModalityErrorType.SAME_ID, ModalityErrorType.OPPOSITE_GENDER].includes(modalityError.type)))
+          .sort((a, b) => a.modalityErrors.length - b.modalityErrors.length);
       }
     },
     processClipboard() {
