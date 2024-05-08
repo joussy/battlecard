@@ -22,14 +22,22 @@
 import { ref, Ref } from 'vue';
 import { Boxer, Gender, Fight, BoxingData, Opponent, BoxingStorage, BoxerAttributes, ClubFighters } from './types/boxing.d'
 export default {
-  props: ['fightCard', 'boxers'],
+  // props: ['fightCard', 'boxers'],
+  props: {
+    fightCard:{
+      type: Object as () => Fight[],
+    },
+    boxers:{
+      type: Object as () => Boxer[],
+    }
+  },
   components: {
   },
   data() {
     return {};
   },
   methods: {
-    groupBy(list: any, keyGetter: (x: any) => any): Map<any, any> {
+    groupBy<T>(list: T[], keyGetter: (x: T) => any): Map<string, T[]> {
       const map = new Map();
       list.forEach((item: any) => {
         const key = keyGetter(item);
@@ -43,14 +51,14 @@ export default {
       return map;
     },
     getClubFighters(): ClubFighters[] {
-      const clubs = this.groupBy(this.boxers, (x) => x.attributes.club);
+      const clubs = this.groupBy(this.boxers as Boxer[], (x) => x.attributes.club);
       const thisObj = this;
-      const clubFighters: ClubFighters[] = Array.from(clubs.keys()).map(function (clubKey: any) {
+      const clubFighters: ClubFighters[] = Array.from(clubs.keys()).map(function (clubKey: string) {
         return {
-          available: clubs.get(clubKey).length,
-          selected: thisObj.fightCard.filter(f => f.boxer1.attributes.club == clubKey || f.boxer2.attributes.club == clubKey).length,
+          available: clubs.get(clubKey)?.length ?? 0,
+          selected: thisObj.fightCard?.filter(f => f.boxer1.attributes.club == clubKey || f.boxer2.attributes.club == clubKey).length,
           clubName: clubKey,
-        }
+        } as ClubFighters
       });
       return clubFighters;
     }
