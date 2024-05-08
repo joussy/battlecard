@@ -22,7 +22,7 @@
         </td>
         <td>
           <span v-for="modalityError in fight.modalityErrors">
-            <ModalityError :modalityError="modalityError"></ModalityError>
+            <ModalityErrorView :modalityError="modalityError"></ModalityErrorView>
           </span>
         </td>
         <td>

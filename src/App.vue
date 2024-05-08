@@ -67,7 +67,7 @@
                       Éligible
                     </span> -->
                     <span v-for="modalityError in opponent.modalityErrors">
-                      <ModalityError :modalityError="modalityError"></ModalityError>
+                      <ModalityErrorView :modalityError="modalityError"></ModalityErrorView>
                     </span>
                   </span>
                   <span class="">
