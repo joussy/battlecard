@@ -12,21 +12,21 @@
       </tr>
     </thead>
     <tbody>
-      <tr v-for="(fight, index) in fightCard" :key="index">
+      <tr v-for="(fight, index) in store.fightCard" :key="index">
         <th scope="row">{{ index + 1 }}</th>
-        <td>{{ getBoxerDisplayName(fight.boxer1) }}</td>
-        <td>{{ getBoxerDisplayName(fight.boxer2) }}</td>
+        <td>{{ store.getBoxerDisplayName(fight.boxer1) }}</td>
+        <td>{{ store.getBoxerDisplayName(fight.boxer2) }}</td>
         <td>
           <img v-if="fight.boxer1.attributes.gender == Gender.MALE" src="@/assets/icons/male.svg" />
           <img v-if="fight.boxer1.attributes.gender == Gender.FEMALE" src="@/assets/icons/female.svg" />
         </td>
         <td>
           <span v-for="modalityError in fight.modalityErrors">
-            <ModalityErrorView :modalityError="modalityError"></ModalityErrorView>
+            <ModalityErrorComponent :modalityError="modalityError"></ModalityErrorComponent>
           </span>
         </td>
         <td>
-          <button @click="removeFromFightCardByIndex(index)" class="btn btn-danger btn-sm ms-2">
+          <button @click="store.removeFromFightCardByIndex(index)" class="btn btn-danger btn-sm ms-2">
             <i class="bi bi-person-dash-fill"></i>
           </button>
         </td>
@@ -40,25 +40,19 @@ import { ref, Ref } from 'vue';
 import { Boxer, Gender, Fight, BoxingData, Opponent, BoxingStorage, BoxerAttributes, ClubFighters } from '@/types/boxing.d'
 import { ModalityError, ModalityErrorType } from '@/types/modality.d'
 import { BeaModality } from '@/fightModality/BeaModality'
-import ModalityErrorComponent from "./modality-error.component.vue"
+import ModalityErrorComponent from "@/components/core/modality-error.component.vue"
+import { store } from '@/composables/fight.composable'
 export default {
-  props: ['fightCard'],
   components: {
-    ModalityErrorView: ModalityErrorComponent
+    ModalityErrorComponent: ModalityErrorComponent
   },
   data() {
     return {
       Gender: Gender,
+      store
     }
   },
   methods: {
-    getBoxerDisplayName(boxer: Boxer) {
-      return `${boxer.attributes.lastName} ${boxer.attributes.firstName}`;
-    },
-    removeFromFightCardByIndex(index: number): void {
-      // Remove fight from the fight card
-      this.fightCard.splice(index, 1);
-    },
   }
 }
 </script>

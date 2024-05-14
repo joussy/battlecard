@@ -55,3 +55,12 @@ export interface ClubFighters {
   available: number;
   selected: number;
 }
+
+export interface FightStore {
+  fightCard: Fight[];
+  boxers: Boxer[];
+  modality: IModality;
+  getBoxerDisplayName(boxer: Boxer): string;
+  removeFromFightCardByIndex(index: number): void;
+  getOpponentModalityErrors(boxer: Boxer, opponent: Boxer): ModalityError[];
+}

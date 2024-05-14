@@ -26,11 +26,11 @@
             /
             <i class="bi bi-chevron-right"></i>
           </button>
-          <button @click="clear()" class="btn btn-danger mb-3 ml-2">
+          <button @click="store.clear()" class="btn btn-danger mb-3 ml-2">
             <i class="bi bi-trash"></i>
           </button>
         </div>
-        <div class="card" v-for="(boxer, index) in boxers" :key="boxer.attributes.id">
+        <div class="card" v-for="(boxer, index) in store.boxers" :key="boxer.attributes.id">
           <div class="card-header d-flex" role="tab" @click="toggleCollapse(index)"
             :class="{ collapsed: !boxer.collapsed }">
             <span class="flex-grow-1">
@@ -40,15 +40,15 @@
                 <img v-if="boxer.attributes.gender == Gender.MALE" src="@/assets/icons/male.svg" />
                 <img v-if="boxer.attributes.gender == Gender.FEMALE" src="@/assets/icons/female.svg" />
             </span>
-              {{ getBoxerDisplayName(boxer) }}
+              {{ store.getBoxerDisplayName(boxer) }}
             </span>
             <span>
-              <span v-if="isInFightCard(boxer)" class="badge" :class="{ 
-                'bg-success': getNbFightsForBoxer(boxer) < 2,
-                'bg-warning': getNbFightsForBoxer(boxer) == 2,
-                'bg-danger': getNbFightsForBoxer(boxer) > 2
+              <span v-if="store.isInFightCard(boxer)" class="badge" :class="{ 
+                'bg-success': store.getNbFightsForBoxer(boxer) < 2,
+                'bg-warning': store.getNbFightsForBoxer(boxer) == 2,
+                'bg-danger': store.getNbFightsForBoxer(boxer) > 2
               }">
-                {{ getNbFightsForBoxer(boxer) }}
+                {{ store.getNbFightsForBoxer(boxer) }}
                 <i class="bi bi-link"></i>
               </span>
               <span class="badge bg-light ml-2">
@@ -62,7 +62,7 @@
                 <li class="list-group-item d-flex"
                  v-for="opponent in boxer.opponents">
                   <span class="flex-grow-1">
-                    <span class="mr-1" :class="{'	text-danger': !opponent.isEligible}">{{ getBoxerDisplayName(opponent.boxer) }}
+                    <span class="mr-1" :class="{'	text-danger': !opponent.isEligible}">{{ store.getBoxerDisplayName(opponent.boxer) }}
                     </span>
                     <!-- <span v-if="opponent.isEligible" class="badge bg-success">
                       Éligible
@@ -72,11 +72,11 @@
                     </span>
                   </span>
                   <span class="">
-                    <button v-if="canCompete(boxer, opponent.boxer)" @click="addToFightCard(boxer, opponent.boxer)"
+                    <button v-if="store.canCompete(boxer, opponent.boxer)" @click="store.addToFightCard(boxer, opponent.boxer)"
                       class="btn btn-success btn-sm">
                       <i class="bi bi-person-plus-fill"></i>
                     </button>
-                    <button v-if="isCompeting(boxer, opponent.boxer)" @click="removeFromFightCard(boxer, opponent.boxer)"
+                    <button v-if="store.isCompeting(boxer, opponent.boxer)" @click="store.removeFromFightCard(boxer, opponent.boxer)"
                       class="btn btn-danger btn-sm">
                       <i class="bi bi-person-dash-fill"></i>
                     </button>
@@ -88,34 +88,32 @@
         </div>
       </div>
       <div class="col-md-6">
-        <FightCardView :fightCard="fightCard"></FightCardView>
-        <ClubStatisticsComponent :boxers="boxers" :fightCard="fightCard"></ClubStatisticsComponent>
+        <FightCardComponent></FightCardComponent>
+        <ClubStatisticsComponent :boxers="store.boxers" :fightCard="store.fightCard"></ClubStatisticsComponent>
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { ref, Ref } from 'vue';
+import { defineComponent } from 'vue';
 import { Boxer, Gender, Fight, BoxingData, Opponent, BoxingStorage, BoxerAttributes, ClubFighters } from '@/types/boxing.d'
 import { ModalityError, ModalityErrorType } from '@/types/modality.d'
 import { BeaModality } from '@/fightModality/BeaModality'
-import ModalityErrorComponent from "@/components/modality-error.component.vue"
+import ModalityErrorComponent from "@/components/core/modality-error.component.vue"
 import FightCardComponent from "@/components/fight-card.component.vue"
 import ClubStatisticsComponent from "@/components/club-statistics.component.vue"
-export default {
+import { store } from '@/composables/fight.composable';
+
+export default defineComponent({
   components: {
     ModalityErrorComponent: ModalityErrorComponent,
-    FightCardView: FightCardComponent,
+    FightCardComponent: FightCardComponent,
     ClubStatisticsComponent: ClubStatisticsComponent
   },
   data() {
-    let ret: BoxingData = {
-      boxers: [
-        // new Boxer(1, "", "Boxer 1", new Date(), [], 1, 1, 1, 50, "", "CPB"), 
-      ],
-      fightCard: [],
-      modality: new BeaModality(),
+    let ret = {
+      store,
       // Nom	Prénom	Combats		Sexe	Poids	Club
       clipboard: `
 JOSHUA	Anthony	1	H	50	Club1
@@ -145,7 +143,7 @@ SERRANO	Amanda	8	F	57	Club1
     // }
     if (localStorage.boxing) {
       const boxingStorage: BoxingStorage = JSON.parse(localStorage.boxing) || {};
-      this.boxers = boxingStorage.boxers.map<Boxer>((b) => {
+      this.store.boxers = boxingStorage.boxers.map<Boxer>((b) => {
         return { attributes: b, collapsed: true, opponents: [] } as Boxer;
       });
       this.computeBoxerOpponents();
@@ -166,57 +164,20 @@ SERRANO	Amanda	8	F	57	Club1
     // }
   },
   methods: {
-    getOpponentModalityErrors(boxer: Boxer, opponent: Boxer): ModalityError[] {
-      return this.modality.getModalityProblems(boxer.attributes, opponent.attributes);
-    },
-    canCompete(boxer1: Boxer, boxer2: Boxer): boolean {
-      return !this.isCompeting(boxer1, boxer2);
-    },
-    getFightId(boxer1: Boxer, boxer2: Boxer): number | null {
-      const index = this.fightCard.findIndex(
-        (fight: Fight) =>
-          (fight.boxer1.attributes.id === boxer1.attributes.id && fight.boxer2.attributes.id === boxer2.attributes.id) ||
-          (fight.boxer1.attributes.id === boxer2.attributes.id && fight.boxer2.attributes.id === boxer1.attributes.id),
-      );
-      return index < 0 ? null : index;
-    },
-    isCompeting(boxer1: Boxer, boxer2: Boxer): boolean {
-      const index = this.getFightId(boxer1, boxer2);
 
-      return index != null;
-    },
-    addToFightCard(boxer1: Boxer, boxer2: Boxer) {
-      // Check if the fight already exists before adding to the fight card
-
-      if (!this.isCompeting(boxer1, boxer2)) {
-        this.fightCard.push({ boxer1, boxer2, modalityErrors: this.getOpponentModalityErrors(boxer1, boxer2) });
-      }
-    },
-    removeFromFightCardByIndex(index: number): void {
-      // Remove fight from the fight card
-      this.fightCard.splice(index, 1);
-    },
     toggleCollapse(index: number): void {
-      this.boxers[index].collapsed = !this.boxers[index].collapsed;
+      this.store.boxers[index].collapsed = !this.store.boxers[index].collapsed;
     },
     expandAll() {
       let collapse = true;
-      if (this.boxers[0]?.collapsed) {
+      if (this.store.boxers[0]?.collapsed) {
         collapse = false;
       }
-      for (let [index, boxer] of this.boxers.entries()) {
-        this.boxers[index].collapsed = collapse;
+      for (let [index, boxer] of this.store.boxers.entries()) {
+        this.store.boxers[index].collapsed = collapse;
       }
     },
-    removeFromFightCard(boxer1: Boxer, boxer2: Boxer): void {
-      let index = this.getFightId(boxer1, boxer2);
-      if (index != null) {
-        this.removeFromFightCardByIndex(index);
-      }
-    },
-    isInFightCard(boxer: Boxer): boolean {
-      return this.getNbFightsForBoxer(boxer) > 0
-    },
+
     tsvToJson(tsvText: string, headers: string[]): object {
       //Split all the text into seperate lines on new lines and carriage return feeds
       var allTextLines = tsvText.split(/\r\n|\n/);
@@ -237,13 +198,13 @@ SERRANO	Amanda	8	F	57	Club1
       return lines;
     },
     computeBoxerOpponents() {
-      for (let [index, boxer] of this.boxers.entries()) {
-        boxer.opponents = this.boxers
+      for (let [index, boxer] of this.store.boxers.entries()) {
+        boxer.opponents = this.store.boxers
           .map((b) => <Opponent>{
             weightDifference: Math.abs(boxer.attributes.weight - b.attributes.weight),
             boxer: b,
-            modalityErrors: this.getOpponentModalityErrors(boxer, b),
-            isEligible: this.getOpponentModalityErrors(boxer, b).length == 0
+            modalityErrors: this.store.getOpponentModalityErrors(boxer, b),
+            isEligible: this.store.getOpponentModalityErrors(boxer, b).length == 0
           })
           .filter(o =>
             !o.modalityErrors.some(modalityError => [ModalityErrorType.SAME_CLUB, ModalityErrorType.SAME_ID, ModalityErrorType.OPPOSITE_GENDER].includes(modalityError.type)))
@@ -259,9 +220,9 @@ SERRANO	Amanda	8	F	57	Club1
         'weight',
         'club'
       ])
-      this.clear();
+      this.store.clear();
       for (const [index, entry] of ret.entries()) {
-        this.boxers.push({
+        this.store.boxers.push({
           collapsed: true,
           opponents: [],
           attributes: {
@@ -279,18 +240,9 @@ SERRANO	Amanda	8	F	57	Club1
       }
       this.computeBoxerOpponents();
     },
-    getNbFightsForBoxer(boxer: Boxer) {
-      return this.fightCard.filter(f => f.boxer1.attributes.id == boxer.attributes.id || f.boxer2.attributes.id == boxer.attributes.id).length
-    },
-    getBoxerDisplayName(boxer: Boxer) {
-      return `${boxer.attributes.lastName} ${boxer.attributes.firstName}`;
-    },
-    clear(): void {
-      this.boxers = [];
-      this.fightCard = [];
-    }
+
   },
-};
+});
 </script>
 
 <style>
