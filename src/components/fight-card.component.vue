@@ -37,14 +37,14 @@
 
 <script lang="ts">
 import { ref, Ref } from 'vue';
-import { Boxer, Gender, Fight, BoxingData, Opponent, BoxingStorage, BoxerAttributes, ClubFighters } from './types/boxing.d'
-import { ModalityError, ModalityErrorType } from './types/modality.d'
-import { BeaModality } from './fightModality/BeaModality'
-import ModalityErrorView from "./ModalityErrorView.vue"
+import { Boxer, Gender, Fight, BoxingData, Opponent, BoxingStorage, BoxerAttributes, ClubFighters } from '@/types/boxing.d'
+import { ModalityError, ModalityErrorType } from '@/types/modality.d'
+import { BeaModality } from '@/fightModality/BeaModality'
+import ModalityErrorComponent from "./modality-error.component.vue"
 export default {
   props: ['fightCard'],
   components: {
-    ModalityErrorView
+    ModalityErrorView: ModalityErrorComponent
   },
   data() {
     return {

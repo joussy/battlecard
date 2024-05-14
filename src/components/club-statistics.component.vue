@@ -20,7 +20,7 @@
 
 <script lang="ts">
 import { ref, Ref } from 'vue';
-import { Boxer, Gender, Fight, BoxingData, Opponent, BoxingStorage, BoxerAttributes, ClubFighters } from './types/boxing.d'
+import { Boxer, Gender, Fight, BoxingData, Opponent, BoxingStorage, BoxerAttributes, ClubFighters } from '@/types/boxing.d'
 export default {
   // props: ['fightCard', 'boxers'],
   props: {

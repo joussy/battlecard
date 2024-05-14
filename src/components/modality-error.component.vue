@@ -9,7 +9,7 @@
 </template>
 
 <script lang="ts">
-import { ModalityError, ModalityErrorType } from './types/modality.d'
+import { ModalityError, ModalityErrorType } from '../types/modality.d'
 
 export default {
     props: ['modalityError'],

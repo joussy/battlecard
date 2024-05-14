@@ -68,7 +68,7 @@
                       Éligible
                     </span> -->
                     <span v-for="modalityError in opponent.modalityErrors">
-                      <ModalityErrorView :modalityError="modalityError"></ModalityErrorView>
+                      <ModalityErrorComponent :modalityError="modalityError"></ModalityErrorComponent>
                     </span>
                   </span>
                   <span class="">
@@ -89,7 +89,7 @@
       </div>
       <div class="col-md-6">
         <FightCardView :fightCard="fightCard"></FightCardView>
-        <ClubStatisticsView :boxers="boxers" :fightCard="fightCard"></ClubStatisticsView>
+        <ClubStatisticsComponent :boxers="boxers" :fightCard="fightCard"></ClubStatisticsComponent>
       </div>
     </div>
   </div>
@@ -97,17 +97,17 @@
 
 <script lang="ts">
 import { ref, Ref } from 'vue';
-import { Boxer, Gender, Fight, BoxingData, Opponent, BoxingStorage, BoxerAttributes, ClubFighters } from './types/boxing.d'
-import { ModalityError, ModalityErrorType } from './types/modality.d'
-import { BeaModality } from './fightModality/BeaModality'
-import ModalityErrorView from "./ModalityErrorView.vue"
-import FightCardView from "./FightCardView.vue"
-import ClubStatisticsView from "./ClubStatisticsView.vue"
+import { Boxer, Gender, Fight, BoxingData, Opponent, BoxingStorage, BoxerAttributes, ClubFighters } from '@/types/boxing.d'
+import { ModalityError, ModalityErrorType } from '@/types/modality.d'
+import { BeaModality } from '@/fightModality/BeaModality'
+import ModalityErrorComponent from "@/components/modality-error.component.vue"
+import FightCardComponent from "@/components/fight-card.component.vue"
+import ClubStatisticsComponent from "@/components/club-statistics.component.vue"
 export default {
   components: {
-    ModalityErrorView,
-    FightCardView,
-    ClubStatisticsView
+    ModalityErrorComponent: ModalityErrorComponent,
+    FightCardView: FightCardComponent,
+    ClubStatisticsComponent: ClubStatisticsComponent
   },
   data() {
     let ret: BoxingData = {
