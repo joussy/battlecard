@@ -21,20 +21,15 @@
 <script lang="ts">
 import { ref, Ref } from 'vue';
 import { Boxer, Gender, Fight, BoxingData, Opponent, BoxingStorage, BoxerAttributes, ClubFighters } from '@/types/boxing.d'
+import { store } from '@/composables/fight.composable';
+
 export default {
-  // props: ['fightCard', 'boxers'],
-  props: {
-    fightCard:{
-      type: Object as () => Fight[],
-    },
-    boxers:{
-      type: Object as () => Boxer[],
-    }
-  },
   components: {
   },
   data() {
-    return {};
+    return {
+      store
+    };
   },
   methods: {
     groupBy<T>(list: T[], keyGetter: (x: T) => any): Map<string, T[]> {
@@ -51,12 +46,12 @@ export default {
       return map;
     },
     getClubFighters(): ClubFighters[] {
-      const clubs = this.groupBy(this.boxers as Boxer[], (x) => x.attributes.club);
+      const clubs = this.groupBy(this.store.boxers as Boxer[], (x) => x.attributes.club);
       const thisObj = this;
       const clubFighters: ClubFighters[] = Array.from(clubs.keys()).map(function (clubKey: string) {
         return {
           available: clubs.get(clubKey)?.length ?? 0,
-          selected: thisObj.fightCard?.filter(f => f.boxer1.attributes.club == clubKey || f.boxer2.attributes.club == clubKey).length,
+          selected: thisObj.store.fightCard.filter(f => f.boxer1.attributes.club == clubKey || f.boxer2.attributes.club == clubKey).length,
           clubName: clubKey,
         } as ClubFighters
       });
@@ -65,7 +60,3 @@ export default {
   },
 };
 </script>
-
-<style>
-/* Add your component-specific styles here */
-</style>

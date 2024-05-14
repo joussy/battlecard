@@ -57,5 +57,18 @@ export const store = reactive({
           this.fightCard.push({ boxer1, boxer2, modalityErrors: this.getOpponentModalityErrors(boxer1, boxer2) });
         }
       },
-  
+      computeBoxerOpponents() {
+        for (let [index, boxer] of this.boxers.entries()) {
+          boxer.opponents = this.boxers
+            .map((b) => <Opponent>{
+              weightDifference: Math.abs(boxer.attributes.weight - b.attributes.weight),
+              boxer: b,
+              modalityErrors: this.getOpponentModalityErrors(boxer, b),
+              isEligible: this.getOpponentModalityErrors(boxer, b).length == 0
+            })
+            .filter(o =>
+              !o.modalityErrors.some(modalityError => [ModalityErrorType.SAME_CLUB, ModalityErrorType.SAME_ID, ModalityErrorType.OPPOSITE_GENDER].includes(modalityError.type)))
+            .sort((a, b) => a.modalityErrors.length - b.modalityErrors.length);
+        }
+      }  
 });
