@@ -37,8 +37,8 @@
               <i class="bi" :class="boxer.collapsed ? 'bi-chevron-down' : 'bi-chevron-right'
                 "></i>
                 <span class="ml-2 mr-1">
-                <img v-if="boxer.attributes.gender == Gender.MALE" src="./assets/icons/male.svg" />
-                <img v-if="boxer.attributes.gender == Gender.FEMALE" src="./assets/icons/female.svg" />
+                <img v-if="boxer.attributes.gender == Gender.MALE" src="@/assets/icons/male.svg" />
+                <img v-if="boxer.attributes.gender == Gender.FEMALE" src="@/assets/icons/female.svg" />
             </span>
               {{ getBoxerDisplayName(boxer) }}
             </span>

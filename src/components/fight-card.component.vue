@@ -17,8 +17,8 @@
         <td>{{ getBoxerDisplayName(fight.boxer1) }}</td>
         <td>{{ getBoxerDisplayName(fight.boxer2) }}</td>
         <td>
-          <img v-if="fight.boxer1.attributes.gender == Gender.MALE" src="./assets/icons/male.svg" />
-          <img v-if="fight.boxer1.attributes.gender == Gender.FEMALE" src="./assets/icons/female.svg" />
+          <img v-if="fight.boxer1.attributes.gender == Gender.MALE" src="@/assets/icons/male.svg" />
+          <img v-if="fight.boxer1.attributes.gender == Gender.FEMALE" src="@/assets/icons/female.svg" />
         </td>
         <td>
           <span v-for="modalityError in fight.modalityErrors">
