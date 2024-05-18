@@ -61,7 +61,7 @@ export class BeaModality extends BaseModality {
     getCategory(boxer: BoxerAttributes, shortText: boolean): string {
         let category = "";
         const birthYear = boxer.birthDate.getFullYear();
-        var thisYear = new Date().getFullYear();
+        let thisYear = new Date().getFullYear();
         if (new Date().getMonth() > 8) {
             thisYear += 1;
         }

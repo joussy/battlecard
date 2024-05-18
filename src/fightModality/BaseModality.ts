@@ -3,7 +3,7 @@ import { IModality } from "./IModality";
 import { ModalityError } from "../types/modality";
 
 export abstract class BaseModality implements IModality {
-    abstract getCategory(boxer: BoxerAttributes): string;
+    abstract getCategory(boxer: BoxerAttributes, shortText: boolean): string;
     abstract getModalityProblems(boxer1: BoxerAttributes, boxer2: BoxerAttributes): ModalityError[];
     isEligible(boxer1: BoxerAttributes, boxer2: BoxerAttributes): boolean {
 
