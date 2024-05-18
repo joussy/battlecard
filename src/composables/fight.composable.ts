@@ -15,7 +15,7 @@ export const store = reactive({
         return this.fightCard.filter((f : Fight) => f.boxer1.attributes.id == boxer.attributes.id || f.boxer2.attributes.id == boxer.attributes.id).length
     },
     getBoxerDisplayName(boxer: Boxer): string {
-        return `${boxer.attributes.lastName} ${boxer.attributes.firstName}`;
+        return `${boxer.attributes.firstName} ${boxer.attributes.lastName}`;
     },
     isInFightCard(boxer: Boxer): boolean {
         return this.getNbFightsForBoxer(boxer) > 0

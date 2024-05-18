@@ -7,7 +7,7 @@
             </h5>
             <p class="card-text">
             <span>Nom | Prénom | Combats | Sexe | Poids | Club</span>
-            <textarea class="d-block w-50 mb-2" v-model="clipboard" />
+            <textarea class="d-block w-100 mb-2" v-model="clipboard" />
             <button class="btn btn-primary" @click="processClipboard()">Import</button>
             </p>
         </div>

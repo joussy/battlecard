@@ -7,7 +7,6 @@ import {formatDistance, differenceInDays} from "date-fns";
 export class BeaModality extends BaseModality {
     getModalityProblems(boxer1: BoxerAttributes, boxer2: BoxerAttributes): ModalityError[] {
         const errors : ModalityError[] = [];
-        console.log(differenceInDays(boxer1.birthDate, boxer2.birthDate))
         if (Math.abs(differenceInDays(boxer1.birthDate, boxer2.birthDate)) > (365 * 2)){
             //formatDistance
             errors.push({type: ModalityErrorType.AGE})
