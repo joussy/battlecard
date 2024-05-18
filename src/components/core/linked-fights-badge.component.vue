@@ -16,7 +16,7 @@ import { defineComponent } from 'vue';
 import { store } from '@/composables/fight.composable';
 
 export default defineComponent({
-    props: ['boxer'],
+    props: ['boxer', 'modalityError'],
     data() {
         return {
             store

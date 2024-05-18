@@ -23,9 +23,9 @@
                 <i>{{ opponent.attributes.categoryShortText }}</i>
             </div>
             <div>
-                <FightRecordBadgeComponent :boxer="opponent" />
-                <NbFightsBadgeComponent :boxer="opponent" />
-                <WeightBadgeComponent :boxer="opponent" />
+                <LinkedFightsBadgeComponent :boxer="opponent" />
+                <NbFightsBadgeComponent :boxer="opponent" :modalityError="store.getOpponentModalityError(boxer, opponent, ModalityErrorType.PRIZE_LIST)" />
+                <WeightBadgeComponent :boxer="opponent" :modalityError="store.getOpponentModalityError(boxer, opponent, ModalityErrorType.WEIGHT)" />
             </div>
         </div>
     </div>
@@ -36,7 +36,7 @@ import { defineComponent } from 'vue';
 import { Boxer, Gender, Fight, BoxingData, Opponent, BoxingStorage, BoxerAttributes, ClubFighters } from '@/types/boxing.d'
 import { ModalityError, ModalityErrorType } from '@/types/modality.d'
 import NbFightsBadgeComponent from "@/components/core/nb-fights-badge.component.vue"
-import FightRecordBadgeComponent from "@/components/core/fight-record-badge.component.vue"
+import LinkedFightsBadgeComponent from "@/components/core/linked-fights-badge.component.vue"
 import WeightBadgeComponent from "@/components/core/weight-badge.component.vue"
 
 import { store } from '@/composables/fight.composable';
@@ -45,7 +45,7 @@ export default defineComponent({
     props: ['boxer', 'opponent'],
     components: {
         NbFightsBadgeComponent: NbFightsBadgeComponent,
-        FightRecordBadgeComponent: FightRecordBadgeComponent,
+        LinkedFightsBadgeComponent: LinkedFightsBadgeComponent,
         WeightBadgeComponent: WeightBadgeComponent
     },
     data() {

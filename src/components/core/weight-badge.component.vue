@@ -1,5 +1,8 @@
 <template>
-    <span class="badge bg-light ml-2 pt-0 pb-0">
+    <span class="badge ml-2" :class="{
+        'bg-danger': modalityError,
+        'bg-light': !modalityError,
+    }">
         <img src="@/assets/icons/scale.svg" height="16" />
         {{ boxer.attributes.weight }}
     </span>
@@ -9,6 +12,6 @@
 import { defineComponent } from 'vue';
 
 export default defineComponent({
-    props: ['boxer'],
+    props: ['boxer', 'modalityError'],
 });
 </script>

@@ -41,6 +41,10 @@ export const store = reactive({
       getOpponentModalityErrors(boxer: Boxer, opponent: Boxer): ModalityError[] {
         return this.modality.getModalityProblems(boxer.attributes, opponent.attributes);
       },
+      getOpponentModalityError(boxer: Boxer, opponent: Boxer, modalityErrorType: ModalityErrorType): ModalityError | undefined {
+        return this.modality.getModalityProblems(boxer.attributes, opponent.attributes)
+          .find(m => m.type == modalityErrorType);
+      },
       canCompete(boxer1: Boxer, boxer2: Boxer): boolean {
         return !this.isCompeting(boxer1, boxer2);
       },
