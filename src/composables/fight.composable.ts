@@ -21,7 +21,7 @@ export const store = reactive({
         return this.getNbFightsForBoxer(boxer) > 0
     },
     removeFromFightCard(boxer1: Boxer, boxer2: Boxer): void {
-        let index = this.getFightId(boxer1, boxer2);
+        const index = this.getFightId(boxer1, boxer2);
         if (index != null) {
           this.removeFromFightCardByIndex(index);
         }
@@ -62,7 +62,7 @@ export const store = reactive({
         }
       },
       computeBoxerOpponents() {
-        for (let [index, boxer] of this.boxers.entries()) {
+        for (const [index, boxer] of this.boxers.entries()) {
           boxer.opponents = this.boxers
             .map((b) => <Opponent>{
               weightDifference: Math.abs(boxer.attributes.weight - b.attributes.weight),

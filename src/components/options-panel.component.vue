@@ -64,6 +64,7 @@ SERRANO	Amanda	8	F	57	Club1	8/4/2014	A0008
                         birthDate: parse(entry.birthDate, 'dd/MM/yyyy', new Date()),
                         nbFights: parseInt(entry.nbFights),
                         category: "",
+                        categoryShortText: "",
                         club: entry.club,
                         weight: parseInt(entry.weight),
                         gender: entry.gender == 'F' ? Gender.FEMALE : Gender.MALE,
