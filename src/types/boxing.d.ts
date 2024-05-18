@@ -17,6 +17,7 @@ export interface BoxerAttributes {
   club: string;
   nbFights: number;
   gender: Gender;
+  license: string;
 }
 
 export interface Opponent {

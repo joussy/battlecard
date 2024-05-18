@@ -2,11 +2,14 @@ import { Boxer, BoxerAttributes } from "../types/boxing";
 import { ModalityError, ModalityErrorType } from "../types/modality.d";
 import { BaseModality } from "./BaseModality";
 import { IModality } from "./IModality";
+import {formatDistance, differenceInDays} from "date-fns";
 
 export class BeaModality extends BaseModality {
     getModalityProblems(boxer1: BoxerAttributes, boxer2: BoxerAttributes): ModalityError[] {
         const errors : ModalityError[] = [];
-        if (boxer2.lastName.startsWith('S')){
+        console.log(differenceInDays(boxer1.birthDate, boxer2.birthDate))
+        if (Math.abs(differenceInDays(boxer1.birthDate, boxer2.birthDate)) > (365 * 2)){
+            //formatDistance
             errors.push({type: ModalityErrorType.AGE})
         }
         if (Math.abs(boxer1.weight - boxer2.weight) > 2){
