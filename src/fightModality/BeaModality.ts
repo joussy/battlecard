@@ -19,6 +19,20 @@ export class BeaModality extends BaseModality {
         "Junior 1", 
         "Junior 2"];
 
+        categoriesShortText = [
+            "P1", 
+            "P2",
+            "P3",
+            "P4",
+            "B1", 
+            "B2", 
+            "M1", 
+            "M2", 
+            "C1", 
+            "C2", 
+            "J1", 
+            "J2"];
+    
     getModalityProblems(boxer1: BoxerAttributes, boxer2: BoxerAttributes): ModalityError[] {
         const errors : ModalityError[] = [];
         if (Math.abs(differenceInDays(boxer1.birthDate, boxer2.birthDate)) > (365 * 2)){
@@ -44,7 +58,7 @@ export class BeaModality extends BaseModality {
         return errors;
     }
 
-    getCategory(boxer: BoxerAttributes): string {
+    getCategory(boxer: BoxerAttributes, shortText: boolean): string {
         let category = "";
         const birthYear = boxer.birthDate.getFullYear();
         var thisYear = new Date().getFullYear();
@@ -54,7 +68,7 @@ export class BeaModality extends BaseModality {
         const delta = thisYear - birthYear - 7;
 
         if (delta >= 0 && delta < this.categories.length){
-            category = this.categories[delta];
+            category = shortText ? this.categoriesShortText[delta] : this.categories[delta];
         } else {
             category = "Adulte Loisir"
         }

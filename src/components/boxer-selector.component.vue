@@ -11,50 +11,55 @@
         </button>
     </div>
     <div class="card" v-for="(boxer, index) in store.boxers" :key="boxer.attributes.id">
-        <div class="card-header d-flex pt-0 pb-1" role="tab" @click="toggleCollapse(index)" :class="{ collapsed: !boxer.collapsed }">
-            <span>
-                <i class="bi" :class="boxer.collapsed ? 'bi-chevron-down' : 'bi-chevron-right'"></i>
-            </span>
-            <span class="ml-2 flex-grow-1">
-                <div>
-                    <span class="mr-1">
-                        <img v-if="boxer.attributes.gender == Gender.MALE" src="@/assets/icons/male.svg" height="17" />
-                        <img v-if="boxer.attributes.gender == Gender.FEMALE" src="@/assets/icons/female.svg" height="17" />
-                    </span>
-                    {{ store.getBoxerDisplayName(boxer) }}
+        <div class="card-header pt-0 pb-1" role="tab" @click="toggleCollapse(index)" :class="{ collapsed: !boxer.collapsed }">
+            <div>
+                <div class="d-flex justify-content-between">
+                    <div class="">
+                        <i class="bi" :class="boxer.collapsed ? 'bi-chevron-down' : 'bi-chevron-right'"></i>
+                        {{ store.getBoxerDisplayName(boxer) }}
+                    </div>
+                    <div class="font-italic text-right" style="font-size: 14px;">
+                        {{ boxer.attributes.club }}
+                    </div>
                 </div>
-                <div>
-                    {{ boxer.attributes.category }}
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <span class="mr-1">
+                            <img v-if="boxer.attributes.gender == Gender.MALE" src="@/assets/icons/male.svg" height="17" />
+                            <img v-if="boxer.attributes.gender == Gender.FEMALE" src="@/assets/icons/female.svg" height="17" />
+                        </span>
+                        <span class="d-none d-sm-inline d-md-inline d-lg-inline d-xl-inline">
+                            <i>{{ boxer.attributes.category }}</i>
+                        </span>
+                        <span class="d-inline d-sm-none">
+                            <i>{{ boxer.attributes.categoryShortText }}</i>
+                        </span>
+                    </div>
+                    <div class="">
+                        <span class="badge" :class="{
+                            'bg-success': store.getNbFightsForBoxer(boxer) < 2,
+                            'bg-warning': store.getNbFightsForBoxer(boxer) == 2,
+                            'bg-danger': store.getNbFightsForBoxer(boxer) > 2,
+                            'd-none': store.getNbFightsForBoxer(boxer) < 1
+                        }">
+                            {{ store.getNbFightsForBoxer(boxer) }}
+                            <i class="bi bi-link"></i>
+                        </span>
+                        <span class="badge bg-light ml-2 pt-0 pb-0">
+                            <img src="@/assets/icons/medal.svg" height="16" />
+                            {{ boxer.attributes.nbFights }}
+                        </span>
+                        <span class="badge bg-light ml-2 pt-0 pb-0">
+                            <img src="@/assets/icons/scale.svg" height="16" />
+                            {{ boxer.attributes.weight }}
+                        </span>
+                        <span class="badge bg-light ml-2 pt-0 pb-0">
+                            🥊
+                            {{ boxer.opponents.filter(o => o.isEligible).length }}/{{ boxer.opponents.length }}
+                        </span>
+                    </div>
                 </div>
-            </span>
-            <span>
-             <div class="text-right">
-                <span style="font-size: 14px;" class="font-italic">{{ boxer.attributes.club }}</span>
-             </div>
-             <div>
-                    <span class="badge" :class="{
-                        'bg-success': store.getNbFightsForBoxer(boxer) < 2,
-                        'bg-warning': store.getNbFightsForBoxer(boxer) == 2,
-                        'bg-danger': store.getNbFightsForBoxer(boxer) > 2,
-                        'invisible': store.getNbFightsForBoxer(boxer) < 1
-                    }">
-                        {{ store.getNbFightsForBoxer(boxer) }}
-                        <i class="bi bi-link"></i>
-                    </span>
-                    <span class="badge bg-light ml-2 pt-0 pb-0">
-                        <img src="@/assets/icons/medal.svg" height="16" />
-                        {{ boxer.attributes.nbFights }}
-                    </span>
-                    <span class="badge bg-light ml-2 pt-0 pb-0">
-                        <img src="@/assets/icons/scale.svg" height="16" />
-                        {{ boxer.attributes.weight }}
-                    </span>
-                    <span class="badge bg-light ml-2 pt-0 pb-0">
-                        🥊
-                        {{ boxer.opponents.filter(o => o.isEligible).length }}/{{ boxer.opponents.length }}
-                    </span>
-                </div>
-            </span>
+            </div>
         </div>
         <div :id="'collapse-' + index" v-show="!boxer.collapsed" class="collapse" :class="{ show: !boxer.collapsed }">
             <div class="card-body">

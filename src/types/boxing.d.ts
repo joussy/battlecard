@@ -14,6 +14,7 @@ export interface BoxerAttributes {
   birthDate: Date;
   weight: number;
   category: string;
+  categoryShortText: string;
   club: string;
   nbFights: number;
   gender: Gender;
