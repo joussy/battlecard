@@ -22,6 +22,7 @@
 import { ref, Ref } from 'vue';
 import { Boxer, Gender, Fight, BoxingData, Opponent, BoxingStorage, BoxerAttributes, ClubFighters } from '@/types/boxing.d'
 import { store } from '@/composables/fight.composable';
+import { groupBy } from '@/utils/arrayUtils'
 
 export default {
   components: {
@@ -32,21 +33,8 @@ export default {
     };
   },
   methods: {
-    groupBy<T>(list: T[], keyGetter: (x: T) => any): Map<string, T[]> {
-      const map = new Map();
-      list.forEach((item: any) => {
-        const key = keyGetter(item);
-        const collection = map.get(key);
-        if (!collection) {
-          map.set(key, [item]);
-        } else {
-          collection.push(item);
-        }
-      });
-      return map;
-    },
     getClubFighters(): ClubFighters[] {
-      const clubs = this.groupBy(this.store.boxers as Boxer[], (x) => x.attributes.club);
+      const clubs = groupBy(this.store.boxers as Boxer[], (x) => x.attributes.club);
       const thisObj = this;
       const clubFighters: ClubFighters[] = Array.from(clubs.keys()).map(function (clubKey: string) {
         return {

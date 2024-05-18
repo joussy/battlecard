@@ -18,6 +18,7 @@ import { defineComponent } from 'vue';
 import { Boxer, Gender, Fight, BoxingData, Opponent, BoxingStorage, BoxerAttributes, ClubFighters } from '@/types/boxing.d'
 import { store } from '@/composables/fight.composable';
 import { ModalityError, ModalityErrorType } from '@/types/modality.d'
+import { tsvToJson } from '@/utils/csvUtils';
 
 export default defineComponent({
     data() {
@@ -39,7 +40,7 @@ SERRANO	Amanda	8	F	57	Club1
 },
     methods: {
     processClipboard() {
-        let ret: any = this.tsvToJson(this.clipboard, [
+        let ret: any = tsvToJson(this.clipboard, [
             'lastName',
             'firstName',
             'nbFights',
@@ -66,25 +67,6 @@ SERRANO	Amanda	8	F	57	Club1
             });
         }
         this.store.computeBoxerOpponents();
-    },
-    tsvToJson(tsvText: string, headers: string[]): object {
-      //Split all the text into seperate lines on new lines and carriage return feeds
-      var allTextLines = tsvText.split(/\r\n|\n/);
-      //Split per line on tabs and commas
-      // var headers = allTextLines[0].split(/\t|,/);
-      var lines = [];
-
-      for (var i = 0; i < allTextLines.length; i++) {
-        var data = allTextLines[i].split(/\t|,|;/);
-
-        var row: any = {};
-        for (var j = 0; j < headers.length; j++) {
-          row[headers[j]] = data[j];
-        }
-        lines.push(row);
-      }
-
-      return lines;
     }
 }
 });
