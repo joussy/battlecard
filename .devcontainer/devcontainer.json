@@ -4,9 +4,9 @@
   "customizations": {
     "vscode": {
       "extensions": [
-		"Vue.volar",
-		"ms-edgedevtools.vscode-edge-devtools"
-	]
+        "Vue.volar",
+        "ms-edgedevtools.vscode-edge-devtools"
+      ]
     }
   },
   "postCreateCommand": "npm install"

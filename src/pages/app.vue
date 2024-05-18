@@ -2,7 +2,7 @@
   <div class="container mt-2">
     <div class="row">
       <div class="col-md-12 mb-4">
-        <UploadComponent></UploadComponent>
+        <UploadComponent />
       </div>
     </div>
     <div class="row">
@@ -31,7 +31,6 @@ import { store } from '@/composables/fight.composable';
 
 export default defineComponent({
   components: {
-    ModalityErrorComponent: ModalityErrorComponent,
     FightCardComponent: FightCardComponent,
     ClubStatisticsComponent: ClubStatisticsComponent,
     UploadComponent: UploadComponent,
