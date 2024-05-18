@@ -35,24 +35,10 @@
                             <i>{{ boxer.attributes.categoryShortText }}</i>
                         </span>
                     </div>
-                    <div class="">
-                        <span class="badge" :class="{
-                            'bg-success': store.getNbFightsForBoxer(boxer) < 2,
-                            'bg-warning': store.getNbFightsForBoxer(boxer) == 2,
-                            'bg-danger': store.getNbFightsForBoxer(boxer) > 2,
-                            'd-none': store.getNbFightsForBoxer(boxer) < 1
-                        }">
-                            {{ store.getNbFightsForBoxer(boxer) }}
-                            <i class="bi bi-link"></i>
-                        </span>
-                        <span class="badge bg-light ml-2 pt-0 pb-0">
-                            <img src="@/assets/icons/medal.svg" height="16" />
-                            {{ boxer.attributes.nbFights }}
-                        </span>
-                        <span class="badge bg-light ml-2 pt-0 pb-0">
-                            <img src="@/assets/icons/scale.svg" height="16" />
-                            {{ boxer.attributes.weight }}
-                        </span>
+                    <div class="">                        
+                        <FightRecordBadgeComponent :boxer="boxer" />
+                        <NbFightsBadgeComponent :boxer="boxer" />
+                        <WeightBadgeComponent :boxer="boxer" />
                         <span class="badge bg-light ml-2 pt-0 pb-0">
                             🥊
                             {{ boxer.opponents.filter(o => o.isEligible).length }}/{{ boxer.opponents.length }}
@@ -65,27 +51,7 @@
             <div class="card-body">
                 <ul class="list-group">
                     <li class="list-group-item d-flex" v-for="opponent in boxer.opponents">
-                        <span class="flex-grow-1">
-                            <span class="mr-1" :class="{ '	text-danger': !opponent.isEligible }">{{
-                                store.getBoxerDisplayName(opponent.boxer) }}
-                            </span>
-                            <!-- <span v-if="opponent.isEligible" class="badge bg-success">
-                        Éligible
-                      </span> -->
-                            <span v-for="modalityError in opponent.modalityErrors">
-                                <ModalityErrorComponent :modalityError="modalityError"></ModalityErrorComponent>
-                            </span>
-                        </span>
-                        <span class="">
-                            <button v-if="store.canCompete(boxer, opponent.boxer)"
-                                @click="store.addToFightCard(boxer, opponent.boxer)" class="btn btn-success btn-sm">
-                                <i class="bi bi-person-plus-fill"></i>
-                            </button>
-                            <button v-if="store.isCompeting(boxer, opponent.boxer)"
-                                @click="store.removeFromFightCard(boxer, opponent.boxer)" class="btn btn-danger btn-sm">
-                                <i class="bi bi-person-dash-fill"></i>
-                            </button>
-                        </span>
+                        <OpponentTileComponent :boxer="boxer" :opponent="opponent.boxer"/>
                     </li>
                 </ul>
             </div>
@@ -97,13 +63,19 @@
 import { defineComponent } from 'vue';
 import { Boxer, Gender, Fight, BoxingData, Opponent, BoxingStorage, BoxerAttributes, ClubFighters } from '@/types/boxing.d'
 import { ModalityError, ModalityErrorType } from '@/types/modality.d'
-import ModalityErrorComponent from "@/components/core/modality-error.component.vue"
+import OpponentTileComponent from "@/components/opponent-tile.component.vue"
+import NbFightsBadgeComponent from "@/components/core/nb-fights-badge.component.vue"
+import FightRecordBadgeComponent from "@/components/core/fight-record-badge.component.vue"
+import WeightBadgeComponent from "@/components/core/weight-badge.component.vue"
 
 import { store } from '@/composables/fight.composable';
 
 export default defineComponent({
     components: {
-        ModalityErrorComponent: ModalityErrorComponent
+        OpponentTileComponent: OpponentTileComponent,
+        NbFightsBadgeComponent: NbFightsBadgeComponent,
+        FightRecordBadgeComponent: FightRecordBadgeComponent,
+        WeightBadgeComponent: WeightBadgeComponent
     },
     data() {
         let ret = {
