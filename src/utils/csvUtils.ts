@@ -1,4 +1,4 @@
-export function tsvToJson(tsvText: string, headers: string[]): object {
+export function tsvToJson(tsvText: string, headers: string[]): any[] {
     //Split all the text into seperate lines on new lines and carriage return feeds
     var allTextLines = tsvText.split(/\r\n|\n/);
     //Split per line on tabs and commas

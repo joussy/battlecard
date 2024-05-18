@@ -21,10 +21,9 @@
 import { defineComponent } from 'vue';
 import { Boxer, Gender, Fight, BoxingData, Opponent, BoxingStorage, BoxerAttributes, ClubFighters } from '@/types/boxing.d'
 import { ModalityError, ModalityErrorType } from '@/types/modality.d'
-import ModalityErrorComponent from "@/components/core/modality-error.component.vue"
 import FightCardComponent from "@/components/fight-card.component.vue"
 import ClubStatisticsComponent from "@/components/club-statistics.component.vue"
-import UploadComponent from "@/components/upload.component.vue";
+import UploadComponent from "@/components/options-panel.component.vue";
 import BoxerSelectorComponent from "@/components/boxer-selector.component.vue";
 
 import { store } from '@/composables/fight.composable';
