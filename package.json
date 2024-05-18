@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "volar-preview-vite",
     "build": "vue-tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "lint": "node_modules/eslint/bin/eslint.js 'src/**/*.{js,vue}'"
   },
   "dependencies": {
     "bootstrap": "4.6.1",
@@ -16,6 +17,8 @@
   "devDependencies": {
     "@codesandbox/vue-preview": "^0.1.1-alpha.16",
     "@vitejs/plugin-vue": "^4.5.0",
+    "eslint": "^9.3.0",
+    "eslint-plugin-vue": "^9.26.0",
     "typescript": "^5.3.2",
     "vite": "^5.0.4",
     "vue-tsc": "^1.8.24"
