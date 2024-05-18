@@ -12,14 +12,20 @@
     </div>
     <div class="card" v-for="(boxer, index) in store.boxers" :key="boxer.attributes.id">
         <div class="card-header d-flex pt-0 pb-1" role="tab" @click="toggleCollapse(index)" :class="{ collapsed: !boxer.collapsed }">
-            <span class="flex-grow-1">
-                <i class="bi" :class="boxer.collapsed ? 'bi-chevron-down' : 'bi-chevron-right'
-                    "></i>
-                <span class="ml-2 mr-1">
-                    <img v-if="boxer.attributes.gender == Gender.MALE" src="@/assets/icons/male.svg" height="17" />
-                    <img v-if="boxer.attributes.gender == Gender.FEMALE" src="@/assets/icons/female.svg" height="17" />
-                </span>
-                {{ store.getBoxerDisplayName(boxer) }}
+            <span>
+                <i class="bi" :class="boxer.collapsed ? 'bi-chevron-down' : 'bi-chevron-right'"></i>
+            </span>
+            <span class="ml-2 flex-grow-1">
+                <div>
+                    <span class="mr-1">
+                        <img v-if="boxer.attributes.gender == Gender.MALE" src="@/assets/icons/male.svg" height="17" />
+                        <img v-if="boxer.attributes.gender == Gender.FEMALE" src="@/assets/icons/female.svg" height="17" />
+                    </span>
+                    {{ store.getBoxerDisplayName(boxer) }}
+                </div>
+                <div>
+                    {{ boxer.attributes.category }}
+                </div>
             </span>
             <span>
              <div class="text-right">

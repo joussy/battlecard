@@ -5,6 +5,20 @@ import { IModality } from "./IModality";
 import {formatDistance, differenceInDays} from "date-fns";
 
 export class BeaModality extends BaseModality {
+    categories = [
+        "Poussin 1", 
+        "Poussin 2",
+        "Poussin 3",
+        "Poussin 4",
+        "Benjamin 1", 
+        "Benjamin 2", 
+        "Minime 1", 
+        "Minime 2", 
+        "Cadet 1", 
+        "Cadet 2", 
+        "Junior 1", 
+        "Junior 2"];
+
     getModalityProblems(boxer1: BoxerAttributes, boxer2: BoxerAttributes): ModalityError[] {
         const errors : ModalityError[] = [];
         if (Math.abs(differenceInDays(boxer1.birthDate, boxer2.birthDate)) > (365 * 2)){
@@ -28,5 +42,23 @@ export class BeaModality extends BaseModality {
         }
 
         return errors;
+    }
+
+    getCategory(boxer: BoxerAttributes): string {
+        let category = "";
+        const birthYear = boxer.birthDate.getFullYear();
+        var thisYear = new Date().getFullYear();
+        if (new Date().getMonth() > 8) {
+            thisYear += 1;
+        }
+        const delta = thisYear - birthYear - 7;
+
+        if (delta >= 0 && delta < this.categories.length){
+            category = this.categories[delta];
+        } else {
+            category = "Adulte Loisir"
+        }
+
+        return category;
     }
 }

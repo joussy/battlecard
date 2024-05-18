@@ -2,7 +2,10 @@
     <span v-if="modalityError.type == ModalityErrorType.WEIGHT">
         <img src="@/assets/icons/scale.svg" />
     </span>
-    <span v-if="modalityError.type == ModalityErrorType.AGE" class="badge bg-danger">Age</span>
+    <!-- <span v-if="modalityError.type == ModalityErrorType.AGE" class="badge bg-danger">Age</span> -->
+    <span v-if="modalityError.type == ModalityErrorType.AGE">
+        <img src="@/assets/icons/birthday-cake.svg" />
+    </span>
     <span v-if="modalityError.type == ModalityErrorType.PRIZE_LIST">
         <img src="@/assets/icons/medal.svg" />
     </span>

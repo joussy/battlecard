@@ -28,14 +28,14 @@ export default defineComponent({
             Gender: Gender,
             // LastName	FirstName	Fights		Sex	Weight	Club	Birthdate   License
             clipboard: `
-JOSHUA	Anthony	1	H	50	Club1	1/1/1989	A0001
-FURY	Tyson	2	H	51	Club2	2/1/1990	B0002
-TYSON	Mike	3	H	52	Club3	3/2/1991	C0003
-STARR	Joey	4	H	53	Club4	4/2/1992	D0004
-MONTANA	Tony	5	H	90	Club5	5/3/1993	E0005
-NICOLSON	Skye	6	F	55	Club6	6/3/1994	F0006
-TAYLOR	Katie	7	F	56	Club7	7/4/1995	G0007
-SERRANO	Amanda	8	F	57	Club1	8/4/1996	A0008
+JOSHUA	Anthony	1	H	50	Club1	1/1/2010	A0001
+FURY	Tyson	2	H	51	Club2	2/1/2010	B0002
+TYSON	Mike	3	H	52	Club3	3/2/2011	C0003
+STARR	Joey	4	H	53	Club4	4/2/2011	D0004
+MONTANA	Tony	5	H	90	Club5	5/3/2012	E0005
+NICOLSON	Skye	6	F	55	Club6	6/3/2012	F0006
+TAYLOR	Katie	7	F	56	Club7	7/4/2013	G0007
+SERRANO	Amanda	8	F	57	Club1	8/4/2014	A0008
       `.trim()
         };
     },

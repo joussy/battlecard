@@ -69,6 +69,7 @@ export const store = reactive({
             .filter(o =>
               !o.modalityErrors.some(modalityError => [ModalityErrorType.SAME_CLUB, ModalityErrorType.SAME_ID, ModalityErrorType.OPPOSITE_GENDER].includes(modalityError.type)))
             .sort((a, b) => a.modalityErrors.length - b.modalityErrors.length);
+            boxer.attributes.category = this.modality.getCategory(boxer.attributes);
         }
-      }  
+      }
 });
