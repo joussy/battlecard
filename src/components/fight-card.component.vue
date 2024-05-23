@@ -36,10 +36,7 @@
 </template>
 
 <script lang="ts">
-import { ref, Ref } from 'vue';
-import { Boxer, Gender, Fight, BoxingData, Opponent, BoxingStorage, BoxerAttributes, ClubFighters } from '@/types/boxing.d'
-import { ModalityError, ModalityErrorType } from '@/types/modality.d'
-import { BeaModality } from '@/fightModality/BeaModality'
+import { Boxer, Gender } from '@/types/boxing.d'
 import ModalityErrorComponent from "@/components/core/modality-error.component.vue"
 import { store } from '@/composables/fight.composable'
 export default {

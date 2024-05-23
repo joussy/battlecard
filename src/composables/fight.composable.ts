@@ -1,5 +1,6 @@
-import { ref , reactive} from 'vue'
-import { Boxer, Gender, Fight, BoxingData, Opponent, BoxingStorage, BoxerAttributes, ClubFighters } from '@/types/boxing.d'
+import { Ref, reactive, toRaw, watch, watchEffect} from 'vue'
+import { Boxer, Fight, Opponent } from '@/types/boxing.d'
+import { DataStorage, BoxerStorage, FightStorage } from '@/types/localstorage.d'
 import { ModalityError, ModalityErrorType } from '@/types/modality.d'
 import { BeaModality } from '@/fightModality/BeaModality'
 
@@ -78,3 +79,12 @@ export const store = reactive({
         }
       }
 });
+
+watchEffect(() => {
+    const localStorageData : DataStorage = {
+      boxers: store.boxers.map((b) : BoxerStorage => {return {attributes: toRaw(b.attributes), collapsed: b.collapsed}}),
+      fightCard: store.fightCard.map(f => { return { boxer1Id: f.boxer1.attributes.id, boxer2Id: f.boxer2.attributes.id } as FightStorage})
+    };
+    console.log(localStorageData);
+  }
+);

@@ -33,8 +33,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { Boxer, Gender, Fight, BoxingData, Opponent, BoxingStorage, BoxerAttributes, ClubFighters } from '@/types/boxing.d'
-import { ModalityError, ModalityErrorType } from '@/types/modality.d'
+import { ModalityErrorType } from '@/types/modality.d'
 import NbFightsBadgeComponent from "@/components/core/nb-fights-badge.component.vue"
 import LinkedFightsBadgeComponent from "@/components/core/linked-fights-badge.component.vue"
 import WeightBadgeComponent from "@/components/core/weight-badge.component.vue"

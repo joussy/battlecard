@@ -43,8 +43,8 @@ export interface BoxingData {
   boxers: Boxer[];
   clipboard: string;
   modality: IModality;
-  Gender: any;
-  ModalityErrorType: any;
+  Gender: Gender;
+  ModalityErrorType: ModalityErrorType;
 }
 
 export interface BoxingStorage {

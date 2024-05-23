@@ -20,7 +20,7 @@
 
 <script lang="ts">
 import { ref, Ref } from 'vue';
-import { Boxer, Gender, Fight, BoxingData, Opponent, BoxingStorage, BoxerAttributes, ClubFighters } from '@/types/boxing.d'
+import { Boxer, ClubFighters } from '@/types/boxing.d'
 import { store } from '@/composables/fight.composable';
 import { groupBy } from '@/utils/arrayUtils'
 
@@ -35,11 +35,10 @@ export default {
   methods: {
     getClubFighters(): ClubFighters[] {
       const clubs = groupBy(this.store.boxers as Boxer[], (x) => x.attributes.club);
-      const thisObj = this;
       const clubFighters: ClubFighters[] = Array.from(clubs.keys()).map(function (clubKey: string) {
         return {
           available: clubs.get(clubKey)?.length ?? 0,
-          selected: thisObj.store.fightCard.filter(f => f.boxer1.attributes.club == clubKey || f.boxer2.attributes.club == clubKey).length,
+          selected: store.fightCard.filter(f => f.boxer1.attributes.club == clubKey || f.boxer2.attributes.club == clubKey).length,
           clubName: clubKey,
         } as ClubFighters
       });

@@ -15,9 +15,8 @@
 </template>
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { Boxer, Gender, Fight, BoxingData, Opponent, BoxingStorage, BoxerAttributes, ClubFighters } from '@/types/boxing.d'
+import { Gender } from '@/types/boxing.d'
 import { store } from '@/composables/fight.composable';
-import { ModalityError, ModalityErrorType } from '@/types/modality.d'
 import { tsvToJson } from '@/utils/csvUtils';
 import { parse } from 'date-fns'
 

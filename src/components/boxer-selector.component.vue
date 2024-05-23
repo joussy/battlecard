@@ -61,8 +61,8 @@
   
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { Boxer, Gender, Fight, BoxingData, Opponent, BoxingStorage, BoxerAttributes, ClubFighters } from '@/types/boxing.d'
-import { ModalityError, ModalityErrorType } from '@/types/modality.d'
+import { Boxer, Gender } from '@/types/boxing.d'
+import { ModalityErrorType } from '@/types/modality.d'
 import OpponentTileComponent from "@/components/opponent-tile.component.vue"
 import NbFightsBadgeComponent from "@/components/core/nb-fights-badge.component.vue"
 import LinkedFightsBadgeComponent from "@/components/core/linked-fights-badge.component.vue"
@@ -97,10 +97,10 @@ export default defineComponent({
         //   this.fightCard = JSON.parse(localStorage.fightCard) || [];
         // }
         if (localStorage.boxing) {
-            const boxingStorage: BoxingStorage = JSON.parse(localStorage.boxing) || {};
-            this.store.boxers = boxingStorage.boxers.map<Boxer>((b) => {
-                return { attributes: b, collapsed: true, opponents: [] } as Boxer;
-            });
+            // const boxingStorage: BoxingStorage = JSON.parse(localStorage.boxing) || {};
+            // this.store.boxers = boxingStorage.boxers.map<Boxer>((b) => {
+            //     return { attributes: b, collapsed: true, opponents: [] } as Boxer;
+            // });
             this.store.computeBoxerOpponents();
         }
     },

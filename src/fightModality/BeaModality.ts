@@ -1,8 +1,7 @@
-import { Boxer, BoxerAttributes } from "../types/boxing";
+import { BoxerAttributes } from "../types/boxing";
 import { ModalityError, ModalityErrorType } from "../types/modality.d";
 import { BaseModality } from "./BaseModality";
-import { IModality } from "./IModality";
-import {formatDistance, differenceInDays} from "date-fns";
+import {differenceInDays} from "date-fns";
 
 export class BeaModality extends BaseModality {
     categories = [
