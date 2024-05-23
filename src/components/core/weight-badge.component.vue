@@ -15,9 +15,21 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { Boxer } from '@/types/boxing';
+import { ModalityError } from '@/types/modality';
+import { PropType, defineComponent } from 'vue';
 
 export default defineComponent({
-    props: ['boxer', 'modalityError'],
+    props: {
+        boxer:{
+            type: Object as PropType<Boxer>,
+            required: true
+        },
+        modalityError:{
+            type: Object as PropType<ModalityError>,
+            required: false,
+            default: null
+        }
+    }
 });
 </script>

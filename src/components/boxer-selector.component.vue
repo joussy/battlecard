@@ -4,30 +4,30 @@
       Fighters
     </h3>
     <button
-      @click="expandAll()"
       class="btn btn-secondary mb-3 ml-2"
+      @click="expandAll()"
     >
       <i class="bi bi-chevron-down" />
       /
       <i class="bi bi-chevron-right" />
     </button>
     <button
-      @click="store.clear()"
       class="btn btn-danger mb-3 ml-2"
+      @click="store.clear()"
     >
       <i class="bi bi-trash" />
     </button>
   </div>
   <div
+    v-for="(boxer, index) in store.boxers"
+    :key="boxer.attributes.id" 
     class="card"
-    v-for="(boxer, index) in store.boxers" 
-    :key="boxer.attributes.id"
   >
     <div
       class="card-header pt-0 pb-1"
       role="tab"
-      @click="toggleCollapse(index)"
       :class="{ collapsed: !boxer.collapsed }"
+      @click="toggleCollapse(index)"
     >
       <div>
         <div class="d-flex justify-content-between">
@@ -79,16 +79,16 @@
       </div>
     </div>
     <div
-      :id="'collapse-' + index"
       v-show="!boxer.collapsed"
+      :id="'collapse-' + index"
       class="collapse"
       :class="{ show: !boxer.collapsed }"
     >
       <div class="card-body">
         <ul class="list-group">
           <li
-            class="list-group-item d-flex"
             v-for="opponent in boxer.opponents"
+            class="list-group-item d-flex"
           >
             <OpponentTileComponent
               :boxer="boxer"

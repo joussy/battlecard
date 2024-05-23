@@ -12,10 +12,16 @@
 </template>
 
 <script lang="ts">
-import { ModalityErrorType } from '@/types/modality.d'
+import { ModalityError, ModalityErrorType } from '@/types/modality.d'
+import { PropType } from 'vue';
 
 export default {
-    props: ['modalityError'],
+    props: {
+        modalityError:{
+            type: Object as PropType<ModalityError>,
+            required: true
+        }
+    },
     data() {
         return {
             ModalityErrorType: ModalityErrorType,

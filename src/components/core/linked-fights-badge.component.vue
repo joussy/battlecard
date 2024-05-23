@@ -14,12 +14,24 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { PropType, defineComponent } from 'vue';
 
 import { store } from '@/composables/fight.composable';
+import { Boxer } from '@/types/boxing';
+import { ModalityError } from '@/types/modality';
 
 export default defineComponent({
-    props: ['boxer', 'modalityError'],
+    props: {
+        boxer:{
+            type: Object as PropType<Boxer>,
+            required: true
+        },
+        modalityError:{
+            type: Object as PropType<ModalityError>,
+            required: false,
+            default: null
+        }
+    },
     data() {
         return {
             store

@@ -46,8 +46,8 @@
         </td>
         <td>
           <button
-            @click="store.removeFromFightCardByIndex(index)"
             class="btn btn-danger btn-sm ms-2"
+            @click="store.removeFromFightCardByIndex(index)"
           >
             <i class="bi bi-person-dash-fill" />
           </button>

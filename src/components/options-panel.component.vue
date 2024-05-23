@@ -10,8 +10,8 @@
       <p class="card-text">
         <span>Nom | Prénom | Combats | Sexe | Poids | Club</span>
         <textarea
-          class="d-block w-100 mb-2"
           v-model="clipboard"
+          class="d-block w-100 mb-2"
         />
         <button
           class="btn btn-primary"
