@@ -3,7 +3,8 @@ module.exports = {
         'eslint:recommended', 
         'plugin:@typescript-eslint/recommended',
         "plugin:vue/base",
-        "plugin:vue/vue3-essential"
+        "plugin:vue/vue3-essential",
+        "plugin:vue/vue3-strongly-recommended"
     ],
     plugins: ['@typescript-eslint'],
     rules: {

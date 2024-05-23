@@ -7,11 +7,11 @@
     </div>
     <div class="row">
       <div class="col-md-6 mb-3">
-        <BoxerSelectorComponent></BoxerSelectorComponent>
+        <BoxerSelectorComponent />
       </div>
       <div class="col-md-6">
-        <FightCardComponent></FightCardComponent>
-        <ClubStatisticsComponent></ClubStatisticsComponent>
+        <FightCardComponent />
+        <ClubStatisticsComponent />
       </div>
     </div>
   </div>

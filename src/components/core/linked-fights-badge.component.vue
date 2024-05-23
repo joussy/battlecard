@@ -1,13 +1,16 @@
 <template>
-    <span class="badge" :class="{
-        'bg-success': store.getNbFightsForBoxer(boxer) < 2,
-        'bg-warning': store.getNbFightsForBoxer(boxer) == 2,
-        'bg-danger': store.getNbFightsForBoxer(boxer) > 2,
-        'd-none': store.getNbFightsForBoxer(boxer) < 1
-    }">
-        {{ store.getNbFightsForBoxer(boxer) }}
-        <i class="bi bi-link"></i>
-    </span>
+  <span
+    class="badge"
+    :class="{
+      'bg-success': store.getNbFightsForBoxer(boxer) < 2,
+      'bg-warning': store.getNbFightsForBoxer(boxer) == 2,
+      'bg-danger': store.getNbFightsForBoxer(boxer) > 2,
+      'd-none': store.getNbFightsForBoxer(boxer) < 1
+    }"
+  >
+    {{ store.getNbFightsForBoxer(boxer) }}
+    <i class="bi bi-link" />
+  </span>
 </template>
 
 <script lang="ts">

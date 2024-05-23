@@ -1,15 +1,26 @@
 <template>
-  <h3 class="mb-4">Clubs</h3>
+  <h3 class="mb-4">
+    Clubs
+  </h3>
   <table class="table table-sm">
     <thead>
       <tr>
-        <th scope="col">Club</th>
-        <th scope="col">Available</th>
-        <th scope="col">Fights</th>
+        <th scope="col">
+          Club
+        </th>
+        <th scope="col">
+          Available
+        </th>
+        <th scope="col">
+          Fights
+        </th>
       </tr>
     </thead>
     <tbody>
-      <tr v-for="(club, index) in getClubFighters()" :key="index">
+      <tr
+        v-for="(club, index) in getClubFighters()"
+        :key="index"
+      >
         <td>{{ club.clubName }}</td>
         <td>{{ club.available }}</td>
         <td>{{ club.selected }}</td>
@@ -19,8 +30,7 @@
 </template>
 
 <script lang="ts">
-import { ref, Ref } from 'vue';
-import { Boxer, ClubFighters } from '@/types/boxing.d'
+import { ClubFighters } from '@/types/boxing.d'
 import { store } from '@/composables/fight.composable';
 import { groupBy } from '@/utils/arrayUtils'
 
@@ -34,7 +44,7 @@ export default {
   },
   methods: {
     getClubFighters(): ClubFighters[] {
-      const clubs = groupBy(this.store.boxers as Boxer[], (x) => x.attributes.club);
+      const clubs = groupBy(this.store.boxers, (x) => x.attributes.club);
       const clubFighters: ClubFighters[] = Array.from(clubs.keys()).map(function (clubKey: string) {
         return {
           available: clubs.get(clubKey)?.length ?? 0,

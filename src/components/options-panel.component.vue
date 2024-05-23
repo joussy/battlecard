@@ -1,17 +1,27 @@
 <template>
-    <div class="card">
-        <div class="card-header"><i class="bi bi-gear-fill mr-1"></i>Options</div>
-        <div class="card-body">
-            <h5 class="card-title">
-                <i class="bi bi-clipboard mr-2"></i>Import from clipboard
-            </h5>
-            <p class="card-text">
-            <span>Nom | Prénom | Combats | Sexe | Poids | Club</span>
-            <textarea class="d-block w-100 mb-2" v-model="clipboard" />
-            <button class="btn btn-primary" @click="processClipboard()">Import</button>
-            </p>
-        </div>
+  <div class="card">
+    <div class="card-header">
+      <i class="bi bi-gear-fill mr-1" />Options
     </div>
+    <div class="card-body">
+      <h5 class="card-title">
+        <i class="bi bi-clipboard mr-2" />Import from clipboard
+      </h5>
+      <p class="card-text">
+        <span>Nom | Prénom | Combats | Sexe | Poids | Club</span>
+        <textarea
+          class="d-block w-100 mb-2"
+          v-model="clipboard"
+        />
+        <button
+          class="btn btn-primary"
+          @click="processClipboard()"
+        >
+          Import
+        </button>
+      </p>
+    </div>
+  </div>
 </template>
 <script lang="ts">
 import { defineComponent } from 'vue';

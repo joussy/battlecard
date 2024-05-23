@@ -1,4 +1,4 @@
-import { Ref, reactive, toRaw, watch, watchEffect} from 'vue'
+import { reactive, toRaw, watchEffect} from 'vue'
 import { Boxer, Fight, Opponent } from '@/types/boxing.d'
 import { DataStorage, BoxerStorage, FightStorage } from '@/types/localstorage.d'
 import { ModalityError, ModalityErrorType } from '@/types/modality.d'
@@ -63,7 +63,7 @@ export const store = reactive({
         }
       },
       computeBoxerOpponents() {
-        for (const [index, boxer] of this.boxers.entries()) {
+        for (const [, boxer] of this.boxers.entries()) {
           boxer.opponents = this.boxers
             .map((b) => <Opponent>{
               weightDifference: Math.abs(boxer.attributes.weight - b.attributes.weight),

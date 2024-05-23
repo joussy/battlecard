@@ -1,4 +1,4 @@
-import { Boxer, BoxerAttributes } from "../types/boxing";
+import { BoxerAttributes } from "../types/boxing";
 import { ModalityError } from "../types/modality";
 
 export interface IModality{
