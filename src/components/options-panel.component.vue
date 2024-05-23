@@ -19,6 +19,12 @@
         >
           Import
         </button>
+        <button
+          class="btn btn-danger ml-2"
+          @click="clearStore()"
+        >
+          Clear Local Storage
+        </button>
       </p>
     </div>
   </div>
@@ -82,6 +88,9 @@ SERRANO	Amanda	8	F	57	Club1	8/4/2014	A0008
                 });
             } 
             this.store.computeBoxerOpponents();
+        },
+        clearStore(){
+            localStorage.removeItem('store')
         }
     }
 });

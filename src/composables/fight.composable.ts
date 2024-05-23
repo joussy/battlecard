@@ -5,6 +5,7 @@ import { ModalityError, ModalityErrorType } from '@/types/modality.d'
 import { BeaModality } from '@/fightModality/BeaModality'
 
 export const store = reactive({
+    restored: false as boolean,
     fightCard: [] as Fight[],
     boxers: [] as Boxer[],
     modality: new BeaModality(),
@@ -80,11 +81,50 @@ export const store = reactive({
       }
 });
 
+export function loadStore(): void  {
+  console.log("loading store ... ")
+  const localStorageDataString = localStorage.getItem('store');
+  if (localStorageDataString) {
+    const localStorageData: DataStorage = JSON.parse(localStorageDataString);
+  
+    store.boxers = localStorageData.boxers.map((b) => {
+      return {
+        attributes: {
+          ...b.attributes,
+          birthDate: new Date(b.attributes.birthDate)
+        },
+        collapsed: b.collapsed
+      } as Boxer;
+    });
+    store.computeBoxerOpponents();
+    // Create a map of boxers by their id for quick lookup
+    const boxerMap = new Map(store.boxers.map(boxer => [boxer.attributes.id, boxer]));
+
+    for (const fight of localStorageData.fightCard) {
+      const boxer1 = boxerMap.get(fight.boxer1Id);
+      const boxer2 = boxerMap.get(fight.boxer2Id);
+      if (boxer1 && boxer2) {
+        store.addToFightCard(boxer1, boxer2);
+      }
+    }
+    console.log("store loaded")
+    console.log(localStorageData)
+  } else {
+    console.log("no store available ... ")
+  }
+  store.restored = true;
+}
+
 watchEffect(() => {
+    if (!store.restored){
+      return;
+    }
+
     const localStorageData : DataStorage = {
       boxers: store.boxers.map((b) : BoxerStorage => {return {attributes: toRaw(b.attributes), collapsed: b.collapsed}}),
       fightCard: store.fightCard.map(f => { return { boxer1Id: f.boxer1.attributes.id, boxer2Id: f.boxer2.attributes.id } as FightStorage})
     };
-    console.log(localStorageData);
+    localStorage.setItem('store', JSON.stringify(localStorageData));
+    console.log("store updated")
   }
 );

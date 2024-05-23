@@ -23,7 +23,7 @@ import FightCardComponent from "@/components/fight-card.component.vue"
 import ClubStatisticsComponent from "@/components/club-statistics.component.vue"
 import UploadComponent from "@/components/options-panel.component.vue";
 import BoxerSelectorComponent from "@/components/boxer-selector.component.vue";
-
+import { loadStore } from '@/composables/fight.composable';
 
 export default defineComponent({
   components: {
@@ -32,8 +32,9 @@ export default defineComponent({
     UploadComponent: UploadComponent,
     BoxerSelectorComponent: BoxerSelectorComponent
   },
-  methods: {
-  },
+  mounted() {
+      loadStore();
+    }
 });
 </script>
 
