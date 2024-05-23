@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "volar-preview-vite",
+    "dev": "vite",
     "build": "vue-tsc && vite build",
     "preview": "vite preview",
     "lint": "node_modules/eslint/bin/eslint.js 'src/**/*.{js,vue,ts}'"
