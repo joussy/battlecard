@@ -41,6 +41,10 @@
           :boxer="opponent"
           :modality-error="store.getOpponentModalityError(boxer, opponent, ModalityErrorType.WEIGHT)"
         />
+        <AgeBadgeComponent
+          :boxer="opponent"
+          :modality-error="store.getOpponentModalityError(boxer, opponent, ModalityErrorType.AGE)"
+        />
       </div>
     </div>
   </div>
@@ -53,6 +57,7 @@ import { Boxer } from '@/types/boxing.d'
 import NbFightsBadgeComponent from "@/components/core/nb-fights-badge.component.vue"
 import LinkedFightsBadgeComponent from "@/components/core/linked-fights-badge.component.vue"
 import WeightBadgeComponent from "@/components/core/weight-badge.component.vue"
+import AgeBadgeComponent from "@/components/core/age-badge.component.vue"
 
 import { store } from '@/composables/fight.composable';
 
@@ -60,7 +65,8 @@ export default defineComponent({
     components: {
         NbFightsBadgeComponent: NbFightsBadgeComponent,
         LinkedFightsBadgeComponent: LinkedFightsBadgeComponent,
-        WeightBadgeComponent: WeightBadgeComponent
+        WeightBadgeComponent: WeightBadgeComponent,
+        AgeBadgeComponent: AgeBadgeComponent
     },
     props: {
         boxer:{
