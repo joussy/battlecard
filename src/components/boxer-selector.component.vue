@@ -130,36 +130,6 @@ export default defineComponent({
 
         return ret;
     },
-    mounted() {
-        // if (localStorage.boxers) {
-        //   this.boxers = JSON.parse(localStorage.boxers) || [];
-        //   this.boxers = this.boxers.map(b => b.opponents)
-        // }
-        // if (localStorage.fightCard) {
-        //   this.fightCard = JSON.parse(localStorage.fightCard) || [];
-        // }
-        if (localStorage.boxing) {
-            // const boxingStorage: BoxingStorage = JSON.parse(localStorage.boxing) || {};
-            // this.store.boxers = boxingStorage.boxers.map<Boxer>((b) => {
-            //     return { attributes: b, collapsed: true, opponents: [] } as Boxer;
-            // });
-            this.store.computeBoxerOpponents();
-        }
-    },
-    // watch: {
-    //     boxers(newBoxers: Boxer[]) {
-            // let toStore = newBoxers.map<Boxer>((b) => {
-            //   let b1 = {...b};
-            //   b1.opponents = [];
-            //   return b1
-            // });
-        // },
-        // fightCard: {
-        //   handler(newFightCard) {
-        //     (localStorage.boxingStorage as BoxingStorage).fights
-        //   }, deep: true
-        // }
-    // },
     methods: {
 
         toggleCollapse(index: number): void {
