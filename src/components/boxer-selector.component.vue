@@ -28,7 +28,7 @@
     v-show="boxerAddMode"
     class="card"
   >
-    <BoxerAddComponent :boxer="null" />
+    <BoxerAddComponent />
   </div>
 
   <div

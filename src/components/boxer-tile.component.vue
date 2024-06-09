@@ -56,7 +56,7 @@
   </div>
   <div
     v-show="!boxer.collapsed"
-    :id="'collapse-' + boxer.id"
+    :id="'collapse-' + boxer.attributes.id"
     class="collapse"
     :class="{ show: !boxer.collapsed }"
   >

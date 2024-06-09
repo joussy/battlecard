@@ -115,8 +115,8 @@
 </template>
   
 <script lang="ts">
-import { PropType, defineComponent } from 'vue';
-import { Gender, Boxer } from '@/types/boxing.d'
+import { defineComponent } from 'vue';
+import { Gender } from '@/types/boxing.d'
 import { ModalityErrorType } from '@/types/modality.d'
 
 import { store } from '@/composables/fight.composable';
@@ -124,12 +124,12 @@ import { store } from '@/composables/fight.composable';
 export default defineComponent({
     components: {
     },
-    props: {
-        boxer:{
-            type: Object as PropType<Boxer>,
-            required: true
-        }
-    },
+    // props: {
+        // boxer:{
+        //     type: Object as PropType<Boxer>,
+        //     required: true
+        // }
+    // },
     data() {
         return {
             store,
