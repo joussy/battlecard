@@ -1,11 +1,11 @@
 <template>
   <div class="card">
     <div class="card-header">
-      <i class="bi bi-gear-fill mr-1" />Options
+      <i class="bi bi-gear-fill me-1" />Options
     </div>
     <div class="card-body">
       <h5 class="card-title">
-        <i class="bi bi-clipboard mr-2" />Import from clipboard
+        <i class="bi bi-clipboard me-2" />Import from clipboard
       </h5>
       <p class="card-text">
         <span>Nom | Prénom | Combats | Sexe | Poids | Club</span>
@@ -20,7 +20,7 @@
           Import
         </button>
         <button
-          class="btn btn-danger ml-2"
+          class="btn btn-danger ms-2"
           @click="clearStore()"
         >
           Clear Local Storage

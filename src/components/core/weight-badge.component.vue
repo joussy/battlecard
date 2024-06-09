@@ -1,9 +1,9 @@
 <template>
   <span
-    class="badge ml-2"
+    class="badge ms-2"
     :class="{
-      'bg-danger': modalityError,
-      'bg-light': !modalityError,
+      'text-bg-danger': modalityError,
+      'text-bg-light': !modalityError,
     }"
   >
     <img

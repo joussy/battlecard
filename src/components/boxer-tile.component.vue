@@ -23,7 +23,7 @@
       </div>
       <div class="d-flex justify-content-between">
         <div>
-          <span class="mr-1">
+          <span class="me-1">
             <img
               v-if="boxer.attributes.gender == Gender.MALE"
               src="@/assets/icons/male.svg"
@@ -42,11 +42,11 @@
             <i>{{ boxer.attributes.categoryShortText }}</i>
           </span>
         </div>
-        <div class="">                        
+        <div>
           <FightRecordBadgeComponent :boxer="boxer" />
           <NbFightsBadgeComponent :boxer="boxer" />
           <WeightBadgeComponent :boxer="boxer" />
-          <span class="badge bg-light ml-2 pt-0 pb-0">
+          <span class="badge text-bg-light ms-2 pt-0 pb-0">
             🥊
             {{ boxer.opponents.filter(o => o.isEligible).length }}/{{ boxer.opponents.length }}
           </span>

@@ -1,15 +1,15 @@
 <template>
-  <div class="mr-3">
+  <div class="me-3">
     <button
       v-if="store.canCompete(boxer, opponent)"
-      class="btn btn-success btn-sm"
+      class="btn btn-outline-success btn-sm"
       @click="store.addToFightCard(boxer, opponent)"
     >
       <i class="bi bi-person-plus-fill" />
     </button>
     <button
       v-if="store.isCompeting(boxer, opponent)"
-      class="btn btn-danger btn-sm"
+      class="btn btn-outline-danger btn-sm"
       @click="store.removeFromFightCard(boxer, opponent)"
     >
       <i class="bi bi-person-dash-fill" />
@@ -31,7 +31,7 @@
       <div>
         <i>{{ opponent.attributes.categoryShortText }}</i>
       </div>
-      <div>
+      <div class="grid gap-0 column-gap-3">
         <LinkedFightsBadgeComponent :boxer="opponent" />
         <NbFightsBadgeComponent
           :boxer="opponent"

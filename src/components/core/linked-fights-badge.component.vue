@@ -1,10 +1,10 @@
 <template>
   <span
-    class="badge"
+    class="badge ms-2"
     :class="{
-      'bg-success': store.getNbFightsForBoxer(boxer) < 2,
-      'bg-warning': store.getNbFightsForBoxer(boxer) == 2,
-      'bg-danger': store.getNbFightsForBoxer(boxer) > 2,
+      'text-bg-success': store.getNbFightsForBoxer(boxer) < 2,
+      'text-bg-warning': store.getNbFightsForBoxer(boxer) == 2,
+      'text-bg-danger': store.getNbFightsForBoxer(boxer) > 2,
       'd-none': store.getNbFightsForBoxer(boxer) < 1
     }"
   >
