@@ -1,41 +1,41 @@
 <template>
-  <div class="container mt-2">
-    <div class="row">
-      <div class="col-md-12 mb-4">
-        <UploadComponent />
-      </div>
+    <div class="container mt-2">
+        <div class="row">
+            <div class="col-md-12 mb-4">
+                <UploadComponent />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <BoxerSelectorComponent />
+            </div>
+            <div class="col-md-6">
+                <FightCardComponent />
+                <ClubStatisticsComponent />
+            </div>
+        </div>
     </div>
-    <div class="row">
-      <div class="col-md-6 mb-3">
-        <BoxerSelectorComponent />
-      </div>
-      <div class="col-md-6">
-        <FightCardComponent />
-        <ClubStatisticsComponent />
-      </div>
-    </div>
-  </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent } from "vue"
 import FightCardComponent from "@/components/fight-card.component.vue"
 import ClubStatisticsComponent from "@/components/club-statistics.component.vue"
-import UploadComponent from "@/components/options-panel.component.vue";
-import BoxerSelectorComponent from "@/components/boxer-selector.component.vue";
-import { loadStore } from '@/composables/fight.composable';
+import UploadComponent from "@/components/options-panel.component.vue"
+import BoxerSelectorComponent from "@/components/boxer-selector.component.vue"
+import { loadStore } from "@/composables/fight.composable"
 
 export default defineComponent({
-  components: {
-    FightCardComponent: FightCardComponent,
-    ClubStatisticsComponent: ClubStatisticsComponent,
-    UploadComponent: UploadComponent,
-    BoxerSelectorComponent: BoxerSelectorComponent
-  },
-  mounted() {
-      loadStore();
-    }
-});
+    components: {
+        FightCardComponent: FightCardComponent,
+        ClubStatisticsComponent: ClubStatisticsComponent,
+        UploadComponent: UploadComponent,
+        BoxerSelectorComponent: BoxerSelectorComponent,
+    },
+    mounted() {
+        loadStore()
+    },
+})
 </script>
 
 <style>
