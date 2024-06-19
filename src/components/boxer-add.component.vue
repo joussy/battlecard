@@ -1,5 +1,5 @@
 <template>
-    <form>
+    <VForm @submit="checkForm">
         <div class="mb-3">
             <label
                 for="lastname"
@@ -7,11 +7,13 @@
             >
                 Last Name
             </label>
-            <input
-                id="lastname"
+            <Field
+                name="lastname"
                 type="text"
                 class="form-control"
+                rules="required"
             />
+            <ErrorMessage name="lastname" />
         </div>
         <div class="mb-3">
             <label
@@ -21,7 +23,8 @@
                 First Name
             </label>
             <input
-                id="firstname"
+                v-model="firstname"
+                name="firstname"
                 type="text"
                 class="form-control"
             />
@@ -111,31 +114,61 @@
                 class="form-control"
             />
         </div>
-    </form>
+        <button
+            type="submit"
+            class="btn btn-primary"
+        >
+            Submit
+        </button>
+    </VForm>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue"
 import { Gender } from "@/types/boxing.d"
 import { ModalityErrorType } from "@/types/modality.d"
+import { Form, Field, ErrorMessage } from "vee-validate"
 
 import { store } from "@/composables/fight.composable"
+import { defineRule } from "vee-validate"
+import { required, email, min } from "@vee-validate/rules"
+// defineRule("required", required)
+// defineRule("email", email)
+// defineRule("min", min)
+defineRule("required", (value: string) => {
+    if (!value || !value.length) {
+        return "This field is required"
+    }
+    return true
+})
 
 export default defineComponent({
-    components: {},
+    components: {
+        VForm: Form,
+        Field: Field,
+        ErrorMessage,
+    },
     // props: {
     // boxer:{
     //     type: Object as PropType<Boxer>,
     //     required: true
     // }
     // },
+    emits: ["submit"],
     data() {
         return {
             store,
             Gender: Gender,
             ModalityErrorType: ModalityErrorType,
+            firstname: null as string | null,
         }
     },
-    methods: {},
+    onCreated() {},
+    methods: {
+        checkForm() {
+            // this.$emit("submit")
+            console.log("checkform")
+        },
+    },
 })
 </script>

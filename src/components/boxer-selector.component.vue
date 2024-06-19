@@ -26,7 +26,7 @@
         v-show="boxerAddMode"
         class="card"
     >
-        <BoxerAddComponent />
+        <BoxerAddComponent @submit="boxerAddMode = false" />
     </div>
 
     <div
