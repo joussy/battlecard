@@ -9,7 +9,10 @@
             </tr>
         </thead>
         <tbody>
-            <tr v-for="(club, index) in getClubFighters()" :key="index">
+            <tr
+                v-for="(club, index) in getClubFighters()"
+                :key="index"
+            >
                 <td>{{ club.clubName }}</td>
                 <td>{{ club.available }}</td>
                 <td>{{ club.selected }}</td>

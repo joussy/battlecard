@@ -12,15 +12,24 @@
             </tr>
         </thead>
         <tbody>
-            <tr v-for="(fight, index) in store.fightCard" :key="index">
+            <tr
+                v-for="(fight, index) in store.fightCard"
+                :key="index"
+            >
                 <th scope="row">
                     {{ index + 1 }}
                 </th>
                 <td>{{ store.getBoxerDisplayName(fight.boxer1) }}</td>
                 <td>{{ store.getBoxerDisplayName(fight.boxer2) }}</td>
                 <td>
-                    <img v-if="fight.boxer1.attributes.gender == Gender.MALE" src="@/assets/icons/male.svg" />
-                    <img v-if="fight.boxer1.attributes.gender == Gender.FEMALE" src="@/assets/icons/female.svg" />
+                    <img
+                        v-if="fight.boxer1.attributes.gender == Gender.MALE"
+                        src="@/assets/icons/male.svg"
+                    />
+                    <img
+                        v-if="fight.boxer1.attributes.gender == Gender.FEMALE"
+                        src="@/assets/icons/female.svg"
+                    />
                 </td>
                 <td>
                     <span v-for="modalityError in fight.modalityErrors">
@@ -28,7 +37,10 @@
                     </span>
                 </td>
                 <td>
-                    <button class="btn btn-outline-danger btn-sm ms-2" @click="store.removeFromFightCardByIndex(index)">
+                    <button
+                        class="btn btn-outline-danger btn-sm ms-2"
+                        @click="store.removeFromFightCardByIndex(index)"
+                    >
                         <i class="bi bi-person-dash-fill" />
                     </button>
                 </td>

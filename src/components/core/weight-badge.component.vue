@@ -6,7 +6,10 @@
             'text-bg-light': !modalityError,
         }"
     >
-        <img src="@/assets/icons/scale.svg" height="16" />
+        <img
+            src="@/assets/icons/scale.svg"
+            height="16"
+        />
         {{ boxer.attributes.weight }}
     </span>
 </template>

@@ -1,9 +1,17 @@
 <template>
     <div class="me-3">
-        <button v-if="store.canCompete(boxer, opponent)" class="btn btn-outline-success btn-sm" @click="store.addToFightCard(boxer, opponent)">
+        <button
+            v-if="store.canCompete(boxer, opponent)"
+            class="btn btn-outline-success btn-sm"
+            @click="store.addToFightCard(boxer, opponent)"
+        >
             <i class="bi bi-person-plus-fill" />
         </button>
-        <button v-if="store.isCompeting(boxer, opponent)" class="btn btn-outline-danger btn-sm" @click="store.removeFromFightCard(boxer, opponent)">
+        <button
+            v-if="store.isCompeting(boxer, opponent)"
+            class="btn btn-outline-danger btn-sm"
+            @click="store.removeFromFightCard(boxer, opponent)"
+        >
             <i class="bi bi-person-dash-fill" />
         </button>
     </div>
@@ -12,7 +20,10 @@
             <div class="">
                 {{ store.getBoxerDisplayName(opponent) }}
             </div>
-            <div class="font-italic text-right" style="font-size: 14px">
+            <div
+                class="font-italic text-right"
+                style="font-size: 14px"
+            >
                 {{ opponent.attributes.club }}
             </div>
         </div>
@@ -22,9 +33,18 @@
             </div>
             <div class="grid gap-0 column-gap-3">
                 <LinkedFightsBadgeComponent :boxer="opponent" />
-                <NbFightsBadgeComponent :boxer="opponent" :modality-error="store.getOpponentModalityError(boxer, opponent, ModalityErrorType.PRIZE_LIST)" />
-                <WeightBadgeComponent :boxer="opponent" :modality-error="store.getOpponentModalityError(boxer, opponent, ModalityErrorType.WEIGHT)" />
-                <AgeBadgeComponent :boxer="opponent" :modality-error="store.getOpponentModalityError(boxer, opponent, ModalityErrorType.AGE)" />
+                <NbFightsBadgeComponent
+                    :boxer="opponent"
+                    :modality-error="store.getOpponentModalityError(boxer, opponent, ModalityErrorType.PRIZE_LIST)"
+                />
+                <WeightBadgeComponent
+                    :boxer="opponent"
+                    :modality-error="store.getOpponentModalityError(boxer, opponent, ModalityErrorType.WEIGHT)"
+                />
+                <AgeBadgeComponent
+                    :boxer="opponent"
+                    :modality-error="store.getOpponentModalityError(boxer, opponent, ModalityErrorType.AGE)"
+                />
             </div>
         </div>
     </div>

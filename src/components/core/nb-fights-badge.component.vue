@@ -6,7 +6,10 @@
             'text-bg-light': !modalityError,
         }"
     >
-        <img src="@/assets/icons/medal.svg" height="16" />
+        <img
+            src="@/assets/icons/medal.svg"
+            height="16"
+        />
         {{ boxer.attributes.nbFights }}
     </span>
 </template>

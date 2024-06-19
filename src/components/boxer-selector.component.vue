@@ -1,23 +1,40 @@
 <template>
     <div class="d-flex">
         <h3 class="flex-grow-1">Fighters</h3>
-        <button class="btn btn-outline-secondary mb-3 ms-2" @click="expandAll()">
+        <button
+            class="btn btn-outline-secondary mb-3 ms-2"
+            @click="expandAll()"
+        >
             <i class="bi bi-chevron-down" />
             /
             <i class="bi bi-chevron-right" />
         </button>
-        <button class="btn btn-outline-danger mb-3 ms-2" @click="store.clear()">
+        <button
+            class="btn btn-outline-danger mb-3 ms-2"
+            @click="store.clear()"
+        >
             <i class="bi bi-trash" />
         </button>
-        <button class="btn btn-outline-success mb-3 ms-2" @click="boxerAddMode = !boxerAddMode">
+        <button
+            class="btn btn-outline-success mb-3 ms-2"
+            @click="boxerAddMode = !boxerAddMode"
+        >
             <i class="bi bi-person-add" />
         </button>
     </div>
-    <div v-show="boxerAddMode" class="card">
+    <div
+        v-show="boxerAddMode"
+        class="card"
+    >
         <BoxerAddComponent />
     </div>
 
-    <div v-for="boxer in store.boxers" v-show="!boxerAddMode" :key="boxer.attributes.id" class="card">
+    <div
+        v-for="boxer in store.boxers"
+        v-show="!boxerAddMode"
+        :key="boxer.attributes.id"
+        class="card"
+    >
         <BoxerTileComponent :boxer="boxer" />
     </div>
 </template>

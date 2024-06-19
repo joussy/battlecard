@@ -1,20 +1,39 @@
 <template>
-    <div class="card-header pt-0 pb-1" role="tab" :class="{ collapsed: !boxer.collapsed }" @click="toggleCollapse(boxer)">
+    <div
+        class="card-header pt-0 pb-1"
+        role="tab"
+        :class="{ collapsed: !boxer.collapsed }"
+        @click="toggleCollapse(boxer)"
+    >
         <div>
             <div class="d-flex justify-content-between">
                 <div class="">
-                    <i class="bi" :class="boxer.collapsed ? 'bi-chevron-down' : 'bi-chevron-right'" />
+                    <i
+                        class="bi"
+                        :class="boxer.collapsed ? 'bi-chevron-down' : 'bi-chevron-right'"
+                    />
                     {{ store.getBoxerDisplayName(boxer) }}
                 </div>
-                <div class="font-italic text-right" style="font-size: 14px">
+                <div
+                    class="font-italic text-right"
+                    style="font-size: 14px"
+                >
                     {{ boxer.attributes.club }}
                 </div>
             </div>
             <div class="d-flex justify-content-between">
                 <div>
                     <span class="me-1">
-                        <img v-if="boxer.attributes.gender == Gender.MALE" src="@/assets/icons/male.svg" height="17" />
-                        <img v-if="boxer.attributes.gender == Gender.FEMALE" src="@/assets/icons/female.svg" height="17" />
+                        <img
+                            v-if="boxer.attributes.gender == Gender.MALE"
+                            src="@/assets/icons/male.svg"
+                            height="17"
+                        />
+                        <img
+                            v-if="boxer.attributes.gender == Gender.FEMALE"
+                            src="@/assets/icons/female.svg"
+                            height="17"
+                        />
                     </span>
                     <span class="d-none d-sm-inline d-md-inline d-lg-inline d-xl-inline">
                         <i>{{ boxer.attributes.category }}</i>
@@ -35,11 +54,22 @@
             </div>
         </div>
     </div>
-    <div v-show="!boxer.collapsed" :id="'collapse-' + boxer.attributes.id" class="collapse" :class="{ show: !boxer.collapsed }">
+    <div
+        v-show="!boxer.collapsed"
+        :id="'collapse-' + boxer.attributes.id"
+        class="collapse"
+        :class="{ show: !boxer.collapsed }"
+    >
         <div class="card-body">
             <ul class="list-group">
-                <li v-for="opponent in boxer.opponents" class="list-group-item d-flex">
-                    <OpponentTileComponent :boxer="boxer" :opponent="opponent.boxer" />
+                <li
+                    v-for="opponent in boxer.opponents"
+                    class="list-group-item d-flex"
+                >
+                    <OpponentTileComponent
+                        :boxer="boxer"
+                        :opponent="opponent.boxer"
+                    />
                 </li>
             </ul>
         </div>

@@ -6,7 +6,10 @@
             'text-bg-light': !modalityError,
         }"
     >
-        <img src="@/assets/icons/birthday-cake.svg" height="16" />
+        <img
+            src="@/assets/icons/birthday-cake.svg"
+            height="16"
+        />
         {{ getBoxerAge() }}
     </span>
 </template>

@@ -5,9 +5,22 @@
             <h5 class="card-title"><i class="bi bi-clipboard me-2" />Import from clipboard</h5>
             <p class="card-text">
                 <span>Nom | Prénom | Combats | Sexe | Poids | Club</span>
-                <textarea v-model="clipboard" class="d-block w-100 mb-2" />
-                <button class="btn btn-primary" @click="processClipboard()">Import</button>
-                <button class="btn btn-danger ms-2" @click="clearStore()">Clear Local Storage</button>
+                <textarea
+                    v-model="clipboard"
+                    class="d-block w-100 mb-2"
+                />
+                <button
+                    class="btn btn-primary"
+                    @click="processClipboard()"
+                >
+                    Import
+                </button>
+                <button
+                    class="btn btn-danger ms-2"
+                    @click="clearStore()"
+                >
+                    Clear Local Storage
+                </button>
             </p>
         </div>
     </div>

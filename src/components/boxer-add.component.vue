@@ -1,36 +1,115 @@
 <template>
     <form>
         <div class="mb-3">
-            <label for="lastname" class="form-label"> Last Name </label>
-            <input id="lastname" type="text" class="form-control" />
+            <label
+                for="lastname"
+                class="form-label"
+            >
+                Last Name
+            </label>
+            <input
+                id="lastname"
+                type="text"
+                class="form-control"
+            />
         </div>
         <div class="mb-3">
-            <label for="firstname" class="form-label"> First Name </label>
-            <input id="firstname" type="text" class="form-control" />
+            <label
+                for="firstname"
+                class="form-label"
+            >
+                First Name
+            </label>
+            <input
+                id="firstname"
+                type="text"
+                class="form-control"
+            />
         </div>
         <div class="mb-3">
-            <div class="btn-group" role="group">
-                <input id="male" type="radio" class="btn-check" name="btnradio" autocomplete="off" />
-                <label class="btn btn-outline-primary" for="male"> Male </label>
-                <input id="female" type="radio" class="btn-check" name="btnradio" autocomplete="off" />
-                <label class="btn btn-outline-primary" for="female"> Female </label>
+            <div
+                class="btn-group"
+                role="group"
+            >
+                <input
+                    id="male"
+                    type="radio"
+                    class="btn-check"
+                    name="btnradio"
+                    autocomplete="off"
+                />
+                <label
+                    class="btn btn-outline-primary"
+                    for="male"
+                >
+                    Male
+                </label>
+                <input
+                    id="female"
+                    type="radio"
+                    class="btn-check"
+                    name="btnradio"
+                    autocomplete="off"
+                />
+                <label
+                    class="btn btn-outline-primary"
+                    for="female"
+                >
+                    Female
+                </label>
             </div>
         </div>
         <div class="mb-3 col-auto">
-            <label for="weight" class="form-label"> Weight </label>
-            <input id="weight" type="number" class="form-control" />
+            <label
+                for="weight"
+                class="form-label"
+            >
+                Weight
+            </label>
+            <input
+                id="weight"
+                type="number"
+                class="form-control"
+            />
         </div>
         <div class="mb-3 col-auto">
-            <label for="club" class="form-label"> Club </label>
-            <input id="club" type="text" class="form-control" />
+            <label
+                for="club"
+                class="form-label"
+            >
+                Club
+            </label>
+            <input
+                id="club"
+                type="text"
+                class="form-control"
+            />
         </div>
         <div class="mb-3 col-auto">
-            <label for="birthdate" class="form-label"> Date de naissance </label>
-            <input id="birthdate" type="date" class="form-control" />
+            <label
+                for="birthdate"
+                class="form-label"
+            >
+                Date de naissance
+            </label>
+            <input
+                id="birthdate"
+                type="date"
+                class="form-control"
+            />
         </div>
         <div class="mb-3 col-auto">
-            <label for="license" class="form-label"> License number </label>
-            <input id="license" type="text" class="form-control" />
+            <label
+                for="license"
+                class="form-label"
+            >
+                License number
+            </label>
+            <input
+                id="license"
+                type="text"
+                class="form-control"
+            />
         </div>
     </form>
 </template>
