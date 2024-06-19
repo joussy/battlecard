@@ -14,7 +14,9 @@ export const store = reactive({
         this.fightCard = []
     },
     getNbFightsForBoxer(boxer: Boxer): number {
-        return this.fightCard.filter((f: Fight) => f.boxer1.attributes.id == boxer.attributes.id || f.boxer2.attributes.id == boxer.attributes.id).length
+        return this.fightCard.filter(
+            (f: Fight) => f.boxer1.attributes.id == boxer.attributes.id || f.boxer2.attributes.id == boxer.attributes.id
+        ).length
     },
     getBoxerDisplayName(boxer: Boxer): string {
         return `${boxer.attributes.firstName} ${boxer.attributes.lastName}`
@@ -31,8 +33,10 @@ export const store = reactive({
     getFightId(boxer1: Boxer, boxer2: Boxer): number | null {
         const index = this.fightCard.findIndex(
             (fight: Fight) =>
-                (fight.boxer1.attributes.id === boxer1.attributes.id && fight.boxer2.attributes.id === boxer2.attributes.id) ||
-                (fight.boxer1.attributes.id === boxer2.attributes.id && fight.boxer2.attributes.id === boxer1.attributes.id)
+                (fight.boxer1.attributes.id === boxer1.attributes.id &&
+                    fight.boxer2.attributes.id === boxer2.attributes.id) ||
+                (fight.boxer1.attributes.id === boxer2.attributes.id &&
+                    fight.boxer2.attributes.id === boxer1.attributes.id)
         )
         return index < 0 ? null : index
     },
@@ -43,8 +47,14 @@ export const store = reactive({
     getOpponentModalityErrors(boxer: Boxer, opponent: Boxer): ModalityError[] {
         return this.modality.getModalityProblems(boxer.attributes, opponent.attributes)
     },
-    getOpponentModalityError(boxer: Boxer, opponent: Boxer, modalityErrorType: ModalityErrorType): ModalityError | undefined {
-        return this.modality.getModalityProblems(boxer.attributes, opponent.attributes).find((m) => m.type == modalityErrorType)
+    getOpponentModalityError(
+        boxer: Boxer,
+        opponent: Boxer,
+        modalityErrorType: ModalityErrorType
+    ): ModalityError | undefined {
+        return this.modality
+            .getModalityProblems(boxer.attributes, opponent.attributes)
+            .find((m) => m.type == modalityErrorType)
     },
     canCompete(boxer1: Boxer, boxer2: Boxer): boolean {
         return !this.isCompeting(boxer1, boxer2)
@@ -74,7 +84,16 @@ export const store = reactive({
                             isEligible: this.getOpponentModalityErrors(boxer, b).length == 0,
                         }
                 )
-                .filter((o) => !o.modalityErrors.some((modalityError) => [ModalityErrorType.SAME_CLUB, ModalityErrorType.SAME_ID, ModalityErrorType.OPPOSITE_GENDER].includes(modalityError.type)))
+                .filter(
+                    (o) =>
+                        !o.modalityErrors.some((modalityError) =>
+                            [
+                                ModalityErrorType.SAME_CLUB,
+                                ModalityErrorType.SAME_ID,
+                                ModalityErrorType.OPPOSITE_GENDER,
+                            ].includes(modalityError.type)
+                        )
+                )
                 .sort((a, b) => a.modalityErrors.length - b.modalityErrors.length)
             boxer.attributes.category = this.modality.getCategory(boxer.attributes, false)
             boxer.attributes.categoryShortText = this.modality.getCategory(boxer.attributes, true)

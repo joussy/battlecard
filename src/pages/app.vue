@@ -32,7 +32,7 @@ export default defineComponent({
         UploadComponent: UploadComponent,
         BoxerSelectorComponent: BoxerSelectorComponent,
     },
-    mounted() {
+    async mounted() {
         loadStore()
     },
 })

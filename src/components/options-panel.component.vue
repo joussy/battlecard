@@ -52,7 +52,16 @@ SERRANO	Amanda	8	F	57	Club1	8/4/2014	A0008
     },
     methods: {
         processClipboard() {
-            const ret = tsvToJson(this.clipboard, ["lastName", "firstName", "nbFights", "gender", "weight", "club", "birthDate", "license"])
+            const ret = tsvToJson(this.clipboard, [
+                "lastName",
+                "firstName",
+                "nbFights",
+                "gender",
+                "weight",
+                "club",
+                "birthDate",
+                "license",
+            ])
             this.store.clear()
             for (const [index, entry] of ret.entries()) {
                 // console.log(parse(entry.birthDate, 'dd/MM/yyyy', new Date()))

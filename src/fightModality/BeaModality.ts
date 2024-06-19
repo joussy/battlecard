@@ -4,7 +4,20 @@ import { BaseModality } from "./BaseModality"
 import { differenceInDays } from "date-fns"
 
 export class BeaModality extends BaseModality {
-    categories = ["Poussin 1", "Poussin 2", "Poussin 3", "Poussin 4", "Benjamin 1", "Benjamin 2", "Minime 1", "Minime 2", "Cadet 1", "Cadet 2", "Junior 1", "Junior 2"]
+    categories = [
+        "Poussin 1",
+        "Poussin 2",
+        "Poussin 3",
+        "Poussin 4",
+        "Benjamin 1",
+        "Benjamin 2",
+        "Minime 1",
+        "Minime 2",
+        "Cadet 1",
+        "Cadet 2",
+        "Junior 1",
+        "Junior 2",
+    ]
 
     categoriesShortText = ["P1", "P2", "P3", "P4", "B1", "B2", "M1", "M2", "C1", "C2", "J1", "J2"]
 

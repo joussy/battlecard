@@ -39,7 +39,9 @@ export default {
             const clubFighters: ClubFighters[] = Array.from(clubs.keys()).map(function (clubKey: string) {
                 return {
                     available: clubs.get(clubKey)?.length ?? 0,
-                    selected: store.fightCard.filter((f) => f.boxer1.attributes.club == clubKey || f.boxer2.attributes.club == clubKey).length,
+                    selected: store.fightCard.filter(
+                        (f) => f.boxer1.attributes.club == clubKey || f.boxer2.attributes.club == clubKey
+                    ).length,
                     clubName: clubKey,
                 } as ClubFighters
             })

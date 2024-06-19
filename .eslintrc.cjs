@@ -13,7 +13,7 @@ module.exports = {
     rules: {
         "prettier/prettier": "warn",
         "vue/require-v-for-key": "off",
-        "@typescript-eslint/no-unused-vars": "warn"
+        "@typescript-eslint/no-unused-vars": "warn",
     },
     parser: "vue-eslint-parser",
     parserOptions: {
