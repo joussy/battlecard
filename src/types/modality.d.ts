@@ -1,5 +1,5 @@
 export interface ModalityError {
-    type: ModalityErrorType;
+    type: ModalityErrorType
 }
 
 export enum ModalityErrorType {

@@ -1,8 +1,15 @@
 {
-    "eslint.validate": [
-      "javascript",
-      "javascriptreact",
-      "vue",
-      "typescript"
-    ]
+    "eslint.validate": ["javascript", "javascriptreact", "vue", "typescript"],
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "[javascript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[vue]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+    },
+    "[typescript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "prettier.singleAttributePerLine": true,
+    "editor.formatOnSave": true
 }
