@@ -61,10 +61,7 @@ export default defineComponent({
             boxerAddMode: false,
         }
     },
-    mounted() {
-        console.log(this.boxerAddMode)
-        console.log("sdfwefewf")
-    },
+    mounted() {},
     methods: {
         expandAll() {
             let collapse = true

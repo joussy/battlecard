@@ -56,6 +56,9 @@ export const store = reactive({
             .getModalityProblems(boxer.attributes, opponent.attributes)
             .find((m) => m.type == modalityErrorType)
     },
+    getClubs(): string[] {
+        return [...new Set(this.boxers.map((boxer) => boxer.attributes.club))]
+    },
     canCompete(boxer1: Boxer, boxer2: Boxer): boolean {
         return !this.isCompeting(boxer1, boxer2)
     },
@@ -102,7 +105,7 @@ export const store = reactive({
 })
 
 export function loadStore(): void {
-    console.log("loading store ... ")
+    console.debug("loading store ... ")
     const localStorageDataString = localStorage.getItem("store")
     if (localStorageDataString) {
         const localStorageData: DataStorage = JSON.parse(localStorageDataString)
@@ -127,10 +130,10 @@ export function loadStore(): void {
                 store.addToFightCard(boxer1, boxer2)
             }
         }
-        console.log("store loaded")
-        console.log(localStorageData)
+        console.debug("store loaded")
+        console.debug(localStorageData)
     } else {
-        console.log("no store available ... ")
+        console.debug("no store available ... ")
     }
     store.restored = true
 }
@@ -149,5 +152,5 @@ watchEffect(() => {
         }),
     }
     localStorage.setItem("store", JSON.stringify(localStorageData))
-    console.log("store updated")
+    console.debug("store updated")
 })

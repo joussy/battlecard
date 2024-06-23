@@ -10,7 +10,6 @@
     "lint": "node_modules/eslint/bin/eslint.js 'src/**/*.{js,vue,ts}'"
   },
   "dependencies": {
-    "@vee-validate/rules": "^4.13.1",
     "bootstrap": "5.3.3",
     "bootstrap-icons": "^1.11.2",
     "date-fns": "^3.6.0",

@@ -1,5 +1,8 @@
 <template>
-    <VForm @submit="checkForm">
+    <VForm
+        class=""
+        @submit="checkForm"
+    >
         <div class="mb-3">
             <label
                 for="lastname"
@@ -8,12 +11,23 @@
                 Last Name
             </label>
             <Field
+                v-slot="{ field, errors }"
                 name="lastname"
-                type="text"
-                class="form-control"
                 rules="required"
+            >
+                <input
+                    class="form-control"
+                    type="text"
+                    :class="{
+                        'is-invalid': errors.length > 0,
+                    }"
+                    v-bind="field"
+                />
+            </Field>
+            <ErrorMessage
+                name="lastname"
+                class="invalid-feedback"
             />
-            <ErrorMessage name="lastname" />
         </div>
         <div class="mb-3">
             <label
@@ -22,11 +36,24 @@
             >
                 First Name
             </label>
-            <input
-                v-model="firstname"
+            <Field
+                v-slot="{ field, errors }"
                 name="firstname"
                 type="text"
-                class="form-control"
+                rules="required"
+            >
+                <input
+                    class="form-control"
+                    type="text"
+                    :class="{
+                        'is-invalid': errors.length > 0,
+                    }"
+                    v-bind="field"
+                />
+            </Field>
+            <ErrorMessage
+                name="firstname"
+                class="invalid-feedback"
             />
         </div>
         <div class="mb-3">
@@ -62,43 +89,92 @@
                 </label>
             </div>
         </div>
-        <div class="mb-3 col-auto">
+        <div class="mb-3">
             <label
                 for="weight"
                 class="form-label"
             >
                 Weight
             </label>
-            <input
-                id="weight"
-                type="number"
-                class="form-control"
+            <Field
+                v-slot="{ field, errors }"
+                name="weight"
+                rules="weightRequired"
+            >
+                <input
+                    class="form-control"
+                    type="number"
+                    min="0"
+                    :class="{
+                        'is-invalid': errors.length > 0,
+                    }"
+                    v-bind="field"
+                />
+            </Field>
+            <ErrorMessage
+                name="weight"
+                class="invalid-feedback"
             />
         </div>
-        <div class="mb-3 col-auto">
+        <div class="mb-3">
             <label
                 for="club"
                 class="form-label"
             >
                 Club
             </label>
-            <input
-                id="club"
+            <Field
+                v-slot="{ field, errors }"
+                name="club"
                 type="text"
-                class="form-control"
+                rules="required"
+            >
+                <input
+                    class="form-control"
+                    type="text"
+                    list="club-list"
+                    :class="{
+                        'is-invalid': errors.length > 0,
+                    }"
+                    v-bind="field"
+                />
+                <datalist id="club-list">
+                    <option
+                        v-for="clubName in clubsAutoCompleteList"
+                        :value="clubName"
+                    ></option>
+                </datalist>
+            </Field>
+            <ErrorMessage
+                name="club"
+                class="invalid-feedback"
             />
         </div>
-        <div class="mb-3 col-auto">
+        <div class="mb-3">
             <label
                 for="birthdate"
                 class="form-label"
             >
-                Date de naissance
+                Birth date
             </label>
-            <input
-                id="birthdate"
-                type="date"
-                class="form-control"
+            <Field
+                v-slot="{ field, errors }"
+                name="birthdate"
+                type="text"
+                rules="required"
+            >
+                <input
+                    class="form-control"
+                    type="date"
+                    :class="{
+                        'is-invalid': errors.length > 0,
+                    }"
+                    v-bind="field"
+                />
+            </Field>
+            <ErrorMessage
+                name="club"
+                class="invalid-feedback"
             />
         </div>
         <div class="mb-3 col-auto">
@@ -130,13 +206,19 @@ import { ModalityErrorType } from "@/types/modality.d"
 import { Form, Field, ErrorMessage } from "vee-validate"
 
 import { store } from "@/composables/fight.composable"
-import { defineRule } from "vee-validate"
-import { required, email, min } from "@vee-validate/rules"
-// defineRule("required", required)
-// defineRule("email", email)
-// defineRule("min", min)
+import { configure, defineRule } from "vee-validate"
+
+configure({
+    validateOnInput: true,
+})
 defineRule("required", (value: string) => {
     if (!value || !value.length) {
+        return "This field is required"
+    }
+    return true
+})
+defineRule("weightRequired", (value: number) => {
+    if (!value || value < 1) {
         return "This field is required"
     }
     return true
@@ -161,14 +243,14 @@ export default defineComponent({
             Gender: Gender,
             ModalityErrorType: ModalityErrorType,
             firstname: null as string | null,
+            clubsAutoCompleteList: [] as string[],
         }
     },
-    onCreated() {},
+    mounted() {
+        this.clubsAutoCompleteList = store.getClubs()
+    },
     methods: {
-        checkForm() {
-            // this.$emit("submit")
-            console.log("checkform")
-        },
+        checkForm() {},
     },
 })
 </script>
