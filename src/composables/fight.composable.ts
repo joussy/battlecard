@@ -1,5 +1,5 @@
 import { reactive, toRaw, watchEffect } from "vue"
-import { Boxer, Fight, Opponent } from "@/types/boxing.d"
+import { Boxer, BoxerAttributes, BoxerForm, Fight, Gender, Opponent } from "@/types/boxing.d"
 import { DataStorage, BoxerStorage, FightStorage } from "@/types/localstorage.d"
 import { ModalityError, ModalityErrorType } from "@/types/modality.d"
 import { BeaModality } from "@/fightModality/BeaModality"
@@ -75,7 +75,7 @@ export const store = reactive({
             this.fightCard.push({ boxer1, boxer2, modalityErrors: this.getOpponentModalityErrors(boxer1, boxer2) })
         }
     },
-    computeBoxerOpponents() {
+    computeBoxersOpponents() {
         for (const [, boxer] of this.boxers.entries()) {
             boxer.opponents = this.boxers
                 .map(
@@ -102,6 +102,28 @@ export const store = reactive({
             boxer.attributes.categoryShortText = this.modality.getCategory(boxer.attributes, true)
         }
     },
+    addBoxer(boxerForm: BoxerForm) {
+        const boxer: Boxer = {
+            attributes: {
+                birthDate: new Date(boxerForm.birthdate),
+                club: boxerForm.club,
+                firstName: boxerForm.firstname,
+                lastName: boxerForm.lastname,
+                gender: parseInt(boxerForm.gender) as Gender,
+                weight: parseInt(boxerForm.weight),
+                category: "",
+                categoryShortText: "",
+                id: 0,
+                license: "",
+                nbFights: 0,
+            },
+            collapsed: true,
+            opponents: [],
+        }
+        this.boxers.push(boxer)
+        this.computeBoxersOpponents()
+        console.log({ f: boxerForm, boxer })
+    },
 })
 
 export function loadStore(): void {
@@ -119,7 +141,7 @@ export function loadStore(): void {
                 collapsed: b.collapsed,
             } as Boxer
         })
-        store.computeBoxerOpponents()
+        store.computeBoxersOpponents()
         // Create a map of boxers by their id for quick lookup
         const boxerMap = new Map(store.boxers.map((boxer) => [boxer.attributes.id, boxer]))
 

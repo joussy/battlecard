@@ -26,7 +26,7 @@
         v-show="boxerAddMode"
         class="card"
     >
-        <BoxerAddComponent @submit="boxerAddMode = false" />
+        <BoxerAddComponent @submit="onBoxerAdd" />
     </div>
 
     <div
@@ -41,7 +41,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue"
-import { Gender } from "@/types/boxing.d"
+import { BoxerForm, Gender } from "@/types/boxing.d"
 import { ModalityErrorType } from "@/types/modality.d"
 import BoxerTileComponent from "@/components/boxer-tile.component.vue"
 import BoxerAddComponent from "@/components/boxer-add.component.vue"
@@ -71,6 +71,10 @@ export default defineComponent({
             for (let [index] of this.store.boxers.entries()) {
                 this.store.boxers[index].collapsed = collapse
             }
+        },
+        onBoxerAdd(newBoxer: BoxerForm) {
+            this.boxerAddMode = false
+            store.addBoxer(newBoxer)
         },
     },
 })

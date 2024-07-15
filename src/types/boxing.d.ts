@@ -66,3 +66,12 @@ export interface FightStore {
     removeFromFightCardByIndex(index: number): void
     getOpponentModalityErrors(boxer: Boxer, opponent: Boxer): ModalityError[]
 }
+
+export interface BoxerForm {
+    birthdate: string
+    club: string
+    firstname: string
+    gender: string
+    lastname: string
+    weight: string
+}

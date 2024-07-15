@@ -1,7 +1,7 @@
 <template>
     <VForm
         class=""
-        @submit="checkForm"
+        @submit="submitForm"
     >
         <div class="mb-3">
             <label
@@ -14,6 +14,7 @@
                 v-slot="{ field, errors }"
                 name="lastname"
                 rules="required"
+                value="lastnametest"
             >
                 <input
                     class="form-control"
@@ -41,6 +42,7 @@
                 name="firstname"
                 type="text"
                 rules="required"
+                value="firstnametest"
             >
                 <input
                     class="form-control"
@@ -56,17 +58,26 @@
                 class="invalid-feedback"
             />
         </div>
-        <div class="mb-3">
+        <div class="mb-3 is-invalid">
+            <!-- <Field
+                id="none"
+                value="female"
+                name="btnradio"
+                type="radio"
+                class=""
+                rules="genderRequired"
+            /> -->
             <div
                 class="btn-group"
                 role="group"
             >
-                <input
+                <Field
                     id="male"
+                    :value="Gender.MALE"
+                    name="gender"
                     type="radio"
                     class="btn-check"
-                    name="btnradio"
-                    autocomplete="off"
+                    rules="genderRequired"
                 />
                 <label
                     class="btn btn-outline-primary"
@@ -74,12 +85,13 @@
                 >
                     Male
                 </label>
-                <input
+                <Field
                     id="female"
+                    :value="Gender.FEMALE"
                     type="radio"
                     class="btn-check"
-                    name="btnradio"
-                    autocomplete="off"
+                    name="gender"
+                    rules="genderRequired"
                 />
                 <label
                     class="btn btn-outline-primary"
@@ -87,6 +99,10 @@
                 >
                     Female
                 </label>
+                <ErrorMessage
+                    name="gender"
+                    class="invalid-feedback"
+                />
             </div>
         </div>
         <div class="mb-3">
@@ -100,6 +116,7 @@
                 v-slot="{ field, errors }"
                 name="weight"
                 rules="weightRequired"
+                value="123"
             >
                 <input
                     class="form-control"
@@ -128,6 +145,7 @@
                 name="club"
                 type="text"
                 rules="required"
+                value="club13"
             >
                 <input
                     class="form-control"
@@ -162,6 +180,7 @@
                 name="birthdate"
                 type="text"
                 rules="required"
+                value="2000-12-11"
             >
                 <input
                     class="form-control"
@@ -201,7 +220,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue"
-import { Gender } from "@/types/boxing.d"
+import { Boxer, BoxerAttributes, BoxerForm, Gender } from "@/types/boxing.d"
 import { ModalityErrorType } from "@/types/modality.d"
 import { Form, Field, ErrorMessage } from "vee-validate"
 
@@ -219,6 +238,12 @@ defineRule("required", (value: string) => {
 })
 defineRule("weightRequired", (value: number) => {
     if (!value || value < 1) {
+        return "This field is required"
+    }
+    return true
+})
+defineRule("genderRequired", (value: string) => {
+    if (!value || value == "none") {
         return "This field is required"
     }
     return true
@@ -250,7 +275,9 @@ export default defineComponent({
         this.clubsAutoCompleteList = store.getClubs()
     },
     methods: {
-        checkForm() {},
+        submitForm(f: BoxerForm) {
+            this.$emit("submit", f)
+        },
     },
 })
 </script>
