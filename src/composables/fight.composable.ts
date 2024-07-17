@@ -103,6 +103,11 @@ export const store = reactive({
         }
     },
     addBoxer(boxerForm: BoxerForm) {
+        let newId = 0
+        if (this.boxers.length > 0) {
+            newId = Math.max(...this.boxers.map((b) => b.attributes.id)) + 1
+        }
+
         const boxer: Boxer = {
             attributes: {
                 birthDate: new Date(boxerForm.birthdate),
@@ -113,7 +118,7 @@ export const store = reactive({
                 weight: parseInt(boxerForm.weight),
                 category: "",
                 categoryShortText: "",
-                id: 0,
+                id: newId,
                 license: "",
                 nbFights: 0,
             },

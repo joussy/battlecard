@@ -23,7 +23,7 @@
         </button>
     </div>
     <div
-        v-show="boxerAddMode"
+        v-if="boxerAddMode"
         class="card"
     >
         <BoxerAddComponent @submit="onBoxerAdd" />
