@@ -1,5 +1,5 @@
 import { reactive, toRaw, watchEffect } from "vue"
-import { Boxer, BoxerAttributes, BoxerForm, Fight, Gender, Opponent } from "@/types/boxing.d"
+import { Boxer, BoxerForm, Fight, Gender, Opponent } from "@/types/boxing.d"
 import { DataStorage, BoxerStorage, FightStorage } from "@/types/localstorage.d"
 import { ModalityError, ModalityErrorType } from "@/types/modality.d"
 import { BeaModality } from "@/fightModality/BeaModality"

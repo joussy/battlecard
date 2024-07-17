@@ -220,9 +220,9 @@
 
 <script lang="ts">
 import { defineComponent } from "vue"
-import { Boxer, BoxerAttributes, BoxerForm, Gender } from "@/types/boxing.d"
+import { Gender } from "@/types/boxing.d"
 import { ModalityErrorType } from "@/types/modality.d"
-import { Form, Field, ErrorMessage } from "vee-validate"
+import { Form, Field, ErrorMessage, GenericObject } from "vee-validate"
 
 import { store } from "@/composables/fight.composable"
 import { configure, defineRule } from "vee-validate"
@@ -275,7 +275,7 @@ export default defineComponent({
         this.clubsAutoCompleteList = store.getClubs()
     },
     methods: {
-        submitForm(f: BoxerForm) {
+        submitForm(f: GenericObject) {
             this.$emit("submit", f)
         },
     },
