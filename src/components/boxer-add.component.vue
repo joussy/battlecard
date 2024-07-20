@@ -99,6 +99,28 @@
         </div>
         <div class="mb-3">
             <label
+                for="birthdate"
+                class="form-label"
+            >
+                Birth Date
+            </label>
+            <input
+                v-model="birthdate"
+                class="form-control"
+                type="date"
+                :class="{
+                    'is-invalid': errors.birthdate?.length ?? 0 > 0,
+                }"
+            />
+            <span
+                name="birthdate"
+                class="invalid-feedback"
+                >{{ errors.weight }}</span
+            >
+        </div>
+
+        <div class="mb-3">
+            <label
                 for="weight"
                 class="form-label"
             >
@@ -218,6 +240,7 @@ export default defineComponent({
                 license: "required",
                 club: "required",
                 gender: "genderRequired",
+                birthdate: "required",
             },
             initialValues: {
                 lastname: "lastnametest",
@@ -225,6 +248,7 @@ export default defineComponent({
                 weight: "123",
                 license: "licensetest",
                 club: "clubtest",
+                birthdate: "1990-09-21",
                 gender: Gender[Gender.FEMALE],
             },
         })
@@ -236,6 +260,7 @@ export default defineComponent({
         const [license] = defineField("license")
         const [club] = defineField("club")
         const [gender] = defineField("gender")
+        const [birthdate] = defineField("birthdate")
         const onSubmit = handleSubmit((values: GenericObject) => {
             emit("boxeradd", values)
         })
@@ -248,6 +273,7 @@ export default defineComponent({
             license,
             club,
             gender,
+            birthdate,
             clubsAutoCompleteList: [] as string[],
             Gender,
         }

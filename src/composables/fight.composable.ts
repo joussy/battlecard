@@ -119,7 +119,7 @@ export const store = reactive({
                 category: "",
                 categoryShortText: "",
                 id: newId,
-                license: "",
+                license: boxerForm.license,
                 nbFights: 0,
             },
             collapsed: true,

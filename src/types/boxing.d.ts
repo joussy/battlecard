@@ -74,4 +74,5 @@ export interface BoxerForm {
     gender: string
     lastname: string
     weight: string
+    license: string
 }
