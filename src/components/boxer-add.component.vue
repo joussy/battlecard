@@ -15,7 +15,7 @@
                 class="form-control"
                 type="text"
                 :class="{
-                    'is-invalid': errors.lastname?.length > 0,
+                    'is-invalid': errors.lastname?.length ?? 0 > 0,
                 }"
             />
             <span
@@ -36,7 +36,7 @@
                 class="form-control"
                 type="text"
                 :class="{
-                    'is-invalid': errors.firstname?.length > 0,
+                    'is-invalid': errors.firstname?.length ?? 0 > 0,
                 }"
             />
             <span
@@ -59,8 +59,8 @@
                 role="group"
             >
                 <input
+                    id="gender_1"
                     v-model="gender"
-                    id="btnradio1"
                     type="radio"
                     class="btn-check"
                     name="gender"
@@ -69,13 +69,13 @@
                 />
                 <label
                     class="btn btn-outline-primary"
-                    for="btnradio1"
+                    for="gender_1"
                     >Female</label
                 >
 
                 <input
+                    id="gender_2"
                     v-model="gender"
-                    id="btnradio2"
                     type="radio"
                     class="btn-check"
                     name="gender"
@@ -84,12 +84,12 @@
                 />
                 <label
                     class="btn btn-outline-primary"
-                    for="btnradio2"
+                    for="gender_2"
                     >Male</label
                 >
             </div>
             <div
-                v-if="errors.gender?.length > 0"
+                v-if="errors.gender?.length ?? 0 > 0"
                 name="btnradio"
                 class="invalid-feedback"
                 style="display: block !important"
@@ -109,7 +109,7 @@
                 class="form-control"
                 type="text"
                 :class="{
-                    'is-invalid': errors.weight?.length > 0,
+                    'is-invalid': errors.weight?.length ?? 0 > 0,
                 }"
             />
             <span
@@ -131,7 +131,7 @@
                 list="club-list"
                 type="text"
                 :class="{
-                    'is-invalid': errors.club?.length > 0,
+                    'is-invalid': errors.club?.length ?? 0 > 0,
                 }"
             />
             <datalist id="club-list">
@@ -158,7 +158,7 @@
                 class="form-control"
                 type="text"
                 :class="{
-                    'is-invalid': errors.license?.length > 0,
+                    'is-invalid': errors.license?.length ?? 0 > 0,
                 }"
             />
             <span
