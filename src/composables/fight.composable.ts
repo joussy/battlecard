@@ -114,7 +114,7 @@ export const store = reactive({
                 club: boxerForm.club,
                 firstName: boxerForm.firstname,
                 lastName: boxerForm.lastname,
-                gender: parseInt(boxerForm.gender) as Gender,
+                gender: boxerForm.gender == Gender[Gender.FEMALE] ? Gender.FEMALE : Gender.MALE,
                 weight: parseInt(boxerForm.weight),
                 category: "",
                 categoryShortText: "",
