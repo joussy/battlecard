@@ -4,7 +4,7 @@
         <div class="card-body">
             <h5 class="card-title"><i class="bi bi-clipboard me-2" />Import from clipboard</h5>
             <p class="card-text">
-                <span>Nom | Prénom | Combats | Sexe | Poids | Club</span>
+                <span>Last Name | First Name | Fights | Gender | Weight | Club | Birth Date | License</span>
                 <textarea
                     v-model="clipboard"
                     class="d-block w-100 mb-2"
@@ -29,8 +29,6 @@
 import { defineComponent } from "vue"
 import { Gender } from "@/types/boxing.d"
 import { store } from "@/composables/fight.composable"
-import { tsvToJson } from "@/utils/csvUtils"
-import { parse } from "date-fns"
 
 export default defineComponent({
     data() {
@@ -52,33 +50,7 @@ SERRANO	Amanda	8	F	57	Club1	8/4/2014	A0008
     },
     methods: {
         processClipboard() {
-            const ret = tsvToJson(this.clipboard, [
-                "lastName",
-                "firstName",
-                "nbFights",
-                "gender",
-                "weight",
-                "club",
-                "birthDate",
-                "license",
-            ])
-            for (const [, entry] of ret.entries()) {
-                const boxerAttributes = {
-                    id: 0,
-                    lastName: entry.lastName,
-                    firstName: entry.firstName,
-                    birthDate: parse(entry.birthDate, "dd/MM/yyyy", new Date()),
-                    nbFights: parseInt(entry.nbFights),
-                    category: "",
-                    categoryShortText: "",
-                    club: entry.club,
-                    weight: parseInt(entry.weight),
-                    gender: entry.gender == "F" ? Gender.FEMALE : Gender.MALE,
-                    license: entry.license,
-                }
-                this.store.addBoxer(boxerAttributes)
-            }
-            this.store.computeBoxersOpponents()
+            this.store.importFromCsv(this.clipboard)
         },
         clearStore() {
             localStorage.removeItem("store")

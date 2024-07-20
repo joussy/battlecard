@@ -21,6 +21,12 @@
         >
             <i class="bi bi-person-add" />
         </button>
+        <button
+            class="btn btn-outline-secondary mb-3 ms-2"
+            @click="downloadCsv"
+        >
+            <i class="bi bi-download" />
+        </button>
     </div>
     <div
         v-if="boxerAddMode"
@@ -76,6 +82,16 @@ export default defineComponent({
             this.boxerAddMode = false
             store.addBoxer(newBoxer)
             store.computeBoxersOpponents()
+        },
+        downloadCsv() {
+            const csv = store.getAvailableBoxersAsCsv()
+            const blob = new Blob([csv], { type: "text/csv" })
+            const elem = window.document.createElement("a")
+            elem.href = window.URL.createObjectURL(blob)
+            elem.download = "boxers.csv"
+            document.body.appendChild(elem)
+            elem.click()
+            document.body.removeChild(elem)
         },
     },
 })

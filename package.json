@@ -12,6 +12,7 @@
   "dependencies": {
     "bootstrap": "5.3.3",
     "bootstrap-icons": "^1.11.2",
+    "csv": "^6.3.9",
     "date-fns": "^3.6.0",
     "vee-validate": "^4.13.1",
     "vue": "^3.3.9"
