@@ -1,5 +1,8 @@
 <template>
-    <form>
+    <form
+        class=""
+        @submit="onSubmit"
+    >
         <div class="mb-3">
             <label
                 for="lastname"
@@ -8,10 +11,18 @@
                 Last Name
             </label>
             <input
-                id="lastname"
-                type="text"
+                v-model="lastname"
                 class="form-control"
+                type="text"
+                :class="{
+                    'is-invalid': errors.lastname?.length ?? 0 > 0,
+                }"
             />
+            <span
+                name="lastname"
+                class="invalid-feedback"
+                >{{ errors.lastname }}</span
+            >
         </div>
         <div class="mb-3">
             <label
@@ -21,45 +32,94 @@
                 First Name
             </label>
             <input
-                id="firstname"
-                type="text"
+                v-model="firstname"
                 class="form-control"
+                type="text"
+                :class="{
+                    'is-invalid': errors.firstname?.length ?? 0 > 0,
+                }"
             />
+            <span
+                name="firstname"
+                class="invalid-feedback"
+                >{{ errors.firstname }}</span
+            >
         </div>
         <div class="mb-3">
+            <div>
+                <label
+                    for="gender"
+                    class="form-label"
+                >
+                    Gender
+                </label>
+            </div>
             <div
                 class="btn-group"
                 role="group"
             >
                 <input
-                    id="male"
+                    id="gender_1"
+                    v-model="gender"
                     type="radio"
                     class="btn-check"
-                    name="btnradio"
+                    name="gender"
                     autocomplete="off"
+                    :value="Gender[Gender.FEMALE]"
                 />
                 <label
                     class="btn btn-outline-primary"
-                    for="male"
+                    for="gender_1"
+                    >Female</label
                 >
-                    Male
-                </label>
+
                 <input
-                    id="female"
+                    id="gender_2"
+                    v-model="gender"
                     type="radio"
                     class="btn-check"
-                    name="btnradio"
+                    name="gender"
                     autocomplete="off"
+                    :value="Gender[Gender.MALE]"
                 />
                 <label
                     class="btn btn-outline-primary"
-                    for="female"
+                    for="gender_2"
+                    >Male</label
                 >
-                    Female
-                </label>
+            </div>
+            <div
+                v-if="errors.gender?.length ?? 0 > 0"
+                name="btnradio"
+                class="invalid-feedback"
+                style="display: block !important"
+            >
+                {{ errors.gender }}
             </div>
         </div>
-        <div class="mb-3 col-auto">
+        <div class="mb-3">
+            <label
+                for="birthdate"
+                class="form-label"
+            >
+                Birth Date
+            </label>
+            <input
+                v-model="birthdate"
+                class="form-control"
+                type="date"
+                :class="{
+                    'is-invalid': errors.birthdate?.length ?? 0 > 0,
+                }"
+            />
+            <span
+                name="birthdate"
+                class="invalid-feedback"
+                >{{ errors.weight }}</span
+            >
+        </div>
+
+        <div class="mb-3">
             <label
                 for="weight"
                 class="form-label"
@@ -67,12 +127,20 @@
                 Weight
             </label>
             <input
-                id="weight"
-                type="number"
+                v-model="weight"
                 class="form-control"
+                type="text"
+                :class="{
+                    'is-invalid': errors.weight?.length ?? 0 > 0,
+                }"
             />
+            <span
+                name="weight"
+                class="invalid-feedback"
+                >{{ errors.weight }}</span
+            >
         </div>
-        <div class="mb-3 col-auto">
+        <div class="mb-3">
             <label
                 for="club"
                 class="form-label"
@@ -80,62 +148,143 @@
                 Club
             </label>
             <input
-                id="club"
+                v-model="club"
+                class="form-control"
+                list="club-list"
                 type="text"
-                class="form-control"
+                :class="{
+                    'is-invalid': errors.club?.length ?? 0 > 0,
+                }"
             />
-        </div>
-        <div class="mb-3 col-auto">
-            <label
-                for="birthdate"
-                class="form-label"
+            <datalist id="club-list">
+                <option
+                    v-for="clubName in clubsAutoCompleteList"
+                    :value="clubName"
+                ></option>
+            </datalist>
+            <span
+                name="club"
+                class="invalid-feedback"
+                >{{ errors.club }}</span
             >
-                Date de naissance
-            </label>
-            <input
-                id="birthdate"
-                type="date"
-                class="form-control"
-            />
         </div>
-        <div class="mb-3 col-auto">
+        <div class="mb-3">
             <label
                 for="license"
                 class="form-label"
             >
-                License number
+                License
             </label>
             <input
-                id="license"
-                type="text"
+                v-model="license"
                 class="form-control"
+                type="text"
+                :class="{
+                    'is-invalid': errors.license?.length ?? 0 > 0,
+                }"
             />
+            <span
+                name="license"
+                class="invalid-feedback"
+                >{{ errors.license }}</span
+            >
         </div>
+        <button
+            type="submit"
+            class="btn btn-primary"
+        >
+            Submit
+        </button>
     </form>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue"
-import { Gender } from "@/types/boxing.d"
-import { ModalityErrorType } from "@/types/modality.d"
-
 import { store } from "@/composables/fight.composable"
 
+import { configure, defineRule, GenericObject, useForm } from "vee-validate"
+import { Gender } from "@/types/boxing.d"
+
+configure({
+    validateOnInput: true,
+})
+defineRule("required", (value: string) => {
+    if (!value || !value.length) {
+        return "This field is required"
+    }
+    return true
+})
+defineRule("weightRequired", (value: number) => {
+    if (!value || value < 1) {
+        return "This field is required"
+    }
+    return true
+})
+defineRule("genderRequired", (value: string) => {
+    if (!value || value == "none") {
+        console.log("gender required")
+        return "This field is required"
+    }
+    return true
+})
 export default defineComponent({
     components: {},
-    // props: {
-    // boxer:{
-    //     type: Object as PropType<Boxer>,
-    //     required: true
-    // }
-    // },
-    data() {
+    emits: ["boxeradd"],
+    setup(_, { emit }) {
+        // Create the form
+        const { defineField, handleSubmit, errors } = useForm({
+            validationSchema: {
+                lastname: "required",
+                firstname: "required",
+                weight: "weightRequired",
+                license: "required",
+                club: "required",
+                gender: "genderRequired",
+                birthdate: "required",
+            },
+            initialValues: {
+                lastname: "lastnametest",
+                firstname: "firstnametest",
+                weight: "123",
+                license: "licensetest",
+                club: "clubtest",
+                birthdate: "1990-09-21",
+                gender: Gender[Gender.FEMALE],
+            },
+        })
+
+        // Define fields
+        const [lastname] = defineField("lastname")
+        const [firstname] = defineField("firstname")
+        const [weight] = defineField("weight")
+        const [license] = defineField("license")
+        const [club] = defineField("club")
+        const [gender] = defineField("gender")
+        const [birthdate] = defineField("birthdate")
+        const onSubmit = handleSubmit((values: GenericObject) => {
+            emit("boxeradd", values)
+        })
         return {
-            store,
-            Gender: Gender,
-            ModalityErrorType: ModalityErrorType,
+            onSubmit,
+            lastname,
+            errors,
+            firstname,
+            weight,
+            license,
+            club,
+            gender,
+            birthdate,
+            clubsAutoCompleteList: [] as string[],
+            Gender,
         }
     },
-    methods: {},
+    mounted() {
+        this.clubsAutoCompleteList = store.getClubs()
+    },
+    methods: {
+        onSubmitDo(values: GenericObject) {
+            this.$emit("boxeradd", values)
+        },
+    },
 })
 </script>

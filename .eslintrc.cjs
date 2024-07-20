@@ -14,6 +14,7 @@ module.exports = {
         "prettier/prettier": "warn",
         "vue/require-v-for-key": "off",
         "@typescript-eslint/no-unused-vars": "warn",
+        "vue/no-unused-vars": "warn",
     },
     parser: "vue-eslint-parser",
     parserOptions: {

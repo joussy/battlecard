@@ -23,10 +23,10 @@
         </button>
     </div>
     <div
-        v-show="boxerAddMode"
+        v-if="boxerAddMode"
         class="card"
     >
-        <BoxerAddComponent />
+        <BoxerAddComponent @boxeradd="onBoxerAdd" />
     </div>
 
     <div
@@ -41,7 +41,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue"
-import { Gender } from "@/types/boxing.d"
+import { BoxerForm, Gender } from "@/types/boxing.d"
 import { ModalityErrorType } from "@/types/modality.d"
 import BoxerTileComponent from "@/components/boxer-tile.component.vue"
 import BoxerAddComponent from "@/components/boxer-add.component.vue"
@@ -61,10 +61,7 @@ export default defineComponent({
             boxerAddMode: false,
         }
     },
-    mounted() {
-        console.log(this.boxerAddMode)
-        console.log("sdfwefewf")
-    },
+    mounted() {},
     methods: {
         expandAll() {
             let collapse = true
@@ -74,6 +71,10 @@ export default defineComponent({
             for (let [index] of this.store.boxers.entries()) {
                 this.store.boxers[index].collapsed = collapse
             }
+        },
+        onBoxerAdd(newBoxer: BoxerForm) {
+            this.boxerAddMode = false
+            store.addBoxer(newBoxer)
         },
     },
 })

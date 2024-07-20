@@ -83,7 +83,7 @@ SERRANO	Amanda	8	F	57	Club1	8/4/2014	A0008
                     },
                 })
             }
-            this.store.computeBoxerOpponents()
+            this.store.computeBoxersOpponents()
         },
         clearStore() {
             localStorage.removeItem("store")
