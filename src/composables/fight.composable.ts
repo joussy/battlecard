@@ -1,5 +1,5 @@
 import { reactive, toRaw, watchEffect } from "vue"
-import { Boxer, BoxerForm, Fight, Gender, Opponent } from "@/types/boxing.d"
+import { Boxer, BoxerAttributes, Fight, Opponent } from "@/types/boxing.d"
 import { DataStorage, BoxerStorage, FightStorage } from "@/types/localstorage.d"
 import { ModalityError, ModalityErrorType } from "@/types/modality.d"
 import { BeaModality } from "@/fightModality/BeaModality"
@@ -102,32 +102,21 @@ export const store = reactive({
             boxer.attributes.categoryShortText = this.modality.getCategory(boxer.attributes, true)
         }
     },
-    addBoxer(boxerForm: BoxerForm) {
-        let newId = 0
+    addBoxer(boxerAttributes: BoxerAttributes) {
+        console.log(boxerAttributes)
         if (this.boxers.length > 0) {
-            newId = Math.max(...this.boxers.map((b) => b.attributes.id)) + 1
+            boxerAttributes.id = Math.max(...this.boxers.map((b) => b.attributes.id)) + 1
+        } else {
+            boxerAttributes.id = 0
         }
 
         const boxer: Boxer = {
-            attributes: {
-                birthDate: new Date(boxerForm.birthdate),
-                club: boxerForm.club,
-                firstName: boxerForm.firstname,
-                lastName: boxerForm.lastname,
-                gender: boxerForm.gender == Gender[Gender.FEMALE] ? Gender.FEMALE : Gender.MALE,
-                weight: parseInt(boxerForm.weight),
-                category: "",
-                categoryShortText: "",
-                id: newId,
-                license: boxerForm.license,
-                nbFights: 0,
-            },
+            attributes: boxerAttributes,
             collapsed: true,
             opponents: [],
         }
         this.boxers.push(boxer)
         this.computeBoxersOpponents()
-        console.log({ f: boxerForm, boxer })
     },
 })
 

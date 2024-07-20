@@ -62,26 +62,21 @@ SERRANO	Amanda	8	F	57	Club1	8/4/2014	A0008
                 "birthDate",
                 "license",
             ])
-            this.store.clear()
-            for (const [index, entry] of ret.entries()) {
-                // console.log(parse(entry.birthDate, 'dd/MM/yyyy', new Date()))
-                this.store.boxers.push({
-                    collapsed: true,
-                    opponents: [],
-                    attributes: {
-                        id: index,
-                        lastName: entry.lastName,
-                        firstName: entry.firstName,
-                        birthDate: parse(entry.birthDate, "dd/MM/yyyy", new Date()),
-                        nbFights: parseInt(entry.nbFights),
-                        category: "",
-                        categoryShortText: "",
-                        club: entry.club,
-                        weight: parseInt(entry.weight),
-                        gender: entry.gender == "F" ? Gender.FEMALE : Gender.MALE,
-                        license: entry.license,
-                    },
-                })
+            for (const [, entry] of ret.entries()) {
+                const boxerAttributes = {
+                    id: 0,
+                    lastName: entry.lastName,
+                    firstName: entry.firstName,
+                    birthDate: parse(entry.birthDate, "dd/MM/yyyy", new Date()),
+                    nbFights: parseInt(entry.nbFights),
+                    category: "",
+                    categoryShortText: "",
+                    club: entry.club,
+                    weight: parseInt(entry.weight),
+                    gender: entry.gender == "F" ? Gender.FEMALE : Gender.MALE,
+                    license: entry.license,
+                }
+                this.store.addBoxer(boxerAttributes)
             }
             this.store.computeBoxersOpponents()
         },

@@ -41,7 +41,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue"
-import { BoxerForm, Gender } from "@/types/boxing.d"
+import { BoxerAttributes, Gender } from "@/types/boxing.d"
 import { ModalityErrorType } from "@/types/modality.d"
 import BoxerTileComponent from "@/components/boxer-tile.component.vue"
 import BoxerAddComponent from "@/components/boxer-add.component.vue"
@@ -72,9 +72,10 @@ export default defineComponent({
                 this.store.boxers[index].collapsed = collapse
             }
         },
-        onBoxerAdd(newBoxer: BoxerForm) {
+        onBoxerAdd(newBoxer: BoxerAttributes) {
             this.boxerAddMode = false
             store.addBoxer(newBoxer)
+            store.computeBoxersOpponents()
         },
     },
 })
