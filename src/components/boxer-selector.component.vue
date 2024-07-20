@@ -26,7 +26,7 @@
         v-if="boxerAddMode"
         class="card"
     >
-        <BoxerAddComponent @submit="onBoxerAdd" />
+        <BoxerAddComponent @boxeradd="onBoxerAdd" />
     </div>
 
     <div
