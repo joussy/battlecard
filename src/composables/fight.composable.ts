@@ -1,8 +1,10 @@
 import { reactive, toRaw, watchEffect } from "vue"
-import { Boxer, BoxerForm, Fight, Gender, Opponent } from "@/types/boxing.d"
+import { Boxer, BoxerAttributes, Fight, Gender, Opponent } from "@/types/boxing.d"
 import { DataStorage, BoxerStorage, FightStorage } from "@/types/localstorage.d"
 import { ModalityError, ModalityErrorType } from "@/types/modality.d"
 import { BeaModality } from "@/fightModality/BeaModality"
+import { stringify as stringifyCsv, parse as parseCsv } from "csv/browser/esm/sync"
+import { format, parse } from "date-fns"
 
 export const store = reactive({
     restored: false as boolean,
@@ -102,32 +104,61 @@ export const store = reactive({
             boxer.attributes.categoryShortText = this.modality.getCategory(boxer.attributes, true)
         }
     },
-    addBoxer(boxerForm: BoxerForm) {
-        let newId = 0
+    addBoxer(boxerAttributes: BoxerAttributes) {
         if (this.boxers.length > 0) {
-            newId = Math.max(...this.boxers.map((b) => b.attributes.id)) + 1
+            boxerAttributes.id = Math.max(...this.boxers.map((b) => b.attributes.id)) + 1
+        } else {
+            boxerAttributes.id = 0
         }
 
         const boxer: Boxer = {
-            attributes: {
-                birthDate: new Date(boxerForm.birthdate),
-                club: boxerForm.club,
-                firstName: boxerForm.firstname,
-                lastName: boxerForm.lastname,
-                gender: boxerForm.gender == Gender[Gender.FEMALE] ? Gender.FEMALE : Gender.MALE,
-                weight: parseInt(boxerForm.weight),
-                category: "",
-                categoryShortText: "",
-                id: newId,
-                license: boxerForm.license,
-                nbFights: 0,
-            },
+            attributes: boxerAttributes,
             collapsed: true,
             opponents: [],
         }
         this.boxers.push(boxer)
         this.computeBoxersOpponents()
-        console.log({ f: boxerForm, boxer })
+    },
+    importFromCsv(csv: string) {
+        const parsedCsv = parseCsv(csv, {
+            columns: ["lastName", "firstName", "nbFights", "gender", "weight", "club", "birthDate", "license"],
+            skip_empty_lines: true,
+            delimiter: "\t",
+        })
+        for (const [, entry] of parsedCsv.entries()) {
+            const boxerAttributes = {
+                id: 0,
+                lastName: entry.lastName,
+                firstName: entry.firstName,
+                birthDate: parse(entry.birthDate, "dd/MM/yyyy", new Date()),
+                nbFights: parseInt(entry.nbFights),
+                category: "",
+                categoryShortText: "",
+                club: entry.club,
+                weight: parseInt(entry.weight),
+                gender: entry.gender == "F" ? Gender.FEMALE : Gender.MALE,
+                license: entry.license,
+            }
+            this.addBoxer(boxerAttributes)
+        }
+        this.computeBoxersOpponents()
+    },
+    getAvailableBoxersAsCsv(): string {
+        const entries = this.boxers.map((entry: Boxer) => {
+            return {
+                lastName: entry.attributes.lastName,
+                firstName: entry.attributes.firstName,
+                nbFights: entry.attributes.nbFights,
+                gender: entry.attributes.gender == Gender.FEMALE ? "F" : "M",
+                weight: entry.attributes.weight,
+                club: entry.attributes.club,
+                birthDate: format(entry.attributes.birthDate, "dd/MM/yyyy"),
+                license: entry.attributes.license,
+            }
+        })
+        const csv = stringifyCsv(entries, { delimiter: "\t" })
+        console.log(csv)
+        return csv
     },
 })
 

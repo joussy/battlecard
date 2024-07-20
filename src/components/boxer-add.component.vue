@@ -203,7 +203,7 @@ import { defineComponent } from "vue"
 import { store } from "@/composables/fight.composable"
 
 import { configure, defineRule, GenericObject, useForm } from "vee-validate"
-import { Gender } from "@/types/boxing.d"
+import { BoxerAttributes, Gender } from "@/types/boxing.d"
 
 configure({
     validateOnInput: true,
@@ -261,8 +261,21 @@ export default defineComponent({
         const [club] = defineField("club")
         const [gender] = defineField("gender")
         const [birthdate] = defineField("birthdate")
-        const onSubmit = handleSubmit((values: GenericObject) => {
-            emit("boxeradd", values)
+        const onSubmit = handleSubmit((form: GenericObject) => {
+            const boxerAttributes: BoxerAttributes = {
+                birthDate: new Date(form.birthdate),
+                club: form.club,
+                firstName: form.firstname,
+                lastName: form.lastname,
+                gender: form.gender == Gender[Gender.FEMALE] ? Gender.FEMALE : Gender.MALE,
+                weight: parseInt(form.weight),
+                category: "",
+                categoryShortText: "",
+                license: form.license,
+                nbFights: 0,
+                id: 0,
+            }
+            emit("boxeradd", boxerAttributes)
         })
         return {
             onSubmit,
@@ -280,11 +293,6 @@ export default defineComponent({
     },
     mounted() {
         this.clubsAutoCompleteList = store.getClubs()
-    },
-    methods: {
-        onSubmitDo(values: GenericObject) {
-            this.$emit("boxeradd", values)
-        },
     },
 })
 </script>

@@ -21,6 +21,12 @@
         >
             <i class="bi bi-person-add" />
         </button>
+        <button
+            class="btn btn-outline-secondary mb-3 ms-2"
+            @click="downloadCsv"
+        >
+            <i class="bi bi-download" />
+        </button>
     </div>
     <div
         v-if="boxerAddMode"
@@ -41,7 +47,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue"
-import { BoxerForm, Gender } from "@/types/boxing.d"
+import { BoxerAttributes, Gender } from "@/types/boxing.d"
 import { ModalityErrorType } from "@/types/modality.d"
 import BoxerTileComponent from "@/components/boxer-tile.component.vue"
 import BoxerAddComponent from "@/components/boxer-add.component.vue"
@@ -72,9 +78,20 @@ export default defineComponent({
                 this.store.boxers[index].collapsed = collapse
             }
         },
-        onBoxerAdd(newBoxer: BoxerForm) {
+        onBoxerAdd(newBoxer: BoxerAttributes) {
             this.boxerAddMode = false
             store.addBoxer(newBoxer)
+            store.computeBoxersOpponents()
+        },
+        downloadCsv() {
+            const csv = store.getAvailableBoxersAsCsv()
+            const blob = new Blob([csv], { type: "text/csv" })
+            const elem = window.document.createElement("a")
+            elem.href = window.URL.createObjectURL(blob)
+            elem.download = "boxers.csv"
+            document.body.appendChild(elem)
+            elem.click()
+            document.body.removeChild(elem)
         },
     },
 })
