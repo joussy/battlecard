@@ -1,6 +1,6 @@
 <template>
     <div class="d-flex">
-        <h3 class="flex-grow-1">Fighters</h3>
+        <h3 class="flex-grow-1"></h3>
         <button
             class="btn btn-outline-secondary mb-3 ms-2"
             @click="expandAll()"

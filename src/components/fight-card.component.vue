@@ -1,5 +1,4 @@
 <template>
-    <h3 class="mb-4">Fight Card</h3>
     <table class="table">
         <thead>
             <tr>
