@@ -199,7 +199,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue"
+import { defineComponent, PropType } from "vue"
 import { store } from "@/composables/fight.composable"
 
 import { configure, defineRule, GenericObject, useForm } from "vee-validate"
@@ -229,7 +229,13 @@ defineRule("genderRequired", (value: string) => {
 })
 export default defineComponent({
     components: {},
-    emits: ["boxeradd"],
+    props: {
+        boxer: {
+            type: Object as PropType<BoxerAttributes | null>,
+            required: true,
+        },
+    },
+    emits: ["boxer-add"],
     setup(_, { emit }) {
         // Create the form
         const { defineField, handleSubmit, errors } = useForm({
@@ -275,7 +281,7 @@ export default defineComponent({
                 nbFights: 0,
                 id: 0,
             }
-            emit("boxeradd", boxerAttributes)
+            emit("boxer-add", boxerAttributes)
         })
         return {
             onSubmit,
@@ -293,6 +299,7 @@ export default defineComponent({
     },
     mounted() {
         this.clubsAutoCompleteList = store.getClubs()
+        console.log(this.boxer)
     },
 })
 </script>

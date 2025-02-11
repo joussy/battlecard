@@ -5,52 +5,62 @@
         :class="{ collapsed: !boxer.collapsed }"
         @click="toggleCollapse(boxer)"
     >
-        <div>
-            <div class="d-flex justify-content-between">
-                <div class="">
-                    <i
-                        class="bi"
-                        :class="boxer.collapsed ? 'bi-chevron-down' : 'bi-chevron-right'"
-                    />
-                    {{ store.getBoxerDisplayName(boxer) }}
+        <div class="d-flex flex-row align-items-center">
+            <div class="flex-grow-1">
+                <div class="d-flex justify-content-between">
+                    <div class="">
+                        <i
+                            class="bi"
+                            :class="boxer.collapsed ? 'bi-chevron-down' : 'bi-chevron-right'"
+                        />
+                        {{ store.getBoxerDisplayName(boxer) }}
+                    </div>
+                    <div
+                        class="font-italic text-right"
+                        style="font-size: 14px"
+                    >
+                        {{ boxer.attributes.club }}
+                    </div>
                 </div>
-                <div
-                    class="font-italic text-right"
-                    style="font-size: 14px"
-                >
-                    {{ boxer.attributes.club }}
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <span class="me-1">
+                            <img
+                                v-if="boxer.attributes.gender == Gender.MALE"
+                                src="@/assets/icons/male.svg"
+                                height="17"
+                            />
+                            <img
+                                v-if="boxer.attributes.gender == Gender.FEMALE"
+                                src="@/assets/icons/female.svg"
+                                height="17"
+                            />
+                        </span>
+                        <span class="d-none d-sm-inline d-md-inline d-lg-inline d-xl-inline">
+                            <i>{{ boxer.attributes.category }}</i>
+                        </span>
+                        <span class="d-inline d-sm-none">
+                            <i>{{ boxer.attributes.categoryShortText }}</i>
+                        </span>
+                    </div>
+                    <div>
+                        <FightRecordBadgeComponent :boxer="boxer" />
+                        <NbFightsBadgeComponent :boxer="boxer" />
+                        <WeightBadgeComponent :boxer="boxer" />
+                        <span class="badge text-bg-light ms-2 pt-0 pb-0">
+                            🥊
+                            {{ boxer.opponents.filter((o) => o.isEligible).length }}/{{ boxer.opponents.length }}
+                        </span>
+                    </div>
                 </div>
             </div>
-            <div class="d-flex justify-content-between">
-                <div>
-                    <span class="me-1">
-                        <img
-                            v-if="boxer.attributes.gender == Gender.MALE"
-                            src="@/assets/icons/male.svg"
-                            height="17"
-                        />
-                        <img
-                            v-if="boxer.attributes.gender == Gender.FEMALE"
-                            src="@/assets/icons/female.svg"
-                            height="17"
-                        />
-                    </span>
-                    <span class="d-none d-sm-inline d-md-inline d-lg-inline d-xl-inline">
-                        <i>{{ boxer.attributes.category }}</i>
-                    </span>
-                    <span class="d-inline d-sm-none">
-                        <i>{{ boxer.attributes.categoryShortText }}</i>
-                    </span>
-                </div>
-                <div>
-                    <FightRecordBadgeComponent :boxer="boxer" />
-                    <NbFightsBadgeComponent :boxer="boxer" />
-                    <WeightBadgeComponent :boxer="boxer" />
-                    <span class="badge text-bg-light ms-2 pt-0 pb-0">
-                        🥊
-                        {{ boxer.opponents.filter((o) => o.isEligible).length }}/{{ boxer.opponents.length }}
-                    </span>
-                </div>
+            <div class="ms-2">
+                <button
+                    class="btn btn-outline-dark"
+                    @click="boxerEdit()"
+                >
+                    <i class="bi bi-pencil"></i>
+                </button>
             </div>
         </div>
     </div>
@@ -100,6 +110,7 @@ export default defineComponent({
             required: true,
         },
     },
+    emits: ["boxer-edit"],
     data() {
         return {
             store,
@@ -110,6 +121,10 @@ export default defineComponent({
     methods: {
         toggleCollapse(boxer: Boxer): void {
             boxer.collapsed = !boxer.collapsed
+        },
+        boxerEdit(): void {
+            console.log("boxer-edit")
+            this.$emit("boxer-edit")
         },
     },
 })

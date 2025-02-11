@@ -17,7 +17,7 @@
         </button>
         <button
             class="btn btn-outline-success mb-3 ms-2"
-            @click="boxerAddMode = !boxerAddMode"
+            @click="(boxerToEdit = null), (boxerAddMode = !boxerAddMode)"
         >
             <i class="bi bi-person-add" />
         </button>
@@ -32,7 +32,10 @@
         v-if="boxerAddMode"
         class="card"
     >
-        <BoxerAddComponent @boxeradd="onBoxerAdd" />
+        <BoxerAddComponent
+            :boxer="boxerToEdit"
+            @boxer-add="onBoxerAdd"
+        />
     </div>
 
     <div
@@ -41,13 +44,16 @@
         :key="boxer.attributes.id"
         class="card"
     >
-        <BoxerTileComponent :boxer="boxer" />
+        <BoxerTileComponent
+            :boxer="boxer"
+            @boxer-edit="editBoxer(boxer)"
+        />
     </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue"
-import { BoxerAttributes, Gender } from "@/types/boxing.d"
+import { Boxer, BoxerAttributes, Gender } from "@/types/boxing.d"
 import { ModalityErrorType } from "@/types/modality.d"
 import BoxerTileComponent from "@/components/boxer-tile.component.vue"
 import BoxerAddComponent from "@/components/boxer-add.component.vue"
@@ -65,6 +71,7 @@ export default defineComponent({
             Gender: Gender,
             ModalityErrorType: ModalityErrorType,
             boxerAddMode: false,
+            boxerToEdit: null as BoxerAttributes | null,
         }
     },
     mounted() {},
@@ -92,6 +99,10 @@ export default defineComponent({
             document.body.appendChild(elem)
             elem.click()
             document.body.removeChild(elem)
+        },
+        editBoxer(boxer: Boxer) {
+            this.boxerToEdit = boxer.attributes
+            this.boxerAddMode = true
         },
     },
 })
