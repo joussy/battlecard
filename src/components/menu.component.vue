@@ -1,5 +1,5 @@
 <template>
-    <!-- <nav class="bottom-menu d-md-none d-flex justify-content-around">
+    <nav class="bottom-menu d-md-none d-flex justify-content-around z-2">
         <a
             href="#/settings"
             class="nav-link active"
@@ -21,8 +21,8 @@
             <i class="bi bi-rocket-takeoff fs-2"></i>
             <div>Card</div>
         </a>
-    </nav> -->
-    <nav class="navbar navbar-expand bg-body-tertiary d-none d-md-flex">
+    </nav>
+    <nav class="top-menu navbar navbar-expand bg-body-tertiary d-none d-md-flex fixed-top">
         <div class="container-fluid">
             <a class="navbar-brand">
                 <img
@@ -54,10 +54,11 @@
     </nav>
 </template>
 <style>
-.bottom-menu {
-    /* position: fixed;
+.bottom-menu
+{
+    position: fixed;
     bottom: 0;
-    left: 0; */
+    left: 0;
     width: 100%;
     background: white;
     border-top: 1px solid #ddd;
@@ -81,4 +82,6 @@
 .bottom-menu i {
     font-size: 24px; /* Larger icon */
 }
+
+
 </style>

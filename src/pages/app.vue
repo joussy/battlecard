@@ -1,6 +1,6 @@
 <template>
     <MenuComponent />
-    <div class="container mt-2">
+    <div class="container mt-2 mt-md-5 mb-5 main-container">
         <component :is="currentView" />
         <!-- <div class="row">
             <div class="col-md-12 mb-4">
@@ -62,5 +62,9 @@ export default defineComponent({
 </script>
 
 <style>
-/* Add your component-specific styles here */
+@include media-breakpoint-up(sm) {
+    .main-container {
+        margin-top: 100px;
+    }
+}
 </style>
