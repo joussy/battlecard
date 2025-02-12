@@ -27,41 +27,41 @@
             <div>Card</div>
         </router-link>
     </nav>
-    <nav class="top-menu navbar navbar-expand bg-body-tertiary d-none d-md-flex fixed-top">
-        <div class="container-fluid">
-            <a class="navbar-brand">
-                <img
-                    src="@/assets/icons/ring.svg"
-                    :style="{ height: '30px' }"
-                />
-            </a>
-            <div class="collapse navbar-collapse">
-                <div class="navbar-nav">
-                    <router-link
-                        :to="{ name: 'settings' }"
-                        class="nav-link"
-                        active-class="active"
-                    >
-                        <div>Settings</div>
-                    </router-link>
-                    <router-link
-                        :to="{ name: 'selector' }"
-                        class="nav-link"
-                        active-class="active"
-                    >
-                        <div>Selector</div>
-                    </router-link>
-                    <router-link
-                        :to="{ name: 'card' }"
-                        class="nav-link"
-                        active-class="active"
-                    >
-                        <div>Card</div>
-                    </router-link>
-                </div>
-            </div>
-        </div>
-    </nav>
+    <ul class="nav nav-underline">
+        <li class="navbar-brand">
+            <img
+                src="@/assets/icons/ring.svg"
+                :style="{ height: '30px' }"
+            />
+        </li>
+        <li class="nav-item">
+            <router-link
+                :to="{ name: 'settings' }"
+                class="nav-link link-secondary"
+                active-class="active"
+            >
+                Settings
+            </router-link>
+        </li>
+        <li class="nav-item">
+            <router-link
+                :to="{ name: 'selector' }"
+                class="nav-link link-secondary"
+                active-class="active"
+            >
+                Selector
+            </router-link>
+        </li>
+        <li class="nav-item">
+            <router-link
+                :to="{ name: 'card' }"
+                class="nav-link link-secondary"
+                active-class="active"
+            >
+                Card
+            </router-link>
+        </li>
+    </ul>
 </template>
 
 <style>

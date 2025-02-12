@@ -1,8 +1,7 @@
 <template>
     <div class="card">
-        <div class="card-header"><i class="bi bi-gear-fill me-1" />Options</div>
+        <div class="card-header"><i class="bi bi-clipboard me-2" />Import from clipboard</div>
         <div class="card-body">
-            <h5 class="card-title"><i class="bi bi-clipboard me-2" />Import from clipboard</h5>
             <p class="card-text">
                 <span>Last Name | First Name | Fights | Gender | Weight | Club | Birth Date | License</span>
                 <textarea
