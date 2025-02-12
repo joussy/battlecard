@@ -1,4 +1,24 @@
 <template>
+    <div class="card mb-3">
+        <div class="card-header"><i class="bi bi-gear me-2" />General</div>
+        <div class="card-body">
+            <div class="form-check form-switch">
+                <input
+                    id="darkmodeSwitch"
+                    class="form-check-input"
+                    type="checkbox"
+                    role="switch"
+                    :checked="store.darkMode"
+                    @click="toggleDarkMode()"
+                />
+                <label
+                    class="form-check-label"
+                    for="darkmodeSwitch"
+                    >Dark Mode</label
+                >
+            </div>
+        </div>
+    </div>
     <div class="card">
         <div class="card-header"><i class="bi bi-clipboard me-2" />Import from clipboard</div>
         <div class="card-body">
@@ -53,6 +73,11 @@ SERRANO	Amanda	8	F	57	Club1	8/4/2014	A0008
         },
         clearStore() {
             localStorage.removeItem("store")
+        },
+        toggleDarkMode() {
+            // const htmlElement = document.documentElement
+            // htmlElement.setAttribute("data-bs-theme", this.store.darkMode ? "light" : "dark")
+            this.store.darkMode = !this.store.darkMode
         },
     },
 })

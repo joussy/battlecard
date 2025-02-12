@@ -1,6 +1,6 @@
 <template>
     <nav
-        class="bottom-menu d-md-none d-flex justify-content-around z-2 fixed-bottom border-top shadow-sm bg-white pb-2"
+        class="bottom-menu d-md-none d-flex justify-content-around z-2 fixed-bottom border-top shadow-sm bg-light-subtle pb-2"
     >
         <router-link
             :to="{ name: 'settings' }"

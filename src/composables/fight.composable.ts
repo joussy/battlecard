@@ -1,4 +1,4 @@
-import { reactive, toRaw, watchEffect } from "vue"
+import { reactive, toRaw, watch, watchEffect } from "vue"
 import { Boxer, BoxerAttributes, Fight, Gender, Opponent } from "@/types/boxing.d"
 import { DataStorage, BoxerStorage, FightStorage } from "@/types/localstorage.d"
 import { ModalityError, ModalityErrorType } from "@/types/modality.d"
@@ -7,6 +7,7 @@ import { stringify as stringifyCsv, parse as parseCsv } from "csv/browser/esm/sy
 import { format, parse } from "date-fns"
 
 export const store = reactive({
+    darkMode: false,
     restored: false as boolean,
     fightCard: [] as Fight[],
     boxers: [] as Boxer[],
@@ -188,6 +189,9 @@ export function loadStore(): void {
                 store.addToFightCard(boxer1, boxer2)
             }
         }
+
+        store.darkMode = localStorageData.darkMode
+
         console.debug("store loaded")
         console.debug(localStorageData)
     } else {
@@ -195,6 +199,14 @@ export function loadStore(): void {
     }
     store.restored = true
 }
+
+watchEffect(() => {
+    // works for reactivity tracking
+    console.log(store.darkMode)
+    const htmlElement = document.documentElement
+
+    htmlElement.setAttribute("data-bs-theme", store.darkMode ? "dark" : "light")
+})
 
 watchEffect(() => {
     if (!store.restored) {
@@ -208,6 +220,7 @@ watchEffect(() => {
         fightCard: store.fightCard.map((f) => {
             return { boxer1Id: f.boxer1.attributes.id, boxer2Id: f.boxer2.attributes.id } as FightStorage
         }),
+        darkMode: store.darkMode,
     }
     localStorage.setItem("store", JSON.stringify(localStorageData))
     console.debug("store updated")
