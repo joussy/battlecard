@@ -56,7 +56,7 @@
             </div>
             <div class="ms-2">
                 <button
-                    class="btn btn-outline-dark"
+                    class="btn btn-outline-secondary"
                     @click="boxerEdit()"
                 >
                     <i class="bi bi-pencil"></i>

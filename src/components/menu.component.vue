@@ -28,7 +28,7 @@
         </router-link>
     </nav>
     <ul class="nav nav-underline fixed-top bg-light-subtle d-none d-md-flex">
-        <li class="navbar-brand">
+        <li class="navbar-brand ps-3">
             <img
                 src="@/assets/icons/ring.svg"
                 :style="{ height: '30px' }"

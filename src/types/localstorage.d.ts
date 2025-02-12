@@ -14,4 +14,5 @@ export interface DataStorage {
     boxers: BoxerStorage[]
     fightCard: FightStorage[]
     darkMode: boolean
+    apiServerAddress: string
 }

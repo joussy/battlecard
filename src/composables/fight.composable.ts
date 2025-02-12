@@ -12,6 +12,7 @@ export const store = reactive({
     fightCard: [] as Fight[],
     boxers: [] as Boxer[],
     modality: new BeaModality(),
+    apiServerAddress: "",
     clear(): void {
         this.boxers = []
         this.fightCard = []
@@ -191,6 +192,7 @@ export function loadStore(): void {
         }
 
         store.darkMode = localStorageData.darkMode
+        store.apiServerAddress = localStorageData.apiServerAddress
 
         console.debug("store loaded")
         console.debug(localStorageData)
@@ -201,10 +203,7 @@ export function loadStore(): void {
 }
 
 watchEffect(() => {
-    // works for reactivity tracking
-    console.log(store.darkMode)
     const htmlElement = document.documentElement
-
     htmlElement.setAttribute("data-bs-theme", store.darkMode ? "dark" : "light")
 })
 
@@ -221,6 +220,7 @@ watchEffect(() => {
             return { boxer1Id: f.boxer1.attributes.id, boxer2Id: f.boxer2.attributes.id } as FightStorage
         }),
         darkMode: store.darkMode,
+        apiServerAddress: store.apiServerAddress,
     }
     localStorage.setItem("store", JSON.stringify(localStorageData))
     console.debug("store updated")
