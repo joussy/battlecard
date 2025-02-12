@@ -1,6 +1,6 @@
 {
     "name": "Devcontainer",
-    "image": "mcr.microsoft.com/vscode/devcontainers/typescript-node:latest",
+    "image": "mcr.microsoft.com/vscode/devcontainers/typescript-node:20",
     "customizations": {
         "vscode": {
             "extensions": ["Vue.volar", "ms-edgedevtools.vscode-edge-devtools"]

@@ -10,7 +10,7 @@ import BoxerSelectorComponent from "@/components/boxer-selector.component.vue"
 import "bootstrap-icons/font/bootstrap-icons.css"
 
 const routes = [
-    { path: "/", name: "home", component: BoxerSelectorComponent },
+    { path: "/", redirect: { name: "selector" } },
     { path: "/selector", name: "selector", component: BoxerSelectorComponent },
     { path: "/settings", name: "settings", component: UploadComponent },
     { path: "/card", name: "card", component: FightCardComponent },
