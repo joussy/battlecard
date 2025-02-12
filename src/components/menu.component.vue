@@ -1,26 +1,29 @@
 <template>
     <nav class="bottom-menu d-md-none d-flex justify-content-around z-2">
-        <a
-            href="#/settings"
-            class="nav-link active"
+        <router-link
+            :to="{ name: 'settings' }"
+            class="nav-link"
+            active-class="active"
         >
             <i class="bi bi-gear fs-2"></i>
             <div>Settings</div>
-        </a>
-        <a
-            href="#/selector"
+        </router-link>
+        <router-link
+            :to="{ name: 'selector' }"
             class="nav-link"
+            active-class="active"
         >
             <i class="bi bi-person-raised-hand fs-2"></i>
             <div>Selector</div>
-        </a>
-        <a
-            href="#/card"
+        </router-link>
+        <router-link
+            :to="{ name: 'card' }"
             class="nav-link"
+            active-class="active"
         >
             <i class="bi bi-rocket-takeoff fs-2"></i>
             <div>Card</div>
-        </a>
+        </router-link>
     </nav>
     <nav class="top-menu navbar navbar-expand bg-body-tertiary d-none d-md-flex fixed-top">
         <div class="container-fluid">
@@ -32,27 +35,33 @@
             </a>
             <div class="collapse navbar-collapse">
                 <div class="navbar-nav">
-                    <a
-                        class="nav-link active"
-                        aria-current="page"
-                        href="#/settings"
-                        >Settings</a
-                    >
-                    <a
+                    <router-link
+                        :to="{ name: 'settings' }"
                         class="nav-link"
-                        href="#/selector"
-                        >Selector</a
+                        active-class="active"
                     >
-                    <a
+                        <div>Settings</div>
+                    </router-link>
+                    <router-link
+                        :to="{ name: 'selector' }"
                         class="nav-link"
-                        href="#/card"
-                        >Card</a
+                        active-class="active"
                     >
+                        <div>Selector</div>
+                    </router-link>
+                    <router-link
+                        :to="{ name: 'card' }"
+                        class="nav-link"
+                        active-class="active"
+                    >
+                        <div>Card</div>
+                    </router-link>
                 </div>
             </div>
         </div>
     </nav>
 </template>
+
 <style>
 .bottom-menu {
     position: fixed;
