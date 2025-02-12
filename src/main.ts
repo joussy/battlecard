@@ -8,6 +8,7 @@ import UploadComponent from "@/components/options-panel.component.vue"
 import BoxerSelectorComponent from "@/components/boxer-selector.component.vue"
 
 import "bootstrap-icons/font/bootstrap-icons.css"
+import { createWebHistory } from "vue-router"
 
 const routes = [
     { path: "/", redirect: { name: "selector" } },
@@ -17,7 +18,7 @@ const routes = [
 ]
 
 const router = createRouter({
-    history: createMemoryHistory(),
+    history: createWebHistory(),
     routes,
 })
 

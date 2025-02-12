@@ -27,7 +27,7 @@
             <div>Card</div>
         </router-link>
     </nav>
-    <ul class="nav nav-underline">
+    <ul class="nav nav-underline fixed-top bg-light-subtle d-none d-md-flex">
         <li class="navbar-brand">
             <img
                 src="@/assets/icons/ring.svg"
