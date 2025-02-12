@@ -1,8 +1,7 @@
 import { createApp } from "vue"
-import "./style.css"
+import "./style.scss"
 import App from "@/pages/app.vue"
 
-import "bootstrap/dist/css/bootstrap.css"
 import "bootstrap-icons/font/bootstrap-icons.css"
 
 createApp(App).mount("#app")

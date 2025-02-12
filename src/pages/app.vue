@@ -1,21 +1,8 @@
 <template>
     <MenuComponent />
-    <div class="container mt-2 mt-md-5 mb-5 main-container">
+    <!-- <div class="container mt-2 mt-md-5 mb-5 main-container"> -->
+    <div class="container main-container">
         <component :is="currentView" />
-        <!-- <div class="row">
-            <div class="col-md-12 mb-4">
-                <UploadComponent />
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-6 mb-3">
-                <BoxerSelectorComponent />
-            </div>
-            <div class="col-md-6">
-                <FightCardComponent />
-                <ClubStatisticsComponent />
-            </div>
-        </div> -->
     </div>
 </template>
 
@@ -61,10 +48,22 @@ export default defineComponent({
 })
 </script>
 
-<style>
-@include media-breakpoint-up(sm) {
+<style lang="scss">
+@import "bootstrap/scss/bootstrap";
+
+.main-container {
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+@include media-breakpoint-up(md) {
     .main-container {
-        margin-top: 100px;
+        margin-top: 70px;
+    }
+}
+@include media-breakpoint-down(md) {
+    .main-container {
+        margin-bottom: 100px;
     }
 }
 </style>

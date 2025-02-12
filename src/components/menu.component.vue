@@ -54,8 +54,7 @@
     </nav>
 </template>
 <style>
-.bottom-menu
-{
+.bottom-menu {
     position: fixed;
     bottom: 0;
     left: 0;
@@ -82,6 +81,4 @@
 .bottom-menu i {
     font-size: 24px; /* Larger icon */
 }
-
-
 </style>
