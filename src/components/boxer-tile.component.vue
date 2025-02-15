@@ -1,6 +1,6 @@
 <template>
     <div
-        class="card-header pt-0 pb-1"
+        class="card-header pt-0 pb-1 ps-1 pe-0 ps-md-2 pe-md-2"
         role="tab"
         :class="{ collapsed: !boxer.collapsed }"
         @click="toggleCollapse(boxer)"
