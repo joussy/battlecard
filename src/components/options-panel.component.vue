@@ -90,7 +90,7 @@ export default defineComponent({
             Gender: Gender,
             // LastName	FirstName	Fights		Sex	Weight	Club	Birthdate   License
             clipboard: `
-JOSHUA	Anthony	1	H	50	Club1	1/1/2010	A0001
+JOSHUA	Anthony	1	H	50.5	Club1	1/1/2010	A0001
 FURY	Tyson	2	H	51	Club2	2/1/2010	B0002
 TYSON	Mike	3	H	52	Club3	3/2/2011	C0003
 STARR	Joey	4	H	53	Club4	4/2/2011	D0004

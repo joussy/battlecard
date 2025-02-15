@@ -45,6 +45,7 @@
                     </div>
                     <div>
                         <FightRecordBadgeComponent :boxer="boxer" />
+                        <AgeBadgeComponent :boxer="boxer" />
                         <RecordBadgeComponent :boxer="boxer" />
                         <WeightBadgeComponent :boxer="boxer" />
                         <PossibleBadgeComponent
@@ -92,6 +93,7 @@ import { Gender, Boxer } from "@/types/boxing.d"
 import { ModalityErrorType } from "@/types/modality.d"
 import OpponentTileComponent from "@/components/opponent-tile.component.vue"
 import RecordBadgeComponent from "@/components/core/record-badge.component.vue"
+import AgeBadgeComponent from "@/components/core/age-badge.component.vue"
 import LinkedFightsBadgeComponent from "@/components/core/linked-fights-badge.component.vue"
 import WeightBadgeComponent from "@/components/core/weight-badge.component.vue"
 import PossibleBadgeComponent from "@/components/core/possible-badge.component.vue"
@@ -106,6 +108,7 @@ export default defineComponent({
         FightRecordBadgeComponent: LinkedFightsBadgeComponent,
         WeightBadgeComponent: WeightBadgeComponent,
         PossibleBadgeComponent: PossibleBadgeComponent,
+        AgeBadgeComponent: AgeBadgeComponent,
         Icon: IconComponent,
     },
     props: {

@@ -160,7 +160,7 @@ export const store = reactive({
                 category: "",
                 categoryShortText: "",
                 club: entry.club,
-                weight: parseInt(entry.weight),
+                weight: parseFloat(entry.weight),
                 gender: entry.gender == "F" ? Gender.FEMALE : Gender.MALE,
                 license: entry.license,
             }

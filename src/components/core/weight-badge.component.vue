@@ -7,7 +7,7 @@
         }"
     >
         <Icon name="scale" />
-        {{ boxer.attributes.weight }}
+        {{ displayWeight() }}
     </span>
 </template>
 
@@ -32,5 +32,11 @@ export default defineComponent({
             default: null,
         },
     },
+    methods: {
+        displayWeight(){
+            const weight = this.boxer.attributes.weight
+            return weight % 1 === 0 ? weight.toFixed(0) : weight.toFixed(1);
+        }
+    }
 })
 </script>

@@ -32,6 +32,10 @@
             </div>
             <div class="grid gap-0 column-gap-3">
                 <LinkedFightsBadgeComponent :boxer="opponent" />
+                <AgeBadgeComponent
+                    :boxer="opponent"
+                    :modality-error="store.getOpponentModalityError(boxer, opponent, ModalityErrorType.AGE)"
+                />
                 <RecordBadgeComponent
                     :boxer="opponent"
                     :modality-error="store.getOpponentModalityError(boxer, opponent, ModalityErrorType.PRIZE_LIST)"
@@ -39,10 +43,6 @@
                 <WeightBadgeComponent
                     :boxer="opponent"
                     :modality-error="store.getOpponentModalityError(boxer, opponent, ModalityErrorType.WEIGHT)"
-                />
-                <AgeBadgeComponent
-                    :boxer="opponent"
-                    :modality-error="store.getOpponentModalityError(boxer, opponent, ModalityErrorType.AGE)"
                 />
             </div>
         </div>
