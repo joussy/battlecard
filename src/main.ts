@@ -9,12 +9,14 @@ import "bootstrap"
 
 import "./style.scss"
 import "bootstrap-icons/font/bootstrap-icons.css"
+import ClubStatisticsComponent from "@/components/club-statistics.component.vue"
 
 const routes = [
     { path: "/", redirect: { name: "selector" } },
     { path: "/selector", name: "selector", component: BoxerSelectorComponent },
     { path: "/settings", name: "settings", component: UploadComponent },
     { path: "/card", name: "card", component: FightCardComponent },
+    { path: "/metrics", name: "metrics", component: ClubStatisticsComponent },
 ]
 
 const router = createRouter({

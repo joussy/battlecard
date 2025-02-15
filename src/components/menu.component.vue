@@ -26,6 +26,14 @@
             <i class="bi bi-rocket-takeoff fs-2"></i>
             <div>Card</div>
         </router-link>
+        <router-link
+            :to="{ name: 'metrics' }"
+            class="nav-link text-center"
+            active-class="active"
+        >
+            <i class="bi bi-bar-chart fs-2"></i>
+            <div>Metrics</div>
+        </router-link>
     </nav>
     <ul class="nav nav-underline fixed-top bg-light-subtle d-none d-md-flex">
         <li class="navbar-brand pt-2 ps-3">
@@ -59,6 +67,15 @@
                 active-class="active"
             >
                 Card
+            </router-link>
+        </li>
+        <li class="nav-item">
+            <router-link
+                :to="{ name: 'metrics' }"
+                class="nav-link link-secondary"
+                active-class="active"
+            >
+                Metrics
             </router-link>
         </li>
     </ul>

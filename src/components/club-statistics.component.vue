@@ -1,11 +1,9 @@
 <template>
-    <h3 class="mb-4">Clubs</h3>
-    <table class="table table-sm">
+    <table class="table">
         <thead>
             <tr>
                 <th scope="col">Club</th>
-                <th scope="col">Available</th>
-                <th scope="col">Fights</th>
+                <th colspan="2">Selected / Available</th>
             </tr>
         </thead>
         <tbody>
@@ -14,8 +12,28 @@
                 :key="index"
             >
                 <td>{{ club.clubName }}</td>
-                <td>{{ club.available }}</td>
-                <td>{{ club.selected }}</td>
+                <td class="d-flex">
+                    <span>{{ club.selected }} / {{ club.available }}</span>
+                    <div
+                        class="progress flex-fill ms-3"
+                        role="progressbar"
+                        style="height: 23px"
+                    >
+                        <div
+                            class="progress-bar"
+                            :class="{
+                                'bg-danger': club.selected < 2,
+                                'bg-warning': club.selected > 1 && club.selected < 4,
+                                'bg-success': club.selected > 3,
+                            }"
+                            :style="{
+                                width: `${(club.selected * 100) / club.available}%`,
+                            }"
+                        >
+                            {{ club.selected }}
+                        </div>
+                    </div>
+                </td>
             </tr>
         </tbody>
     </table>
