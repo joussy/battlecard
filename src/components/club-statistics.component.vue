@@ -3,7 +3,7 @@
         <thead>
             <tr>
                 <th scope="col">Club</th>
-                <th colspan="2">Selected / Available</th>
+                <th colspan="2">Selection</th>
             </tr>
         </thead>
         <tbody>
@@ -12,7 +12,7 @@
                 :key="index"
             >
                 <td>{{ club.clubName }}</td>
-                <td>
+                <td class="w-50">
                     <div class="d-flex">
                         <span>{{ club.selected }} / {{ club.available }}</span>
                         <div
