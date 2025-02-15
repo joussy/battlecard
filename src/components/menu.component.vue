@@ -7,7 +7,7 @@
             class="nav-link text-center"
             active-class="active"
         >
-            <i class="bi bi-gear fs-2"></i>
+            <i class="bi bi-gear-fill fs-2"></i>
             <div>Settings</div>
         </router-link>
         <router-link
@@ -23,7 +23,7 @@
             class="nav-link text-center"
             active-class="active"
         >
-            <i class="bi bi-rocket-takeoff fs-2"></i>
+            <i class="bi bi-rocket-takeoff-fill fs-2"></i>
             <div>Card</div>
         </router-link>
         <router-link
@@ -31,7 +31,7 @@
             class="nav-link text-center"
             active-class="active"
         >
-            <i class="bi bi-bar-chart fs-2"></i>
+            <i class="bi bi-bar-chart-fill fs-2"></i>
             <div>Metrics</div>
         </router-link>
     </nav>
