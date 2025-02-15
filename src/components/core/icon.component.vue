@@ -7,9 +7,9 @@
 </template>
 
 <script lang="ts">
-import { defineAsyncComponent } from "vue"
+import { defineAsyncComponent, defineComponent } from "vue"
 
-export default {
+export default defineComponent({
     props: {
         name: {
             type: String,
@@ -21,7 +21,7 @@ export default {
             return defineAsyncComponent(() => import(`@/assets/icons/${this.name}.svg?component`))
         },
     },
-}
+})
 </script>
 <style lang="scss">
 .svg-2 {

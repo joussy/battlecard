@@ -27,7 +27,7 @@ export class BeaModality extends BaseModality {
             //formatDistance
             errors.push({ type: ModalityErrorType.AGE })
         }
-        if (Math.abs(boxer1.weight - boxer2.weight) > 2) {
+        if (Math.abs(boxer1.weight - boxer2.weight) > 3) {
             errors.push({ type: ModalityErrorType.WEIGHT })
         }
         if (boxer1.club == boxer2.club) {

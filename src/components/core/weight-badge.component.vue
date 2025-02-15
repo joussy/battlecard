@@ -15,7 +15,7 @@
 import { Boxer } from "@/types/boxing"
 import { ModalityError } from "@/types/modality"
 import { PropType, defineComponent } from "vue"
-import IconComponent from "./icon.component.vue"
+import IconComponent from "@/components/core/icon.component.vue"
 
 export default defineComponent({
     components: {
@@ -33,10 +33,10 @@ export default defineComponent({
         },
     },
     methods: {
-        displayWeight(){
+        displayWeight() {
             const weight = this.boxer.attributes.weight
-            return weight % 1 === 0 ? weight.toFixed(0) : weight.toFixed(1);
-        }
-    }
+            return weight % 1 === 0 ? weight.toFixed(0) : weight.toFixed(1)
+        },
+    },
 })
 </script>

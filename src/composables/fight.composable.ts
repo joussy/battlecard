@@ -1,4 +1,4 @@
-import { reactive, toRaw, watch, watchEffect } from "vue"
+import { reactive, toRaw, watchEffect } from "vue"
 import { Boxer, BoxerAttributes, Fight, Gender, Opponent } from "@/types/boxing.d"
 import { DataStorage, BoxerStorage, FightStorage } from "@/types/localstorage.d"
 import { ModalityError, ModalityErrorType } from "@/types/modality.d"
@@ -6,7 +6,6 @@ import { BeaModality } from "@/fightModality/BeaModality"
 import { stringify as stringifyCsv, parse as parseCsv } from "csv/browser/esm/sync"
 import { format, parse } from "date-fns"
 import { ApiService } from "@/services/api.service"
-import { ApiBoxer } from "@/types/api"
 
 export const store = reactive({
     darkMode: false,
