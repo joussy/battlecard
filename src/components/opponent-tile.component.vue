@@ -33,7 +33,7 @@
             </div>
             <div class="grid gap-0 column-gap-3">
                 <LinkedFightsBadgeComponent :boxer="opponent" />
-                <NbFightsBadgeComponent
+                <RecordBadgeComponent
                     :boxer="opponent"
                     :modality-error="store.getOpponentModalityError(boxer, opponent, ModalityErrorType.PRIZE_LIST)"
                 />
@@ -54,7 +54,7 @@
 import { PropType, defineComponent } from "vue"
 import { ModalityErrorType } from "@/types/modality.d"
 import { Boxer } from "@/types/boxing.d"
-import NbFightsBadgeComponent from "@/components/core/nb-fights-badge.component.vue"
+import RecordBadgeComponent from "@/components/core/record-badge.component.vue"
 import LinkedFightsBadgeComponent from "@/components/core/linked-fights-badge.component.vue"
 import WeightBadgeComponent from "@/components/core/weight-badge.component.vue"
 import AgeBadgeComponent from "@/components/core/age-badge.component.vue"
@@ -63,7 +63,7 @@ import { store } from "@/composables/fight.composable"
 
 export default defineComponent({
     components: {
-        NbFightsBadgeComponent: NbFightsBadgeComponent,
+        RecordBadgeComponent: RecordBadgeComponent,
         LinkedFightsBadgeComponent: LinkedFightsBadgeComponent,
         WeightBadgeComponent: WeightBadgeComponent,
         AgeBadgeComponent: AgeBadgeComponent,

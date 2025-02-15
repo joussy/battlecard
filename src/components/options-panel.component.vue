@@ -31,10 +31,18 @@
                     placeholder="https://my-ip-server"
                 />
             </div>
+            <div class="mb-3">
+                <button
+                    class="btn btn-danger ms-2"
+                    @click="clearStore()"
+                >
+                    Clear Local Storage
+                </button>
+            </div>
         </div>
     </div>
-    <div class="card">
-        <div class="card-header"><i class="bi bi-clipboard me-2" />Import from clipboard</div>
+    <div class="card mb-3">
+        <div class="card-header"><i class="bi bi-clipboard me-2" />Import from clibpoard</div>
         <div class="card-body">
             <p class="card-text">
                 <span>Last Name | First Name | Fights | Gender | Weight | Club | Birth Date | License</span>
@@ -48,11 +56,23 @@
                 >
                     Import
                 </button>
+            </p>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-header"><i class="bi bi-globe me-2" />Import from API</div>
+        <div class="card-body">
+            <p class="card-text">
+                <span>id1 ; id2 ; id3 ; ...</span>
+                <textarea
+                    v-model="apiIds"
+                    class="d-block w-100 mb-2"
+                />
                 <button
-                    class="btn btn-danger ms-2"
-                    @click="clearStore()"
+                    class="btn btn-primary"
+                    @click="processApiImport()"
                 >
-                    Clear Local Storage
+                    Import
                 </button>
             </p>
         </div>
@@ -79,11 +99,15 @@ NICOLSON	Skye	6	F	55	Club6	6/3/2012	F0006
 TAYLOR	Katie	7	F	56	Club7	7/4/2013	G0007
 SERRANO	Amanda	8	F	57	Club1	8/4/2014	A0008
       `.trim(),
+            apiIds: "279687;279688;279689",
         }
     },
     methods: {
         processClipboard() {
             this.store.importFromCsv(this.clipboard)
+        },
+        processApiImport() {
+            this.store.importFromApiByIds(this.apiIds.split(";"))
         },
         clearStore() {
             localStorage.removeItem("store")

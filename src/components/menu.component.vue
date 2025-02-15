@@ -28,10 +28,10 @@
         </router-link>
     </nav>
     <ul class="nav nav-underline fixed-top bg-light-subtle d-none d-md-flex">
-        <li class="navbar-brand ps-3">
-            <img
-                src="@/assets/icons/ring.svg"
-                :style="{ height: '30px' }"
+        <li class="navbar-brand pt-2 ps-3">
+            <Icon
+                name="ring"
+                class="svg-2"
             />
         </li>
         <li class="nav-item">
@@ -63,7 +63,15 @@
         </li>
     </ul>
 </template>
+<script lang="ts">
+import Icon from "@/components/core/icon.component.vue"
 
+export default {
+    components: {
+        Icon: Icon,
+    },
+}
+</script>
 <style>
 .bottom-menu .nav-link {
     color: #6c757d;

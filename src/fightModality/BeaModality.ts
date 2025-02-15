@@ -58,7 +58,7 @@ export class BeaModality extends BaseModality {
         if (delta >= 0 && delta < this.categories.length) {
             category = shortText ? this.categoriesShortText[delta] : this.categories[delta]
         } else {
-            category = "Adulte Loisir"
+            category = shortText ? "Loisir" : "Adulte Loisir"
         }
 
         return category

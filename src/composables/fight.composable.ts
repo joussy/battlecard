@@ -5,6 +5,8 @@ import { ModalityError, ModalityErrorType } from "@/types/modality.d"
 import { BeaModality } from "@/fightModality/BeaModality"
 import { stringify as stringifyCsv, parse as parseCsv } from "csv/browser/esm/sync"
 import { format, parse } from "date-fns"
+import { ApiService } from "@/services/api.service"
+import { ApiBoxer } from "@/types/api"
 
 export const store = reactive({
     darkMode: false,
@@ -120,6 +122,27 @@ export const store = reactive({
         }
         this.boxers.push(boxer)
         this.computeBoxersOpponents()
+    },
+    async importFromApiByIds(apiIds: string[]) {
+        console.log(apiIds)
+        for (const id of apiIds) {
+            const apiBoxer = await ApiService.getBoxerById(id, store.apiServerAddress)
+            if (apiBoxer) {
+                this.addBoxer({
+                    id: 0,
+                    license: apiBoxer.license,
+                    birthDate: new Date(apiBoxer.birth_date),
+                    club: apiBoxer.club,
+                    firstName: apiBoxer.firstname,
+                    lastName: apiBoxer.name,
+                    nbFights: 0,
+                    weight: 0,
+                    category: "fakeCat",
+                    categoryShortText: "fakeCatShort",
+                    gender: apiBoxer.gender == "male" ? Gender.MALE : Gender.FEMALE,
+                })
+            }
+        }
     },
     importFromCsv(csv: string) {
         const parsedCsv = parseCsv(csv, {

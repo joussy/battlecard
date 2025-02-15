@@ -6,10 +6,7 @@
             'text-bg-light': !modalityError,
         }"
     >
-        <img
-            src="@/assets/icons/scale.svg"
-            height="16"
-        />
+        <Icon name="scale" />
         {{ boxer.attributes.weight }}
     </span>
 </template>
@@ -18,8 +15,12 @@
 import { Boxer } from "@/types/boxing"
 import { ModalityError } from "@/types/modality"
 import { PropType, defineComponent } from "vue"
+import IconComponent from "./icon.component.vue"
 
 export default defineComponent({
+    components: {
+        Icon: IconComponent,
+    },
     props: {
         boxer: {
             type: Object as PropType<Boxer>,

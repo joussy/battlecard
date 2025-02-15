@@ -11,7 +11,7 @@
                     <div class="">
                         <i
                             class="bi"
-                            :class="boxer.collapsed ? 'bi-chevron-down' : 'bi-chevron-right'"
+                            :class="boxer.collapsed ? 'bi-chevron-right' : 'bi-chevron-down'"
                         />
                         {{ store.getBoxerDisplayName(boxer) }}
                     </div>
@@ -25,14 +25,14 @@
                 <div class="d-flex justify-content-between">
                     <div>
                         <span class="me-1">
-                            <img
+                            <Icon
                                 v-if="boxer.attributes.gender == Gender.MALE"
-                                src="@/assets/icons/male.svg"
+                                name="male"
                                 height="17"
                             />
-                            <img
+                            <Icon
                                 v-if="boxer.attributes.gender == Gender.FEMALE"
-                                src="@/assets/icons/female.svg"
+                                name="female"
                                 height="17"
                             />
                         </span>
@@ -45,12 +45,12 @@
                     </div>
                     <div>
                         <FightRecordBadgeComponent :boxer="boxer" />
-                        <NbFightsBadgeComponent :boxer="boxer" />
+                        <RecordBadgeComponent :boxer="boxer" />
                         <WeightBadgeComponent :boxer="boxer" />
-                        <span class="badge text-bg-light ms-2 pt-0 pb-0">
-                            🥊
-                            {{ boxer.opponents.filter((o) => o.isEligible).length }}/{{ boxer.opponents.length }}
-                        </span>
+                        <PossibleBadgeComponent
+                            :selected="boxer.opponents.filter((o) => o.isEligible).length"
+                            :available="boxer.opponents.length"
+                        />
                     </div>
                 </div>
             </div>
@@ -91,18 +91,22 @@ import { PropType, defineComponent } from "vue"
 import { Gender, Boxer } from "@/types/boxing.d"
 import { ModalityErrorType } from "@/types/modality.d"
 import OpponentTileComponent from "@/components/opponent-tile.component.vue"
-import NbFightsBadgeComponent from "@/components/core/nb-fights-badge.component.vue"
+import RecordBadgeComponent from "@/components/core/record-badge.component.vue"
 import LinkedFightsBadgeComponent from "@/components/core/linked-fights-badge.component.vue"
 import WeightBadgeComponent from "@/components/core/weight-badge.component.vue"
+import PossibleBadgeComponent from "@/components/core/possible-badge.component.vue"
 
 import { store } from "@/composables/fight.composable"
+import IconComponent from "@/components/core/icon.component.vue"
 
 export default defineComponent({
     components: {
         OpponentTileComponent: OpponentTileComponent,
-        NbFightsBadgeComponent: NbFightsBadgeComponent,
+        RecordBadgeComponent: RecordBadgeComponent,
         FightRecordBadgeComponent: LinkedFightsBadgeComponent,
         WeightBadgeComponent: WeightBadgeComponent,
+        PossibleBadgeComponent: PossibleBadgeComponent,
+        Icon: IconComponent,
     },
     props: {
         boxer: {
