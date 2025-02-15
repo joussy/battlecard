@@ -27,6 +27,14 @@
         >
             <i class="bi bi-download" />
         </button>
+        <button
+            class="btn btn-outline-secondary mb-3 ms-2"
+            data-bs-toggle="offcanvas"
+            data-bs-target="#offcanvasNavbar"
+        >
+            <span class="bi bi-funnel"></span>
+        </button>
+        <BoxerSelectorFiltersComponent />
     </div>
     <div
         v-if="boxerAddMode"
@@ -39,7 +47,7 @@
     </div>
 
     <div
-        v-for="boxer in store.boxers"
+        v-for="boxer in getBoxersToDisplay()"
         v-show="!boxerAddMode"
         :key="boxer.attributes.id"
         class="card"
@@ -59,11 +67,13 @@ import BoxerTileComponent from "@/components/boxer-tile.component.vue"
 import BoxerAddComponent from "@/components/boxer-add.component.vue"
 
 import { store } from "@/composables/fight.composable"
+import BoxerSelectorFiltersComponent from "@/components/boxer-selector-filters.component.vue"
 
 export default defineComponent({
     components: {
         BoxerTileComponent: BoxerTileComponent,
         BoxerAddComponent: BoxerAddComponent,
+        BoxerSelectorFiltersComponent: BoxerSelectorFiltersComponent,
     },
     data() {
         return {
@@ -103,6 +113,12 @@ export default defineComponent({
         editBoxer(boxer: Boxer) {
             this.boxerToEdit = boxer.attributes
             this.boxerAddMode = true
+        },
+        getBoxersToDisplay(): Boxer[] {
+            return store.boxers.filter((b) => {
+                if (store.hideFightersWithNoMatch && !b.opponents.some((o) => o.isEligible)) return false
+                return true
+            })
         },
     },
 })

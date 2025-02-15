@@ -74,7 +74,7 @@
         <div class="card-body ps-0 pe-0 pt-0 pb-0">
             <ul class="list-group rounded-0">
                 <li
-                    v-for="opponent in boxer.opponents"
+                    v-for="opponent in getOpponentsToDisplay()"
                     class="list-group-item d-flex border-start-0 border-end-0"
                 >
                     <OpponentTileComponent
@@ -89,7 +89,7 @@
 
 <script lang="ts">
 import { PropType, defineComponent } from "vue"
-import { Gender, Boxer } from "@/types/boxing.d"
+import { Gender, Boxer, Opponent } from "@/types/boxing.d"
 import { ModalityErrorType } from "@/types/modality.d"
 import OpponentTileComponent from "@/components/opponent-tile.component.vue"
 import RecordBadgeComponent from "@/components/core/record-badge.component.vue"
@@ -132,6 +132,12 @@ export default defineComponent({
         boxerEdit(): void {
             console.log("boxer-edit")
             this.$emit("boxer-edit")
+        },
+        getOpponentsToDisplay(): Opponent[] {
+            return this.boxer.opponents.filter((o) => {
+                if (store.hideNonMatchableOpponents && !o.isEligible) return false
+                return true
+            })
         },
     },
 })

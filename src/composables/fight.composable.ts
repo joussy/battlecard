@@ -14,6 +14,8 @@ export const store = reactive({
     boxers: [] as Boxer[],
     modality: new BeaModality(),
     apiServerAddress: "",
+    hideNonMatchableOpponents: false,
+    hideFightersWithNoMatch: false,
     clear(): void {
         this.boxers = []
         this.fightCard = []
@@ -220,6 +222,8 @@ export function loadStore(): void {
 
         store.darkMode = localStorageData.darkMode
         store.apiServerAddress = localStorageData.apiServerAddress
+        store.hideNonMatchableOpponents = localStorageData.hideNonMatchableOpponents
+        store.hideFightersWithNoMatch = localStorageData.hideFightersWithNoMatch
 
         console.debug("store loaded")
         console.debug(localStorageData)
@@ -248,6 +252,8 @@ watchEffect(() => {
         }),
         darkMode: store.darkMode,
         apiServerAddress: store.apiServerAddress,
+        hideNonMatchableOpponents: store.hideNonMatchableOpponents,
+        hideFightersWithNoMatch: store.hideFightersWithNoMatch,
     }
     localStorage.setItem("store", JSON.stringify(localStorageData))
     console.debug("store updated")
