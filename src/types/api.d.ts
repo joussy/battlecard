@@ -1,5 +1,4 @@
 export interface ApiBoxer {
-    id: number
     name: string
     firstname: string
     birth_date: Date

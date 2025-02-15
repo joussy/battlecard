@@ -21,13 +21,13 @@
                 <td>{{ store.getBoxerDisplayName(fight.boxer1) }}</td>
                 <td>{{ store.getBoxerDisplayName(fight.boxer2) }}</td>
                 <td>
-                    <img
+                    <Icon
                         v-if="fight.boxer1.attributes.gender == Gender.MALE"
-                        src="@/assets/icons/male.svg"
+                        name="male"
                     />
-                    <img
+                    <Icon
                         v-if="fight.boxer1.attributes.gender == Gender.FEMALE"
-                        src="@/assets/icons/female.svg"
+                        name="female"
                     />
                 </td>
                 <td>
@@ -52,9 +52,12 @@
 import { Gender } from "@/types/boxing.d"
 import ModalityErrorComponent from "@/components/core/modality-error.component.vue"
 import { store } from "@/composables/fight.composable"
+import Icon from "@/components/core/icon.component.vue"
+
 export default {
     components: {
         ModalityErrorComponent: ModalityErrorComponent,
+        Icon: Icon,
     },
     data() {
         return {

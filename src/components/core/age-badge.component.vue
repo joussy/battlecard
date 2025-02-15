@@ -6,9 +6,8 @@
             'text-bg-light': !modalityError,
         }"
     >
-        <img
-            src="@/assets/icons/birthday-cake.svg"
-            height="16"
+        <Icon
+            name="birthday-cake"
         />
         {{ getBoxerAge() }}
     </span>
@@ -19,8 +18,12 @@ import { Boxer } from "@/types/boxing"
 import { ModalityError } from "@/types/modality"
 import { PropType, defineComponent } from "vue"
 import { differenceInYears } from "date-fns"
+import Icon from "@/components/core/icon.component.vue"
 
 export default defineComponent({
+    components:{
+        Icon: Icon
+    },
     props: {
         boxer: {
             type: Object as PropType<Boxer>,

@@ -7,14 +7,13 @@
         }"
     >
         <Icon
-            name="scale"
+            name="glove"
         />
-        {{ boxer.attributes.weight }}
+        {{ selected }}/{{ available }}
     </span>
 </template>
 
 <script lang="ts">
-import { Boxer } from "@/types/boxing"
 import { ModalityError } from "@/types/modality"
 import { PropType, defineComponent } from "vue"
 import IconComponent from "./icon.component.vue";
@@ -24,8 +23,12 @@ export default defineComponent({
         Icon: IconComponent
     },
     props: {
-        boxer: {
-            type: Object as PropType<Boxer>,
+        selected: {
+            type: Number,
+            required: true,
+        },
+        available: {
+            type: Number,
             required: true,
         },
         modalityError: {

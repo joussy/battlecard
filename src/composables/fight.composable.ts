@@ -125,19 +125,23 @@ export const store = reactive({
     },
     async importFromApiByIds(apiIds: string[]) {
         console.log(apiIds)
-        for (const id in apiIds) {
-            const apiBoxer: ApiBoxer = await ApiService.getBoxerById(id, store.apiServerAddress)
-            this.addBoxer({
-                birthDate: apiBoxer.birth_date,
-                club: apiBoxer.club,
-                firstName: apiBoxer.firstname,
-                lastName: apiBoxer.name,
-                nbFights: 0,
-                weight: 0,
-                category: null,
-                categoryShortText: null,
-                gender = store.
-            });
+        for (const id of apiIds) {
+            const apiBoxer = await ApiService.getBoxerById(id, store.apiServerAddress)
+            if (apiBoxer) {
+                this.addBoxer({
+                    id: 0,
+                    license: apiBoxer.license,
+                    birthDate: new Date(apiBoxer.birth_date),
+                    club: apiBoxer.club,
+                    firstName: apiBoxer.firstname,
+                    lastName: apiBoxer.name,
+                    nbFights: 0,
+                    weight: 0,
+                    category: "fakeCat",
+                    categoryShortText: "fakeCatShort",
+                    gender: apiBoxer.gender == "male" ? Gender.MALE : Gender.FEMALE,
+                })
+            }
         }
     },
     importFromCsv(csv: string) {

@@ -1,21 +1,25 @@
 <template>
     <span v-if="modalityError.type == ModalityErrorType.WEIGHT">
-        <img src="@/assets/icons/scale.svg" />
+        <Icon name="scale" />
     </span>
     <!-- <span v-if="modalityError.type == ModalityErrorType.AGE" class="badge bg-danger">Age</span> -->
     <span v-if="modalityError.type == ModalityErrorType.AGE">
-        <img src="@/assets/icons/birthday-cake.svg" />
+        <Icon name="birthday-cake" />
     </span>
     <span v-if="modalityError.type == ModalityErrorType.PRIZE_LIST">
-        <img src="@/assets/icons/medal.svg" />
+        <Icon name="medal" />
     </span>
 </template>
 
 <script lang="ts">
 import { ModalityError, ModalityErrorType } from "@/types/modality.d"
 import { PropType } from "vue"
+import Icon from "@/components/core/icon.component.vue"
 
 export default {
+    components:{
+        Icon: Icon,
+    },
     props: {
         modalityError: {
             type: Object as PropType<ModalityError>,

@@ -5,11 +5,11 @@
             'text-bg-success': store.getNbFightsForBoxer(boxer) < 2,
             'text-bg-warning': store.getNbFightsForBoxer(boxer) == 2,
             'text-bg-danger': store.getNbFightsForBoxer(boxer) > 2,
-            'd-none': store.getNbFightsForBoxer(boxer) < 1,
+            invisible: store.getNbFightsForBoxer(boxer) < 1,
         }"
     >
-        {{ store.getNbFightsForBoxer(boxer) }}
-        <i class="bi bi-link" />
+    <Icon name="link" />
+    {{ store.getNbFightsForBoxer(boxer) }}
     </span>
 </template>
 
@@ -19,8 +19,12 @@ import { PropType, defineComponent } from "vue"
 import { store } from "@/composables/fight.composable"
 import { Boxer } from "@/types/boxing"
 import { ModalityError } from "@/types/modality"
+import IconComponent from "@/components/core/icon.component.vue"
 
 export default defineComponent({
+    components:{
+        Icon: IconComponent
+    },
     props: {
         boxer: {
             type: Object as PropType<Boxer>,

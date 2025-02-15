@@ -6,9 +6,8 @@
             'text-bg-light': !modalityError,
         }"
     >
-        <img
-            src="@/assets/icons/medal.svg"
-            height="16"
+        <Icon
+            name="medal"
         />
         {{ boxer.attributes.nbFights }}
     </span>
@@ -18,8 +17,12 @@
 import { Boxer } from "@/types/boxing"
 import { ModalityError } from "@/types/modality"
 import { PropType, defineComponent } from "vue"
+import IconComponent from "./icon.component.vue";
 
 export default defineComponent({
+    components:{
+        Icon: IconComponent
+    },
     props: {
         boxer: {
             type: Object as PropType<Boxer>,
