@@ -8,8 +8,8 @@
             invisible: store.getNbFightsForBoxer(boxer) < 1,
         }"
     >
-    <Icon name="link" />
-    {{ store.getNbFightsForBoxer(boxer) }}
+        <Icon name="link" />
+        {{ store.getNbFightsForBoxer(boxer) }}
     </span>
 </template>
 
@@ -22,8 +22,8 @@ import { ModalityError } from "@/types/modality"
 import IconComponent from "@/components/core/icon.component.vue"
 
 export default defineComponent({
-    components:{
-        Icon: IconComponent
+    components: {
+        Icon: IconComponent,
     },
     props: {
         boxer: {

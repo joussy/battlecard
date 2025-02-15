@@ -1,8 +1,12 @@
 <template>
-    <component :is="icon" height="17" width="17" />
+    <component
+        :is="icon"
+        height="17"
+        width="17"
+    />
 </template>
 
-<script>
+<script lang="ts">
 import { defineAsyncComponent } from "vue"
 
 export default {

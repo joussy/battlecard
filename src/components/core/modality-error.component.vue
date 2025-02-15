@@ -17,7 +17,7 @@ import { PropType } from "vue"
 import Icon from "@/components/core/icon.component.vue"
 
 export default {
-    components:{
+    components: {
         Icon: Icon,
     },
     props: {

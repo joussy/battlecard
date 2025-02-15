@@ -6,9 +6,7 @@
             'text-bg-light': !modalityError,
         }"
     >
-        <Icon
-            name="birthday-cake"
-        />
+        <Icon name="birthday-cake" />
         {{ getBoxerAge() }}
     </span>
 </template>
@@ -21,8 +19,8 @@ import { differenceInYears } from "date-fns"
 import Icon from "@/components/core/icon.component.vue"
 
 export default defineComponent({
-    components:{
-        Icon: Icon
+    components: {
+        Icon: Icon,
     },
     props: {
         boxer: {
