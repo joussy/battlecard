@@ -55,12 +55,12 @@
                 </div>
             </div>
             <div class="ms-2">
-                <button
+                <!-- <button
                     class="btn btn-outline-secondary"
                     @click="boxerEdit()"
                 >
                     <i class="bi bi-pencil"></i>
-                </button>
+                </button> -->
             </div>
         </div>
     </div>
