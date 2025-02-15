@@ -70,11 +70,11 @@
         class="collapse"
         :class="{ show: !boxer.collapsed }"
     >
-        <div class="card-body">
-            <ul class="list-group">
+        <div class="card-body ps-0 pe-0 pt-0 pb-0">
+            <ul class="list-group rounded-0">
                 <li
                     v-for="opponent in boxer.opponents"
-                    class="list-group-item d-flex"
+                    class="list-group-item d-flex border-start-0 border-end-0"
                 >
                     <OpponentTileComponent
                         :boxer="boxer"
