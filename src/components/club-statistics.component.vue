@@ -12,25 +12,27 @@
                 :key="index"
             >
                 <td>{{ club.clubName }}</td>
-                <td class="d-flex">
-                    <span>{{ club.selected }} / {{ club.available }}</span>
-                    <div
-                        class="progress flex-fill ms-3"
-                        role="progressbar"
-                        style="height: 23px"
-                    >
+                <td>
+                    <div class="d-flex">
+                        <span>{{ club.selected }} / {{ club.available }}</span>
                         <div
-                            class="progress-bar"
-                            :class="{
-                                'bg-danger': club.selected < 2,
-                                'bg-warning': club.selected > 1 && club.selected < 4,
-                                'bg-success': club.selected > 3,
-                            }"
-                            :style="{
-                                width: `${(club.selected * 100) / club.available}%`,
-                            }"
+                            class="progress flex-fill ms-3"
+                            role="progressbar"
+                            style="height: 23px"
                         >
-                            {{ club.selected }}
+                            <div
+                                class="progress-bar"
+                                :class="{
+                                    'bg-danger': club.selected < 2,
+                                    'bg-warning': club.selected > 1 && club.selected < 4,
+                                    'bg-success': club.selected > 3,
+                                }"
+                                :style="{
+                                    width: `${(club.selected * 100) / club.available}%`,
+                                }"
+                            >
+                                {{ club.selected }}
+                            </div>
                         </div>
                     </div>
                 </td>
