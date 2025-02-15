@@ -123,10 +123,15 @@ export const store = reactive({
         this.boxers.push(boxer)
         this.computeBoxersOpponents()
     },
-    async importFromApiByIds(apiIds: string[]) {
-        console.log(apiIds)
-        for (const id of apiIds) {
-            const apiBoxer = await ApiService.getBoxerById(id, store.apiServerAddress)
+    async importFromApiByIds(csv: string) {
+        console.log(csv)
+        const parsedCsv = parseCsv(csv, {
+            columns: ["licence", "weight"],
+            skip_empty_lines: true,
+            delimiter: ",",
+        })
+        for (const [, entry] of parsedCsv.entries()) {
+            const apiBoxer = await ApiService.getBoxerById(entry.licence, store.apiServerAddress)
             if (apiBoxer) {
                 this.addBoxer({
                     id: 0,
@@ -136,7 +141,7 @@ export const store = reactive({
                     firstName: apiBoxer.firstname,
                     lastName: apiBoxer.name,
                     nbFights: 0,
-                    weight: 0,
+                    weight: parseFloat(entry.weight),
                     category: "fakeCat",
                     categoryShortText: "fakeCatShort",
                     gender: apiBoxer.gender == "male" ? Gender.MALE : Gender.FEMALE,
