@@ -1,23 +1,22 @@
 <template>
-    <div class="me-3">
-        <button
-            v-if="store.canCompete(boxer, opponent)"
-            class="btn btn-outline-success btn-sm"
-            @click="store.addToFightCard(boxer, opponent)"
-        >
-            <i class="bi bi-person-plus-fill" />
-        </button>
-        <button
-            v-if="store.isCompeting(boxer, opponent)"
-            class="btn btn-outline-danger btn-sm"
-            @click="store.removeFromFightCard(boxer, opponent)"
-        >
-            <i class="bi bi-person-dash-fill" />
-        </button>
-    </div>
     <div class="w-100">
         <div class="d-flex justify-content-between">
             <div class="">
+                <button
+                    v-if="store.canCompete(boxer, opponent)"
+                    class="btn btn-outline-success btn-sm"
+                    @click="store.addToFightCard(boxer, opponent)"
+                >
+                    <i class="bi bi-person-plus-fill" />
+                </button>
+                <button
+                    v-if="store.isCompeting(boxer, opponent)"
+                    class="btn btn-outline-danger btn-sm"
+                    @click="store.removeFromFightCard(boxer, opponent)"
+                >
+                    <i class="bi bi-person-dash-fill" />
+                </button>
+
                 {{ store.getBoxerDisplayName(opponent) }}
             </div>
             <div

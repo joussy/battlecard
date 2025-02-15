@@ -1,6 +1,6 @@
 <template>
     <span
-        class="badge ms-2"
+        class="badge ms-1"
         :class="{
             'text-bg-success': store.getNbFightsForBoxer(boxer) < 2,
             'text-bg-warning': store.getNbFightsForBoxer(boxer) == 2,

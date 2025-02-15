@@ -1,6 +1,6 @@
 <template>
     <span
-        class="badge ms-2"
+        class="badge ms-1"
         :class="{
             'text-bg-danger': modalityError,
             'text-bg-light': !modalityError,
