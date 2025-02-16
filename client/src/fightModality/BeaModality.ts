@@ -1,5 +1,5 @@
 import { BoxerAttributes } from "../types/boxing"
-import { ModalityError, ModalityErrorType } from "../types/modality"
+import { ModalityError, ModalityErrorType } from "../types/modality.d"
 import { BaseModality } from "./BaseModality"
 import { differenceInDays } from "date-fns"
 
