@@ -2,6 +2,20 @@
     <div class="card mb-3">
         <div class="card-header"><i class="bi bi-gear me-2" />General</div>
         <div class="card-body">
+            <div class="mb-3">
+                <button
+                    class="btn btn-warning ms-2"
+                    @click="auth()"
+                >
+                    Auth
+                </button>
+                <button
+                    class="btn btn-warning ms-2"
+                    @click="testBtn()"
+                >
+                    Test
+                </button>
+            </div>
             <div class="form-check form-switch mb-3">
                 <input
                     id="darkmodeSwitch"
@@ -82,6 +96,9 @@
 import { defineComponent } from "vue"
 import { Gender } from "@/types/boxing.d"
 import { store } from "@/composables/fight.composable"
+import PocketBase, { AuthRecord } from "pocketbase"
+
+const pb = new PocketBase(import.meta.env.VITE_SERVER_URL)
 
 export default defineComponent({
     data() {
@@ -105,6 +122,9 @@ SERRANO	Amanda	8	F	57	Club1	8/4/2014	A0008
 `,
         }
     },
+    mounted() {
+        console.log("mounted")
+    },
     methods: {
         processClipboard() {
             this.store.importFromCsv(this.clipboard)
@@ -117,6 +137,18 @@ SERRANO	Amanda	8	F	57	Club1	8/4/2014	A0008
         },
         toggleDarkMode() {
             this.store.darkMode = !this.store.darkMode
+        },
+        async auth() {
+            const authData = await pb.collection("users").authWithOAuth2({ provider: "google" })
+
+            // after the above you can also access the auth data from the authStore
+            console.log(pb.authStore.isValid)
+            console.log(pb.authStore.token)
+        },
+        testBtn() {
+            if (pb.authStore.record) {
+                console.log(pb.files.getURL(pb.authStore.record, pb.authStore.record?.avatar))
+            }
         },
     },
 })
