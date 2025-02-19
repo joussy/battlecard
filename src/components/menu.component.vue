@@ -87,6 +87,15 @@ export default {
     components: {
         Icon: Icon,
     },
+    computed() {
+        {
+            // if (store.pocketBase?.authStore.record) {
+            //     return store.pocketBase.files.getURL(store.pocketBase.authStore.record, store.pocketBase.authStore.record?.avatar))
+            // }
+
+            return null
+        }
+    },
 }
 </script>
 <style>

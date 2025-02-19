@@ -13,6 +13,9 @@ export interface FightStorage {
 export interface DataStorage {
     boxers: BoxerStorage[]
     fightCard: FightStorage[]
+}
+
+export interface UserStorage {
     darkMode: boolean
     apiServerAddress: string
     hideNonMatchableOpponents: boolean

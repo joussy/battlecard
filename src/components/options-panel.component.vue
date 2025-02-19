@@ -22,7 +22,7 @@
                     class="form-check-input"
                     type="checkbox"
                     role="switch"
-                    :checked="store.darkMode"
+                    :checked="userStore.darkMode"
                     @click="toggleDarkMode()"
                 />
                 <label
@@ -39,7 +39,7 @@
                 >
                 <input
                     id="apiUrl"
-                    v-model="store.apiServerAddress"
+                    v-model="userStore.apiServerAddress"
                     type="url"
                     class="form-control"
                     placeholder="https://my-ip-server"
@@ -96,14 +96,13 @@
 import { defineComponent } from "vue"
 import { Gender } from "@/types/boxing.d"
 import { store } from "@/composables/fight.composable"
-import PocketBase, { AuthRecord } from "pocketbase"
-
-const pb = new PocketBase(import.meta.env.VITE_SERVER_URL)
+import { userStore } from "@/composables/user.composable"
 
 export default defineComponent({
     data() {
         return {
             store,
+            userStore,
             Gender: Gender,
             // LastName	FirstName	Fights		Sex	Weight	Club	Birthdate   License
             clipboard: `
@@ -136,18 +135,24 @@ SERRANO	Amanda	8	F	57	Club1	8/4/2014	A0008
             localStorage.removeItem("store")
         },
         toggleDarkMode() {
-            this.store.darkMode = !this.store.darkMode
+            userStore.darkMode = !userStore.darkMode
         },
         async auth() {
-            const authData = await pb.collection("users").authWithOAuth2({ provider: "google" })
+            if (!store.pocketBase) return
+            const authData = await store.pocketBase.collection("users").authWithOAuth2({ provider: "google" })
 
             // after the above you can also access the auth data from the authStore
-            console.log(pb.authStore.isValid)
-            console.log(pb.authStore.token)
+            console.log(store.pocketBase.authStore.isValid)
+            console.log(store.pocketBase.authStore.token)
         },
         testBtn() {
-            if (pb.authStore.record) {
-                console.log(pb.files.getURL(pb.authStore.record, pb.authStore.record?.avatar))
+            if (store.pocketBase?.authStore.record) {
+                console.log(
+                    store.pocketBase.files.getURL(
+                        store.pocketBase.authStore.record,
+                        store.pocketBase.authStore.record?.avatar
+                    )
+                )
             }
         },
     },

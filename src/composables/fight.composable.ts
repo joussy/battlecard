@@ -6,16 +6,17 @@ import { BeaModality } from "@/fightModality/BeaModality"
 import { stringify as stringifyCsv, parse as parseCsv } from "csv/browser/esm/sync"
 import { format, parse } from "date-fns"
 import { ApiService } from "@/services/api.service"
+import PocketBase from "pocketbase"
+import { userStore } from "./user.composable"
+
+const pb = import.meta.env.VITE_SERVER_URL ? new PocketBase(import.meta.env.VITE_SERVER_URL) : null
 
 export const store = reactive({
-    darkMode: false,
     restored: false as boolean,
     fightCard: [] as Fight[],
     boxers: [] as Boxer[],
     modality: new BeaModality(),
-    apiServerAddress: "",
-    hideNonMatchableOpponents: false,
-    hideFightersWithNoMatch: false,
+    pocketBase: pb,
     clear(): void {
         this.boxers = []
         this.fightCard = []
@@ -132,7 +133,7 @@ export const store = reactive({
             delimiter: ",",
         })
         for (const [, entry] of parsedCsv.entries()) {
-            const apiBoxer = await ApiService.getBoxerById(entry.licence, store.apiServerAddress)
+            const apiBoxer = await ApiService.getBoxerById(entry.licence, userStore.apiServerAddress)
             if (apiBoxer) {
                 this.addBoxer({
                     id: 0,
@@ -220,11 +221,6 @@ export function loadStore(): void {
             }
         }
 
-        store.darkMode = localStorageData.darkMode
-        store.apiServerAddress = localStorageData.apiServerAddress
-        store.hideNonMatchableOpponents = localStorageData.hideNonMatchableOpponents
-        store.hideFightersWithNoMatch = localStorageData.hideFightersWithNoMatch
-
         console.debug("store loaded")
         console.debug(localStorageData)
     } else {
@@ -232,11 +228,6 @@ export function loadStore(): void {
     }
     store.restored = true
 }
-
-watchEffect(() => {
-    const htmlElement = document.documentElement
-    htmlElement.setAttribute("data-bs-theme", store.darkMode ? "dark" : "light")
-})
 
 watchEffect(() => {
     if (!store.restored) {
@@ -250,10 +241,6 @@ watchEffect(() => {
         fightCard: store.fightCard.map((f) => {
             return { boxer1Id: f.boxer1.attributes.id, boxer2Id: f.boxer2.attributes.id } as FightStorage
         }),
-        darkMode: store.darkMode,
-        apiServerAddress: store.apiServerAddress,
-        hideNonMatchableOpponents: store.hideNonMatchableOpponents,
-        hideFightersWithNoMatch: store.hideFightersWithNoMatch,
     }
     localStorage.setItem("store", JSON.stringify(localStorageData))
     console.debug("store updated")

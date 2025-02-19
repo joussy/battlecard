@@ -17,7 +17,7 @@
         </button>
         <button
             class="btn btn-outline-success mb-3 ms-2"
-            @click="(boxerToEdit = null), (boxerAddMode = !boxerAddMode)"
+            @click="((boxerToEdit = null), (boxerAddMode = !boxerAddMode))"
         >
             <i class="bi bi-person-add" />
         </button>
@@ -68,6 +68,7 @@ import BoxerAddComponent from "@/components/boxer-add.component.vue"
 
 import { store } from "@/composables/fight.composable"
 import BoxerSelectorFiltersComponent from "@/components/boxer-selector-filters.component.vue"
+import { userStore } from "@/composables/user.composable"
 
 export default defineComponent({
     components: {
@@ -116,7 +117,7 @@ export default defineComponent({
         },
         getBoxersToDisplay(): Boxer[] {
             return store.boxers.filter((b) => {
-                if (store.hideFightersWithNoMatch && !b.opponents.some((o) => o.isEligible)) return false
+                if (userStore.hideFightersWithNoMatch && !b.opponents.some((o) => o.isEligible)) return false
                 return true
             })
         },

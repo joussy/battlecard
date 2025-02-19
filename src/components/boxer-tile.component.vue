@@ -100,6 +100,7 @@ import PossibleBadgeComponent from "@/components/core/possible-badge.component.v
 
 import { store } from "@/composables/fight.composable"
 import IconComponent from "@/components/core/icon.component.vue"
+import { userStore } from "@/composables/user.composable"
 
 export default defineComponent({
     components: {
@@ -135,7 +136,7 @@ export default defineComponent({
         },
         getOpponentsToDisplay(): Opponent[] {
             return this.boxer.opponents.filter((o) => {
-                if (store.hideNonMatchableOpponents && !o.isEligible) return false
+                if (userStore.hideNonMatchableOpponents && !o.isEligible) return false
                 return true
             })
         },
