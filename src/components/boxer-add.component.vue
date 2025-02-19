@@ -200,7 +200,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from "vue"
-import { store } from "@/composables/fight.composable"
+import { fightCardStore } from "@/composables/fight.composable"
 
 import { configure, defineRule, GenericObject, useForm } from "vee-validate"
 import { BoxerAttributes, Gender } from "@/types/boxing.d"
@@ -298,7 +298,7 @@ export default defineComponent({
         }
     },
     mounted() {
-        this.clubsAutoCompleteList = store.getClubs()
+        this.clubsAutoCompleteList = fightCardStore.getClubs()
         console.log(this.boxer)
     },
 })

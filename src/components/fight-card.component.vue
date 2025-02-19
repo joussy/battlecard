@@ -51,7 +51,7 @@
 <script lang="ts">
 import { Gender } from "@/types/boxing.d"
 import ModalityErrorComponent from "@/components/core/modality-error.component.vue"
-import { store } from "@/composables/fight.composable"
+import { fightCardStore } from "@/composables/fight.composable"
 import Icon from "@/components/core/icon.component.vue"
 
 export default {
@@ -62,7 +62,7 @@ export default {
     data() {
         return {
             Gender: Gender,
-            store,
+            store: fightCardStore,
         }
     },
     methods: {},

@@ -66,7 +66,7 @@ import { ModalityErrorType } from "@/types/modality.d"
 import BoxerTileComponent from "@/components/boxer-tile.component.vue"
 import BoxerAddComponent from "@/components/boxer-add.component.vue"
 
-import { store } from "@/composables/fight.composable"
+import { fightCardStore } from "@/composables/fight.composable"
 import BoxerSelectorFiltersComponent from "@/components/boxer-selector-filters.component.vue"
 import { userStore } from "@/composables/user.composable"
 
@@ -78,7 +78,7 @@ export default defineComponent({
     },
     data() {
         return {
-            store,
+            store: fightCardStore,
             Gender: Gender,
             ModalityErrorType: ModalityErrorType,
             boxerAddMode: false,
@@ -98,11 +98,11 @@ export default defineComponent({
         },
         onBoxerAdd(newBoxer: BoxerAttributes) {
             this.boxerAddMode = false
-            store.addBoxer(newBoxer)
-            store.computeBoxersOpponents()
+            fightCardStore.addBoxer(newBoxer)
+            fightCardStore.computeBoxersOpponents()
         },
         downloadCsv() {
-            const csv = store.getAvailableBoxersAsCsv()
+            const csv = fightCardStore.getAvailableBoxersAsCsv()
             const blob = new Blob([csv], { type: "text/csv" })
             const elem = window.document.createElement("a")
             elem.href = window.URL.createObjectURL(blob)
@@ -116,7 +116,7 @@ export default defineComponent({
             this.boxerAddMode = true
         },
         getBoxersToDisplay(): Boxer[] {
-            return store.boxers.filter((b) => {
+            return fightCardStore.boxers.filter((b) => {
                 if (userStore.hideFightersWithNoMatch && !b.opponents.some((o) => o.isEligible)) return false
                 return true
             })

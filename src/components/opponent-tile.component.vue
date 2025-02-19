@@ -58,7 +58,7 @@ import LinkedFightsBadgeComponent from "@/components/core/linked-fights-badge.co
 import WeightBadgeComponent from "@/components/core/weight-badge.component.vue"
 import AgeBadgeComponent from "@/components/core/age-badge.component.vue"
 
-import { store } from "@/composables/fight.composable"
+import { fightCardStore } from "@/composables/fight.composable"
 
 export default defineComponent({
     components: {
@@ -79,7 +79,7 @@ export default defineComponent({
     },
     data() {
         let ret = {
-            store,
+            store: fightCardStore,
             ModalityErrorType: ModalityErrorType,
         }
 

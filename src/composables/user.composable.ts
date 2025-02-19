@@ -2,15 +2,23 @@ import { reactive, watchEffect } from "vue"
 import { UserStorage } from "@/types/localstorage.d"
 import PocketBase from "pocketbase"
 
-const pb = import.meta.env.VITE_SERVER_URL ? new PocketBase(import.meta.env.VITE_SERVER_URL) : null
+const pocketBase = import.meta.env.VITE_SERVER_URL ? new PocketBase(import.meta.env.VITE_SERVER_URL) : null
 
 export const userStore = reactive({
     darkMode: false,
     apiServerAddress: "",
     hideNonMatchableOpponents: false,
     hideFightersWithNoMatch: false,
-    pocketBase: pb,
     restored: false as boolean,
+    getAvatar() {
+        if (pocketBase?.authStore.record) {
+            return pocketBase.files.getURL(pocketBase.authStore.record, pocketBase.authStore.record?.avatar)
+        }
+    },
+    async authenticate() {
+        if (!pocketBase) return null
+        const authData = await pocketBase.collection("users").authWithOAuth2({ provider: "google" })
+    },
 })
 
 export function loadUserStore(): void {

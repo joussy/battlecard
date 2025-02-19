@@ -95,13 +95,13 @@
 <script lang="ts">
 import { defineComponent } from "vue"
 import { Gender } from "@/types/boxing.d"
-import { store } from "@/composables/fight.composable"
+import { fightCardStore } from "@/composables/fight.composable"
 import { userStore } from "@/composables/user.composable"
 
 export default defineComponent({
     data() {
         return {
-            store,
+            store: fightCardStore,
             userStore,
             Gender: Gender,
             // LastName	FirstName	Fights		Sex	Weight	Club	Birthdate   License
@@ -138,23 +138,9 @@ SERRANO	Amanda	8	F	57	Club1	8/4/2014	A0008
             userStore.darkMode = !userStore.darkMode
         },
         async auth() {
-            if (!store.pocketBase) return
-            const authData = await store.pocketBase.collection("users").authWithOAuth2({ provider: "google" })
-
-            // after the above you can also access the auth data from the authStore
-            console.log(store.pocketBase.authStore.isValid)
-            console.log(store.pocketBase.authStore.token)
+            userStore.authenticate()
         },
-        testBtn() {
-            if (store.pocketBase?.authStore.record) {
-                console.log(
-                    store.pocketBase.files.getURL(
-                        store.pocketBase.authStore.record,
-                        store.pocketBase.authStore.record?.avatar
-                    )
-                )
-            }
-        },
+        testBtn() {},
     },
 })
 </script>

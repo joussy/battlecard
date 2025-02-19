@@ -1,6 +1,6 @@
 import { reactive, toRaw, watchEffect } from "vue"
 import { Boxer, BoxerAttributes, Fight, Gender, Opponent } from "@/types/boxing.d"
-import { DataStorage, BoxerStorage, FightStorage } from "@/types/localstorage.d"
+import { FightCardStorage, BoxerStorage, FightStorage } from "@/types/localstorage.d"
 import { ModalityError, ModalityErrorType } from "@/types/modality.d"
 import { BeaModality } from "@/fightModality/BeaModality"
 import { stringify as stringifyCsv, parse as parseCsv } from "csv/browser/esm/sync"
@@ -9,14 +9,13 @@ import { ApiService } from "@/services/api.service"
 import PocketBase from "pocketbase"
 import { userStore } from "./user.composable"
 
-const pb = import.meta.env.VITE_SERVER_URL ? new PocketBase(import.meta.env.VITE_SERVER_URL) : null
+const pocketBase = import.meta.env.VITE_SERVER_URL ? new PocketBase(import.meta.env.VITE_SERVER_URL) : null
 
-export const store = reactive({
+export const fightCardStore = reactive({
     restored: false as boolean,
     fightCard: [] as Fight[],
     boxers: [] as Boxer[],
     modality: new BeaModality(),
-    pocketBase: pb,
     clear(): void {
         this.boxers = []
         this.fightCard = []
@@ -196,11 +195,11 @@ export const store = reactive({
 
 export function loadStore(): void {
     console.debug("loading store ... ")
-    const localStorageDataString = localStorage.getItem("store")
+    const localStorageDataString = localStorage.getItem("fightCardStore")
     if (localStorageDataString) {
-        const localStorageData: DataStorage = JSON.parse(localStorageDataString)
+        const localStorageData: FightCardStorage = JSON.parse(localStorageDataString)
 
-        store.boxers = localStorageData.boxers.map((b) => {
+        fightCardStore.boxers = localStorageData.boxers.map((b) => {
             return {
                 attributes: {
                     ...b.attributes,
@@ -209,15 +208,15 @@ export function loadStore(): void {
                 collapsed: b.collapsed,
             } as Boxer
         })
-        store.computeBoxersOpponents()
+        fightCardStore.computeBoxersOpponents()
         // Create a map of boxers by their id for quick lookup
-        const boxerMap = new Map(store.boxers.map((boxer) => [boxer.attributes.id, boxer]))
+        const boxerMap = new Map(fightCardStore.boxers.map((boxer) => [boxer.attributes.id, boxer]))
 
         for (const fight of localStorageData.fightCard) {
             const boxer1 = boxerMap.get(fight.boxer1Id)
             const boxer2 = boxerMap.get(fight.boxer2Id)
             if (boxer1 && boxer2) {
-                store.addToFightCard(boxer1, boxer2)
+                fightCardStore.addToFightCard(boxer1, boxer2)
             }
         }
 
@@ -226,22 +225,22 @@ export function loadStore(): void {
     } else {
         console.debug("no store available ... ")
     }
-    store.restored = true
+    fightCardStore.restored = true
 }
 
 watchEffect(() => {
-    if (!store.restored) {
+    if (!fightCardStore.restored) {
         return
     }
 
-    const localStorageData: DataStorage = {
-        boxers: store.boxers.map((b): BoxerStorage => {
+    const localStorageData: FightCardStorage = {
+        boxers: fightCardStore.boxers.map((b): BoxerStorage => {
             return { attributes: toRaw(b.attributes), collapsed: b.collapsed }
         }),
-        fightCard: store.fightCard.map((f) => {
+        fightCard: fightCardStore.fightCard.map((f) => {
             return { boxer1Id: f.boxer1.attributes.id, boxer2Id: f.boxer2.attributes.id } as FightStorage
         }),
     }
-    localStorage.setItem("store", JSON.stringify(localStorageData))
+    localStorage.setItem("fightCardStore", JSON.stringify(localStorageData))
     console.debug("store updated")
 })

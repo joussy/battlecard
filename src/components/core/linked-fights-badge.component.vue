@@ -16,7 +16,7 @@
 <script lang="ts">
 import { PropType, defineComponent } from "vue"
 
-import { store } from "@/composables/fight.composable"
+import { fightCardStore } from "@/composables/fight.composable"
 import { Boxer } from "@/types/boxing"
 import { ModalityError } from "@/types/modality"
 import IconComponent from "@/components/core/icon.component.vue"
@@ -38,7 +38,7 @@ export default defineComponent({
     },
     data() {
         return {
-            store,
+            store: fightCardStore,
         }
     },
 })
