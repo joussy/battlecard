@@ -38,9 +38,10 @@
                 </div>
                 <button
                     class="btn btn-danger"
+                    alt="Sign out"
                     @click="logout()"
                 >
-                    Logout
+                    <i class="bi bi-box-arrow-right"></i>
                 </button>
             </div>
         </div>
