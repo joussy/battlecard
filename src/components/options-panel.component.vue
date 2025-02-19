@@ -8,7 +8,7 @@
             <button
                 v-if="!userStore.account"
                 class="btn btn-warning ms-2"
-                @click="auth()"
+                @click="signIn()"
             >
                 Sign In
             </button>
@@ -36,7 +36,12 @@
                         {{ userStore.account?.email }}
                     </div>
                 </div>
-                <button class="btn btn-danger">Logout</button>
+                <button
+                    class="btn btn-danger"
+                    @click="logout()"
+                >
+                    Logout
+                </button>
             </div>
         </div>
     </div>
@@ -161,7 +166,7 @@ SERRANO	Amanda	8	F	57	Club1	8/4/2014	A0008
         toggleDarkMode() {
             userStore.darkMode = !userStore.darkMode
         },
-        async auth() {
+        async signIn() {
             userStore.authenticate()
         },
         logout() {
