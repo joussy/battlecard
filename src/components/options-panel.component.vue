@@ -3,21 +3,40 @@
         v-if="userStore.authenticationAvailable"
         class="card mb-3"
     >
-        <div class="card-header"><i class="bi bi-gear me-2" />Account</div>
+        <div class="card-header"><i class="bi bi-person me-2" />Account</div>
         <div class="card-body">
-            <div class="mb-3">
-                <button
-                    class="btn btn-warning ms-2"
-                    @click="auth()"
-                >
-                    Sign In
-                </button>
-                <button
-                    class="btn btn-warning ms-2"
-                    @click="logout()"
-                >
-                    Logout
-                </button>
+            <button
+                v-if="!userStore.account"
+                class="btn btn-warning ms-2"
+                @click="auth()"
+            >
+                Sign In
+            </button>
+            <div
+                v-else
+                class="d-flex flex-row align-items-center"
+            >
+                <img
+                    v-if="userStore.account.avatar"
+                    :src="userStore.account.avatar"
+                    class="rounded-circle me-2 avatar-icon"
+                    alt="User Avatar"
+                />
+                <i
+                    v-else
+                    class="bi bi-person-circle me-2"
+                    :style="{ 'font-size': '2.5rem' }"
+                ></i>
+                <div class="flex-grow-1">
+                    <strong>{{ userStore.account?.name }}</strong>
+                    <div
+                        class="text-muted"
+                        style="font-size: 0.85rem"
+                    >
+                        {{ userStore.account?.email }}
+                    </div>
+                </div>
+                <button class="btn btn-danger">Logout</button>
             </div>
         </div>
     </div>
@@ -151,3 +170,9 @@ SERRANO	Amanda	8	F	57	Club1	8/4/2014	A0008
     },
 })
 </script>
+<style lang="scss">
+.avatar-icon {
+    width: 40px;
+    height: 40px;
+}
+</style>

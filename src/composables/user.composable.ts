@@ -31,6 +31,7 @@ function updateAccount() {
         userStore.account = {
             id: pocketBase.authStore.record.id,
             name: pocketBase.authStore.record.name as string,
+            email: pocketBase.authStore.record.email as string,
             avatar: null,
         }
         if (pocketBase.authStore.record?.avatar) {
