@@ -1,6 +1,7 @@
 import { reactive, watchEffect } from "vue"
 import { UserStorage } from "@/types/localstorage.d"
 import PocketBase from "pocketbase"
+import { UserAccount } from "@/types/user"
 
 const pocketBase = import.meta.env.VITE_SERVER_URL ? new PocketBase(import.meta.env.VITE_SERVER_URL) : null
 
@@ -10,19 +11,44 @@ export const userStore = reactive({
     hideNonMatchableOpponents: false,
     hideFightersWithNoMatch: false,
     restored: false as boolean,
-    getAvatar() {
-        if (pocketBase?.authStore.record) {
-            return pocketBase.files.getURL(pocketBase.authStore.record, pocketBase.authStore.record?.avatar)
-        }
-    },
+    account: null as UserAccount | null,
+    authenticationAvailable: pocketBase != null,
     async authenticate() {
+        if (!pocketBase || pocketBase.authStore.isValid) return null
+        await pocketBase.collection("users").authWithOAuth2({ provider: "google" })
+        updateAccount()
+    },
+    async logout() {
         if (!pocketBase) return null
-        const authData = await pocketBase.collection("users").authWithOAuth2({ provider: "google" })
+        await pocketBase.authStore.clear()
     },
 })
 
+function updateAccount() {
+    if (!pocketBase?.authStore.isValid) {
+        userStore.account = null
+    } else if (pocketBase?.authStore.record) {
+        userStore.account = {
+            id: pocketBase.authStore.record.id,
+            name: pocketBase.authStore.record.name as string,
+            avatar: null,
+        }
+        if (pocketBase.authStore.record?.avatar) {
+            userStore.account.avatar = pocketBase.files.getURL(
+                pocketBase.authStore.record,
+                pocketBase.authStore.record.avatar,
+                {}
+            )
+        }
+    }
+}
+
 export function loadUserStore(): void {
     console.debug("loading user ... ")
+    pocketBase?.authStore.onChange(() => {
+        updateAccount()
+    })
+    updateAccount()
     const localStorageDataString = localStorage.getItem("userStore")
     if (localStorageDataString) {
         const localStorageData: UserStorage = JSON.parse(localStorageDataString)
@@ -33,7 +59,6 @@ export function loadUserStore(): void {
         userStore.hideFightersWithNoMatch = localStorageData.hideFightersWithNoMatch
 
         console.debug("store loaded")
-        console.debug(localStorageData)
     } else {
         console.debug("no store available ... ")
     }

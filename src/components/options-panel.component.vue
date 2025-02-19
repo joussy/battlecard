@@ -1,21 +1,29 @@
 <template>
-    <div class="card mb-3">
-        <div class="card-header"><i class="bi bi-gear me-2" />General</div>
+    <div
+        v-if="userStore.authenticationAvailable"
+        class="card mb-3"
+    >
+        <div class="card-header"><i class="bi bi-gear me-2" />Account</div>
         <div class="card-body">
             <div class="mb-3">
                 <button
                     class="btn btn-warning ms-2"
                     @click="auth()"
                 >
-                    Auth
+                    Sign In
                 </button>
                 <button
                     class="btn btn-warning ms-2"
-                    @click="testBtn()"
+                    @click="logout()"
                 >
-                    Test
+                    Logout
                 </button>
             </div>
+        </div>
+    </div>
+    <div class="card mb-3">
+        <div class="card-header"><i class="bi bi-gear me-2" />General</div>
+        <div class="card-body">
             <div class="form-check form-switch mb-3">
                 <input
                     id="darkmodeSwitch"
@@ -121,9 +129,6 @@ SERRANO	Amanda	8	F	57	Club1	8/4/2014	A0008
 `,
         }
     },
-    mounted() {
-        console.log("mounted")
-    },
     methods: {
         processClipboard() {
             this.store.importFromCsv(this.clipboard)
@@ -140,7 +145,9 @@ SERRANO	Amanda	8	F	57	Club1	8/4/2014	A0008
         async auth() {
             userStore.authenticate()
         },
-        testBtn() {},
+        logout() {
+            userStore.logout()
+        },
     },
 })
 </script>

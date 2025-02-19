@@ -7,7 +7,19 @@
             class="nav-link text-center"
             active-class="active"
         >
-            <i class="bi bi-gear-fill fs-2"></i>
+            <i
+                v-if="!userStore.account"
+                class="bi bi-gear-fill fs-2"
+            ></i>
+            <i
+                v-else-if="!userStore.account.avatar"
+                class="bi bi-gear-fill fs-2"
+            ></i>
+            <img
+                v-else
+                :src="userStore.account.avatar"
+                class="rounded-circle icon-img-2 align-text-bottom"
+            />
             <div>Settings</div>
         </router-link>
         <router-link
@@ -82,18 +94,15 @@
 </template>
 <script lang="ts">
 import Icon from "@/components/core/icon.component.vue"
+import { userStore } from "@/composables/user.composable"
 
 export default {
     components: {
         Icon: Icon,
     },
-    computed() {
-        {
-            // if (store.pocketBase?.authStore.record) {
-            //     return store.pocketBase.files.getURL(store.pocketBase.authStore.record, store.pocketBase.authStore.record?.avatar))
-            // }
-
-            return null
+    data() {
+        return {
+            userStore,
         }
     },
 }
@@ -105,5 +114,11 @@ export default {
 }
 .bottom-menu .nav-link.active {
     color: #007bff;
+}
+.icon-img-2 {
+    width: 30px; /* Matches svg-2 */
+    height: 30px;
+    margin-top: 5px;
+    display: inline-block;
 }
 </style>

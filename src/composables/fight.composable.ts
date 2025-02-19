@@ -6,10 +6,7 @@ import { BeaModality } from "@/fightModality/BeaModality"
 import { stringify as stringifyCsv, parse as parseCsv } from "csv/browser/esm/sync"
 import { format, parse } from "date-fns"
 import { ApiService } from "@/services/api.service"
-import PocketBase from "pocketbase"
 import { userStore } from "./user.composable"
-
-const pocketBase = import.meta.env.VITE_SERVER_URL ? new PocketBase(import.meta.env.VITE_SERVER_URL) : null
 
 export const fightCardStore = reactive({
     restored: false as boolean,
