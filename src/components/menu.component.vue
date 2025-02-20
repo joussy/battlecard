@@ -7,7 +7,19 @@
             class="nav-link text-center"
             active-class="active"
         >
-            <i class="bi bi-gear-fill fs-2"></i>
+            <i
+                v-if="!userStore.account"
+                class="bi bi-gear-fill fs-2"
+            ></i>
+            <i
+                v-else-if="!userStore.account.avatar"
+                class="bi bi-person-circle fs-2"
+            ></i>
+            <img
+                v-else
+                :src="userStore.account.avatar"
+                class="rounded-circle icon-img-2 align-text-bottom"
+            />
             <div>Settings</div>
         </router-link>
         <router-link
@@ -35,14 +47,14 @@
             <div>Metrics</div>
         </router-link>
     </nav>
-    <ul class="nav nav-underline fixed-top bg-light-subtle d-none d-md-flex">
-        <li class="navbar-brand pt-2 ps-3">
+    <nav class="nav nav-underline fixed-top bg-light-subtle d-none d-md-flex">
+        <div class="navbar-brand pt-2 ps-3">
             <Icon
                 name="ring"
                 class="svg-2"
             />
-        </li>
-        <li class="nav-item">
+        </div>
+        <div class="nav-item">
             <router-link
                 :to="{ name: 'settings' }"
                 class="nav-link link-secondary"
@@ -50,8 +62,8 @@
             >
                 Settings
             </router-link>
-        </li>
-        <li class="nav-item">
+        </div>
+        <div class="nav-item">
             <router-link
                 :to="{ name: 'selector' }"
                 class="nav-link link-secondary"
@@ -59,8 +71,8 @@
             >
                 Selector
             </router-link>
-        </li>
-        <li class="nav-item">
+        </div>
+        <div class="nav-item">
             <router-link
                 :to="{ name: 'card' }"
                 class="nav-link link-secondary"
@@ -68,8 +80,8 @@
             >
                 Card
             </router-link>
-        </li>
-        <li class="nav-item">
+        </div>
+        <div class="nav-item">
             <router-link
                 :to="{ name: 'metrics' }"
                 class="nav-link link-secondary"
@@ -77,15 +89,55 @@
             >
                 Metrics
             </router-link>
-        </li>
-    </ul>
+        </div>
+        <div class="nav-item dropdown ms-auto me-3">
+            <div
+                class="border-0 d-flex align-items-center icon-img-2"
+                type="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+            >
+                <i
+                    v-if="!userStore.account?.avatar"
+                    class="bi bi-person-circle fs-2"
+                ></i>
+                <img
+                    v-else
+                    :src="userStore.account.avatar"
+                    class="rounded-circle icon-img-2 align-text-bottom"
+                />
+            </div>
+            <ul class="dropdown-menu dropdown-menu-end">
+                <li v-if="userStore.account">
+                    <a
+                        class="dropdown-item"
+                        @click="userStore.logout()"
+                        >Logout</a
+                    >
+                </li>
+                <li v-else>
+                    <a
+                        class="dropdown-item"
+                        @click="userStore.authenticate()"
+                        >Login</a
+                    >
+                </li>
+            </ul>
+        </div>
+    </nav>
 </template>
 <script lang="ts">
 import Icon from "@/components/core/icon.component.vue"
+import { userStore } from "@/composables/user.composable"
 
 export default {
     components: {
         Icon: Icon,
+    },
+    data() {
+        return {
+            userStore,
+        }
     },
 }
 </script>
@@ -96,5 +148,11 @@ export default {
 }
 .bottom-menu .nav-link.active {
     color: #007bff;
+}
+.icon-img-2 {
+    width: 30px; /* Matches svg-2 */
+    height: 30px;
+    margin-top: 5px;
+    display: inline-block;
 }
 </style>

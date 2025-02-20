@@ -98,8 +98,9 @@ import LinkedFightsBadgeComponent from "@/components/core/linked-fights-badge.co
 import WeightBadgeComponent from "@/components/core/weight-badge.component.vue"
 import PossibleBadgeComponent from "@/components/core/possible-badge.component.vue"
 
-import { store } from "@/composables/fight.composable"
+import { fightCardStore } from "@/composables/fight.composable"
 import IconComponent from "@/components/core/icon.component.vue"
+import { userStore } from "@/composables/user.composable"
 
 export default defineComponent({
     components: {
@@ -120,7 +121,7 @@ export default defineComponent({
     emits: ["boxer-edit"],
     data() {
         return {
-            store,
+            store: fightCardStore,
             Gender: Gender,
             ModalityErrorType: ModalityErrorType,
         }
@@ -135,7 +136,7 @@ export default defineComponent({
         },
         getOpponentsToDisplay(): Opponent[] {
             return this.boxer.opponents.filter((o) => {
-                if (store.hideNonMatchableOpponents && !o.isEligible) return false
+                if (userStore.hideNonMatchableOpponents && !o.isEligible) return false
                 return true
             })
         },

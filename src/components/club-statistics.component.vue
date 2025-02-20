@@ -43,14 +43,14 @@
 
 <script lang="ts">
 import { ClubFighters } from "@/types/boxing.d"
-import { store } from "@/composables/fight.composable"
+import { fightCardStore } from "@/composables/fight.composable"
 import { groupBy } from "@/utils/arrayUtils"
 
 export default {
     components: {},
     data() {
         return {
-            store,
+            store: fightCardStore,
         }
     },
     methods: {
@@ -59,7 +59,7 @@ export default {
             const clubFighters: ClubFighters[] = Array.from(clubs.keys()).map(function (clubKey: string) {
                 return {
                     available: clubs.get(clubKey)?.length ?? 0,
-                    selected: store.fightCard.filter(
+                    selected: fightCardStore.fightCard.filter(
                         (f) => f.boxer1.attributes.club == clubKey || f.boxer2.attributes.club == clubKey
                     ).length,
                     clubName: clubKey,

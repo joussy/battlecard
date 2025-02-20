@@ -10,11 +10,13 @@ export interface FightStorage {
     boxer2Id: number
 }
 
-export interface DataStorage {
+export interface FightCardStorage {
     boxers: BoxerStorage[]
     fightCard: FightStorage[]
+}
+
+export interface UserStorage {
     darkMode: boolean
-    apiServerAddress: string
     hideNonMatchableOpponents: boolean
     hideFightersWithNoMatch: boolean
 }

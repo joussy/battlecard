@@ -9,6 +9,7 @@
 import { defineComponent } from "vue"
 import MenuComponent from "@/components/menu.component.vue"
 import { loadStore } from "@/composables/fight.composable"
+import { loadUserStore } from "@/composables/user.composable"
 
 export default defineComponent({
     components: {
@@ -20,6 +21,7 @@ export default defineComponent({
         }
     },
     async mounted() {
+        await loadUserStore()
         loadStore()
     },
 })

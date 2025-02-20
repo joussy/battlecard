@@ -1,4 +1,51 @@
 <template>
+    <div
+        v-if="userStore.authenticationAvailable"
+        class="card mb-3"
+    >
+        <div class="card-header"><i class="bi bi-person me-2" />Account</div>
+        <div class="card-body">
+            <button
+                v-if="!userStore.account"
+                class="btn btn-warning ms-2"
+                @click="signIn()"
+            >
+                Sign In
+            </button>
+            <div
+                v-else
+                class="d-flex flex-row align-items-center"
+            >
+                <img
+                    v-if="userStore.account.avatar"
+                    :src="userStore.account.avatar"
+                    class="rounded-circle me-2 avatar-icon"
+                    alt="User Avatar"
+                />
+                <i
+                    v-else
+                    class="bi bi-person-circle me-2"
+                    :style="{ 'font-size': '2.5rem' }"
+                ></i>
+                <div class="flex-grow-1">
+                    <strong>{{ userStore.account?.name }}</strong>
+                    <div
+                        class="text-muted"
+                        style="font-size: 0.85rem"
+                    >
+                        {{ userStore.account?.email }}
+                    </div>
+                </div>
+                <button
+                    class="btn btn-danger"
+                    alt="Sign out"
+                    @click="logout()"
+                >
+                    <i class="bi bi-box-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
     <div class="card mb-3">
         <div class="card-header"><i class="bi bi-gear me-2" />General</div>
         <div class="card-body">
@@ -8,7 +55,7 @@
                     class="form-check-input"
                     type="checkbox"
                     role="switch"
-                    :checked="store.darkMode"
+                    :checked="userStore.darkMode"
                     @click="toggleDarkMode()"
                 />
                 <label
@@ -16,28 +63,6 @@
                     for="darkmodeSwitch"
                     >Dark Mode</label
                 >
-            </div>
-            <div class="mb-3">
-                <label
-                    for="apiUrl"
-                    class="form-label"
-                    >API Server Address</label
-                >
-                <input
-                    id="apiUrl"
-                    v-model="store.apiServerAddress"
-                    type="url"
-                    class="form-control"
-                    placeholder="https://my-ip-server"
-                />
-            </div>
-            <div class="mb-3">
-                <button
-                    class="btn btn-danger ms-2"
-                    @click="clearStore()"
-                >
-                    Clear Local Storage
-                </button>
             </div>
         </div>
     </div>
@@ -59,7 +84,10 @@
             </p>
         </div>
     </div>
-    <div class="card">
+    <div
+        v-if="userStore.account?.apiEnabled"
+        class="card"
+    >
         <div class="card-header"><i class="bi bi-globe me-2" />Import from API</div>
         <div class="card-body">
             <p class="card-text">
@@ -81,12 +109,14 @@
 <script lang="ts">
 import { defineComponent } from "vue"
 import { Gender } from "@/types/boxing.d"
-import { store } from "@/composables/fight.composable"
+import { fightCardStore } from "@/composables/fight.composable"
+import { userStore } from "@/composables/user.composable"
 
 export default defineComponent({
     data() {
         return {
-            store,
+            store: fightCardStore,
+            userStore,
             Gender: Gender,
             // LastName	FirstName	Fights		Sex	Weight	Club	Birthdate   License
             clipboard: `
@@ -105,6 +135,9 @@ SERRANO	Amanda	8	F	57	Club1	8/4/2014	A0008
 `,
         }
     },
+    mounted() {
+        console.log(this.userStore.account)
+    },
     methods: {
         processClipboard() {
             this.store.importFromCsv(this.clipboard)
@@ -116,8 +149,20 @@ SERRANO	Amanda	8	F	57	Club1	8/4/2014	A0008
             localStorage.removeItem("store")
         },
         toggleDarkMode() {
-            this.store.darkMode = !this.store.darkMode
+            userStore.darkMode = !userStore.darkMode
+        },
+        async signIn() {
+            userStore.authenticate()
+        },
+        logout() {
+            userStore.logout()
         },
     },
 })
 </script>
+<style lang="scss">
+.avatar-icon {
+    width: 40px;
+    height: 40px;
+}
+</style>

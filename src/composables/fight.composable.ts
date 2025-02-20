@@ -1,21 +1,17 @@
 import { reactive, toRaw, watchEffect } from "vue"
 import { Boxer, BoxerAttributes, Fight, Gender, Opponent } from "@/types/boxing.d"
-import { DataStorage, BoxerStorage, FightStorage } from "@/types/localstorage.d"
+import { FightCardStorage, BoxerStorage, FightStorage } from "@/types/localstorage.d"
 import { ModalityError, ModalityErrorType } from "@/types/modality.d"
 import { BeaModality } from "@/fightModality/BeaModality"
 import { stringify as stringifyCsv, parse as parseCsv } from "csv/browser/esm/sync"
 import { format, parse } from "date-fns"
 import { ApiService } from "@/services/api.service"
 
-export const store = reactive({
-    darkMode: false,
+export const fightCardStore = reactive({
     restored: false as boolean,
     fightCard: [] as Fight[],
     boxers: [] as Boxer[],
     modality: new BeaModality(),
-    apiServerAddress: "",
-    hideNonMatchableOpponents: false,
-    hideFightersWithNoMatch: false,
     clear(): void {
         this.boxers = []
         this.fightCard = []
@@ -132,7 +128,7 @@ export const store = reactive({
             delimiter: ",",
         })
         for (const [, entry] of parsedCsv.entries()) {
-            const apiBoxer = await ApiService.getBoxerById(entry.licence, store.apiServerAddress)
+            const apiBoxer = await ApiService.getBoxerById(entry.licence)
             if (apiBoxer) {
                 this.addBoxer({
                     id: 0,
@@ -195,11 +191,11 @@ export const store = reactive({
 
 export function loadStore(): void {
     console.debug("loading store ... ")
-    const localStorageDataString = localStorage.getItem("store")
+    const localStorageDataString = localStorage.getItem("fightCardStore")
     if (localStorageDataString) {
-        const localStorageData: DataStorage = JSON.parse(localStorageDataString)
+        const localStorageData: FightCardStorage = JSON.parse(localStorageDataString)
 
-        store.boxers = localStorageData.boxers.map((b) => {
+        fightCardStore.boxers = localStorageData.boxers.map((b) => {
             return {
                 attributes: {
                     ...b.attributes,
@@ -208,53 +204,39 @@ export function loadStore(): void {
                 collapsed: b.collapsed,
             } as Boxer
         })
-        store.computeBoxersOpponents()
+        fightCardStore.computeBoxersOpponents()
         // Create a map of boxers by their id for quick lookup
-        const boxerMap = new Map(store.boxers.map((boxer) => [boxer.attributes.id, boxer]))
+        const boxerMap = new Map(fightCardStore.boxers.map((boxer) => [boxer.attributes.id, boxer]))
 
         for (const fight of localStorageData.fightCard) {
             const boxer1 = boxerMap.get(fight.boxer1Id)
             const boxer2 = boxerMap.get(fight.boxer2Id)
             if (boxer1 && boxer2) {
-                store.addToFightCard(boxer1, boxer2)
+                fightCardStore.addToFightCard(boxer1, boxer2)
             }
         }
-
-        store.darkMode = localStorageData.darkMode
-        store.apiServerAddress = localStorageData.apiServerAddress
-        store.hideNonMatchableOpponents = localStorageData.hideNonMatchableOpponents
-        store.hideFightersWithNoMatch = localStorageData.hideFightersWithNoMatch
 
         console.debug("store loaded")
         console.debug(localStorageData)
     } else {
         console.debug("no store available ... ")
     }
-    store.restored = true
+    fightCardStore.restored = true
 }
 
 watchEffect(() => {
-    const htmlElement = document.documentElement
-    htmlElement.setAttribute("data-bs-theme", store.darkMode ? "dark" : "light")
-})
-
-watchEffect(() => {
-    if (!store.restored) {
+    if (!fightCardStore.restored) {
         return
     }
 
-    const localStorageData: DataStorage = {
-        boxers: store.boxers.map((b): BoxerStorage => {
+    const localStorageData: FightCardStorage = {
+        boxers: fightCardStore.boxers.map((b): BoxerStorage => {
             return { attributes: toRaw(b.attributes), collapsed: b.collapsed }
         }),
-        fightCard: store.fightCard.map((f) => {
+        fightCard: fightCardStore.fightCard.map((f) => {
             return { boxer1Id: f.boxer1.attributes.id, boxer2Id: f.boxer2.attributes.id } as FightStorage
         }),
-        darkMode: store.darkMode,
-        apiServerAddress: store.apiServerAddress,
-        hideNonMatchableOpponents: store.hideNonMatchableOpponents,
-        hideFightersWithNoMatch: store.hideFightersWithNoMatch,
     }
-    localStorage.setItem("store", JSON.stringify(localStorageData))
+    localStorage.setItem("fightCardStore", JSON.stringify(localStorageData))
     console.debug("store updated")
 })
