@@ -6,7 +6,6 @@ import { BeaModality } from "@/fightModality/BeaModality"
 import { stringify as stringifyCsv, parse as parseCsv } from "csv/browser/esm/sync"
 import { format, parse } from "date-fns"
 import { ApiService } from "@/services/api.service"
-import { userStore } from "./user.composable"
 
 export const fightCardStore = reactive({
     restored: false as boolean,
@@ -129,7 +128,7 @@ export const fightCardStore = reactive({
             delimiter: ",",
         })
         for (const [, entry] of parsedCsv.entries()) {
-            const apiBoxer = await ApiService.getBoxerById(entry.licence, userStore.apiServerAddress)
+            const apiBoxer = await ApiService.getBoxerById(entry.licence)
             if (apiBoxer) {
                 this.addBoxer({
                     id: 0,

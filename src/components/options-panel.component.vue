@@ -64,28 +64,6 @@
                     >Dark Mode</label
                 >
             </div>
-            <div class="mb-3">
-                <label
-                    for="apiUrl"
-                    class="form-label"
-                    >API Server Address</label
-                >
-                <input
-                    id="apiUrl"
-                    v-model="userStore.apiServerAddress"
-                    type="url"
-                    class="form-control"
-                    placeholder="https://my-ip-server"
-                />
-            </div>
-            <div class="mb-3">
-                <button
-                    class="btn btn-danger ms-2"
-                    @click="clearStore()"
-                >
-                    Clear Local Storage
-                </button>
-            </div>
         </div>
     </div>
     <div class="card mb-3">
@@ -107,7 +85,7 @@
         </div>
     </div>
     <div
-        v-if="userStore.account"
+        v-if="userStore.account?.apiEnabled"
         class="card"
     >
         <div class="card-header"><i class="bi bi-globe me-2" />Import from API</div>
@@ -156,6 +134,9 @@ SERRANO	Amanda	8	F	57	Club1	8/4/2014	A0008
 279689,52
 `,
         }
+    },
+    mounted() {
+        console.log(this.userStore.account)
     },
     methods: {
         processClipboard() {

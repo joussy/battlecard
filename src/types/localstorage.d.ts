@@ -17,7 +17,6 @@ export interface FightCardStorage {
 
 export interface UserStorage {
     darkMode: boolean
-    apiServerAddress: string
     hideNonMatchableOpponents: boolean
     hideFightersWithNoMatch: boolean
 }

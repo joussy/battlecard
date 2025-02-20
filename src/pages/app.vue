@@ -21,7 +21,7 @@ export default defineComponent({
         }
     },
     async mounted() {
-        loadUserStore()
+        await loadUserStore()
         loadStore()
     },
 })

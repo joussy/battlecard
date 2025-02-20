@@ -7,7 +7,6 @@ const pocketBase = import.meta.env.VITE_SERVER_URL ? new PocketBase(import.meta.
 
 export const userStore = reactive({
     darkMode: false,
-    apiServerAddress: "",
     hideNonMatchableOpponents: false,
     hideFightersWithNoMatch: false,
     restored: false as boolean,
@@ -16,7 +15,7 @@ export const userStore = reactive({
     async authenticate() {
         if (!pocketBase || pocketBase.authStore.isValid) return null
         await pocketBase.collection("users").authWithOAuth2({ provider: "google" })
-        updateAccount()
+        await updateAccount()
     },
     async logout() {
         if (!pocketBase) return null
@@ -24,7 +23,7 @@ export const userStore = reactive({
     },
 })
 
-function updateAccount() {
+async function updateAccount() {
     if (!pocketBase?.authStore.isValid) {
         userStore.account = null
     } else if (pocketBase?.authStore.record) {
@@ -33,6 +32,8 @@ function updateAccount() {
             name: pocketBase.authStore.record.name as string,
             email: pocketBase.authStore.record.email as string,
             avatar: null,
+            apiEnabled: false,
+            authToken: pocketBase.authStore.token,
         }
         if (pocketBase.authStore.record?.avatar) {
             userStore.account.avatar = pocketBase.files.getURL(
@@ -41,21 +42,25 @@ function updateAccount() {
                 {}
             )
         }
+        const record = await pocketBase.collection("users").getOne(pocketBase.authStore.record.id, {
+            // expand: "relField1,relField2.subRelField",
+        })
+        userStore.account.apiEnabled = record.apiEnabled
+        console.log(record)
     }
 }
 
-export function loadUserStore(): void {
+export async function loadUserStore() {
     console.debug("loading user ... ")
-    pocketBase?.authStore.onChange(() => {
-        updateAccount()
+    pocketBase?.authStore.onChange(async () => {
+        await updateAccount()
     })
-    updateAccount()
+    await updateAccount()
     const localStorageDataString = localStorage.getItem("userStore")
     if (localStorageDataString) {
         const localStorageData: UserStorage = JSON.parse(localStorageDataString)
 
         userStore.darkMode = localStorageData.darkMode
-        userStore.apiServerAddress = localStorageData.apiServerAddress
         userStore.hideNonMatchableOpponents = localStorageData.hideNonMatchableOpponents
         userStore.hideFightersWithNoMatch = localStorageData.hideFightersWithNoMatch
 
@@ -78,7 +83,6 @@ watchEffect(() => {
 
     const localStorageData: UserStorage = {
         darkMode: userStore.darkMode,
-        apiServerAddress: userStore.apiServerAddress,
         hideNonMatchableOpponents: userStore.hideNonMatchableOpponents,
         hideFightersWithNoMatch: userStore.hideFightersWithNoMatch,
     }
