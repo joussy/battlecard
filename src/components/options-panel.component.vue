@@ -106,7 +106,10 @@
             </p>
         </div>
     </div>
-    <div class="card">
+    <div
+        v-if="userStore.account"
+        class="card"
+    >
         <div class="card-header"><i class="bi bi-globe me-2" />Import from API</div>
         <div class="card-body">
             <p class="card-text">

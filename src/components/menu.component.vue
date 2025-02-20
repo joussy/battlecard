@@ -106,14 +106,6 @@
                     :src="userStore.account.avatar"
                     class="rounded-circle icon-img-2 align-text-bottom"
                 />
-
-                <!-- <img
-                    v-if="userStore.account?.avatar"
-                    :src="userStore.account.avatar"
-                    class="rounded-circle me-2"
-                    width="40"
-                    height="40"
-                /> -->
             </div>
             <ul class="dropdown-menu dropdown-menu-end">
                 <li v-if="userStore.account">
