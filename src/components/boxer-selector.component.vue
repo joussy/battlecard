@@ -11,7 +11,7 @@
         </button>
         <button
             class="btn btn-outline-danger mb-3 ms-2"
-            @click="store.clear()"
+            @click="fightService.clear()"
         >
             <i class="bi bi-trash" />
         </button>
@@ -69,6 +69,7 @@ import BoxerAddComponent from "@/components/boxer-add.component.vue"
 import { fightCardStore } from "@/composables/fight.composable"
 import BoxerSelectorFiltersComponent from "@/components/boxer-selector-filters.component.vue"
 import { userStore } from "@/composables/user.composable"
+import fightService from "@/services/fight.service"
 
 export default defineComponent({
     components: {
@@ -83,6 +84,7 @@ export default defineComponent({
             ModalityErrorType: ModalityErrorType,
             boxerAddMode: false,
             boxerToEdit: null as BoxerAttributes | null,
+            fightService: fightService,
         }
     },
     mounted() {},
@@ -98,11 +100,11 @@ export default defineComponent({
         },
         onBoxerAdd(newBoxer: BoxerAttributes) {
             this.boxerAddMode = false
-            fightCardStore.addBoxer(newBoxer)
-            fightCardStore.computeBoxersOpponents()
+            fightService.addBoxer(newBoxer)
+            fightService.computeBoxersOpponents()
         },
         downloadCsv() {
-            const csv = fightCardStore.getAvailableBoxersAsCsv()
+            const csv = fightService.getAvailableBoxersAsCsv()
             const blob = new Blob([csv], { type: "text/csv" })
             const elem = window.document.createElement("a")
             elem.href = window.URL.createObjectURL(blob)

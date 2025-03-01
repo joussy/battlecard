@@ -8,7 +8,7 @@
 <script lang="ts">
 import { defineComponent } from "vue"
 import MenuComponent from "@/components/menu.component.vue"
-import { loadStore } from "@/composables/fight.composable"
+import fightService from "@/services/fight.service"
 import { loadUserStore } from "@/composables/user.composable"
 
 export default defineComponent({
@@ -22,7 +22,7 @@ export default defineComponent({
     },
     async mounted() {
         await loadUserStore()
-        loadStore()
+        fightService.loadStore()
     },
 })
 </script>

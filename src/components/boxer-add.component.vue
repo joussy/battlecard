@@ -200,10 +200,10 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from "vue"
-import { fightCardStore } from "@/composables/fight.composable"
 
 import { configure, defineRule, GenericObject, useForm } from "vee-validate"
 import { BoxerAttributes, Gender } from "@/types/boxing.d"
+import fightService from "@/services/fight.service"
 
 configure({
     validateOnInput: true,
@@ -222,7 +222,6 @@ defineRule("weightRequired", (value: number) => {
 })
 defineRule("genderRequired", (value: string) => {
     if (!value || value == "none") {
-        console.log("gender required")
         return "This field is required"
     }
     return true
@@ -298,8 +297,7 @@ export default defineComponent({
         }
     },
     mounted() {
-        this.clubsAutoCompleteList = fightCardStore.getClubs()
-        console.log(this.boxer)
+        this.clubsAutoCompleteList = fightService.getClubs()
     },
 })
 </script>

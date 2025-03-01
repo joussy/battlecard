@@ -13,7 +13,7 @@
                             class="bi"
                             :class="boxer.collapsed ? 'bi-chevron-right' : 'bi-chevron-down'"
                         />
-                        {{ store.getBoxerDisplayName(boxer) }}
+                        {{ fightService.getBoxerDisplayName(boxer) }}
                     </div>
                     <div
                         class="font-italic text-right"
@@ -101,6 +101,7 @@ import PossibleBadgeComponent from "@/components/core/possible-badge.component.v
 import { fightCardStore } from "@/composables/fight.composable"
 import IconComponent from "@/components/core/icon.component.vue"
 import { userStore } from "@/composables/user.composable"
+import fightService, { FightService } from "@/services/fight.service"
 
 export default defineComponent({
     components: {
@@ -124,6 +125,7 @@ export default defineComponent({
             store: fightCardStore,
             Gender: Gender,
             ModalityErrorType: ModalityErrorType,
+            fightService: fightService,
         }
     },
     methods: {
@@ -131,7 +133,6 @@ export default defineComponent({
             boxer.collapsed = !boxer.collapsed
         },
         boxerEdit(): void {
-            console.log("boxer-edit")
             this.$emit("boxer-edit")
         },
         getOpponentsToDisplay(): Opponent[] {

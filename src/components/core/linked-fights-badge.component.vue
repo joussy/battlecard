@@ -2,14 +2,14 @@
     <span
         class="badge ms-1"
         :class="{
-            'text-bg-success': store.getNbFightsForBoxer(boxer) < 2,
-            'text-bg-warning': store.getNbFightsForBoxer(boxer) == 2,
-            'text-bg-danger': store.getNbFightsForBoxer(boxer) > 2,
-            invisible: store.getNbFightsForBoxer(boxer) < 1,
+            'text-bg-success': fightService.getNbFightsForBoxer(boxer) < 2,
+            'text-bg-warning': fightService.getNbFightsForBoxer(boxer) == 2,
+            'text-bg-danger': fightService.getNbFightsForBoxer(boxer) > 2,
+            invisible: fightService.getNbFightsForBoxer(boxer) < 1,
         }"
     >
         <Icon name="link" />
-        {{ store.getNbFightsForBoxer(boxer) }}
+        {{ fightService.getNbFightsForBoxer(boxer) }}
     </span>
 </template>
 
@@ -20,6 +20,7 @@ import { fightCardStore } from "@/composables/fight.composable"
 import { Boxer } from "@/types/boxing"
 import { ModalityError } from "@/types/modality"
 import IconComponent from "@/components/core/icon.component.vue"
+import fightService from "@/services/fight.service"
 
 export default defineComponent({
     components: {
@@ -39,6 +40,7 @@ export default defineComponent({
     data() {
         return {
             store: fightCardStore,
+            fightService: fightService,
         }
     },
 })

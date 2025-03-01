@@ -46,7 +46,6 @@ async function updateAccount() {
             // expand: "relField1,relField2.subRelField",
         })
         userStore.account.apiEnabled = record.apiEnabled
-        console.log(record)
     }
 }
 

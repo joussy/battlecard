@@ -111,6 +111,7 @@ import { defineComponent } from "vue"
 import { Gender } from "@/types/boxing.d"
 import { fightCardStore } from "@/composables/fight.composable"
 import { userStore } from "@/composables/user.composable"
+import fightService from "@/services/fight.service"
 
 export default defineComponent({
     data() {
@@ -135,15 +136,13 @@ SERRANO	Amanda	8	F	57	Club1	8/4/2014	A0008
 `,
         }
     },
-    mounted() {
-        console.log(this.userStore.account)
-    },
+    mounted() {},
     methods: {
         processClipboard() {
-            this.store.importFromCsv(this.clipboard)
+            fightService.importFromCsv(this.clipboard)
         },
         processApiImport() {
-            this.store.importFromApiByIds(this.apiClipboard)
+            fightService.importFromApiByIds(this.apiClipboard)
         },
         clearStore() {
             localStorage.removeItem("store")

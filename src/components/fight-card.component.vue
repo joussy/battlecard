@@ -18,8 +18,8 @@
                 <th scope="row">
                     {{ index + 1 }}
                 </th>
-                <td>{{ store.getBoxerDisplayName(fight.boxer1) }}</td>
-                <td>{{ store.getBoxerDisplayName(fight.boxer2) }}</td>
+                <td>{{ fightService.getBoxerDisplayName(fight.boxer1) }}</td>
+                <td>{{ fightService.getBoxerDisplayName(fight.boxer2) }}</td>
                 <td>
                     <Icon
                         v-if="fight.boxer1.attributes.gender == Gender.MALE"
@@ -38,7 +38,7 @@
                 <td>
                     <button
                         class="btn btn-outline-danger btn-sm ms-2"
-                        @click="store.removeFromFightCardByIndex(index)"
+                        @click="fightService.removeFromFightCardByIndex(index)"
                     >
                         <i class="bi bi-person-dash-fill" />
                     </button>
@@ -53,6 +53,7 @@ import { Gender } from "@/types/boxing.d"
 import ModalityErrorComponent from "@/components/core/modality-error.component.vue"
 import { fightCardStore } from "@/composables/fight.composable"
 import Icon from "@/components/core/icon.component.vue"
+import fightService from "@/services/fight.service"
 
 export default {
     components: {
@@ -63,6 +64,7 @@ export default {
         return {
             Gender: Gender,
             store: fightCardStore,
+            fightService: fightService,
         }
     },
     methods: {},
