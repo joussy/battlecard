@@ -204,6 +204,7 @@ import { defineComponent, PropType } from "vue"
 import { configure, defineRule, GenericObject, useForm } from "vee-validate"
 import { BoxerAttributes, Gender } from "@/types/boxing.d"
 import fightService from "@/services/fight.service"
+import { generateRandomId } from "@/utils/string.utils"
 
 configure({
     validateOnInput: true,
@@ -278,7 +279,7 @@ export default defineComponent({
                 categoryShortText: "",
                 license: form.license,
                 nbFights: 0,
-                id: 0,
+                id: generateRandomId(),
             }
             emit("boxer-add", boxerAttributes)
         })

@@ -101,7 +101,7 @@ import PossibleBadgeComponent from "@/components/core/possible-badge.component.v
 import { fightCardStore } from "@/composables/fight.composable"
 import IconComponent from "@/components/core/icon.component.vue"
 import { userStore } from "@/composables/user.composable"
-import fightService, { FightService } from "@/services/fight.service"
+import fightService from "@/services/fight.service"
 
 export default defineComponent({
     components: {

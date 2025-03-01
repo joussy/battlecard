@@ -22,7 +22,7 @@ export default defineComponent({
     },
     async mounted() {
         await loadUserStore()
-        fightService.loadStore()
+        await fightService.loadFightStore()
     },
 })
 </script>

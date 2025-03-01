@@ -5,6 +5,10 @@ import { format, parse } from "date-fns"
 import { ApiService } from "@/services/api.service"
 import { fightCardStore } from "@/composables/fight.composable"
 import { FightCardStorage } from "@/types/localstorage"
+import DbConverter from "@/converters/db.converter"
+import pocketBaseManager from "@/managers/pocketbase.manager"
+import { userStore } from "@/composables/user.composable"
+import { generateRandomId } from "@/utils/string.utils"
 
 export class FightService {
     clear(): void {
@@ -117,17 +121,14 @@ export class FightService {
     }
 
     addBoxer(boxerAttributes: BoxerAttributes) {
-        if (fightCardStore.boxers.length > 0) {
-            boxerAttributes.id = Math.max(...fightCardStore.boxers.map((b) => b.attributes.id)) + 1
-        } else {
-            boxerAttributes.id = 0
-        }
+        boxerAttributes.id = generateRandomId()
 
         const boxer: Boxer = {
             attributes: boxerAttributes,
             collapsed: true,
             opponents: [],
         }
+        pocketBaseManager.addBoxer(DbConverter.toDbBoxer(boxerAttributes))
         fightCardStore.boxers.push(boxer)
         this.computeBoxersOpponents()
     }
@@ -142,7 +143,7 @@ export class FightService {
             const apiBoxer = await ApiService.getBoxerById(entry.licence)
             if (apiBoxer) {
                 this.addBoxer({
-                    id: 0,
+                    id: generateRandomId(),
                     license: apiBoxer.license,
                     birthDate: new Date(apiBoxer.birth_date),
                     club: apiBoxer.club,
@@ -166,7 +167,7 @@ export class FightService {
         })
         for (const [, entry] of parsedCsv.entries()) {
             const boxerAttributes = {
-                id: 0,
+                id: generateRandomId(),
                 lastName: entry.lastName,
                 firstName: entry.firstName,
                 birthDate: parse(entry.birthDate, "dd/MM/yyyy", new Date()),
@@ -200,39 +201,52 @@ export class FightService {
         return csv
     }
 
-    loadStore(): void {
-        console.debug("loading store ... ")
-        const localStorageDataString = localStorage.getItem("fightCardStore")
-        if (localStorageDataString) {
-            const localStorageData: FightCardStorage = JSON.parse(localStorageDataString)
-
-            fightCardStore.boxers = localStorageData.boxers.map((b) => {
-                return {
-                    attributes: {
-                        ...b.attributes,
-                        birthDate: new Date(b.attributes.birthDate),
-                    },
-                    collapsed: b.collapsed,
-                } as Boxer
-            })
-            this.computeBoxersOpponents()
-            // Create a map of boxers by their id for quick lookup
-            const boxerMap = new Map(fightCardStore.boxers.map((boxer) => [boxer.attributes.id, boxer]))
-
-            for (const fight of localStorageData.fightCard) {
-                const boxer1 = boxerMap.get(fight.boxer1Id)
-                const boxer2 = boxerMap.get(fight.boxer2Id)
-                if (boxer1 && boxer2) {
-                    this.addToFightCard(boxer1, boxer2)
-                }
-            }
-
-            console.debug("store loaded")
-            console.debug(localStorageData)
+    async loadFightStore() {
+        if (userStore.account?.id) {
+            console.debug("loading store from Db... ")
+            await this.loadFromDb()
+        } else if (localStorage["fightCardStore"]) {
+            console.debug("loading store from LocalStorage... ")
+            const localStorageDataString = localStorage.getItem("fightCardStore") as string
+            this.loadFromLocalStorage(localStorageDataString)
         } else {
             console.debug("no store available ... ")
         }
         fightCardStore.restored = true
+    }
+
+    private async loadFromDb() {
+        const boxers = await pocketBaseManager.getBoxers()
+        fightCardStore.boxers = boxers.map((b) => DbConverter.toBoxer(b))
+        this.computeBoxersOpponents()
+    }
+
+    private loadFromLocalStorage(localStorageDataString: string) {
+        const localStorageData: FightCardStorage = JSON.parse(localStorageDataString)
+
+        fightCardStore.boxers = localStorageData.boxers.map((b) => {
+            return {
+                attributes: {
+                    ...b.attributes,
+                    birthDate: new Date(b.attributes.birthDate),
+                },
+                collapsed: b.collapsed,
+            } as Boxer
+        })
+        this.computeBoxersOpponents()
+        // Create a map of boxers by their id for quick lookup
+        const boxerMap = new Map(fightCardStore.boxers.map((boxer) => [boxer.attributes.id, boxer]))
+
+        for (const fight of localStorageData.fightCard) {
+            const boxer1 = boxerMap.get(fight.boxer1Id)
+            const boxer2 = boxerMap.get(fight.boxer2Id)
+            if (boxer1 && boxer2) {
+                this.addToFightCard(boxer1, boxer2)
+            }
+        }
+
+        console.debug("store loaded")
+        console.debug(localStorageData)
     }
 }
 
