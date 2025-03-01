@@ -109,14 +109,13 @@
 <script lang="ts">
 import { defineComponent } from "vue"
 import { Gender } from "@/types/boxing.d"
-import { fightCardStore } from "@/composables/fight.composable"
 import { userStore } from "@/composables/user.composable"
 import fightService from "@/services/fight.service"
 
 export default defineComponent({
     data() {
         return {
-            store: fightCardStore,
+            store: fightService.store(),
             userStore,
             Gender: Gender,
             // LastName	FirstName	Fights		Sex	Weight	Club	Birthdate   License

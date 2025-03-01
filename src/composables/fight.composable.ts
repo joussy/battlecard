@@ -3,12 +3,14 @@ import { Boxer, Fight } from "@/types/boxing.d"
 import { FightCardStorage, BoxerStorage, FightStorage } from "@/types/localstorage.d"
 import { BeaModality } from "@/fightModality/BeaModality"
 
-export const fightCardStore = reactive({
+const fightCardStore = reactive({
     restored: false as boolean,
     fightCard: [] as Fight[],
     boxers: [] as Boxer[],
     modality: new BeaModality(),
 })
+
+export default fightCardStore
 
 watchEffect(() => {
     if (!fightCardStore.restored) {

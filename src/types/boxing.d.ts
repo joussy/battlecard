@@ -3,7 +3,7 @@ import { ModalityError } from "./modality"
 
 export interface Boxer {
     attributes: BoxerAttributes
-    opponents: Opponent[]
+    opponents: Readonly<Opponent[]>
     collapsed: boolean
 }
 
@@ -23,7 +23,7 @@ export interface BoxerAttributes {
 
 export interface Opponent {
     boxer: Boxer
-    modalityErrors: ModalityError[]
+    modalityErrors: Readonly<ModalityError[]>
     weightDifference: number
     isEligible: boolean
 }

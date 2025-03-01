@@ -13,7 +13,7 @@
                             class="bi"
                             :class="boxer.collapsed ? 'bi-chevron-right' : 'bi-chevron-down'"
                         />
-                        {{ fightService.getBoxerDisplayName(boxer) }}
+                        {{ fightService.getBoxerDisplayName(boxer.attributes) }}
                     </div>
                     <div
                         class="font-italic text-right"
@@ -98,7 +98,6 @@ import LinkedFightsBadgeComponent from "@/components/core/linked-fights-badge.co
 import WeightBadgeComponent from "@/components/core/weight-badge.component.vue"
 import PossibleBadgeComponent from "@/components/core/possible-badge.component.vue"
 
-import { fightCardStore } from "@/composables/fight.composable"
 import IconComponent from "@/components/core/icon.component.vue"
 import { userStore } from "@/composables/user.composable"
 import fightService from "@/services/fight.service"
@@ -122,20 +121,20 @@ export default defineComponent({
     emits: ["boxer-edit"],
     data() {
         return {
-            store: fightCardStore,
+            store: fightService.store(),
             Gender: Gender,
             ModalityErrorType: ModalityErrorType,
             fightService: fightService,
         }
     },
     methods: {
-        toggleCollapse(boxer: Boxer): void {
-            boxer.collapsed = !boxer.collapsed
+        toggleCollapse(boxer: Readonly<Boxer>): void {
+            fightService.collapseBoxer(boxer, !boxer.collapsed)
         },
         boxerEdit(): void {
             this.$emit("boxer-edit")
         },
-        getOpponentsToDisplay(): Opponent[] {
+        getOpponentsToDisplay(): Readonly<Opponent[]> {
             return this.boxer.opponents.filter((o) => {
                 if (userStore.hideNonMatchableOpponents && !o.isEligible) return false
                 return true

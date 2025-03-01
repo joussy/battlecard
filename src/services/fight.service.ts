@@ -3,14 +3,18 @@ import { ModalityError, ModalityErrorType } from "@/types/modality.d"
 import { stringify as stringifyCsv, parse as parseCsv } from "csv/browser/esm/sync"
 import { format, parse } from "date-fns"
 import { ApiService } from "@/services/api.service"
-import { fightCardStore } from "@/composables/fight.composable"
+import fightCardStore from "@/composables/fight.composable"
 import { FightCardStorage } from "@/types/localstorage"
 import DbConverter from "@/converters/db.converter"
 import pocketBaseManager from "@/managers/pocketbase.manager"
 import { userStore } from "@/composables/user.composable"
 import { generateRandomId } from "@/utils/string.utils"
+import { readonly } from "vue"
 
 export class FightService {
+    store() {
+        return readonly(fightCardStore)
+    }
     clear(): void {
         fightCardStore.boxers = []
         fightCardStore.fightCard = []
@@ -21,8 +25,8 @@ export class FightService {
         ).length
     }
 
-    getBoxerDisplayName(boxer: Boxer): string {
-        return `${boxer.attributes.firstName} ${boxer.attributes.lastName}`
+    getBoxerDisplayName(boxer: Readonly<BoxerAttributes>): string {
+        return `${boxer.firstName} ${boxer.lastName}`
     }
 
     isInFightCard(boxer: Boxer): boolean {
@@ -52,8 +56,8 @@ export class FightService {
         fightCardStore.fightCard.splice(index, 1)
     }
 
-    getOpponentModalityErrors(boxer: Boxer, opponent: Boxer): ModalityError[] {
-        return fightCardStore.modality.getModalityProblems(boxer.attributes, opponent.attributes)
+    getOpponentModalityErrors(boxer: BoxerAttributes, opponent: BoxerAttributes): ModalityError[] {
+        return fightCardStore.modality.getModalityProblems(boxer, opponent)
     }
 
     getOpponentModalityError(
@@ -87,7 +91,7 @@ export class FightService {
             fightCardStore.fightCard.push({
                 boxer1,
                 boxer2,
-                modalityErrors: this.getOpponentModalityErrors(boxer1, boxer2),
+                modalityErrors: this.getOpponentModalityErrors(boxer1.attributes, boxer2.attributes),
             })
         }
     }
@@ -100,8 +104,8 @@ export class FightService {
                         <Opponent>{
                             weightDifference: Math.abs(boxer.attributes.weight - b.attributes.weight),
                             boxer: b,
-                            modalityErrors: this.getOpponentModalityErrors(boxer, b),
-                            isEligible: this.getOpponentModalityErrors(boxer, b).length == 0,
+                            modalityErrors: this.getOpponentModalityErrors(boxer.attributes, b.attributes),
+                            isEligible: this.getOpponentModalityErrors(boxer.attributes, b.attributes).length == 0,
                         }
                 )
                 .filter(
@@ -120,15 +124,25 @@ export class FightService {
         }
     }
 
-    addBoxer(boxerAttributes: BoxerAttributes) {
+    collapseBoxer(boxer: Readonly<Boxer>, collapse: boolean) {
+        const storeBoxer = fightCardStore.boxers.findLast((x) => x.attributes.id == boxer.attributes.id)
+        if (storeBoxer) {
+            storeBoxer.collapsed = collapse
+        }
+    }
+
+    async addBoxer(boxerAttributes: BoxerAttributes) {
         boxerAttributes.id = generateRandomId()
 
-        const boxer: Boxer = {
+        let boxer: Boxer = {
             attributes: boxerAttributes,
             collapsed: true,
             opponents: [],
         }
-        pocketBaseManager.addBoxer(DbConverter.toDbBoxer(boxerAttributes))
+        if (pocketBaseManager.isAvailable()) {
+            const res = await pocketBaseManager.addBoxer(DbConverter.toDbBoxer(boxerAttributes))
+            boxer = DbConverter.toBoxer(res)
+        }
         fightCardStore.boxers.push(boxer)
         this.computeBoxersOpponents()
     }
@@ -185,7 +199,7 @@ export class FightService {
     }
 
     getAvailableBoxersAsCsv(): string {
-        const entries = fightCardStore.boxers.map((entry: Boxer) => {
+        const entries = fightCardStore.boxers.map((entry) => {
             return {
                 lastName: entry.attributes.lastName,
                 firstName: entry.attributes.firstName,

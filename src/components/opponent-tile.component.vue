@@ -17,7 +17,7 @@
                     <i class="bi bi-person-dash-fill" />
                 </button>
 
-                {{ fightService.getBoxerDisplayName(opponent) }}
+                {{ fightService.getBoxerDisplayName(opponent.attributes) }}
             </div>
             <div
                 class="font-italic text-right"
@@ -60,7 +60,7 @@ import LinkedFightsBadgeComponent from "@/components/core/linked-fights-badge.co
 import WeightBadgeComponent from "@/components/core/weight-badge.component.vue"
 import AgeBadgeComponent from "@/components/core/age-badge.component.vue"
 import FightService from "@/services/fight.service"
-import { fightCardStore } from "@/composables/fight.composable"
+import fightService from "@/services/fight.service"
 
 export default defineComponent({
     components: {
@@ -81,7 +81,7 @@ export default defineComponent({
     },
     data() {
         let ret = {
-            store: fightCardStore,
+            store: fightService.store(),
             fightService: FightService,
             ModalityErrorType: ModalityErrorType,
         }

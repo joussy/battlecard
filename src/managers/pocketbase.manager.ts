@@ -7,14 +7,18 @@ const pocketBase = (
 ) as TypedPocketBase
 
 export class PocketBaseManager {
+    isAvailable(): boolean {
+        return pocketBase && userStore.account?.id != null
+    }
     async getBoxers(): Promise<DbBoxer[]> {
         return await pocketBase.collection("boxer").getFullList()
     }
-    addBoxer(boxer: DbBoxer) {
+    async addBoxer(boxer: DbBoxer): Promise<DbBoxer> {
         console.log("insert")
-        if (!pocketBase || !userStore.account?.id) return
+        if (!pocketBase || !userStore.account?.id) return Promise.reject()
         boxer.userId = userStore.account.id
-        pocketBase.collection("boxer").create(boxer)
+        boxer.id = ""
+        return pocketBase.collection("boxer").create(boxer)
     }
 }
 const instance = new PocketBaseManager()
