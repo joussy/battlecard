@@ -11,7 +11,7 @@
         </button>
         <button
             class="btn btn-outline-danger mb-3 ms-2"
-            @click="fightService.clear()"
+            @click="clear()"
         >
             <i class="bi bi-trash" />
         </button>
@@ -88,6 +88,9 @@ export default defineComponent({
     },
     mounted() {},
     methods: {
+        async clear() {
+            await fightService.clear()
+        },
         expandAll() {
             let collapse = true
             if (this.store.boxers[0]?.collapsed) {

@@ -35,7 +35,8 @@ export enum Gender {
 export interface Fight {
     boxer1: Boxer
     boxer2: Boxer
-    modalityErrors: ModalityError[]
+    modalityErrors: Readonly<ModalityError[]>
+    id: string
 }
 
 export interface BoxingData {

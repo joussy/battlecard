@@ -137,11 +137,11 @@ SERRANO	Amanda	8	F	57	Club1	8/4/2014	A0008
     },
     mounted() {},
     methods: {
-        processClipboard() {
-            fightService.importFromCsv(this.clipboard)
+        async processClipboard() {
+            await fightService.importFromCsv(this.clipboard)
         },
-        processApiImport() {
-            fightService.importFromApiByIds(this.apiClipboard)
+        async processApiImport() {
+            await fightService.importFromApiByIds(this.apiClipboard)
         },
         clearStore() {
             localStorage.removeItem("store")
@@ -150,7 +150,7 @@ SERRANO	Amanda	8	F	57	Club1	8/4/2014	A0008
             userStore.darkMode = !userStore.darkMode
         },
         async signIn() {
-            userStore.authenticate()
+            await userStore.authenticate()
         },
         logout() {
             userStore.logout()

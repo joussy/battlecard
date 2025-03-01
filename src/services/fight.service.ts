@@ -4,24 +4,35 @@ import { stringify as stringifyCsv, parse as parseCsv } from "csv/browser/esm/sy
 import { format, parse } from "date-fns"
 import { ApiService } from "@/services/api.service"
 import fightCardStore from "@/composables/fight.composable"
-import { FightCardStorage } from "@/types/localstorage"
-import DbConverter from "@/converters/db.converter"
-import pocketBaseManager from "@/managers/pocketbase.manager"
-import { userStore } from "@/composables/user.composable"
 import { generateRandomId } from "@/utils/string.utils"
 import { readonly } from "vue"
 
 export class FightService {
-    store() {
-        return readonly(fightCardStore)
+    async loadFightStore() {
+        await fightCardStore.loadFightStore()
+        this.computeBoxersCategory()
+        await this.computeBoxersOpponents()
     }
-    clear(): void {
-        fightCardStore.boxers = []
-        fightCardStore.fightCard = []
+
+    computeBoxersCategory() {
+        for (const boxer of fightCardStore.store.boxers) {
+            fightCardStore.setBoxerCategory(
+                boxer.attributes.id,
+                fightCardStore.store.modality.getCategory(boxer.attributes, false),
+                fightCardStore.store.modality.getCategory(boxer.attributes, true)
+            )
+        }
+    }
+
+    store() {
+        return readonly(fightCardStore.store)
+    }
+    async clear() {
+        await fightCardStore.clear()
     }
     getNbFightsForBoxer(boxer: Boxer): number {
-        return fightCardStore.fightCard.filter(
-            (f: Fight) => f.boxer1.attributes.id == boxer.attributes.id || f.boxer2.attributes.id == boxer.attributes.id
+        return fightCardStore.store.fightCard.filter(
+            (f) => f.boxer1.attributes.id == boxer.attributes.id || f.boxer2.attributes.id == boxer.attributes.id
         ).length
     }
 
@@ -33,31 +44,31 @@ export class FightService {
         return this.getNbFightsForBoxer(boxer) > 0
     }
 
+    async removeFight(fight: Fight) {
+        await fightCardStore.removeFightById(fight.id)
+    }
+
     removeFromFightCard(boxer1: Boxer, boxer2: Boxer): void {
-        const index = this.getFightId(boxer1, boxer2)
-        if (index != null) {
-            this.removeFromFightCardByIndex(index)
+        const fightId = this.getFightId(boxer1, boxer2)
+        console.log(fightId)
+        if (fightId != null) {
+            fightCardStore.removeFightById(fightId)
         }
     }
 
-    getFightId(boxer1: Boxer, boxer2: Boxer): number | null {
-        const index = fightCardStore.fightCard.findIndex(
-            (fight: Fight) =>
+    getFightId(boxer1: Boxer, boxer2: Boxer): string | null {
+        const index = fightCardStore.store.fightCard.find(
+            (fight) =>
                 (fight.boxer1.attributes.id === boxer1.attributes.id &&
                     fight.boxer2.attributes.id === boxer2.attributes.id) ||
                 (fight.boxer1.attributes.id === boxer2.attributes.id &&
                     fight.boxer2.attributes.id === boxer1.attributes.id)
         )
-        return index < 0 ? null : index
-    }
-
-    removeFromFightCardByIndex(index: number): void {
-        // Remove fight from the fight card
-        fightCardStore.fightCard.splice(index, 1)
+        return index?.id ?? null
     }
 
     getOpponentModalityErrors(boxer: BoxerAttributes, opponent: BoxerAttributes): ModalityError[] {
-        return fightCardStore.modality.getModalityProblems(boxer, opponent)
+        return fightCardStore.store.modality.getModalityProblems(boxer, opponent)
     }
 
     getOpponentModalityError(
@@ -65,13 +76,13 @@ export class FightService {
         opponent: Boxer,
         modalityErrorType: ModalityErrorType
     ): ModalityError | undefined {
-        return fightCardStore.modality
+        return fightCardStore.store.modality
             .getModalityProblems(boxer.attributes, opponent.attributes)
             .find((m) => m.type == modalityErrorType)
     }
 
     getClubs(): string[] {
-        return [...new Set(fightCardStore.boxers.map((boxer) => boxer.attributes.club))]
+        return [...new Set(fightCardStore.store.boxers.map((boxer) => boxer.attributes.club))]
     }
 
     canCompete(boxer1: Boxer, boxer2: Boxer): boolean {
@@ -84,21 +95,21 @@ export class FightService {
         return index != null
     }
 
-    addToFightCard(boxer1: Boxer, boxer2: Boxer) {
+    async addToFightCard(boxer1: Boxer, boxer2: Boxer) {
         // Check if the fight already exists before adding to the fight card
 
         if (!this.isCompeting(boxer1, boxer2)) {
-            fightCardStore.fightCard.push({
-                boxer1,
-                boxer2,
-                modalityErrors: this.getOpponentModalityErrors(boxer1.attributes, boxer2.attributes),
-            })
+            const fight = await fightCardStore.addFight(boxer1, boxer2)
+            fightCardStore.setModalityErrors(
+                fight.id,
+                this.getOpponentModalityErrors(boxer1.attributes, boxer2.attributes)
+            )
         }
     }
 
-    computeBoxersOpponents() {
-        for (const [, boxer] of fightCardStore.boxers.entries()) {
-            boxer.opponents = fightCardStore.boxers
+    async computeBoxersOpponents() {
+        for (const [, boxer] of fightCardStore.store.boxers.entries()) {
+            const opponents = fightCardStore.store.boxers
                 .map(
                     (b) =>
                         <Opponent>{
@@ -119,45 +130,41 @@ export class FightService {
                         )
                 )
                 .sort((a, b) => a.modalityErrors.length - b.modalityErrors.length)
-            boxer.attributes.category = fightCardStore.modality.getCategory(boxer.attributes, false)
-            boxer.attributes.categoryShortText = fightCardStore.modality.getCategory(boxer.attributes, true)
+            console.log(opponents)
+            await fightCardStore.setBoxerOpponents(boxer.attributes.id, opponents)
         }
     }
 
     collapseBoxer(boxer: Readonly<Boxer>, collapse: boolean) {
-        const storeBoxer = fightCardStore.boxers.findLast((x) => x.attributes.id == boxer.attributes.id)
-        if (storeBoxer) {
-            storeBoxer.collapsed = collapse
-        }
+        fightCardStore.collapseBoxer(boxer.attributes.id, collapse)
     }
 
     async addBoxer(boxerAttributes: BoxerAttributes) {
-        boxerAttributes.id = generateRandomId()
-
         let boxer: Boxer = {
             attributes: boxerAttributes,
             collapsed: true,
             opponents: [],
         }
-        if (pocketBaseManager.isAvailable()) {
-            const res = await pocketBaseManager.addBoxer(DbConverter.toDbBoxer(boxerAttributes))
-            boxer = DbConverter.toBoxer(res)
-        }
-        fightCardStore.boxers.push(boxer)
-        this.computeBoxersOpponents()
+        boxer = await fightCardStore.addBoxer(boxer)
+        fightCardStore.setBoxerCategory(
+            boxer.attributes.id,
+            fightCardStore.store.modality.getCategory(boxer.attributes, false),
+            fightCardStore.store.modality.getCategory(boxer.attributes, true)
+        )
+        await this.computeBoxersOpponents()
     }
 
     async importFromApiByIds(csv: string) {
         const parsedCsv = parseCsv(csv, {
-            columns: ["licence", "weight"],
+            columns: ["license", "weight"],
             skip_empty_lines: true,
             delimiter: ",",
         })
         for (const [, entry] of parsedCsv.entries()) {
-            const apiBoxer = await ApiService.getBoxerById(entry.licence)
+            const apiBoxer = await ApiService.getBoxerById(entry.license)
             if (apiBoxer) {
-                this.addBoxer({
-                    id: generateRandomId(),
+                await this.addBoxer({
+                    id: "",
                     license: apiBoxer.license,
                     birthDate: new Date(apiBoxer.birth_date),
                     club: apiBoxer.club,
@@ -173,7 +180,7 @@ export class FightService {
         }
     }
 
-    importFromCsv(csv: string) {
+    async importFromCsv(csv: string) {
         const parsedCsv = parseCsv(csv, {
             columns: ["lastName", "firstName", "nbFights", "gender", "weight", "club", "birthDate", "license"],
             skip_empty_lines: true,
@@ -193,13 +200,13 @@ export class FightService {
                 gender: entry.gender == "F" ? Gender.FEMALE : Gender.MALE,
                 license: entry.license,
             }
-            this.addBoxer(boxerAttributes)
+            await this.addBoxer(boxerAttributes)
         }
-        this.computeBoxersOpponents()
+        await this.computeBoxersOpponents()
     }
 
     getAvailableBoxersAsCsv(): string {
-        const entries = fightCardStore.boxers.map((entry) => {
+        const entries = fightCardStore.store.boxers.map((entry) => {
             return {
                 lastName: entry.attributes.lastName,
                 firstName: entry.attributes.firstName,
@@ -213,54 +220,6 @@ export class FightService {
         })
         const csv = stringifyCsv(entries, { delimiter: "\t" })
         return csv
-    }
-
-    async loadFightStore() {
-        if (userStore.account?.id) {
-            console.debug("loading store from Db... ")
-            await this.loadFromDb()
-        } else if (localStorage["fightCardStore"]) {
-            console.debug("loading store from LocalStorage... ")
-            const localStorageDataString = localStorage.getItem("fightCardStore") as string
-            this.loadFromLocalStorage(localStorageDataString)
-        } else {
-            console.debug("no store available ... ")
-        }
-        fightCardStore.restored = true
-    }
-
-    private async loadFromDb() {
-        const boxers = await pocketBaseManager.getBoxers()
-        fightCardStore.boxers = boxers.map((b) => DbConverter.toBoxer(b))
-        this.computeBoxersOpponents()
-    }
-
-    private loadFromLocalStorage(localStorageDataString: string) {
-        const localStorageData: FightCardStorage = JSON.parse(localStorageDataString)
-
-        fightCardStore.boxers = localStorageData.boxers.map((b) => {
-            return {
-                attributes: {
-                    ...b.attributes,
-                    birthDate: new Date(b.attributes.birthDate),
-                },
-                collapsed: b.collapsed,
-            } as Boxer
-        })
-        this.computeBoxersOpponents()
-        // Create a map of boxers by their id for quick lookup
-        const boxerMap = new Map(fightCardStore.boxers.map((boxer) => [boxer.attributes.id, boxer]))
-
-        for (const fight of localStorageData.fightCard) {
-            const boxer1 = boxerMap.get(fight.boxer1Id)
-            const boxer2 = boxerMap.get(fight.boxer2Id)
-            if (boxer1 && boxer2) {
-                this.addToFightCard(boxer1, boxer2)
-            }
-        }
-
-        console.debug("store loaded")
-        console.debug(localStorageData)
     }
 }
 

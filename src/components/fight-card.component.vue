@@ -38,7 +38,7 @@
                 <td>
                     <button
                         class="btn btn-outline-danger btn-sm ms-2"
-                        @click="fightService.removeFromFightCardByIndex(index)"
+                        @click="fightService.removeFromFightCard(fight.boxer1, fight.boxer2)"
                     >
                         <i class="bi bi-person-dash-fill" />
                     </button>
