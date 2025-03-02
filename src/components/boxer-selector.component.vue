@@ -11,7 +11,7 @@
         </button>
         <button
             class="btn btn-outline-danger mb-3 ms-2"
-            @click="fightService.clear()"
+            @click="clear()"
         >
             <i class="bi bi-trash" />
         </button>
@@ -54,22 +54,21 @@
     >
         <BoxerTileComponent
             :boxer="boxer"
-            @boxer-edit="editBoxer(boxer)"
+            @boxer-edit="editBoxer(boxer.attributes)"
         />
     </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue"
-import { Boxer, BoxerAttributes, Gender } from "@/types/boxing.d"
+import { BoxerAttributes, Gender } from "@/types/boxing.d"
 import { ModalityErrorType } from "@/types/modality.d"
 import BoxerTileComponent from "@/components/boxer-tile.component.vue"
 import BoxerAddComponent from "@/components/boxer-add.component.vue"
 
-import { fightCardStore } from "@/composables/fight.composable"
 import BoxerSelectorFiltersComponent from "@/components/boxer-selector-filters.component.vue"
-import { userStore } from "@/composables/user.composable"
 import fightService from "@/services/fight.service"
+import { uiStore } from "@/composables/ui.composable"
 
 export default defineComponent({
     components: {
@@ -79,7 +78,7 @@ export default defineComponent({
     },
     data() {
         return {
-            store: fightCardStore,
+            store: fightService.store(),
             Gender: Gender,
             ModalityErrorType: ModalityErrorType,
             boxerAddMode: false,
@@ -89,19 +88,21 @@ export default defineComponent({
     },
     mounted() {},
     methods: {
+        async clear() {
+            await fightService.clear()
+        },
         expandAll() {
             let collapse = true
-            if (this.store.boxers[0]?.collapsed) {
+            if (this.store.boxers[0] && uiStore.createOrGetBoxerUi(this.store.boxers[0].attributes.id).collapsed) {
                 collapse = false
             }
             for (let [index] of this.store.boxers.entries()) {
-                this.store.boxers[index].collapsed = collapse
+                uiStore.collapse(this.store.boxers[index].attributes.id, collapse)
             }
         },
         onBoxerAdd(newBoxer: BoxerAttributes) {
             this.boxerAddMode = false
             fightService.addBoxer(newBoxer)
-            fightService.computeBoxersOpponents()
         },
         downloadCsv() {
             const csv = fightService.getAvailableBoxersAsCsv()
@@ -113,13 +114,13 @@ export default defineComponent({
             elem.click()
             document.body.removeChild(elem)
         },
-        editBoxer(boxer: Boxer) {
-            this.boxerToEdit = boxer.attributes
+        editBoxer(boxer: Readonly<BoxerAttributes>) {
+            this.boxerToEdit = boxer
             this.boxerAddMode = true
         },
-        getBoxersToDisplay(): Boxer[] {
-            return fightCardStore.boxers.filter((b) => {
-                if (userStore.hideFightersWithNoMatch && !b.opponents.some((o) => o.isEligible)) return false
+        getBoxersToDisplay() {
+            return fightService.store().boxers.filter((b) => {
+                if (uiStore.hideFightersWithNoMatch && !b.opponents.some((o) => o.isEligible)) return false
                 return true
             })
         },

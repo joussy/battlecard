@@ -42,26 +42,28 @@
 </template>
 
 <script lang="ts">
+import fightService from "@/services/fight.service"
 import { ClubFighters } from "@/types/boxing.d"
-import { fightCardStore } from "@/composables/fight.composable"
 import { groupBy } from "@/utils/arrayUtils"
 
 export default {
     components: {},
     data() {
         return {
-            store: fightCardStore,
+            store: fightService.store(),
         }
     },
     methods: {
         getClubFighters(): ClubFighters[] {
-            const clubs = groupBy(this.store.boxers, (x) => x.attributes.club)
+            const clubs = groupBy(fightService.store().boxers, (x) => x.attributes.club)
             const clubFighters: ClubFighters[] = Array.from(clubs.keys()).map(function (clubKey: string) {
                 return {
                     available: clubs.get(clubKey)?.length ?? 0,
-                    selected: fightCardStore.fightCard.filter(
-                        (f) => f.boxer1.attributes.club == clubKey || f.boxer2.attributes.club == clubKey
-                    ).length,
+                    selected: fightService
+                        .store()
+                        .fightCard.filter(
+                            (f) => f.boxer1.attributes.club == clubKey || f.boxer2.attributes.club == clubKey
+                        ).length,
                     clubName: clubKey,
                 } as ClubFighters
             })

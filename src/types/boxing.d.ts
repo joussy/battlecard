@@ -3,12 +3,11 @@ import { ModalityError } from "./modality"
 
 export interface Boxer {
     attributes: BoxerAttributes
-    opponents: Opponent[]
-    collapsed: boolean
+    opponents: Readonly<Opponent[]>
 }
 
 export interface BoxerAttributes {
-    id: number
+    id: string
     firstName: string
     lastName: string
     birthDate: Date
@@ -23,7 +22,7 @@ export interface BoxerAttributes {
 
 export interface Opponent {
     boxer: Boxer
-    modalityErrors: ModalityError[]
+    modalityErrors: Readonly<ModalityError[]>
     weightDifference: number
     isEligible: boolean
 }
@@ -35,7 +34,8 @@ export enum Gender {
 export interface Fight {
     boxer1: Boxer
     boxer2: Boxer
-    modalityErrors: ModalityError[]
+    modalityErrors: Readonly<ModalityError[]>
+    id: string
 }
 
 export interface BoxingData {

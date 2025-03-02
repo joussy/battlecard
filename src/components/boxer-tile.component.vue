@@ -2,18 +2,18 @@
     <div
         class="card-header pt-0 pb-1 ps-1 pe-0 ps-md-2 pe-md-2"
         role="tab"
-        :class="{ collapsed: !boxer.collapsed }"
+        :class="{ collapsed: !isCollapsed() }"
         @click="toggleCollapse(boxer)"
     >
         <div class="d-flex flex-row align-items-center">
             <div class="flex-grow-1">
                 <div class="d-flex justify-content-between">
-                    <div class="">
+                    <div>
                         <i
                             class="bi"
-                            :class="boxer.collapsed ? 'bi-chevron-right' : 'bi-chevron-down'"
+                            :class="isCollapsed() ? 'bi-chevron-right' : 'bi-chevron-down'"
                         />
-                        {{ fightService.getBoxerDisplayName(boxer) }}
+                        {{ fightService.getBoxerDisplayName(boxer.attributes) }}
                     </div>
                     <div
                         class="font-italic text-right"
@@ -66,10 +66,10 @@
         </div>
     </div>
     <div
-        v-show="!boxer.collapsed"
+        v-show="!isCollapsed()"
         :id="'collapse-' + boxer.attributes.id"
         class="collapse"
-        :class="{ show: !boxer.collapsed }"
+        :class="{ show: !isCollapsed() }"
     >
         <div class="card-body ps-0 pe-0 pt-0 pb-0">
             <ul class="list-group rounded-0">
@@ -98,10 +98,9 @@ import LinkedFightsBadgeComponent from "@/components/core/linked-fights-badge.co
 import WeightBadgeComponent from "@/components/core/weight-badge.component.vue"
 import PossibleBadgeComponent from "@/components/core/possible-badge.component.vue"
 
-import { fightCardStore } from "@/composables/fight.composable"
 import IconComponent from "@/components/core/icon.component.vue"
-import { userStore } from "@/composables/user.composable"
-import fightService, { FightService } from "@/services/fight.service"
+import fightService from "@/services/fight.service"
+import { uiStore } from "@/composables/ui.composable"
 
 export default defineComponent({
     components: {
@@ -122,22 +121,25 @@ export default defineComponent({
     emits: ["boxer-edit"],
     data() {
         return {
-            store: fightCardStore,
+            store: fightService.store(),
             Gender: Gender,
             ModalityErrorType: ModalityErrorType,
             fightService: fightService,
         }
     },
     methods: {
-        toggleCollapse(boxer: Boxer): void {
-            boxer.collapsed = !boxer.collapsed
+        toggleCollapse(boxer: Readonly<Boxer>): void {
+            uiStore.collapse(boxer.attributes.id, null)
         },
         boxerEdit(): void {
             this.$emit("boxer-edit")
         },
-        getOpponentsToDisplay(): Opponent[] {
+        isCollapsed() {
+            return uiStore.createOrGetBoxerUi(this.boxer.attributes.id).collapsed
+        },
+        getOpponentsToDisplay(): Readonly<Opponent[]> {
             return this.boxer.opponents.filter((o) => {
-                if (userStore.hideNonMatchableOpponents && !o.isEligible) return false
+                if (uiStore.hideNonMatchableOpponents && !o.isEligible) return false
                 return true
             })
         },

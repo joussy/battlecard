@@ -55,7 +55,7 @@
                     class="form-check-input"
                     type="checkbox"
                     role="switch"
-                    :checked="userStore.darkMode"
+                    :checked="uiStore.darkMode"
                     @click="toggleDarkMode()"
                 />
                 <label
@@ -109,15 +109,16 @@
 <script lang="ts">
 import { defineComponent } from "vue"
 import { Gender } from "@/types/boxing.d"
-import { fightCardStore } from "@/composables/fight.composable"
 import { userStore } from "@/composables/user.composable"
 import fightService from "@/services/fight.service"
+import { uiStore } from "@/composables/ui.composable"
 
 export default defineComponent({
     data() {
         return {
-            store: fightCardStore,
+            store: fightService.store(),
             userStore,
+            uiStore,
             Gender: Gender,
             // LastName	FirstName	Fights		Sex	Weight	Club	Birthdate   License
             clipboard: `
@@ -138,20 +139,20 @@ SERRANO	Amanda	8	F	57	Club1	8/4/2014	A0008
     },
     mounted() {},
     methods: {
-        processClipboard() {
-            fightService.importFromCsv(this.clipboard)
+        async processClipboard() {
+            await fightService.importFromCsv(this.clipboard)
         },
-        processApiImport() {
-            fightService.importFromApiByIds(this.apiClipboard)
+        async processApiImport() {
+            await fightService.importFromApiByIds(this.apiClipboard)
         },
         clearStore() {
             localStorage.removeItem("store")
         },
         toggleDarkMode() {
-            userStore.darkMode = !userStore.darkMode
+            uiStore.darkMode = !uiStore.darkMode
         },
         async signIn() {
-            userStore.authenticate()
+            await userStore.authenticate()
         },
         logout() {
             userStore.logout()

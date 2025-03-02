@@ -1,4 +1,4 @@
-export function groupBy<T>(list: T[], keyGetter: (x: T) => unknown): Map<string, T[]> {
+export function groupBy<T>(list: Readonly<T[]>, keyGetter: (x: T) => unknown): Map<string, T[]> {
     const map = new Map()
     list.forEach((item: T) => {
         const key = keyGetter(item)
