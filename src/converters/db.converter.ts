@@ -31,7 +31,6 @@ export default class DbConverter {
                 categoryShortText: "fakeShortCat",
                 id: boxer.id,
             },
-            collapsed: false,
             opponents: [],
         }
     }

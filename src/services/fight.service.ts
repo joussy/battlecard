@@ -133,14 +133,9 @@ export class FightService {
         }
     }
 
-    collapseBoxer(boxer: Readonly<Boxer>, collapse: boolean) {
-        fightCardStore.collapseBoxer(boxer.attributes.id, collapse)
-    }
-
     async addBoxer(boxerAttributes: BoxerAttributes) {
         let boxer: Boxer = {
             attributes: boxerAttributes,
-            collapsed: true,
             opponents: [],
         }
         boxer = await fightCardStore.addBoxer(boxer)

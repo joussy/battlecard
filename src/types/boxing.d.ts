@@ -4,7 +4,6 @@ import { ModalityError } from "./modality"
 export interface Boxer {
     attributes: BoxerAttributes
     opponents: Readonly<Opponent[]>
-    collapsed: boolean
 }
 
 export interface BoxerAttributes {

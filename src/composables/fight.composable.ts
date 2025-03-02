@@ -61,12 +61,6 @@ export default {
             boxer.opponents = opponents
         }
     },
-    collapseBoxer(boxerId: string, collapse: boolean) {
-        const boxer = this.getBoxerById(boxerId)
-        if (boxer) {
-            boxer.collapsed = collapse
-        }
-    },
     async removeFightById(id: string) {
         if (userStore.account?.id) {
             await pocketBaseManager.deleteFights([id])
@@ -123,7 +117,6 @@ export default {
                     ...b.attributes,
                     birthDate: new Date(b.attributes.birthDate),
                 },
-                collapsed: b.collapsed,
             } as Boxer
         })
 
@@ -148,12 +141,11 @@ watchEffect(() => {
 
     const localStorageData: FightCardStorage = {
         boxers: fightCardStore.boxers.map((b): BoxerStorage => {
-            return { attributes: toRaw(b.attributes), collapsed: b.collapsed }
+            return { attributes: toRaw(b.attributes) }
         }),
         fightCard: fightCardStore.fightCard.map((f) => {
             return { boxer1Id: f.boxer1.attributes.id, boxer2Id: f.boxer2.attributes.id } as FightStorage
         }),
     }
     localStorage.setItem("fightCardStore", JSON.stringify(localStorageData))
-    console.debug("store updated")
 })

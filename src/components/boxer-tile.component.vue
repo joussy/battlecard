@@ -2,7 +2,7 @@
     <div
         class="card-header pt-0 pb-1 ps-1 pe-0 ps-md-2 pe-md-2"
         role="tab"
-        :class="{ collapsed: !boxer.collapsed }"
+        :class="{ collapsed: !isCollapsed() }"
         @click="toggleCollapse(boxer)"
     >
         <div class="d-flex flex-row align-items-center">
@@ -11,7 +11,7 @@
                     <div>
                         <i
                             class="bi"
-                            :class="boxer.collapsed ? 'bi-chevron-right' : 'bi-chevron-down'"
+                            :class="isCollapsed() ? 'bi-chevron-right' : 'bi-chevron-down'"
                         />
                         {{ fightService.getBoxerDisplayName(boxer.attributes) }}
                     </div>
@@ -66,10 +66,10 @@
         </div>
     </div>
     <div
-        v-show="!boxer.collapsed"
+        v-show="!isCollapsed()"
         :id="'collapse-' + boxer.attributes.id"
         class="collapse"
-        :class="{ show: !boxer.collapsed }"
+        :class="{ show: !isCollapsed() }"
     >
         <div class="card-body ps-0 pe-0 pt-0 pb-0">
             <ul class="list-group rounded-0">
@@ -99,7 +99,6 @@ import WeightBadgeComponent from "@/components/core/weight-badge.component.vue"
 import PossibleBadgeComponent from "@/components/core/possible-badge.component.vue"
 
 import IconComponent from "@/components/core/icon.component.vue"
-import { userStore } from "@/composables/user.composable"
 import fightService from "@/services/fight.service"
 import { uiStore } from "@/composables/ui.composable"
 
@@ -130,10 +129,13 @@ export default defineComponent({
     },
     methods: {
         toggleCollapse(boxer: Readonly<Boxer>): void {
-            fightService.collapseBoxer(boxer, !boxer.collapsed)
+            uiStore.collapse(boxer.attributes.id, null)
         },
         boxerEdit(): void {
             this.$emit("boxer-edit")
+        },
+        isCollapsed() {
+            return uiStore.createOrGetBoxerUi(this.boxer.attributes.id).collapsed
         },
         getOpponentsToDisplay(): Readonly<Opponent[]> {
             return this.boxer.opponents.filter((o) => {

@@ -93,11 +93,11 @@ export default defineComponent({
         },
         expandAll() {
             let collapse = true
-            if (this.store.boxers[0]?.collapsed) {
+            if (this.store.boxers[0] && uiStore.createOrGetBoxerUi(this.store.boxers[0].attributes.id).collapsed) {
                 collapse = false
             }
             for (let [index] of this.store.boxers.entries()) {
-                fightService.collapseBoxer(this.store.boxers[index], collapse)
+                uiStore.collapse(this.store.boxers[index].attributes.id, collapse)
             }
         },
         onBoxerAdd(newBoxer: BoxerAttributes) {
