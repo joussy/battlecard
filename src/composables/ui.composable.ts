@@ -1,8 +1,8 @@
-import { reactive, readonly, watchEffect } from "vue"
-import { BoxerUi, UiStorage } from "@/types/ui"
+import { reactive, watchEffect } from "vue"
+import { BoxerUi, UiStorage, UiTheme } from "@/types/ui"
 
 const uiStore = reactive({
-    darkMode: false,
+    theme: "auto" as UiTheme,
     hideNonMatchableOpponents: false,
     hideFightersWithNoMatch: false,
     restored: false as boolean,
@@ -28,7 +28,7 @@ function loadUiStore() {
     if (localStorageDataString) {
         const localStorageData: UiStorage = JSON.parse(localStorageDataString)
 
-        uiStore.darkMode = localStorageData.darkMode
+        uiStore.theme = localStorageData.theme
         uiStore.hideNonMatchableOpponents = localStorageData.hideNonMatchableOpponents
         uiStore.hideFightersWithNoMatch = localStorageData.hideFightersWithNoMatch
         uiStore.boxers = new Map(localStorageData.boxers)
@@ -41,8 +41,12 @@ function loadUiStore() {
 }
 
 watchEffect(() => {
+    let theme = uiStore.theme == "dark" ? "dark" : "light"
     const htmlElement = document.documentElement
-    htmlElement.setAttribute("data-bs-theme", uiStore.darkMode ? "dark" : "light")
+    if (uiStore.theme == "auto") {
+        theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"
+    }
+    htmlElement.setAttribute("data-bs-theme", theme)
 })
 
 watchEffect(() => {
@@ -51,7 +55,7 @@ watchEffect(() => {
     }
 
     const localStorageData: UiStorage = {
-        darkMode: uiStore.darkMode,
+        theme: uiStore.theme,
         hideNonMatchableOpponents: uiStore.hideNonMatchableOpponents,
         hideFightersWithNoMatch: uiStore.hideFightersWithNoMatch,
         boxers: Array.from(uiStore.boxers),

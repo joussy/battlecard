@@ -49,20 +49,58 @@
     <div class="card mb-3">
         <div class="card-header"><i class="bi bi-gear me-2" />General</div>
         <div class="card-body">
-            <div class="form-check form-switch mb-3">
-                <input
-                    id="darkmodeSwitch"
-                    class="form-check-input"
-                    type="checkbox"
-                    role="switch"
-                    :checked="uiStore.darkMode"
-                    @click="toggleDarkMode()"
-                />
-                <label
-                    class="form-check-label"
-                    for="darkmodeSwitch"
-                    >Dark Mode</label
+            <div class="mb-3">
+                <div class="form-label">Theme</div>
+                <div
+                    class="btn-group"
+                    role="group"
+                    aria-label="Basic radio toggle button group"
                 >
+                    <input
+                        id="btnradio1"
+                        type="radio"
+                        class="btn-check"
+                        name="btnradio"
+                        autocomplete="off"
+                        :checked="uiStore.theme == 'auto'"
+                        @click="setTheme('auto')"
+                    />
+                    <label
+                        class="btn btn-outline-primary"
+                        for="btnradio1"
+                        >Auto</label
+                    >
+
+                    <input
+                        id="btnradio2"
+                        type="radio"
+                        class="btn-check"
+                        name="btnradio"
+                        autocomplete="off"
+                        :checked="uiStore.theme == 'light'"
+                        @click="setTheme('light')"
+                    />
+                    <label
+                        class="btn btn-outline-primary"
+                        for="btnradio2"
+                        >Light</label
+                    >
+
+                    <input
+                        id="btnradio3"
+                        type="radio"
+                        class="btn-check"
+                        name="btnradio"
+                        autocomplete="off"
+                        :checked="uiStore.theme == 'dark'"
+                        @click="setTheme('dark')"
+                    />
+                    <label
+                        class="btn btn-outline-primary"
+                        for="btnradio3"
+                        >Dark</label
+                    >
+                </div>
             </div>
         </div>
     </div>
@@ -112,6 +150,7 @@ import { Gender } from "@/types/boxing.d"
 import { userStore } from "@/composables/user.composable"
 import fightService from "@/services/fight.service"
 import { uiStore } from "@/composables/ui.composable"
+import { DarkMode as UiTheme } from "@/types/ui"
 
 export default defineComponent({
     data() {
@@ -148,8 +187,8 @@ SERRANO	Amanda	8	F	57	Club1	8/4/2014	A0008
         clearStore() {
             localStorage.removeItem("store")
         },
-        toggleDarkMode() {
-            uiStore.darkMode = !uiStore.darkMode
+        setTheme(mode: UiTheme) {
+            uiStore.theme = mode
         },
         async signIn() {
             await userStore.authenticate()

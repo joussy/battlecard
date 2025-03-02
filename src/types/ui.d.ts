@@ -3,8 +3,10 @@ export interface BoxerUi {
 }
 
 export interface UiStorage {
-    darkMode: boolean
+    theme: UiTheme
     hideNonMatchableOpponents: boolean
     hideFightersWithNoMatch: boolean
     boxers: Array
 }
+
+type UiTheme = "dark" | "light" | "auto"
