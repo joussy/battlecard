@@ -15,7 +15,7 @@ export interface FightCardStorage {
     fightCard: FightStorage[]
 }
 
-export interface UserStorage {
+export interface UiStorage {
     darkMode: boolean
     hideNonMatchableOpponents: boolean
     hideFightersWithNoMatch: boolean

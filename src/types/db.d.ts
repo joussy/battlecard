@@ -19,7 +19,7 @@ export interface DbFight {
     id: string
     boxer1Id: string
     boxer2Id: string
-    userId: string
+    userId?: string
 }
 
 interface TypedPocketBase extends Client {

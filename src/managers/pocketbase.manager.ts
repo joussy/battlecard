@@ -21,6 +21,7 @@ export class PocketBaseManager {
         return await pocketBase.collection("fight").getFullList()
     }
     async addFight(fight: DbFight): Promise<DbFight> {
+        fight.userId = userStore.account?.id
         fight.id = ""
         return await pocketBase.collection("fight").create(fight)
     }
@@ -38,9 +39,6 @@ export class PocketBaseManager {
         return await pocketBase.collection("boxer").getFullList()
     }
     async addBoxer(boxer: DbBoxer): Promise<DbBoxer> {
-        if (!userStore.account?.id) {
-            return Promise.reject()
-        }
         boxer.userId = userStore.account?.id
         boxer.id = ""
         return await pocketBase.collection("boxer").create(boxer)

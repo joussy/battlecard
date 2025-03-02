@@ -67,8 +67,8 @@ import BoxerTileComponent from "@/components/boxer-tile.component.vue"
 import BoxerAddComponent from "@/components/boxer-add.component.vue"
 
 import BoxerSelectorFiltersComponent from "@/components/boxer-selector-filters.component.vue"
-import { userStore } from "@/composables/user.composable"
 import fightService from "@/services/fight.service"
+import { uiStore } from "@/composables/ui.composable"
 
 export default defineComponent({
     components: {
@@ -101,7 +101,6 @@ export default defineComponent({
             }
         },
         onBoxerAdd(newBoxer: BoxerAttributes) {
-            console.log(newBoxer)
             this.boxerAddMode = false
             fightService.addBoxer(newBoxer)
         },
@@ -121,7 +120,7 @@ export default defineComponent({
         },
         getBoxersToDisplay() {
             return fightService.store().boxers.filter((b) => {
-                if (userStore.hideFightersWithNoMatch && !b.opponents.some((o) => o.isEligible)) return false
+                if (uiStore.hideFightersWithNoMatch && !b.opponents.some((o) => o.isEligible)) return false
                 return true
             })
         },

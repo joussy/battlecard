@@ -10,6 +10,7 @@ import { defineComponent, watch } from "vue"
 import MenuComponent from "@/components/menu.component.vue"
 import fightService from "@/services/fight.service"
 import { loadUserStore, userStore } from "@/composables/user.composable"
+import { loadUiStore } from "@/composables/ui.composable"
 
 export default defineComponent({
     components: {
@@ -21,6 +22,7 @@ export default defineComponent({
         }
     },
     async mounted() {
+        await loadUiStore()
         await loadUserStore()
         watch(
             () => userStore.account,

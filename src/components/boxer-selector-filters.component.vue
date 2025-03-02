@@ -26,8 +26,8 @@
                     class="form-check-input"
                     type="checkbox"
                     role="switch"
-                    :checked="userStore.hideNonMatchableOpponents"
-                    @click="userStore.hideNonMatchableOpponents = !userStore.hideNonMatchableOpponents"
+                    :checked="uiStore.hideNonMatchableOpponents"
+                    @click="uiStore.hideNonMatchableOpponents = !uiStore.hideNonMatchableOpponents"
                 />
                 <label
                     class="form-check-label"
@@ -41,8 +41,8 @@
                     class="form-check-input"
                     type="checkbox"
                     role="switch"
-                    :checked="userStore.hideFightersWithNoMatch"
-                    @click="userStore.hideFightersWithNoMatch = !userStore.hideFightersWithNoMatch"
+                    :checked="uiStore.hideFightersWithNoMatch"
+                    @click="uiStore.hideFightersWithNoMatch = !uiStore.hideFightersWithNoMatch"
                 />
                 <label
                     class="form-check-label"
@@ -57,12 +57,12 @@
 <script lang="ts">
 import { defineComponent } from "vue"
 
-import { userStore } from "@/composables/user.composable"
+import { uiStore } from "@/composables/ui.composable"
 
 export default defineComponent({
     data() {
         return {
-            userStore,
+            uiStore,
         }
     },
 })

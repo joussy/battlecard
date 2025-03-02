@@ -55,7 +55,7 @@
                     class="form-check-input"
                     type="checkbox"
                     role="switch"
-                    :checked="userStore.darkMode"
+                    :checked="uiStore.darkMode"
                     @click="toggleDarkMode()"
                 />
                 <label
@@ -111,12 +111,14 @@ import { defineComponent } from "vue"
 import { Gender } from "@/types/boxing.d"
 import { userStore } from "@/composables/user.composable"
 import fightService from "@/services/fight.service"
+import { uiStore } from "@/composables/ui.composable"
 
 export default defineComponent({
     data() {
         return {
             store: fightService.store(),
             userStore,
+            uiStore,
             Gender: Gender,
             // LastName	FirstName	Fights		Sex	Weight	Club	Birthdate   License
             clipboard: `
@@ -147,7 +149,7 @@ SERRANO	Amanda	8	F	57	Club1	8/4/2014	A0008
             localStorage.removeItem("store")
         },
         toggleDarkMode() {
-            userStore.darkMode = !userStore.darkMode
+            uiStore.darkMode = !uiStore.darkMode
         },
         async signIn() {
             await userStore.authenticate()

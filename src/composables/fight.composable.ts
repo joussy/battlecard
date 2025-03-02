@@ -82,7 +82,6 @@ export default {
     },
     async loadFightStore() {
         if (userStore.account?.id != null) {
-            console.log(userStore.account.id)
             console.debug("loading store from Db... ")
             await this.loadFromDb()
         } else if (localStorage["fightCardStore"]) {
@@ -139,7 +138,6 @@ export default {
         }
 
         console.debug("store loaded")
-        console.debug(localStorageData)
     },
 }
 
