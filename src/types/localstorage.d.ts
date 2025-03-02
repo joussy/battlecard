@@ -5,6 +5,7 @@ export interface BoxerStorage {
 }
 
 export interface FightStorage {
+    order: number
     boxer1Id: string
     boxer2Id: string
 }

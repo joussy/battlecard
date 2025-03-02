@@ -150,7 +150,7 @@ import { Gender } from "@/types/boxing.d"
 import { userStore } from "@/composables/user.composable"
 import fightService from "@/services/fight.service"
 import { uiStore } from "@/composables/ui.composable"
-import { DarkMode as UiTheme } from "@/types/ui"
+import { UiTheme } from "@/types/ui"
 
 export default defineComponent({
     data() {

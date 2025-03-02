@@ -39,12 +39,13 @@ export default {
         fightCardStore.boxers = []
         fightCardStore.fightCard = []
     },
-    async addFight(boxer1: Boxer, boxer2: Boxer): Promise<Readonly<Fight>> {
+    async addFight(boxer1: Boxer, boxer2: Boxer, order: number): Promise<Readonly<Fight>> {
         let fight: Fight = {
             boxer1: boxer1,
             boxer2: boxer2,
             modalityErrors: [],
             id: generateRandomId(),
+            order,
         }
         if (userStore.account?.id != null) {
             const ret = await pocketBaseManager.addFight(DbConverter.toDbFight(fight, userStore.account?.id))
@@ -67,6 +68,48 @@ export default {
         }
         const index = fightCardStore.fightCard.findIndex((f) => f.id == id)
         if (index > -1) fightCardStore.fightCard.splice(index, 1)
+    },
+    async updateFightOrder(fightId: string, order: number) {
+        if (order < 0) {
+            return
+        }
+        const fights = fightCardStore.fightCard
+        // Find the fight by its ID
+        const fightIndex = fights.findIndex((fight) => fight.id === fightId)
+
+        if (fightIndex === -1) {
+            console.error("Fight not found")
+            return
+        }
+
+        // Get the fight to move
+        const fightToMove = fights[fightIndex]
+
+        // Remove the fight from its current position
+        fights.splice(fightIndex, 1)
+
+        // Insert the fight at the new position based on the order
+        fights.splice(order, 0, fightToMove)
+
+        // Optionally, update the order property of each fight
+        fights.forEach((fight, index) => {
+            fight.order = index
+        })
+        if (userStore?.account?.id != null) {
+            await pocketBaseManager.updateFights(fights.map((f) => DbConverter.toDbFight(f, userStore.account!.id)))
+        }
+    },
+    async switchFight(fightId: string) {
+        const fight = this.getFightById(fightId)
+        if (fight) {
+            const boxer1 = fight.boxer1
+            const boxer2 = fight.boxer2
+            fight.boxer1 = boxer2
+            fight.boxer2 = boxer1
+            if (userStore?.account?.id != null) {
+                await pocketBaseManager.updateFights([DbConverter.toDbFight(fight, userStore.account.id)])
+            }
+        }
     },
     setModalityErrors(fightId: string, modalityErrors: ModalityError[]) {
         const fight = this.getFightById(fightId)
@@ -122,11 +165,11 @@ export default {
 
         const boxerMap = new Map(fightCardStore.boxers.map((boxer) => [boxer.attributes.id, boxer]))
 
-        for (const fight of localStorageData.fightCard) {
+        for (const fight of localStorageData.fightCard.sort((a, b) => a.order - b.order)) {
             const boxer1 = boxerMap.get(fight.boxer1Id)
             const boxer2 = boxerMap.get(fight.boxer2Id)
             if (boxer1 && boxer2) {
-                this.addFight(boxer1, boxer2)
+                this.addFight(boxer1, boxer2, fight.order)
             }
         }
 
@@ -144,7 +187,11 @@ watchEffect(() => {
             return { attributes: toRaw(b.attributes) }
         }),
         fightCard: fightCardStore.fightCard.map((f) => {
-            return { boxer1Id: f.boxer1.attributes.id, boxer2Id: f.boxer2.attributes.id } as FightStorage
+            return {
+                boxer1Id: f.boxer1.attributes.id,
+                boxer2Id: f.boxer2.attributes.id,
+                order: f.order,
+            } as FightStorage
         }),
     }
     localStorage.setItem("fightCardStore", JSON.stringify(localStorageData))

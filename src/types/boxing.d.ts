@@ -36,6 +36,7 @@ export interface Fight {
     boxer2: Boxer
     modalityErrors: Readonly<ModalityError[]>
     id: string
+    order: number
 }
 
 export interface BoxingData {

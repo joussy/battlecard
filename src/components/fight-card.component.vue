@@ -11,12 +11,9 @@
             </tr>
         </thead>
         <tbody>
-            <tr
-                v-for="(fight, index) in store.fightCard"
-                :key="index"
-            >
+            <tr v-for="fight in store.fightCard">
                 <th scope="row">
-                    {{ index + 1 }}
+                    {{ fight.order + 1 }}
                 </th>
                 <td>{{ fightService.getBoxerDisplayName(fight.boxer1.attributes) }}</td>
                 <td>{{ fightService.getBoxerDisplayName(fight.boxer2.attributes) }}</td>
@@ -36,6 +33,24 @@
                     </span>
                 </td>
                 <td>
+                    <button
+                        class="btn ms-0"
+                        @click="fightService.switchFight(fight.id)"
+                    >
+                        <i class="bi bi-arrow-left-right" />
+                    </button>
+                    <button
+                        class="btn ms-0"
+                        @click="fightService.moveFight(fight.id, fight.order - 1)"
+                    >
+                        <i class="bi bi-arrow-up" />
+                    </button>
+                    <button
+                        class="btn ms-0"
+                        @click="fightService.moveFight(fight.id, fight.order + 1)"
+                    >
+                        <i class="bi bi-arrow-down" />
+                    </button>
                     <button
                         class="btn btn-outline-danger btn-sm ms-2"
                         @click="fightService.removeFromFightCard(fight.boxer1, fight.boxer2)"

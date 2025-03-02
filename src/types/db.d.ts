@@ -16,6 +16,7 @@ export interface DbBoxer {
 }
 
 export interface DbFight {
+    order: number
     id: string
     boxer1Id: string
     boxer2Id: string

@@ -40,6 +40,7 @@ export default class DbConverter {
             boxer1,
             boxer2,
             id: fight.id,
+            order: fight.order,
             modalityErrors: [],
         }
     }
@@ -50,6 +51,7 @@ export default class DbConverter {
             boxer1Id: fight.boxer1.attributes.id,
             boxer2Id: fight.boxer2.attributes.id,
             userId: userId,
+            order: fight.order,
         }
     }
 }

@@ -7,6 +7,13 @@ const pocketBase = (
 ) as TypedPocketBase
 
 export class PocketBaseManager {
+    async updateFights(fights: DbFight[]) {
+        const batch = pocketBase.createBatch()
+        for (const fight of fights) {
+            batch.collection("fight").update(fight.id, fight)
+        }
+        await batch.send()
+    }
     async deleteFights(fightIds: string[]) {
         if (fightIds.length == 0) {
             return
@@ -18,7 +25,9 @@ export class PocketBaseManager {
         await batch.send()
     }
     async getFights(): Promise<DbFight[]> {
-        return await pocketBase.collection("fight").getFullList()
+        return await pocketBase.collection("fight").getFullList({
+            sort: "order",
+        })
     }
     async addFight(fight: DbFight): Promise<DbFight> {
         fight.userId = userStore.account?.id

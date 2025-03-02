@@ -96,9 +96,9 @@ export class FightService {
 
     async addToFightCard(boxer1: Boxer, boxer2: Boxer) {
         // Check if the fight already exists before adding to the fight card
-
+        const order = fightCardStore.store.fightCard.length
         if (!this.isCompeting(boxer1, boxer2)) {
-            const fight = await fightCardStore.addFight(boxer1, boxer2)
+            const fight = await fightCardStore.addFight(boxer1, boxer2, order)
             fightCardStore.setModalityErrors(
                 fight.id,
                 this.getOpponentModalityErrors(boxer1.attributes, boxer2.attributes)
@@ -213,6 +213,13 @@ export class FightService {
         })
         const csv = stringifyCsv(entries, { delimiter: "\t" })
         return csv
+    }
+
+    async moveFight(fightId: string, order: number) {
+        await fightCardStore.updateFightOrder(fightId, order)
+    }
+    async switchFight(fightId: string) {
+        await fightCardStore.switchFight(fightId)
     }
 }
 
