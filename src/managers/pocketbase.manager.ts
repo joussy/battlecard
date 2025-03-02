@@ -21,6 +21,7 @@ export class PocketBaseManager {
         return await pocketBase.collection("fight").getFullList()
     }
     async addFight(fight: DbFight): Promise<DbFight> {
+        fight.id = ""
         return await pocketBase.collection("fight").create(fight)
     }
     async deleteBoxers(ids: string[]) {
@@ -33,18 +34,14 @@ export class PocketBaseManager {
         }
         await batch.send()
     }
-    isAvailable(): boolean {
-        return pocketBase && userStore.account?.id != null
-    }
     async getBoxers(): Promise<DbBoxer[]> {
         return await pocketBase.collection("boxer").getFullList()
     }
     async addBoxer(boxer: DbBoxer): Promise<DbBoxer> {
-        console.log("insert")
-        if (!pocketBase || !userStore.account?.id) {
+        if (!userStore.account?.id) {
             return Promise.reject()
         }
-        boxer.userId = userStore.account.id
+        boxer.userId = userStore.account?.id
         boxer.id = ""
         return await pocketBase.collection("boxer").create(boxer)
     }

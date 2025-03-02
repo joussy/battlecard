@@ -4,22 +4,21 @@ import PocketBase from "pocketbase"
 import { UserAccount } from "@/types/user"
 
 const pocketBase = import.meta.env.VITE_SERVER_URL ? new PocketBase(import.meta.env.VITE_SERVER_URL) : null
-
 export const userStore = reactive({
     darkMode: false,
     hideNonMatchableOpponents: false,
     hideFightersWithNoMatch: false,
     restored: false as boolean,
-    account: null as UserAccount | null,
+    account: null as null | UserAccount,
     authenticationAvailable: pocketBase != null,
     async authenticate() {
         if (!pocketBase || pocketBase.authStore.isValid) return null
         await pocketBase.collection("users").authWithOAuth2({ provider: "google" })
         await updateAccount()
     },
-    async logout() {
+    logout() {
         if (!pocketBase) return null
-        await pocketBase.authStore.clear()
+        pocketBase.authStore.clear()
     },
 })
 
@@ -42,9 +41,7 @@ async function updateAccount() {
                 {}
             )
         }
-        const record = await pocketBase.collection("users").getOne(pocketBase.authStore.record.id, {
-            // expand: "relField1,relField2.subRelField",
-        })
+        const record = await pocketBase.collection("users").getOne(pocketBase.authStore.record.id, {})
         userStore.account.apiEnabled = record.apiEnabled
     }
 }

@@ -6,10 +6,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue"
+import { defineComponent, watch } from "vue"
 import MenuComponent from "@/components/menu.component.vue"
 import fightService from "@/services/fight.service"
-import { loadUserStore } from "@/composables/user.composable"
+import { loadUserStore, userStore } from "@/composables/user.composable"
 
 export default defineComponent({
     components: {
@@ -22,7 +22,15 @@ export default defineComponent({
     },
     async mounted() {
         await loadUserStore()
-        await fightService.loadFightStore()
+        watch(
+            () => userStore.account,
+            async () => {
+                await fightService.loadFightStore()
+            },
+            {
+                immediate: true,
+            }
+        )
     },
 })
 </script>

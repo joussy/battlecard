@@ -8,7 +8,7 @@
         <div class="d-flex flex-row align-items-center">
             <div class="flex-grow-1">
                 <div class="d-flex justify-content-between">
-                    <div class="">
+                    <div>
                         <i
                             class="bi"
                             :class="boxer.collapsed ? 'bi-chevron-right' : 'bi-chevron-down'"

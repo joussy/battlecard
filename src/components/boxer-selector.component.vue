@@ -101,9 +101,9 @@ export default defineComponent({
             }
         },
         onBoxerAdd(newBoxer: BoxerAttributes) {
+            console.log(newBoxer)
             this.boxerAddMode = false
             fightService.addBoxer(newBoxer)
-            fightService.computeBoxersOpponents()
         },
         downloadCsv() {
             const csv = fightService.getAvailableBoxersAsCsv()

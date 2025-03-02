@@ -1,7 +1,7 @@
 <template>
     <div class="w-100">
         <div class="d-flex justify-content-between">
-            <div class="">
+            <div>
                 <button
                     v-if="fightService.canCompete(boxer, opponent)"
                     class="btn btn-outline-success btn-sm"

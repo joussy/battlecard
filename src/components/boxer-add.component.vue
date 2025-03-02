@@ -232,7 +232,8 @@ export default defineComponent({
     props: {
         boxer: {
             type: Object as PropType<BoxerAttributes | null>,
-            required: true,
+            required: false,
+            default: null,
         },
     },
     emits: ["boxer-add"],

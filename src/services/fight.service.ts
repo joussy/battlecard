@@ -11,7 +11,7 @@ export class FightService {
     async loadFightStore() {
         await fightCardStore.loadFightStore()
         this.computeBoxersCategory()
-        await this.computeBoxersOpponents()
+        this.computeBoxersOpponents()
     }
 
     computeBoxersCategory() {
@@ -50,7 +50,6 @@ export class FightService {
 
     removeFromFightCard(boxer1: Boxer, boxer2: Boxer): void {
         const fightId = this.getFightId(boxer1, boxer2)
-        console.log(fightId)
         if (fightId != null) {
             fightCardStore.removeFightById(fightId)
         }
@@ -107,7 +106,7 @@ export class FightService {
         }
     }
 
-    async computeBoxersOpponents() {
+    computeBoxersOpponents() {
         for (const [, boxer] of fightCardStore.store.boxers.entries()) {
             const opponents = fightCardStore.store.boxers
                 .map(
@@ -130,8 +129,7 @@ export class FightService {
                         )
                 )
                 .sort((a, b) => a.modalityErrors.length - b.modalityErrors.length)
-            console.log(opponents)
-            await fightCardStore.setBoxerOpponents(boxer.attributes.id, opponents)
+            fightCardStore.setBoxerOpponents(boxer.attributes.id, opponents)
         }
     }
 
@@ -151,7 +149,7 @@ export class FightService {
             fightCardStore.store.modality.getCategory(boxer.attributes, false),
             fightCardStore.store.modality.getCategory(boxer.attributes, true)
         )
-        await this.computeBoxersOpponents()
+        this.computeBoxersOpponents()
     }
 
     async importFromApiByIds(csv: string) {
@@ -164,7 +162,7 @@ export class FightService {
             const apiBoxer = await ApiService.getBoxerById(entry.license)
             if (apiBoxer) {
                 await this.addBoxer({
-                    id: "",
+                    id: generateRandomId(),
                     license: apiBoxer.license,
                     birthDate: new Date(apiBoxer.birth_date),
                     club: apiBoxer.club,
@@ -202,7 +200,7 @@ export class FightService {
             }
             await this.addBoxer(boxerAttributes)
         }
-        await this.computeBoxersOpponents()
+        this.computeBoxersOpponents()
     }
 
     getAvailableBoxersAsCsv(): string {

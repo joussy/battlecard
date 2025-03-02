@@ -6,6 +6,7 @@ import pocketBaseManager from "@/managers/pocketbase.manager"
 import DbConverter from "@/converters/db.converter"
 import { userStore } from "./user.composable"
 import { ModalityError } from "@/types/modality"
+import { generateRandomId } from "@/utils/string.utils"
 
 const fightCardStore = reactive({
     restored: false as boolean,
@@ -23,7 +24,7 @@ export default {
         return fightCardStore.fightCard.find((x) => x.id == id)
     },
     async addBoxer(boxer: Boxer) {
-        if (pocketBaseManager.isAvailable()) {
+        if (userStore.account?.id) {
             const res = await pocketBaseManager.addBoxer(DbConverter.toDbBoxer(boxer.attributes))
             boxer = DbConverter.toBoxer(res)
         }
@@ -31,7 +32,7 @@ export default {
         return boxer
     },
     async clear() {
-        if (pocketBaseManager.isAvailable()) {
+        if (userStore.account?.id) {
             await pocketBaseManager.deleteFights(fightCardStore.fightCard.map((b) => b.id))
             await pocketBaseManager.deleteBoxers(fightCardStore.boxers.map((b) => b.attributes.id))
         }
@@ -43,10 +44,10 @@ export default {
             boxer1: boxer1,
             boxer2: boxer2,
             modalityErrors: [],
-            id: "",
+            id: generateRandomId(),
         }
-        if (userStore.account?.id) {
-            const ret = await pocketBaseManager.addFight(DbConverter.toDbFight(fight, userStore.account.id))
+        if (userStore.account?.id != null) {
+            const ret = await pocketBaseManager.addFight(DbConverter.toDbFight(fight, userStore.account?.id))
             fight = DbConverter.toFight(ret, boxer1, boxer2)
         }
 
@@ -67,7 +68,9 @@ export default {
         }
     },
     async removeFightById(id: string) {
-        await pocketBaseManager.deleteFights([id])
+        if (userStore.account?.id) {
+            await pocketBaseManager.deleteFights([id])
+        }
         const index = fightCardStore.fightCard.findIndex((f) => f.id == id)
         if (index > -1) fightCardStore.fightCard.splice(index, 1)
     },
@@ -78,7 +81,8 @@ export default {
         }
     },
     async loadFightStore() {
-        if (userStore.account?.id) {
+        if (userStore.account?.id != null) {
+            console.log(userStore.account.id)
             console.debug("loading store from Db... ")
             await this.loadFromDb()
         } else if (localStorage["fightCardStore"]) {
@@ -140,7 +144,7 @@ export default {
 }
 
 watchEffect(() => {
-    if (!fightCardStore.restored) {
+    if (!fightCardStore.restored || userStore.account?.id != null) {
         return
     }
 
