@@ -10,7 +10,7 @@ const userStore = reactive({
     async authenticate() {
         if (!pocketBase || pocketBase.authStore.isValid) return null
         await pocketBase.collection("users").authWithOAuth2({ provider: "google" })
-        await updateAccount()
+        updateAccount()
     },
     logout() {
         if (!pocketBase) return null
@@ -18,7 +18,7 @@ const userStore = reactive({
     },
 })
 
-async function updateAccount() {
+function updateAccount() {
     if (!pocketBase?.authStore.isValid) {
         userStore.account = null
     } else if (pocketBase?.authStore.record) {
@@ -37,17 +37,17 @@ async function updateAccount() {
                 {}
             )
         }
-        const record = await pocketBase.collection("users").getOne(pocketBase.authStore.record.id, {})
-        userStore.account.apiEnabled = record.apiEnabled
+
+        userStore.account.apiEnabled = true
     }
 }
 
-async function loadUserStore() {
+function loadUserStore() {
     console.debug("loading user ... ")
-    pocketBase?.authStore.onChange(async () => {
-        await updateAccount()
+    pocketBase?.authStore.onChange(() => {
+        updateAccount()
     })
-    await updateAccount()
+    updateAccount()
     userStore.restored = true
 }
 

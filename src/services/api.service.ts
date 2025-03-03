@@ -1,5 +1,6 @@
 import { ApiBoxer } from "@/types/api"
 import { userStore } from "@/composables/user.composable"
+import { postAndDownload } from "@/utils/download.utils"
 
 export class ApiService {
     static async getBoxerById(id: string): Promise<ApiBoxer | null> {
@@ -17,5 +18,10 @@ export class ApiService {
             console.error(error)
             return null
         }
+    }
+    static async downloadFightCardAsPdf() {
+        await postAndDownload(`${import.meta.env.VITE_SERVER_URL}/api/printCard`, {}, "fight-card.pdf", {
+            Authorization: userStore.account?.authToken ?? "",
+        })
     }
 }
