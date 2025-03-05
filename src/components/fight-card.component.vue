@@ -20,56 +20,57 @@
                 <th scope="col" />
             </tr>
         </thead>
-        <tbody>
-            <tr v-for="fight in fightStore.fightCard">
-                <th scope="row">
-                    {{ fight.order + 1 }}
-                </th>
-                <td>{{ fightService.getBoxerDisplayName(fight.boxer1.attributes) }}</td>
-                <td>{{ fightService.getBoxerDisplayName(fight.boxer2.attributes) }}</td>
-                <td>
-                    <Icon
-                        v-if="fight.boxer1.attributes.gender == Gender.MALE"
-                        name="male"
-                    />
-                    <Icon
-                        v-if="fight.boxer1.attributes.gender == Gender.FEMALE"
-                        name="female"
-                    />
-                </td>
-                <td>
-                    <span v-for="modalityError in fight.modalityErrors">
-                        <ModalityErrorComponent :modality-error="modalityError" />
-                    </span>
-                </td>
-                <td>
-                    <button
-                        class="btn ms-0"
-                        @click="fightService.switchFight(fight.id)"
-                    >
-                        <i class="bi bi-arrow-left-right" />
-                    </button>
-                    <button
-                        class="btn ms-0"
-                        @click="fightService.moveFight(fight.id, fight.order - 1)"
-                    >
-                        <i class="bi bi-arrow-up" />
-                    </button>
-                    <button
-                        class="btn ms-0"
-                        @click="fightService.moveFight(fight.id, fight.order + 1)"
-                    >
-                        <i class="bi bi-arrow-down" />
-                    </button>
-                    <button
-                        class="btn btn-outline-danger btn-sm ms-2"
-                        @click="fightService.removeFromFightCard(fight.boxer1, fight.boxer2)"
-                    >
-                        <i class="bi bi-person-dash-fill" />
-                    </button>
-                </td>
-            </tr>
-        </tbody>
+        <draggable
+            v-model="fightCard"
+            tag="tbody"
+            item-key="id"
+            handle=".handle"
+            @end="moved"
+        >
+            <template #item="{ element: fight }">
+                <tr>
+                    <th scope="row">
+                        <span class="pe-2">
+                            {{ fight.order }}
+                        </span>
+                        <button class="btn ms-0 handle p-0">
+                            <i class="bi bi-grip-horizontal" />
+                        </button>
+                    </th>
+                    <td>{{ fightService.getBoxerDisplayName(fight.boxer1.attributes) }}</td>
+                    <td>{{ fightService.getBoxerDisplayName(fight.boxer2.attributes) }}</td>
+                    <td>
+                        <Icon
+                            v-if="fight.boxer1.attributes.gender == Gender.MALE"
+                            name="male"
+                        />
+                        <Icon
+                            v-if="fight.boxer1.attributes.gender == Gender.FEMALE"
+                            name="female"
+                        />
+                    </td>
+                    <td>
+                        <span v-for="modalityError in fight.modalityErrors">
+                            <ModalityErrorComponent :modality-error="modalityError" />
+                        </span>
+                    </td>
+                    <td>
+                        <button
+                            class="btn ms-0"
+                            @click="fightService.switchFight(fight.id)"
+                        >
+                            <i class="bi bi-arrow-left-right" />
+                        </button>
+                        <button
+                            class="btn btn-outline-danger btn-sm ms-2"
+                            @click="fightService.removeFromFightCard(fight.boxer1, fight.boxer2)"
+                        >
+                            <i class="bi bi-person-dash-fill" />
+                        </button>
+                    </td>
+                </tr>
+            </template>
+        </draggable>
     </table>
 </template>
 
@@ -80,11 +81,13 @@ import Icon from "@/components/core/icon.component.vue"
 import fightService from "@/services/fight.service"
 import { ApiService } from "@/services/api.service"
 import { userStore } from "@/composables/user.composable"
+import draggable from "vuedraggable"
 
 export default {
     components: {
         ModalityErrorComponent: ModalityErrorComponent,
         Icon: Icon,
+        draggable,
     },
     data() {
         return {
@@ -94,9 +97,24 @@ export default {
             userStore: userStore,
         }
     },
+    computed: {
+        fightCard: {
+            get() {
+                return fightService.store().fightCard
+            },
+            set() {
+                /* Avoid error on readonly collection */
+            },
+        },
+    },
     methods: {
         async downloadPdf() {
             await ApiService.downloadFightCardAsPdf()
+        },
+        moved(evt: { oldIndex?: number; newIndex?: number }) {
+            if (evt?.oldIndex !== undefined && evt?.newIndex !== undefined) {
+                fightService.moveFight(this.fightCard[evt.oldIndex].id, evt.newIndex + 1)
+            }
         },
     },
 }
