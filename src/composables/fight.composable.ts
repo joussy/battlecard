@@ -69,8 +69,8 @@ export default {
         const index = fightCardStore.fightCard.findIndex((f) => f.id == id)
         if (index > -1) fightCardStore.fightCard.splice(index, 1)
     },
-    async updateFightOrder(fightId: string, order: number) {
-        if (order < 1) {
+    async updateFightOrder(fightId: string, newIndex: number) {
+        if (newIndex < 0) {
             return
         }
 
@@ -86,7 +86,7 @@ export default {
         // Get the fight to move
         const fightToMove = fights[fightIndex]
 
-        if (fightToMove.order == order) {
+        if (fightIndex == newIndex) {
             return
         }
 
@@ -94,11 +94,11 @@ export default {
         fights.splice(fightIndex, 1)
 
         // Insert the fight at the new position based on the order
-        fights.splice(order, 0, fightToMove)
+        fights.splice(newIndex, 0, fightToMove)
 
         // Optionally, update the order property of each fight
         fights.forEach((fight, index) => {
-            fight.order = index + 1
+            fight.order = index + 1 // +1 because we want an order starting 1, not 0
         })
         if (userStore?.account?.id != null) {
             await pocketBaseManager.updateFights(fights.map((f) => DbConverter.toDbFight(f, userStore.account!.id)))

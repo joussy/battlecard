@@ -113,7 +113,7 @@ export default {
         },
         moved(evt: { oldIndex?: number; newIndex?: number }) {
             if (evt?.oldIndex !== undefined && evt?.newIndex !== undefined) {
-                fightService.moveFight(this.fightCard[evt.oldIndex].id, evt.newIndex + 1)
+                fightService.moveFight(this.fightCard[evt.oldIndex].id, evt.newIndex)
             }
         },
     },
