@@ -21,7 +21,7 @@
             </tr>
         </thead>
         <draggable
-            v-model="fightCard"
+            v-model="fightCard as unknown[] | undefined"
             tag="tbody"
             item-key="id"
             handle=".handle"
