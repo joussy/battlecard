@@ -4,10 +4,47 @@
         <button
             v-if="userStore.account"
             class="btn btn-outline-secondary mb-3 ms-2"
-            @click="downloadPdf"
+            @click="downloadFile('pdf')"
         >
             <i class="bi bi-file-earmark-pdf-fill" />
         </button>
+        <div
+            class="btn-group"
+            role="group"
+        >
+            <button
+                type="button"
+                class="btn btn-outline-secondary mb-3 ms-2 dropdown-toggle"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+            >
+                <i class="bi bi-download" />
+            </button>
+            <ul class="dropdown-menu">
+                <li>
+                    <a
+                        class="dropdown-item"
+                        @click="downloadFile('pdf')"
+                    >
+                        Pdf
+                    </a>
+                </li>
+                <li>
+                    <a
+                        class="dropdown-item"
+                        @click="downloadFile('xlsx')"
+                        >Xlsx</a
+                    >
+                </li>
+                <li>
+                    <a
+                        class="dropdown-item"
+                        @click="downloadFile('csv')"
+                        >CSV</a
+                    >
+                </li>
+            </ul>
+        </div>
     </div>
     <table class="table">
         <thead>
@@ -108,7 +145,7 @@ export default {
         },
     },
     methods: {
-        async downloadPdf() {
+        async downloadFile(fileType: FileType) {
             await ApiService.downloadFightCardAsPdf()
         },
         moved(evt: { oldIndex?: number; newIndex?: number }) {
