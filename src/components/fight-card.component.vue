@@ -1,13 +1,6 @@
 <template>
     <div class="d-flex">
         <h3 class="flex-grow-1"></h3>
-        <button
-            v-if="userStore.account"
-            class="btn btn-outline-secondary mb-3 ms-2"
-            @click="downloadFile('pdf')"
-        >
-            <i class="bi bi-file-earmark-pdf-fill" />
-        </button>
         <div
             class="btn-group"
             role="group"
@@ -26,21 +19,35 @@
                         class="dropdown-item"
                         @click="downloadFile('pdf')"
                     >
-                        Pdf
+                        <i class="bi bi-file-earmark-pdf"></i>
+                        PDF
                     </a>
                 </li>
                 <li>
                     <a
                         class="dropdown-item"
                         @click="downloadFile('xlsx')"
-                        >Xlsx</a
+                    >
+                        <i class="bi bi-file-earmark-spreadsheet"></i>
+                        XLSX</a
                     >
                 </li>
                 <li>
                     <a
                         class="dropdown-item"
                         @click="downloadFile('csv')"
-                        >CSV</a
+                    >
+                        <i class="bi bi-file-earmark-spreadsheet"></i>
+                        CSV</a
+                    >
+                </li>
+                <li>
+                    <a
+                        class="dropdown-item"
+                        @click="downloadFile('png')"
+                    >
+                        <i class="bi bi-file-earmark-image-fill"></i>
+                        PNG</a
                     >
                 </li>
             </ul>
@@ -119,6 +126,7 @@ import fightService from "@/services/fight.service"
 import { ApiService } from "@/services/api.service"
 import { userStore } from "@/composables/user.composable"
 import draggable from "vuedraggable"
+import { FileType } from "@/types/api"
 
 export default {
     components: {
@@ -146,7 +154,7 @@ export default {
     },
     methods: {
         async downloadFile(fileType: FileType) {
-            await ApiService.downloadFightCardAsPdf()
+            await ApiService.downloadFightCard(fileType)
         },
         moved(evt: { oldIndex?: number; newIndex?: number }) {
             if (evt?.oldIndex !== undefined && evt?.newIndex !== undefined) {

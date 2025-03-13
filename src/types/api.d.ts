@@ -8,4 +8,4 @@ export interface ApiBoxer {
     license: string
 }
 
-type FileType = "pdf" | "xlsx" | "csv"
+type FileType = "pdf" | "xlsx" | "csv" | "png"
