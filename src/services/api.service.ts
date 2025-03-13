@@ -1,4 +1,4 @@
-import { ApiBoxer } from "@/types/api"
+import { ApiBoxer, FileType } from "@/types/api"
 import { userStore } from "@/composables/user.composable"
 import { postAndDownload } from "@/utils/download.utils"
 
@@ -19,9 +19,14 @@ export class ApiService {
             return null
         }
     }
-    static async downloadFightCardAsPdf() {
-        await postAndDownload(`${import.meta.env.VITE_SERVER_URL}/api/printCard`, {}, "fight-card.pdf", {
-            Authorization: userStore.account?.authToken ?? "",
-        })
+    static async downloadFightCard(fileType: FileType) {
+        await postAndDownload(
+            `${import.meta.env.VITE_SERVER_URL}/api/printCard`,
+            { fileType },
+            `fight-card.${fileType}`,
+            {
+                Authorization: userStore.account?.authToken ?? "",
+            }
+        )
     }
 }

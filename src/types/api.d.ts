@@ -7,3 +7,5 @@ export interface ApiBoxer {
     gender: Gender
     license: string
 }
+
+type FileType = "pdf" | "xlsx" | "csv" | "png"
