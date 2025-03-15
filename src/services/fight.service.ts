@@ -18,8 +18,8 @@ export class FightService {
         for (const boxer of fightCardStore.store.boxers) {
             fightCardStore.setBoxerCategory(
                 boxer.attributes.id,
-                fightCardStore.store.modality.getCategory(boxer.attributes, false),
-                fightCardStore.store.modality.getCategory(boxer.attributes, true)
+                fightCardStore.store.modality.getCategoryName(boxer.attributes, false),
+                fightCardStore.store.modality.getCategoryName(boxer.attributes, true)
             )
         }
     }
@@ -141,8 +141,8 @@ export class FightService {
         boxer = await fightCardStore.addBoxer(boxer)
         fightCardStore.setBoxerCategory(
             boxer.attributes.id,
-            fightCardStore.store.modality.getCategory(boxer.attributes, false),
-            fightCardStore.store.modality.getCategory(boxer.attributes, true)
+            fightCardStore.store.modality.getCategoryName(boxer.attributes, false),
+            fightCardStore.store.modality.getCategoryName(boxer.attributes, true)
         )
         this.computeBoxersOpponents()
     }

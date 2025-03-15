@@ -7,12 +7,13 @@ import DbConverter from "@/converters/db.converter"
 import { userStore } from "./user.composable"
 import { ModalityError } from "@/types/modality"
 import { generateRandomId } from "@/utils/string.utils"
+import { IModality } from "@/fightModality/IModality"
 
 const fightCardStore = reactive({
     restored: false as boolean,
     fightCard: [] as Fight[],
     boxers: [] as Boxer[],
-    modality: new BeaModality(),
+    modality: new BeaModality() as IModality,
 })
 
 export default {

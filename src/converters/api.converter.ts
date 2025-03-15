@@ -1,11 +1,16 @@
-import { BoxerAttributes } from "@/types/boxing.d"
-import { BoxerExtraInfo as BoxerCardExtraInfo } from "@/types/api"
+import { Fight } from "@/types/boxing.d"
+import { IModality } from "@/fightModality/IModality"
+import { getFightDurationAsString } from "@/utils/string.utils"
+import { FightExtraInfo } from "@/types/api"
 
 export default class ApiConverter {
-    static toBoxerCardExtraInfo(boxerAttributes: BoxerAttributes): BoxerCardExtraInfo {
+    static ToFightCardExtraInfo(fight: Fight, modality: IModality): FightExtraInfo {
+        const fightDuration = modality.getFightDuration(fight.boxer1.attributes, fight.boxer2.attributes)
         return {
-            boxerId: boxerAttributes.id,
-            category: boxerAttributes.category,
+            fightId: fight.id,
+            duration: getFightDurationAsString(fightDuration.rounds, fightDuration.roundDurationAsSeconds),
+            boxer1Category: fight.boxer1.attributes.category,
+            boxer2Category: fight.boxer2.attributes.category,
         }
     }
 }

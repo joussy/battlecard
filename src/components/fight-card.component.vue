@@ -54,14 +54,14 @@
             </ul>
         </div>
     </div>
-    <table class="table">
+    <table class="table table-bordered">
         <thead>
             <tr>
                 <th scope="col">#</th>
                 <th scope="col">Red</th>
                 <th scope="col">Blue</th>
                 <th scope="col" />
-                <th scope="col" />
+                <!-- <th scope="col" /> -->
                 <th scope="col" />
             </tr>
         </thead>
@@ -85,20 +85,29 @@
                     <td>{{ fightService.getBoxerDisplayName(fight.boxer1.attributes) }}</td>
                     <td>{{ fightService.getBoxerDisplayName(fight.boxer2.attributes) }}</td>
                     <td>
-                        <Icon
-                            v-if="fight.boxer1.attributes.gender == Gender.MALE"
-                            name="male"
-                        />
-                        <Icon
-                            v-if="fight.boxer1.attributes.gender == Gender.FEMALE"
-                            name="female"
-                        />
+                        <div class="me-1">
+                            <i
+                                v-if="fight.boxer1.attributes.gender == Gender.FEMALE"
+                                class="bi bi-gender-female"
+                            ></i>
+                            <i
+                                v-if="fight.boxer1.attributes.gender == Gender.MALE"
+                                class="bi bi-gender-male"
+                            ></i>
+                            <span v-if="fight.modalityErrors.length > 0"
+                                ><i class="bi bi-exclamation-circle-fill"></i
+                            ></span>
+                        </div>
+                        <div>
+                            <i class="bi bi-stopwatch me-1"></i>
+                            <span>{{ getFightDuration(fight) }}</span>
+                        </div>
                     </td>
-                    <td>
+                    <!-- <td>
                         <span v-for="modalityError in fight.modalityErrors">
                             <ModalityErrorComponent :modality-error="modalityError" />
                         </span>
-                    </td>
+                    </td> -->
                     <td>
                         <button
                             class="btn ms-0"
@@ -120,19 +129,16 @@
 </template>
 
 <script lang="ts">
-import { Gender } from "@/types/boxing.d"
-import ModalityErrorComponent from "@/components/core/modality-error.component.vue"
-import Icon from "@/components/core/icon.component.vue"
+import { Fight, Gender } from "@/types/boxing.d"
 import fightService from "@/services/fight.service"
 import { ApiService } from "@/services/api.service"
 import { userStore } from "@/composables/user.composable"
 import draggable from "vuedraggable"
 import { FileType } from "@/types/api"
+import { getFightDurationAsString } from "@/utils/string.utils"
 
 export default {
     components: {
-        ModalityErrorComponent: ModalityErrorComponent,
-        Icon: Icon,
         draggable,
     },
     data() {
@@ -155,15 +161,19 @@ export default {
     },
     methods: {
         async downloadFile(fileType: FileType) {
-            const boxersExtraInfo = this.fightStore.boxers
-                .filter((b) => fightService.isInFightCard(b))
-                .map((b) => b.attributes)
-            await ApiService.downloadFightCard(fileType, boxersExtraInfo)
+            await ApiService.downloadFightCard(fileType, this.fightStore.fightCard, this.fightStore.modality)
         },
         moved(evt: { oldIndex?: number; newIndex?: number }) {
             if (evt?.oldIndex !== undefined && evt?.newIndex !== undefined) {
                 fightService.moveFight(this.fightCard[evt.oldIndex].id, evt.newIndex)
             }
+        },
+        getFightDuration(fight: Fight) {
+            const fightDuration = this.fightStore.modality.getFightDuration(
+                fight.boxer1.attributes,
+                fight.boxer2.attributes
+            )
+            return getFightDurationAsString(fightDuration.rounds, fightDuration.roundDurationAsSeconds)
         },
     },
 }

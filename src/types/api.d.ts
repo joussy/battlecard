@@ -8,9 +8,11 @@ export interface ApiBoxer {
     license: string
 }
 
-export interface BoxerExtraInfo {
-    boxerId: string
-    category: string
+export interface FightExtraInfo {
+    fightId: string
+    duration: string
+    boxer1Category: string
+    boxer2Category: string
 }
 
 type FileType = "pdf" | "xlsx" | "csv" | "png"
