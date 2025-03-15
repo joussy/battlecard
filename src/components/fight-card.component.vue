@@ -1,7 +1,8 @@
 <template>
     <div class="d-flex">
-        <h3 class="flex-grow-1"></h3>
+        <div class="flex-grow-1"></div>
         <div
+            v-if="userStore.account != null"
             class="btn-group"
             role="group"
         >
