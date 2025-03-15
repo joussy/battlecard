@@ -221,10 +221,5 @@ export default {
             display: block;
         }
     }
-    .menu-card-tools {
-        @include media-breakpoint-up(xs) {
-            display: hidden;
-        }
-    }
 }
 </style>
