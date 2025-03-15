@@ -8,4 +8,9 @@ export interface ApiBoxer {
     license: string
 }
 
+export interface BoxerExtraInfo {
+    boxerId: string
+    category: string
+}
+
 type FileType = "pdf" | "xlsx" | "csv" | "png"

@@ -155,7 +155,10 @@ export default {
     },
     methods: {
         async downloadFile(fileType: FileType) {
-            await ApiService.downloadFightCard(fileType)
+            const boxersExtraInfo = this.fightStore.boxers
+                .filter((b) => fightService.isInFightCard(b))
+                .map((b) => b.attributes)
+            await ApiService.downloadFightCard(fileType, boxersExtraInfo)
         },
         moved(evt: { oldIndex?: number; newIndex?: number }) {
             if (evt?.oldIndex !== undefined && evt?.newIndex !== undefined) {

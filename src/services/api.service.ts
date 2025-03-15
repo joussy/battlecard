@@ -1,6 +1,8 @@
-import { ApiBoxer, FileType } from "@/types/api"
+import { ApiBoxer, BoxerExtraInfo, FileType } from "@/types/api"
 import { userStore } from "@/composables/user.composable"
 import { postAndDownload } from "@/utils/download.utils"
+import { BoxerAttributes } from "@/types/boxing"
+import ApiConverter from "@/converters/api.converter"
 
 export class ApiService {
     static async getBoxerById(id: string): Promise<ApiBoxer | null> {
@@ -19,10 +21,11 @@ export class ApiService {
             return null
         }
     }
-    static async downloadFightCard(fileType: FileType) {
+    static async downloadFightCard(fileType: FileType, boxers: readonly BoxerAttributes[]) {
+        const cardExtraInfo = boxers.map((b) => ApiConverter.toBoxerCardExtraInfo(b))
         await postAndDownload(
             `${import.meta.env.VITE_SERVER_URL}/api/printCard`,
-            { fileType },
+            { fileType, cardExtraInfo },
             `fight-card.${fileType}`,
             {
                 Authorization: userStore.account?.authToken ?? "",
