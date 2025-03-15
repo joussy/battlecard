@@ -45,7 +45,7 @@ export default {
             boxer2: boxer2,
             modalityErrors: [],
             id: generateRandomId(),
-            order,
+            order: order + 1,
         }
         if (userStore.account?.id != null) {
             const ret = await pocketBaseManager.addFight(DbConverter.toDbFight(fight, userStore.account?.id))
@@ -68,6 +68,16 @@ export default {
         }
         const index = fightCardStore.fightCard.findIndex((f) => f.id == id)
         if (index > -1) fightCardStore.fightCard.splice(index, 1)
+        await this.updateFightsOrder()
+    },
+    async updateFightsOrder() {
+        const fights = fightCardStore.fightCard
+        fights.forEach((fight, index) => {
+            fight.order = index + 1 // +1 because we want an order starting 1, not 0
+        })
+        if (userStore?.account?.id != null) {
+            await pocketBaseManager.updateFights(fights.map((f) => DbConverter.toDbFight(f, userStore.account!.id)))
+        }
     },
     async updateFightOrder(fightId: string, newIndex: number) {
         if (newIndex < 0) {
@@ -96,13 +106,7 @@ export default {
         // Insert the fight at the new position based on the order
         fights.splice(newIndex, 0, fightToMove)
 
-        // Optionally, update the order property of each fight
-        fights.forEach((fight, index) => {
-            fight.order = index + 1 // +1 because we want an order starting 1, not 0
-        })
-        if (userStore?.account?.id != null) {
-            await pocketBaseManager.updateFights(fights.map((f) => DbConverter.toDbFight(f, userStore.account!.id)))
-        }
+        await this.updateFightsOrder()
     },
     async switchFight(fightId: string) {
         const fight = this.getFightById(fightId)
