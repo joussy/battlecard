@@ -1,25 +1,86 @@
 import { BoxerAttributes } from "../types/boxing"
-import { ModalityError, ModalityErrorType } from "../types/modality.d"
+import { BeaCategory, FightDuration, ModalityError, ModalityErrorType } from "../types/modality.d"
 import { BaseModality } from "./BaseModality"
 import { differenceInDays } from "date-fns"
 
 export class BeaModality extends BaseModality {
-    categories = [
-        "Poussin 1",
-        "Poussin 2",
-        "Poussin 3",
-        "Poussin 4",
-        "Benjamin 1",
-        "Benjamin 2",
-        "Minime 1",
-        "Minime 2",
-        "Cadet 1",
-        "Cadet 2",
-        "Junior 1",
-        "Junior 2",
+    getFightDuration(boxer1: BoxerAttributes, boxer2: BoxerAttributes): FightDuration {
+        const boxer1Category = this.getCategory(boxer1)
+        const boxer2Category = this.getCategory(boxer2)
+        const roundDuration = Math.min(boxer1Category.roundDurationAsSeconds, boxer2Category.roundDurationAsSeconds)
+        return {
+            restTimeAsSeconds: 60,
+            roundDurationAsSeconds: roundDuration,
+            rounds: 3,
+        }
+    }
+    categories: BeaCategory[] = [
+        {
+            name: "Poussin 1",
+            shortName: "P1",
+            roundDurationAsSeconds: 60,
+        },
+        {
+            name: "Poussin 2",
+            shortName: "P2",
+            roundDurationAsSeconds: 60,
+        },
+        {
+            name: "Poussin 3",
+            shortName: "P3",
+            roundDurationAsSeconds: 60,
+        },
+        {
+            name: "Poussin 4",
+            shortName: "P4",
+            roundDurationAsSeconds: 60,
+        },
+        {
+            name: "Benjamin 1",
+            shortName: "B1",
+            roundDurationAsSeconds: 60,
+        },
+        {
+            name: "Benjamin 2",
+            shortName: "B2",
+            roundDurationAsSeconds: 60,
+        },
+        {
+            name: "Minime 1",
+            shortName: "M1",
+            roundDurationAsSeconds: 90,
+        },
+        {
+            name: "Minime 2",
+            shortName: "M2",
+            roundDurationAsSeconds: 90,
+        },
+        {
+            name: "Cadet 1",
+            shortName: "C1",
+            roundDurationAsSeconds: 120,
+        },
+        {
+            name: "Cadet 2",
+            shortName: "C2",
+            roundDurationAsSeconds: 120,
+        },
+        {
+            name: "Junior 1",
+            shortName: "J1",
+            roundDurationAsSeconds: 120,
+        },
+        {
+            name: "Junior 2",
+            shortName: "J2",
+            roundDurationAsSeconds: 120,
+        },
+        {
+            name: "Senior",
+            shortName: "Senior",
+            roundDurationAsSeconds: 120,
+        },
     ]
-
-    categoriesShortText = ["P1", "P2", "P3", "P4", "B1", "B2", "M1", "M2", "C1", "C2", "J1", "J2"]
 
     getModalityProblems(boxer1: BoxerAttributes, boxer2: BoxerAttributes): ModalityError[] {
         const errors: ModalityError[] = []
@@ -46,21 +107,25 @@ export class BeaModality extends BaseModality {
         return errors
     }
 
-    getCategory(boxer: BoxerAttributes, shortText: boolean): string {
-        let category = ""
+    private getCategory(boxer: BoxerAttributes): BeaCategory {
+        let category: BeaCategory | null = null
         const birthYear = boxer.birthDate.getFullYear()
         let thisYear = new Date().getFullYear()
         if (new Date().getMonth() > 8) {
             thisYear += 1
         }
         const delta = thisYear - birthYear - 7
-
         if (delta >= 0 && delta < this.categories.length) {
-            category = shortText ? this.categoriesShortText[delta] : this.categories[delta]
+            category = this.categories[delta]
         } else {
-            category = shortText ? "Loisir" : "Adulte Loisir"
+            category = this.categories[this.categories.length - 1]
         }
-
         return category
+    }
+
+    getCategoryName(boxer: BoxerAttributes, shortText: boolean): string {
+        const category = this.getCategory(boxer)
+        const categoryName = shortText ? category.shortName : category.name
+        return categoryName
     }
 }

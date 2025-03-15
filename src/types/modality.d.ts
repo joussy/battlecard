@@ -10,3 +10,15 @@ export enum ModalityErrorType {
     OPPOSITE_GENDER = 5,
     PRIZE_LIST = 6,
 }
+
+export interface FightDuration {
+    rounds: number
+    roundDurationAsSeconds: number
+    restTimeAsSeconds: number
+}
+
+export interface BeaCategory {
+    name: string
+    shortName: string
+    roundDurationAsSeconds: number
+}
