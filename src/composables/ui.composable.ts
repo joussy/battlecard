@@ -20,6 +20,11 @@ const uiStore = reactive({
         }
         boxer.collapsed = collapsed
     },
+    collapseAll() {
+        for (const boxer of this.boxers) {
+            boxer[1].collapsed = true
+        }
+    },
 })
 
 function loadUiStore() {

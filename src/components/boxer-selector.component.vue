@@ -2,14 +2,6 @@
     <div class="d-flex">
         <h3 class="flex-grow-1"></h3>
         <button
-            class="btn btn-outline-secondary mb-3 ms-2"
-            @click="expandAll()"
-        >
-            <i class="bi bi-chevron-down" />
-            /
-            <i class="bi bi-chevron-right" />
-        </button>
-        <button
             class="btn btn-outline-danger mb-3 ms-2"
             @click="clear()"
         >
@@ -91,14 +83,8 @@ export default defineComponent({
         async clear() {
             await fightService.clear()
         },
-        expandAll() {
-            let collapse = true
-            if (this.store.boxers[0] && uiStore.createOrGetBoxerUi(this.store.boxers[0].attributes.id).collapsed) {
-                collapse = false
-            }
-            for (let [index] of this.store.boxers.entries()) {
-                uiStore.collapse(this.store.boxers[index].attributes.id, collapse)
-            }
+        collapseAll() {
+            uiStore.collapseAll()
         },
         onBoxerAdd(newBoxer: BoxerAttributes) {
             this.boxerAddMode = false

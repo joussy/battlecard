@@ -129,7 +129,9 @@ export default defineComponent({
     },
     methods: {
         toggleCollapse(boxer: Readonly<Boxer>): void {
-            uiStore.collapse(boxer.attributes.id, null)
+            const isCollapsed = uiStore.boxers.get(boxer.attributes.id)?.collapsed
+            uiStore.collapseAll()
+            uiStore.collapse(boxer.attributes.id, !isCollapsed)
         },
         boxerEdit(): void {
             this.$emit("boxer-edit")
