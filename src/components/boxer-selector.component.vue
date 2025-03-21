@@ -42,11 +42,11 @@
         v-for="boxer in getBoxersToDisplay()"
         v-show="!boxerAddMode"
         :key="boxer.attributes.id"
-        class="card"
     >
         <BoxerTileComponent
             :boxer="boxer"
             @boxer-edit="editBoxer(boxer.attributes)"
+            @click="$router.push({ name: 'selector-tile', params: { id: boxer.attributes.id } })"
         />
     </div>
 </template>
@@ -78,7 +78,6 @@ export default defineComponent({
             fightService: fightService,
         }
     },
-    mounted() {},
     methods: {
         async clear() {
             await fightService.clear()
