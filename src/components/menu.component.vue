@@ -18,7 +18,7 @@
             <img
                 v-else
                 :src="userStore.account.avatar"
-                class="rounded-circle icon-img-2 align-text-bottom"
+                class="rounded-circle icon-img-2 align-text-bottom mt-2 mb-1"
             />
             <div>Settings</div>
         </router-link>
@@ -27,7 +27,10 @@
             class="nav-link text-center"
             active-class="active"
         >
-            <i class="bi bi-person-raised-hand fs-2"></i>
+            <Icon
+                name="group-of-people"
+                class="svg-2 mt-2 pb-1"
+            ></Icon>
             <div>Selector</div>
         </router-link>
         <router-link
@@ -35,7 +38,10 @@
             class="nav-link text-center"
             active-class="active"
         >
-            <i class="bi bi-rocket-takeoff-fill fs-2"></i>
+            <Icon
+                name="headgear"
+                class="svg-2 mt-2 pb-1"
+            ></Icon>
             <div>Card</div>
         </router-link>
         <router-link
