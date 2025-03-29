@@ -25,7 +25,7 @@
         <router-link
             :to="{ name: 'selector' }"
             class="nav-link text-center"
-            active-class="active"
+            :class="{ active: $route.path.startsWith('/selector') }"
         >
             <Icon
                 name="group-of-people"
