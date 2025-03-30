@@ -7,6 +7,7 @@
         >
             <div class="d-flex justify-content-between">
                 <div>
+                    <IconComponent :name="boxer.attributes.gender == Gender.MALE ? 'male' : 'female'"></IconComponent>
                     {{ fightService.getBoxerDisplayName(boxer.attributes) }}
                 </div>
                 <div
@@ -47,6 +48,7 @@ import LinkedFightsBadgeComponent from "@/components/badges/linked-fights-badge.
 
 import fightService from "@/services/fight.service"
 import { uiStore } from "@/composables/ui.composable"
+import IconComponent from "../core/icon.component.vue"
 
 export default defineComponent({
     components: {
@@ -55,6 +57,7 @@ export default defineComponent({
         PossibleBadgeComponent,
         AgeBadgeComponent,
         LinkedFightsBadgeComponent,
+        IconComponent,
     },
     props: {
         boxer: {
