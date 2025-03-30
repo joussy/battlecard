@@ -33,7 +33,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-6 pb-1">
                     <i>{{ opponent.attributes.club }}</i>
                 </div>
                 <div class="col-md-6 d-flex justify-content-end flex-wrap">

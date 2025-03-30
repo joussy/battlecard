@@ -215,7 +215,7 @@ defineRule("required", (value: string) => {
     }
     return true
 })
-defineRule("weightRequired", (value) => {
+defineRule("weightRequired", (value: string) => {
     if (!value) {
         return "This field is required and must be a number greater than or equal to 1"
     }
