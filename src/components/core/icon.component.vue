@@ -1,8 +1,8 @@
 <template>
     <component
         :is="icon"
-        height="17"
-        width="17"
+        :height="height"
+        :width="width"
     />
 </template>
 
@@ -14,6 +14,16 @@ export default defineComponent({
         name: {
             type: String,
             required: true,
+        },
+        height: {
+            type: String,
+            required: false,
+            default: "17",
+        },
+        width: {
+            type: String,
+            required: false,
+            default: "17",
         },
     },
     computed: {
