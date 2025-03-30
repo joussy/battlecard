@@ -1,8 +1,7 @@
 <template>
     <component
         :is="icon"
-        height="17"
-        width="17"
+        :class="'svg-' + size"
     />
 </template>
 
@@ -15,6 +14,11 @@ export default defineComponent({
             type: String,
             required: true,
         },
+        size: {
+            type: Number,
+            required: false,
+            default: 1,
+        },
     },
     computed: {
         icon() {
@@ -24,13 +28,18 @@ export default defineComponent({
 })
 </script>
 <style lang="scss">
+.svg-1 {
+    width: auto;
+    height: 17px;
+}
+
 .svg-2 {
-    width: 2 * 17px;
+    width: auto;
     height: 2 * 17px;
 }
 
 .svg-3 {
-    width: 3 * 17px;
+    width: auto;
     height: 3 * 17px;
 }
 </style>

@@ -25,9 +25,12 @@
         <router-link
             :to="{ name: 'selector' }"
             class="nav-link text-center"
-            active-class="active"
+            :class="{ active: $route.path.startsWith('/selector') }"
         >
-            <i class="bi bi-person-raised-hand fs-2"></i>
+            <Icon
+                name="group-of-people"
+                :style="{ height: '38px' }"
+            ></Icon>
             <div>Selector</div>
         </router-link>
         <router-link
@@ -35,7 +38,10 @@
             class="nav-link text-center"
             active-class="active"
         >
-            <i class="bi bi-rocket-takeoff-fill fs-2"></i>
+            <Icon
+                name="headgear"
+                class="svg-2 mt-1"
+            ></Icon>
             <div>Card</div>
         </router-link>
         <router-link

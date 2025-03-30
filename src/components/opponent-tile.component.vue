@@ -1,37 +1,39 @@
 <template>
-    <div class="w-100">
-        <div class="d-flex justify-content-between">
-            <div>
-                <button
-                    v-if="fightService.canCompete(boxer, opponent)"
-                    class="btn btn-outline-success btn-sm"
-                    @click="fightService.addToFightCard(boxer, opponent)"
-                >
-                    <i class="bi bi-person-plus-fill" />
-                </button>
-                <button
-                    v-if="fightService.isCompeting(boxer, opponent)"
-                    class="btn btn-outline-danger btn-sm"
-                    @click="fightService.removeFromFightCard(boxer, opponent)"
-                >
-                    <i class="bi bi-person-dash-fill" />
-                </button>
+    <div
+        class="card mb-2"
+        :class="{ 'border-success': fightService.isCompeting(boxer, opponent) }"
+    >
+        <div class="card-body">
+            <div class="d-flex justify-content-between">
+                <div>
+                    <button
+                        v-if="fightService.canCompete(boxer, opponent)"
+                        class="btn btn-outline-success btn-sm"
+                        @click="fightService.addToFightCard(boxer, opponent)"
+                    >
+                        <i class="bi bi-person-plus-fill" />
+                    </button>
+                    <button
+                        v-if="fightService.isCompeting(boxer, opponent)"
+                        class="btn btn-outline-danger btn-sm"
+                        @click="fightService.removeFromFightCard(boxer, opponent)"
+                    >
+                        <i class="bi bi-person-dash-fill" />
+                    </button>
 
-                {{ fightService.getBoxerDisplayName(opponent.attributes) }}
+                    {{ fightService.getBoxerDisplayName(opponent.attributes) }}
+                </div>
+                <div
+                    class="font-italic text-right"
+                    style="font-size: 14px"
+                >
+                    {{ opponent.attributes.categoryShortText }}
+                </div>
             </div>
-            <div
-                class="font-italic text-right"
-                style="font-size: 14px"
-            >
-                {{ opponent.attributes.club }}
-            </div>
-        </div>
-        <div class="d-flex justify-content-between">
             <div>
-                <i>{{ opponent.attributes.categoryShortText }}</i>
+                <i>{{ opponent.attributes.club }}</i>
             </div>
             <div class="grid gap-0 column-gap-3">
-                <LinkedFightsBadgeComponent :boxer="opponent" />
                 <AgeBadgeComponent
                     :boxer="opponent"
                     :modality-error="fightService.getOpponentModalityError(boxer, opponent, ModalityErrorType.AGE)"
@@ -46,6 +48,7 @@
                     :boxer="opponent"
                     :modality-error="fightService.getOpponentModalityError(boxer, opponent, ModalityErrorType.WEIGHT)"
                 />
+                <LinkedFightsBadgeComponent :boxer="opponent" />
             </div>
         </div>
     </div>
