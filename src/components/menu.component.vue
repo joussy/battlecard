@@ -29,8 +29,7 @@
         >
             <Icon
                 name="group-of-people"
-                height="38"
-                width="auto"
+                :style="{ height: '38px' }"
             ></Icon>
             <div>Selector</div>
         </router-link>
