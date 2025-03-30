@@ -1,7 +1,7 @@
 <template>
-    <div class="card mb-3">
+    <div class="card mb-2">
         <div
-            class="card-body pt-0 pb-1 ps-1 pe-0 ps-md-2 pe-md-2 mt-2 mb-1"
+            class="card-body pt-0 pb-1 ps-1 pe-0 ps-md-2 pe-md-2 mt-1 mb-1"
             role="tab"
             @click="toggleCollapse(boxer)"
         >

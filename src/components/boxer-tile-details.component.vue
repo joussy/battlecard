@@ -3,34 +3,32 @@
         v-if="boxer != null"
         class="card mb-3"
     >
-        <div
-            class="card-body pt-0 pb-1 ps-1 pe-0 ps-md-2 pe-md-2"
-            role="tab"
-        >
-            <div>
-                {{ fightService.getBoxerDisplayName(boxer.attributes) }}
+        <div class="card shadow-lg rounded">
+            <div class="card-body p-1 p-md-3">
+                <h5 class="card-title fw-bold text-center">
+                    {{ boxer.attributes.lastName }} {{ boxer.attributes.firstName }}
+                </h5>
+                <h6 class="text-muted text-center">
+                    <span class="fw-semibold">{{ boxer.attributes.license }} - {{ getBirthDateAndAge(boxer) }}</span>
+                </h6>
+                <hr class="m-0 m-md-2" />
+                <div class="row text-md-center">
+                    <p class="col-md-4 mb-1"><strong>Club:</strong> {{ boxer?.attributes.club }}</p>
+                    <p class="col-md-4 mb-1"><strong>Weight:</strong> {{ boxer.attributes.weight }} kg</p>
+                    <p class="col-md-4 mb-1"><strong>Category:</strong> {{ boxer.attributes.category }}</p>
+                </div>
             </div>
-            <div>{{ getBirthDateAndAge(boxer) }}</div>
-            <div>Weight: {{ boxer.attributes.weight }} kg</div>
-            <div>License: {{ boxer.attributes.license }}</div>
-            <div>Category: {{ boxer.attributes.category }}</div>
-            <div>Club: {{ boxer?.attributes.club }}</div>
         </div>
     </div>
-    <h5>Available opponents</h5>
+    <h6 class="ps-1">Available opponents</h6>
     <div>
         <div class="ps-0 pe-0 pt-0 pb-0">
-            <ul class="list-group rounded-0">
-                <li
-                    v-for="opponent in getOpponentsToDisplay()"
-                    class="list-group-item d-flex border-start-0 border-end-0 border-top-0 border-bottom-1"
-                >
-                    <OpponentTileComponent
-                        :boxer="boxer"
-                        :opponent="opponent.boxer"
-                    />
-                </li>
-            </ul>
+            <div v-for="opponent in getOpponentsToDisplay()">
+                <OpponentTileComponent
+                    :boxer="boxer"
+                    :opponent="opponent.boxer"
+                />
+            </div>
         </div>
     </div>
 </template>
@@ -40,13 +38,7 @@ import { defineComponent } from "vue"
 import { Boxer, Gender, Opponent } from "@/types/boxing.d"
 import { ModalityErrorType } from "@/types/modality.d"
 import OpponentTileComponent from "@/components/opponent-tile.component.vue"
-import RecordBadgeComponent from "@/components/core/record-badge.component.vue"
-import AgeBadgeComponent from "@/components/core/age-badge.component.vue"
-import LinkedFightsBadgeComponent from "@/components/core/linked-fights-badge.component.vue"
-import WeightBadgeComponent from "@/components/core/weight-badge.component.vue"
-import PossibleBadgeComponent from "@/components/core/possible-badge.component.vue"
 
-import IconComponent from "@/components/core/icon.component.vue"
 import fightService from "@/services/fight.service"
 import { uiStore } from "@/composables/ui.composable"
 import { differenceInYears, format } from "date-fns"
@@ -54,12 +46,6 @@ import { differenceInYears, format } from "date-fns"
 export default defineComponent({
     components: {
         OpponentTileComponent: OpponentTileComponent,
-        RecordBadgeComponent: RecordBadgeComponent,
-        FightRecordBadgeComponent: LinkedFightsBadgeComponent,
-        WeightBadgeComponent: WeightBadgeComponent,
-        PossibleBadgeComponent: PossibleBadgeComponent,
-        AgeBadgeComponent: AgeBadgeComponent,
-        Icon: IconComponent,
     },
     setup() {},
     data() {
@@ -84,7 +70,7 @@ export default defineComponent({
         getBirthDateAndAge(boxer: Boxer): string {
             const age = differenceInYears(new Date(), boxer.attributes.birthDate)
             const birthDate = format(boxer.attributes.birthDate, "dd/MM/yyyy")
-            return `${birthDate} - ${age} years old`
+            return `${birthDate} (${age})`
         },
     },
 })
