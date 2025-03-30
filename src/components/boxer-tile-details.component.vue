@@ -16,7 +16,7 @@
                 <div class="card-body p-1 p-md-3">
                     <div class="row">
                         <p class="col-md-6 mb-1">
-                            <Icon name="birthday-cake"></Icon>
+                            <Icon :name="boxer.attributes.gender == Gender.MALE ? 'male' : 'female'"></Icon>
                             {{ getBirthDateAndAge(boxer) }}
                         </p>
                         <p class="col-md-6 mb-1">
