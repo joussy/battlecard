@@ -1,7 +1,9 @@
 <template>
     <div
         class="card mb-2"
-        :class="{ 'border-success': fightService.isCompeting(boxer, opponent) }"
+        :class="{
+            'border-success': fightService.isCompeting(boxer, opponent),
+        }"
     >
         <div class="card-body">
             <div class="d-flex justify-content-between">

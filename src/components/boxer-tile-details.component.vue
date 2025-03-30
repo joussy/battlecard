@@ -1,6 +1,6 @@
 <template>
     <div v-if="boxer != null">
-        <div class="d-flex justify-content-center align-items-center pb-1">
+        <div class="bg-body sticky-md-none sticky-top d-flex justify-content-center align-items-center pb-1">
             <router-link
                 :to="{ name: 'selector' }"
                 class="nav-link text-center"
@@ -12,7 +12,7 @@
             </h5>
         </div>
         <div class="card mb-3">
-            <div class="card shadow-lg rounded">
+            <div class="card shadow rounded">
                 <div class="card-body p-1 p-md-3">
                     <div class="row">
                         <p class="col-md-6 mb-1">
