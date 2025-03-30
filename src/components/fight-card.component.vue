@@ -77,7 +77,10 @@
                 </ul>
             </div>
         </div>
-        <table class="table table-bordered">
+        <table
+            ref="sortableTable"
+            class="table table-bordered"
+        >
             <thead>
                 <tr>
                     <th scope="col">#</th>
@@ -93,69 +96,59 @@
                     />
                 </tr>
             </thead>
-            <draggable
-                v-model="fightCard as unknown[] | undefined"
-                tag="tbody"
-                item-key="id"
-                handle=".handle"
-                @end="moved"
-            >
-                <template #item="{ element: fight }">
-                    <tr>
-                        <th scope="row">
-                            <span>
-                                {{ fight.order }}
-                            </span>
-                            <button
-                                v-if="editionMode"
-                                class="btn ms-0 handle p-0 ps-2"
-                            >
-                                <i class="bi bi-grip-horizontal" />
-                            </button>
-                        </th>
-                        <td>{{ fightService.getBoxerDisplayName(fight.boxer1.attributes) }}</td>
-                        <td>{{ fightService.getBoxerDisplayName(fight.boxer2.attributes) }}</td>
-                        <td class="fight-extra-infos">
-                            <div class="me-1">
-                                <i
-                                    v-if="fight.boxer1.attributes.gender == Gender.FEMALE"
-                                    class="bi bi-gender-female"
-                                ></i>
-                                <i
-                                    v-if="fight.boxer1.attributes.gender == Gender.MALE"
-                                    class="bi bi-gender-male"
-                                ></i>
-                                <span v-if="fight.modalityErrors.length > 0"
-                                    ><i class="bi bi-exclamation-circle-fill"></i
-                                ></span>
-                            </div>
-                            <div>
-                                <i class="bi bi-stopwatch me-1 d-none d-md-inline"></i>
-                                <span>{{ getFightDuration(fight) }}</span>
-                            </div>
-                        </td>
-                        <!-- <td>
-                        <span v-for="modalityError in fight.modalityErrors">
-                            <ModalityErrorComponent :modality-error="modalityError" />
+            <tbody>
+                <tr
+                    v-for="(fight, index) in fightCard"
+                    :key="fight.id"
+                >
+                    <th scope="row">
+                        <span>
+                            {{ fight.order }}
                         </span>
-                    </td> -->
-                        <td v-if="editionMode">
-                            <button
-                                class="btn ms-0"
-                                @click="fightService.switchFight(fight.id)"
-                            >
-                                <i class="bi bi-arrow-left-right" />
-                            </button>
-                            <button
-                                class="btn btn-outline-danger btn-sm ms-2"
-                                @click="fightService.removeFromFightCard(fight.boxer1, fight.boxer2)"
-                            >
-                                <i class="bi bi-person-dash-fill" />
-                            </button>
-                        </td>
-                    </tr>
-                </template>
-            </draggable>
+                        <button
+                            v-if="editionMode"
+                            class="btn ms-0 handle p-0 ps-2"
+                        >
+                            <i class="bi bi-grip-horizontal" />
+                        </button>
+                    </th>
+                    <td>{{ fightService.getBoxerDisplayName(fight.boxer1.attributes) }}</td>
+                    <td>{{ fightService.getBoxerDisplayName(fight.boxer2.attributes) }}</td>
+                    <td class="fight-extra-infos">
+                        <div class="me-1">
+                            <i
+                                v-if="fight.boxer1.attributes.gender == Gender.FEMALE"
+                                class="bi bi-gender-female"
+                            ></i>
+                            <i
+                                v-if="fight.boxer1.attributes.gender == Gender.MALE"
+                                class="bi bi-gender-male"
+                            ></i>
+                            <span v-if="fight.modalityErrors.length > 0"
+                                ><i class="bi bi-exclamation-circle-fill"></i
+                            ></span>
+                        </div>
+                        <div>
+                            <i class="bi bi-stopwatch me-1 d-none d-md-inline"></i>
+                            <span>{{ getFightDuration(fight) }}</span>
+                        </div>
+                    </td>
+                    <td v-if="editionMode">
+                        <button
+                            class="btn ms-0"
+                            @click="fightService.switchFight(fight.id)"
+                        >
+                            <i class="bi bi-arrow-left-right" />
+                        </button>
+                        <button
+                            class="btn btn-outline-danger btn-sm ms-2"
+                            @click="fightService.removeFromFightCard(fight.boxer1, fight.boxer2)"
+                        >
+                            <i class="bi bi-person-dash-fill" />
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
         </table>
     </div>
 </template>
@@ -165,21 +158,18 @@ import { Fight, Gender } from "@/types/boxing.d"
 import fightService from "@/services/fight.service"
 import { ApiService } from "@/services/api.service"
 import { userStore } from "@/composables/user.composable"
-import draggable from "vuedraggable"
 import { FileType } from "@/types/api"
 import { getFightDurationAsString } from "@/utils/string.utils"
+import Sortable from "sortablejs"
 
 export default {
-    components: {
-        draggable,
-    },
     data() {
         return {
             Gender: Gender,
             fightStore: fightService.store(),
             fightService: fightService,
             userStore: userStore,
-            editionMode: false,
+            editionMode: true,
         }
     },
     computed: {
@@ -192,15 +182,36 @@ export default {
             },
         },
     },
+    mounted() {
+        this.initSortable()
+    },
     methods: {
+        initSortable() {
+            Sortable.create(this.$refs.sortableTable.querySelector("tbody"), {
+                animation: 150,
+                onEnd: (evt: { oldIndex?: number; newIndex?: number }) => {
+                    if (evt?.oldIndex !== undefined && evt?.newIndex !== undefined) {
+                        fightService.moveFight(this.fightCard[evt.oldIndex].id, evt.newIndex)
+                    }
+                },
+                handle: ".handle",
+                scroll: true,
+                direction: "horizontal",
+                // scrollSensitivity: 700,
+                // scrollSpeed: 500, // Scroll 10px per tick
+                // forceFallback: true,
+                // forceAutoScrollFallback: true,
+                // fallbackOnBody: true,
+            })
+        },
         async downloadFile(fileType: FileType) {
             await ApiService.downloadFightCard(fileType, this.fightStore.fightCard, this.fightStore.modality)
         },
-        moved(evt: { oldIndex?: number; newIndex?: number }) {
-            if (evt?.oldIndex !== undefined && evt?.newIndex !== undefined) {
-                fightService.moveFight(this.fightCard[evt.oldIndex].id, evt.newIndex)
-            }
-        },
+        // moved(evt: { oldIndex?: number; newIndex?: number }) {
+        //     if (evt?.oldIndex !== undefined && evt?.newIndex !== undefined) {
+        //         fightService.moveFight(this.fightCard[evt.oldIndex].id, evt.newIndex)
+        //     }
+        // },
         getFightDuration(fight: Fight) {
             const fightDuration = this.fightStore.modality.getFightDuration(
                 fight.boxer1.attributes,
@@ -211,7 +222,7 @@ export default {
     },
 }
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 @import "bootstrap/scss/bootstrap";
 .edition-mode {
     .fight-extra-infos {
