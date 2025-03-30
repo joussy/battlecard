@@ -22,6 +22,7 @@
   },
   "devDependencies": {
     "@types/sortablejs": "^1.15.8",
+    "@types/bootstrap": "^5.2.10",
     "@tsconfig/node22": "^22.0.0",
     "@types/node": "^22.13.1",
     "@typescript-eslint/eslint-plugin": "^8.24.0",

@@ -1,17 +1,11 @@
 <template>
     <div
-        id="offcanvasNavbar"
+        id="filtersOffcanvasNavbar"
         class="offcanvas offcanvas-end"
         tabindex="-1"
-        aria-labelledby="offcanvasNavbarLabel"
     >
         <div class="offcanvas-header">
-            <h5
-                id="offcanvasNavbarLabel"
-                class="offcanvas-title"
-            >
-                Filters
-            </h5>
+            <h5 class="offcanvas-title">Filters</h5>
             <button
                 type="button"
                 class="btn-close"

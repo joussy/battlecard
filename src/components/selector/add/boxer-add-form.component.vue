@@ -215,10 +215,25 @@ defineRule("required", (value: string) => {
     }
     return true
 })
-defineRule("weightRequired", (value: number) => {
-    if (!value || value < 1) {
-        return "This field is required"
+defineRule("weightRequired", (value) => {
+    if (!value) {
+        return "This field is required and must be a number greater than or equal to 1"
     }
+
+    // Check for invalid characters
+    const validFormat = /^-?\d+([.,]\d+)?$/
+    if (!validFormat.test(value)) {
+        return "Please enter a valid number (digits only, with optional comma or dot)"
+    }
+
+    // Normalize and parse
+    const normalized = value.replace(",", ".")
+    const parsed = parseFloat(normalized)
+
+    if (isNaN(parsed) || parsed < 1) {
+        return "The number must be greater than or equal to 1"
+    }
+
     return true
 })
 defineRule("genderRequired", (value: string) => {
@@ -268,7 +283,7 @@ export default defineComponent({
         const [club] = defineField("club")
         const [gender] = defineField("gender")
         const [birthdate] = defineField("birthdate")
-        const onSubmit = handleSubmit((form: GenericObject) => {
+        const onSubmit = handleSubmit(async (form: GenericObject) => {
             const boxerAttributes: BoxerAttributes = {
                 birthDate: new Date(form.birthdate),
                 club: form.club,
@@ -282,6 +297,7 @@ export default defineComponent({
                 nbFights: 0,
                 id: generateRandomId(),
             }
+            await fightService.addBoxer(boxerAttributes)
             emit("boxer-add", boxerAttributes)
         })
         return {

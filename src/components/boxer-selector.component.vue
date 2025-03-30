@@ -10,6 +10,8 @@
             </button>
             <button
                 class="btn btn-outline-success mb-3 ms-2"
+                data-bs-toggle="offcanvas"
+                data-bs-target="#boxerAddOffcanvasNavbar"
                 @click="((boxerToEdit = null), (boxerAddMode = !boxerAddMode))"
             >
                 <i class="bi bi-person-add" />
@@ -23,25 +25,15 @@
             <button
                 class="btn btn-outline-secondary mb-3 ms-2"
                 data-bs-toggle="offcanvas"
-                data-bs-target="#offcanvasNavbar"
+                data-bs-target="#filtersOffcanvasNavbar"
             >
                 <span class="bi bi-funnel"></span>
             </button>
             <BoxerSelectorFiltersComponent />
+            <BoxerAddOffcanvasComponent />
         </div>
-        <div
-            v-if="boxerAddMode"
-            class="card"
-        >
-            <BoxerAddComponent
-                :boxer="boxerToEdit"
-                @boxer-add="onBoxerAdd"
-            />
-        </div>
-
         <div
             v-for="boxer in getBoxersToDisplay()"
-            v-show="!boxerAddMode"
             :key="boxer.attributes.id"
         >
             <BoxerTileComponent
@@ -57,17 +49,17 @@
 import { defineComponent } from "vue"
 import { BoxerAttributes, Gender } from "@/types/boxing.d"
 import { ModalityErrorType } from "@/types/modality.d"
-import BoxerTileComponent from "@/components/boxer-tile.component.vue"
-import BoxerAddComponent from "@/components/boxer-add.component.vue"
+import BoxerTileComponent from "@/components/selector/boxer-tile.component.vue"
+import BoxerAddOffcanvasComponent from "@/components/selector/add/boxer-add-offcanvas.component.vue"
 
-import BoxerSelectorFiltersComponent from "@/components/boxer-selector-filters.component.vue"
+import BoxerSelectorFiltersComponent from "@/components/selector/boxer-selector-filters.component.vue"
 import fightService from "@/services/fight.service"
 import { uiStore } from "@/composables/ui.composable"
 
 export default defineComponent({
     components: {
         BoxerTileComponent: BoxerTileComponent,
-        BoxerAddComponent: BoxerAddComponent,
+        BoxerAddOffcanvasComponent: BoxerAddOffcanvasComponent,
         BoxerSelectorFiltersComponent: BoxerSelectorFiltersComponent,
     },
     data() {
@@ -86,10 +78,6 @@ export default defineComponent({
         },
         collapseAll() {
             uiStore.collapseAll()
-        },
-        onBoxerAdd(newBoxer: BoxerAttributes) {
-            this.boxerAddMode = false
-            fightService.addBoxer(newBoxer)
         },
         downloadCsv() {
             const csv = fightService.getAvailableBoxersAsCsv()

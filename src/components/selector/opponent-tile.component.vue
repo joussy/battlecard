@@ -37,6 +37,7 @@
                     <i>{{ opponent.attributes.club }}</i>
                 </div>
                 <div class="col-md-6 d-flex justify-content-end flex-wrap">
+                    <LinkedFightsBadgeComponent :boxer="opponent" />
                     <AgeBadgeComponent
                         :boxer="opponent"
                         :modality-error="fightService.getOpponentModalityError(boxer, opponent, ModalityErrorType.AGE)"
@@ -53,7 +54,6 @@
                             fightService.getOpponentModalityError(boxer, opponent, ModalityErrorType.WEIGHT)
                         "
                     />
-                    <LinkedFightsBadgeComponent :boxer="opponent" />
                 </div>
             </div>
         </div>
@@ -64,10 +64,10 @@
 import { PropType, defineComponent } from "vue"
 import { ModalityErrorType } from "@/types/modality.d"
 import { Boxer } from "@/types/boxing.d"
-import RecordBadgeComponent from "@/components/core/record-badge.component.vue"
-import LinkedFightsBadgeComponent from "@/components/core/linked-fights-badge.component.vue"
-import WeightBadgeComponent from "@/components/core/weight-badge.component.vue"
-import AgeBadgeComponent from "@/components/core/age-badge.component.vue"
+import RecordBadgeComponent from "@/components/badges/record-badge.component.vue"
+import LinkedFightsBadgeComponent from "@/components/badges/linked-fights-badge.component.vue"
+import WeightBadgeComponent from "@/components/badges/weight-badge.component.vue"
+import AgeBadgeComponent from "@/components/badges/age-badge.component.vue"
 import FightService from "@/services/fight.service"
 import fightService from "@/services/fight.service"
 

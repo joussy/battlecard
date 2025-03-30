@@ -50,7 +50,7 @@
 import { defineComponent } from "vue"
 import { Boxer, Gender, Opponent } from "@/types/boxing.d"
 import { ModalityErrorType } from "@/types/modality.d"
-import OpponentTileComponent from "@/components/opponent-tile.component.vue"
+import OpponentTileComponent from "@/components/selector/opponent-tile.component.vue"
 import IconComponent from "@/components/core/icon.component.vue"
 
 import fightService from "@/services/fight.service"
