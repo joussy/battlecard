@@ -32,25 +32,29 @@
                     {{ opponent.attributes.categoryShortText }}
                 </div>
             </div>
-            <div>
-                <i>{{ opponent.attributes.club }}</i>
-            </div>
-            <div class="grid gap-0 column-gap-3">
-                <AgeBadgeComponent
-                    :boxer="opponent"
-                    :modality-error="fightService.getOpponentModalityError(boxer, opponent, ModalityErrorType.AGE)"
-                />
-                <RecordBadgeComponent
-                    :boxer="opponent"
-                    :modality-error="
-                        fightService.getOpponentModalityError(boxer, opponent, ModalityErrorType.PRIZE_LIST)
-                    "
-                />
-                <WeightBadgeComponent
-                    :boxer="opponent"
-                    :modality-error="fightService.getOpponentModalityError(boxer, opponent, ModalityErrorType.WEIGHT)"
-                />
-                <LinkedFightsBadgeComponent :boxer="opponent" />
+            <div class="row">
+                <div class="col-md-6">
+                    <i>{{ opponent.attributes.club }}</i>
+                </div>
+                <div class="col-md-6 d-flex justify-content-end flex-wrap">
+                    <AgeBadgeComponent
+                        :boxer="opponent"
+                        :modality-error="fightService.getOpponentModalityError(boxer, opponent, ModalityErrorType.AGE)"
+                    />
+                    <RecordBadgeComponent
+                        :boxer="opponent"
+                        :modality-error="
+                            fightService.getOpponentModalityError(boxer, opponent, ModalityErrorType.PRIZE_LIST)
+                        "
+                    />
+                    <WeightBadgeComponent
+                        :boxer="opponent"
+                        :modality-error="
+                            fightService.getOpponentModalityError(boxer, opponent, ModalityErrorType.WEIGHT)
+                        "
+                    />
+                    <LinkedFightsBadgeComponent :boxer="opponent" />
+                </div>
             </div>
         </div>
     </div>

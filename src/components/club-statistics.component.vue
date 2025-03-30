@@ -1,44 +1,46 @@
 <template>
-    <table class="table">
-        <thead>
-            <tr>
-                <th scope="col">Club</th>
-                <th colspan="2">Selection</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr
-                v-for="(club, index) in getClubFighters()"
-                :key="index"
-            >
-                <td>{{ club.clubName }}</td>
-                <td class="w-50">
-                    <div class="d-flex">
-                        <span>{{ club.selected }} / {{ club.available }}</span>
-                        <div
-                            class="progress flex-fill ms-3"
-                            role="progressbar"
-                            style="height: 23px"
-                        >
+    <div class="max-width-md">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Club</th>
+                    <th colspan="2">Selection</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr
+                    v-for="(club, index) in getClubFighters()"
+                    :key="index"
+                >
+                    <td>{{ club.clubName }}</td>
+                    <td class="w-50">
+                        <div class="d-flex">
+                            <span>{{ club.selected }} / {{ club.available }}</span>
                             <div
-                                class="progress-bar"
-                                :class="{
-                                    'bg-danger': club.selected < 2,
-                                    'bg-warning': club.selected > 1 && club.selected < 4,
-                                    'bg-success': club.selected > 3,
-                                }"
-                                :style="{
-                                    width: `${(club.selected * 100) / club.available}%`,
-                                }"
+                                class="progress flex-fill ms-3"
+                                role="progressbar"
+                                style="height: 23px"
                             >
-                                {{ club.selected }}
+                                <div
+                                    class="progress-bar"
+                                    :class="{
+                                        'bg-danger': club.selected < 2,
+                                        'bg-warning': club.selected > 1 && club.selected < 4,
+                                        'bg-success': club.selected > 3,
+                                    }"
+                                    :style="{
+                                        width: `${(club.selected * 100) / club.available}%`,
+                                    }"
+                                >
+                                    {{ club.selected }}
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </template>
 
 <script lang="ts">

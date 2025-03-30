@@ -1,146 +1,148 @@
 <template>
-    <div
-        v-if="userStore.authenticationAvailable"
-        class="card mb-3"
-    >
-        <div class="card-header"><i class="bi bi-person me-2" />Account</div>
-        <div class="card-body">
-            <button
-                v-if="!userStore.account"
-                class="btn btn-warning ms-2"
-                @click="signIn()"
-            >
-                Sign In
-            </button>
-            <div
-                v-else
-                class="d-flex flex-row align-items-center"
-            >
-                <img
-                    v-if="userStore.account.avatar"
-                    :src="userStore.account.avatar"
-                    class="rounded-circle me-2 avatar-icon"
-                    alt="User Avatar"
-                />
-                <i
+    <div class="max-width-md">
+        <div
+            v-if="userStore.authenticationAvailable"
+            class="card mb-3"
+        >
+            <div class="card-header"><i class="bi bi-person me-2" />Account</div>
+            <div class="card-body">
+                <button
+                    v-if="!userStore.account"
+                    class="btn btn-warning ms-2"
+                    @click="signIn()"
+                >
+                    Sign In
+                </button>
+                <div
                     v-else
-                    class="bi bi-person-circle me-2"
-                    :style="{ 'font-size': '2.5rem' }"
-                ></i>
-                <div class="flex-grow-1">
-                    <strong>{{ userStore.account?.name }}</strong>
-                    <div
-                        class="text-muted"
-                        style="font-size: 0.85rem"
+                    class="d-flex flex-row align-items-center"
+                >
+                    <img
+                        v-if="userStore.account.avatar"
+                        :src="userStore.account.avatar"
+                        class="rounded-circle me-2 avatar-icon"
+                        alt="User Avatar"
+                    />
+                    <i
+                        v-else
+                        class="bi bi-person-circle me-2"
+                        :style="{ 'font-size': '2.5rem' }"
+                    ></i>
+                    <div class="flex-grow-1">
+                        <strong>{{ userStore.account?.name }}</strong>
+                        <div
+                            class="text-muted"
+                            style="font-size: 0.85rem"
+                        >
+                            {{ userStore.account?.email }}
+                        </div>
+                    </div>
+                    <button
+                        class="btn btn-danger"
+                        alt="Sign out"
+                        @click="logout()"
                     >
-                        {{ userStore.account?.email }}
+                        <i class="bi bi-box-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="card mb-3">
+            <div class="card-header"><i class="bi bi-gear me-2" />General</div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <div class="form-label">Theme</div>
+                    <div
+                        class="btn-group"
+                        role="group"
+                        aria-label="Basic radio toggle button group"
+                    >
+                        <input
+                            id="btnradio1"
+                            type="radio"
+                            class="btn-check"
+                            name="btnradio"
+                            autocomplete="off"
+                            :checked="uiStore.theme == 'auto'"
+                            @click="setTheme('auto')"
+                        />
+                        <label
+                            class="btn btn-outline-primary"
+                            for="btnradio1"
+                            >Auto</label
+                        >
+
+                        <input
+                            id="btnradio2"
+                            type="radio"
+                            class="btn-check"
+                            name="btnradio"
+                            autocomplete="off"
+                            :checked="uiStore.theme == 'light'"
+                            @click="setTheme('light')"
+                        />
+                        <label
+                            class="btn btn-outline-primary"
+                            for="btnradio2"
+                            >Light</label
+                        >
+
+                        <input
+                            id="btnradio3"
+                            type="radio"
+                            class="btn-check"
+                            name="btnradio"
+                            autocomplete="off"
+                            :checked="uiStore.theme == 'dark'"
+                            @click="setTheme('dark')"
+                        />
+                        <label
+                            class="btn btn-outline-primary"
+                            for="btnradio3"
+                            >Dark</label
+                        >
                     </div>
                 </div>
-                <button
-                    class="btn btn-danger"
-                    alt="Sign out"
-                    @click="logout()"
-                >
-                    <i class="bi bi-box-arrow-right"></i>
-                </button>
             </div>
         </div>
-    </div>
-    <div class="card mb-3">
-        <div class="card-header"><i class="bi bi-gear me-2" />General</div>
-        <div class="card-body">
-            <div class="mb-3">
-                <div class="form-label">Theme</div>
-                <div
-                    class="btn-group"
-                    role="group"
-                    aria-label="Basic radio toggle button group"
-                >
-                    <input
-                        id="btnradio1"
-                        type="radio"
-                        class="btn-check"
-                        name="btnradio"
-                        autocomplete="off"
-                        :checked="uiStore.theme == 'auto'"
-                        @click="setTheme('auto')"
+        <div class="card mb-3">
+            <div class="card-header"><i class="bi bi-clipboard me-2" />Import from clibpoard</div>
+            <div class="card-body">
+                <p class="card-text">
+                    <span>Last Name | First Name | Fights | Gender | Weight | Club | Birth Date | License</span>
+                    <textarea
+                        v-model="clipboard"
+                        class="d-block w-100 mb-2"
                     />
-                    <label
-                        class="btn btn-outline-primary"
-                        for="btnradio1"
-                        >Auto</label
+                    <button
+                        class="btn btn-primary"
+                        @click="processClipboard()"
                     >
-
-                    <input
-                        id="btnradio2"
-                        type="radio"
-                        class="btn-check"
-                        name="btnradio"
-                        autocomplete="off"
-                        :checked="uiStore.theme == 'light'"
-                        @click="setTheme('light')"
-                    />
-                    <label
-                        class="btn btn-outline-primary"
-                        for="btnradio2"
-                        >Light</label
-                    >
-
-                    <input
-                        id="btnradio3"
-                        type="radio"
-                        class="btn-check"
-                        name="btnradio"
-                        autocomplete="off"
-                        :checked="uiStore.theme == 'dark'"
-                        @click="setTheme('dark')"
-                    />
-                    <label
-                        class="btn btn-outline-primary"
-                        for="btnradio3"
-                        >Dark</label
-                    >
-                </div>
+                        Import
+                    </button>
+                </p>
             </div>
         </div>
-    </div>
-    <div class="card mb-3">
-        <div class="card-header"><i class="bi bi-clipboard me-2" />Import from clibpoard</div>
-        <div class="card-body">
-            <p class="card-text">
-                <span>Last Name | First Name | Fights | Gender | Weight | Club | Birth Date | License</span>
-                <textarea
-                    v-model="clipboard"
-                    class="d-block w-100 mb-2"
-                />
-                <button
-                    class="btn btn-primary"
-                    @click="processClipboard()"
-                >
-                    Import
-                </button>
-            </p>
-        </div>
-    </div>
-    <div
-        v-if="userStore.account?.apiEnabled"
-        class="card"
-    >
-        <div class="card-header"><i class="bi bi-globe me-2" />Import from API</div>
-        <div class="card-body">
-            <p class="card-text">
-                <span>unique Id , Weight</span>
-                <textarea
-                    v-model="apiClipboard"
-                    class="d-block w-100 mb-2"
-                />
-                <button
-                    class="btn btn-primary"
-                    @click="processApiImport()"
-                >
-                    Import
-                </button>
-            </p>
+        <div
+            v-if="userStore.account?.apiEnabled"
+            class="card"
+        >
+            <div class="card-header"><i class="bi bi-globe me-2" />Import from API</div>
+            <div class="card-body">
+                <p class="card-text">
+                    <span>unique Id , Weight</span>
+                    <textarea
+                        v-model="apiClipboard"
+                        class="d-block w-100 mb-2"
+                    />
+                    <button
+                        class="btn btn-primary"
+                        @click="processApiImport()"
+                    >
+                        Import
+                    </button>
+                </p>
+            </div>
         </div>
     </div>
 </template>

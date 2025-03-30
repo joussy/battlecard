@@ -1,53 +1,55 @@
 <template>
-    <div class="d-flex">
-        <h3 class="flex-grow-1"></h3>
-        <button
-            class="btn btn-outline-danger mb-3 ms-2"
-            @click="clear()"
+    <div class="max-width-md">
+        <div class="d-flex">
+            <h3 class="flex-grow-1"></h3>
+            <button
+                class="btn btn-outline-danger mb-3 ms-2"
+                @click="clear()"
+            >
+                <i class="bi bi-trash" />
+            </button>
+            <button
+                class="btn btn-outline-success mb-3 ms-2"
+                @click="((boxerToEdit = null), (boxerAddMode = !boxerAddMode))"
+            >
+                <i class="bi bi-person-add" />
+            </button>
+            <button
+                class="btn btn-outline-secondary mb-3 ms-2"
+                @click="downloadCsv"
+            >
+                <i class="bi bi-download" />
+            </button>
+            <button
+                class="btn btn-outline-secondary mb-3 ms-2"
+                data-bs-toggle="offcanvas"
+                data-bs-target="#offcanvasNavbar"
+            >
+                <span class="bi bi-funnel"></span>
+            </button>
+            <BoxerSelectorFiltersComponent />
+        </div>
+        <div
+            v-if="boxerAddMode"
+            class="card"
         >
-            <i class="bi bi-trash" />
-        </button>
-        <button
-            class="btn btn-outline-success mb-3 ms-2"
-            @click="((boxerToEdit = null), (boxerAddMode = !boxerAddMode))"
-        >
-            <i class="bi bi-person-add" />
-        </button>
-        <button
-            class="btn btn-outline-secondary mb-3 ms-2"
-            @click="downloadCsv"
-        >
-            <i class="bi bi-download" />
-        </button>
-        <button
-            class="btn btn-outline-secondary mb-3 ms-2"
-            data-bs-toggle="offcanvas"
-            data-bs-target="#offcanvasNavbar"
-        >
-            <span class="bi bi-funnel"></span>
-        </button>
-        <BoxerSelectorFiltersComponent />
-    </div>
-    <div
-        v-if="boxerAddMode"
-        class="card"
-    >
-        <BoxerAddComponent
-            :boxer="boxerToEdit"
-            @boxer-add="onBoxerAdd"
-        />
-    </div>
+            <BoxerAddComponent
+                :boxer="boxerToEdit"
+                @boxer-add="onBoxerAdd"
+            />
+        </div>
 
-    <div
-        v-for="boxer in getBoxersToDisplay()"
-        v-show="!boxerAddMode"
-        :key="boxer.attributes.id"
-    >
-        <BoxerTileComponent
-            :boxer="boxer"
-            @boxer-edit="editBoxer(boxer.attributes)"
-            @click="$router.push({ name: 'selector-tile', params: { id: boxer.attributes.id } })"
-        />
+        <div
+            v-for="boxer in getBoxersToDisplay()"
+            v-show="!boxerAddMode"
+            :key="boxer.attributes.id"
+        >
+            <BoxerTileComponent
+                :boxer="boxer"
+                @boxer-edit="editBoxer(boxer.attributes)"
+                @click="$router.push({ name: 'selector-tile', params: { id: boxer.attributes.id } })"
+            />
+        </div>
     </div>
 </template>
 

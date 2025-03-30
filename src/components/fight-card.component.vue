@@ -169,7 +169,7 @@ export default {
             fightStore: fightService.store(),
             fightService: fightService,
             userStore: userStore,
-            editionMode: true,
+            editionMode: false,
         }
     },
     computed: {
@@ -187,21 +187,24 @@ export default {
     },
     methods: {
         initSortable() {
-            Sortable.create(this.$refs.sortableTable.querySelector("tbody"), {
+            const table = this.$refs.sortableTable as HTMLElement
+            const tbody = table?.querySelector("tbody")
+
+            if (!tbody) {
+                return
+            }
+
+            Sortable.create(tbody, {
                 animation: 150,
-                onEnd: (evt: { oldIndex?: number; newIndex?: number }) => {
+                onEnd: async (evt: { oldIndex?: number; newIndex?: number }) => {
+                    console.log(evt)
                     if (evt?.oldIndex !== undefined && evt?.newIndex !== undefined) {
-                        fightService.moveFight(this.fightCard[evt.oldIndex].id, evt.newIndex)
+                        await fightService.moveFight(this.fightCard[evt.oldIndex].id, evt.newIndex)
                     }
                 },
                 handle: ".handle",
                 scroll: true,
                 direction: "horizontal",
-                // scrollSensitivity: 700,
-                // scrollSpeed: 500, // Scroll 10px per tick
-                // forceFallback: true,
-                // forceAutoScrollFallback: true,
-                // fallbackOnBody: true,
             })
         },
         async downloadFile(fileType: FileType) {

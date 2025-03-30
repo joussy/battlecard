@@ -1,6 +1,6 @@
 <template>
     <MenuComponent />
-    <div class="container main-container">
+    <div class="main-container container">
         <RouterView />
     </div>
 </template>

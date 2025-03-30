@@ -1,5 +1,8 @@
 <template>
-    <div v-if="boxer != null">
+    <div
+        v-if="boxer != null"
+        class="max-width-md"
+    >
         <div class="bg-body sticky-md-none sticky-top d-flex justify-content-center align-items-center pb-1">
             <router-link
                 :to="{ name: 'selector' }"
