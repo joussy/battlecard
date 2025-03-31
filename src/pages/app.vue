@@ -1,5 +1,6 @@
 <template>
-    <MenuComponent />
+    <MenuTopComponent></MenuTopComponent>
+    <MenuBottomComponent></MenuBottomComponent>
     <div class="main-container container">
         <RouterView />
     </div>
@@ -7,23 +8,25 @@
 
 <script lang="ts">
 import { defineComponent, watch } from "vue"
-import MenuComponent from "@/components/menu.component.vue"
+import MenuTopComponent from "@/components/menu/menu-top.component.vue"
+import MenuBottomComponent from "@/components/menu/menu-bottom.component.vue"
 import fightService from "@/services/fight.service"
 import { loadUserStore, userStore } from "@/composables/user.composable"
 import { loadUiStore } from "@/composables/ui.composable"
 
 export default defineComponent({
     components: {
-        MenuComponent: MenuComponent,
+        MenuTopComponent,
+        MenuBottomComponent,
     },
     data() {
         return {
             currentPath: window.location.hash,
         }
     },
-    async mounted() {
-        await loadUiStore()
-        await loadUserStore()
+    mounted() {
+        loadUiStore()
+        loadUserStore()
         watch(
             () => userStore.account,
             async () => {

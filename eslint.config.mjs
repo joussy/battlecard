@@ -46,6 +46,7 @@ export default [
             "@typescript-eslint/no-unused-vars": "warn",
             "vue/no-unused-vars": "warn",
             "require-await": "error",
+            "vue/multi-word-component-names": "off",
         },
     },
 ]

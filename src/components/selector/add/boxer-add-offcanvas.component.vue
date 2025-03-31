@@ -30,7 +30,7 @@ import { defineComponent } from "vue"
 
 import { uiStore } from "@/composables/ui.composable"
 import BoxerAddFormComponent from "./boxer-add-form.component.vue"
-import Offcanvas from "bootstrap/js/dist/offcanvas"
+import bootstrap from "@/utils/bootstrap.singleton"
 
 export default defineComponent({
     components: {
@@ -43,7 +43,7 @@ export default defineComponent({
     },
     methods: {
         closeModal() {
-            const bsOffcanvas = Offcanvas.getInstance("#boxerAddOffcanvasNavbar")
+            const bsOffcanvas = bootstrap.getInstance().Offcanvas.getInstance("#boxerAddOffcanvasNavbar")
             if (bsOffcanvas) {
                 bsOffcanvas.hide()
             }
