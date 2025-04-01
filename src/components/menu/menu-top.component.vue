@@ -17,6 +17,15 @@
         </div>
         <div class="nav-item">
             <router-link
+                :to="{ name: 'tournaments' }"
+                class="nav-link link-secondary"
+                active-class="active"
+            >
+                Events
+            </router-link>
+        </div>
+        <div class="nav-item">
+            <router-link
                 :to="{ name: 'selector' }"
                 class="nav-link link-secondary"
                 active-class="active"

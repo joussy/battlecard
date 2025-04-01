@@ -1,5 +1,5 @@
 import PocketBase from "pocketbase"
-import { DbBoxer, DbFight, TypedPocketBase } from "@/types/db"
+import { DbBoxer, DbFight, DbTournament, TypedPocketBase } from "@/types/db"
 import { userStore } from "@/composables/user.composable"
 
 const pocketBase = (
@@ -28,6 +28,9 @@ export class PocketBaseManager {
         return await pocketBase.collection("fight").getFullList({
             sort: "order",
         })
+    }
+    async getTournaments(): Promise<DbTournament[]> {
+        return await pocketBase.collection("tournament").getFullList()
     }
     async addFight(fight: DbFight): Promise<DbFight> {
         fight.userId = userStore.account?.id
