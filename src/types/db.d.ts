@@ -23,7 +23,13 @@ export interface DbFight {
     userId?: string
 }
 
+export interface DbTournament {
+    id: string
+    name: string
+}
+
 interface TypedPocketBase extends Client {
     collection(idOrName: "boxer"): RecordService<DbBoxer>
     collection(idOrName: "fight"): RecordService<DbFight>
+    collection(idOrName: "tournament"): RecordService<DbTournament>
 }

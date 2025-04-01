@@ -67,3 +67,8 @@ export interface FightStore {
     removeFromFightCardByIndex(index: number): void
     getOpponentModalityErrors(boxer: Boxer, opponent: Boxer): ModalityError[]
 }
+
+export interface Tournament {
+    id: string
+    name: string
+}

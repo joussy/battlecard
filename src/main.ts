@@ -10,9 +10,11 @@ import "./style.scss"
 import "bootstrap-icons/font/bootstrap-icons.css"
 import ClubStatisticsComponent from "@/components/club-statistics.component.vue"
 import BoxerTileDetailsComponent from "@/components/selector/boxer-tile-details.component.vue"
+import TournamentsComponent from "@/components/tournaments.component.vue"
 
 const routes = [
     { path: "/", redirect: { name: "selector" } },
+    { path: "/tournaments", name: "tournaments", component: TournamentsComponent },
     { path: "/selector", name: "selector", component: BoxerSelectorComponent },
     { path: "/selector/tile/:id", name: "selector-tile", component: BoxerTileDetailsComponent },
     { path: "/settings", name: "settings", component: UploadComponent },

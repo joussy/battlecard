@@ -1,5 +1,5 @@
-import { DbBoxer, DbFight } from "@/types/db"
-import { Boxer, BoxerAttributes, Fight, Gender } from "@/types/boxing.d"
+import { DbBoxer, DbFight, DbTournament } from "@/types/db"
+import { Boxer, BoxerAttributes, Fight, Gender, Tournament } from "@/types/boxing.d"
 
 export default class DbConverter {
     static toDbBoxer(boxerAttributes: BoxerAttributes): DbBoxer {
@@ -32,6 +32,20 @@ export default class DbConverter {
                 id: boxer.id,
             },
             opponents: [],
+        }
+    }
+
+    static toTournament(tournament: DbTournament): Tournament {
+        return {
+            id: tournament.id,
+            name: tournament.name,
+        }
+    }
+
+    static toDbTournament(tournament: Tournament): DbTournament {
+        return {
+            id: tournament.id,
+            name: tournament.name,
         }
     }
 

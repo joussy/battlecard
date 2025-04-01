@@ -1,5 +1,5 @@
 import { reactive, readonly, toRaw, watchEffect } from "vue"
-import { Boxer, Fight, Opponent } from "@/types/boxing.d"
+import { Boxer, Fight, FightTournament, Opponent } from "@/types/boxing.d"
 import { FightCardStorage, BoxerStorage, FightStorage } from "@/types/localstorage.d"
 import { BeaModality } from "@/fightModality/BeaModality"
 import pocketBaseManager from "@/managers/pocketbase.manager"
@@ -14,6 +14,7 @@ const fightCardStore = reactive({
     fightCard: [] as Fight[],
     boxers: [] as Boxer[],
     modality: new BeaModality() as IModality,
+    tournaments: [] as FightTournament[],
 })
 
 export default {
@@ -151,6 +152,8 @@ export default {
     async loadFromDb() {
         const boxers = await pocketBaseManager.getBoxers()
         const fights = await pocketBaseManager.getFights()
+        const tournaments = await pocketBaseManager.getTournaments()
+        fightCardStore.tournaments = tournaments.map((t) => DbConverter.toTournament(t))
         fightCardStore.boxers = boxers.map((b) => DbConverter.toBoxer(b))
         fightCardStore.fightCard = fights
             .map((f) => {
