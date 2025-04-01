@@ -210,11 +210,6 @@ export default {
         async downloadFile(fileType: FileType) {
             await ApiService.downloadFightCard(fileType, this.fightStore.fightCard, this.fightStore.modality)
         },
-        // moved(evt: { oldIndex?: number; newIndex?: number }) {
-        //     if (evt?.oldIndex !== undefined && evt?.newIndex !== undefined) {
-        //         fightService.moveFight(this.fightCard[evt.oldIndex].id, evt.newIndex)
-        //     }
-        // },
         getFightDuration(fight: Fight) {
             const fightDuration = this.fightStore.modality.getFightDuration(
                 fight.boxer1.attributes,
