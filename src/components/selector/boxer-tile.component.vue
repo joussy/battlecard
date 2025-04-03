@@ -92,3 +92,8 @@ export default defineComponent({
     },
 })
 </script>
+<style lang="scss" scoped>
+.card:hover {
+    border: 1px solid black;
+}
+</style>
