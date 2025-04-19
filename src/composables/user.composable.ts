@@ -9,7 +9,13 @@ const userStore = reactive({
     authenticationAvailable: pocketBase != null,
     async authenticate() {
         if (!pocketBase || pocketBase.authStore.isValid) return null
-        await pocketBase.collection("users").authWithOAuth2({ provider: "google" })
+        if (import.meta.env.VITE_LOCAL_USER) {
+            pocketBase
+                .collection("users")
+                .authWithPassword(import.meta.env.VITE_LOCAL_USER, import.meta.env.VITE_LOCAL_PASSWORD)
+        } else {
+            await pocketBase.collection("users").authWithOAuth2({ provider: "google" })
+        }
         updateAccount()
     },
     logout() {

@@ -8,6 +8,7 @@ import svgLoader from "vite-svg-loader"
 export default defineConfig({
     plugins: [svgLoader(), vue()],
     server: {
+        host: "0.0.0.0",
         watch: {
             usePolling: true,
         },
