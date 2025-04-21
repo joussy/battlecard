@@ -158,10 +158,16 @@ export default {
     },
 
     async loadFromDb() {
-        const boxers = await pocketBaseManager.getBoxers()
-        const fights = await pocketBaseManager.getFights()
         const tournaments = await pocketBaseManager.getTournaments()
         fightCardStore.tournaments = tournaments.map((t) => DbConverter.toTournament(t))
+        if (fightCardStore.currentTournament) {
+            await this.loadTournamentFromDb(fightCardStore.currentTournament.id)
+        }
+    },
+
+    async loadTournamentFromDb(tournamentId: string) {
+        const boxers = await pocketBaseManager.getBoxersForTournament(tournamentId)
+        const fights = await pocketBaseManager.getFights(tournamentId)
         fightCardStore.boxers = boxers.map((b) => DbConverter.toBoxer(b))
         fightCardStore.fightCard = fights
             .map((f) => {
@@ -197,12 +203,15 @@ export default {
         console.debug("store loaded")
     },
 
-    setCurrentTournament(tournamentId: string) {
+    async setCurrentTournament(tournamentId: string) {
         const tournament = fightCardStore.tournaments.find((t) => t.id == tournamentId)
 
-        if (tournament) {
-            fightCardStore.currentTournament = tournament
+        if (!tournament) {
+            return
         }
+
+        fightCardStore.currentTournament = tournament
+        await this.loadTournamentFromDb(fightCardStore.currentTournament.id)
     },
 }
 

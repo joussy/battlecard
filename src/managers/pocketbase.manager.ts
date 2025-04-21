@@ -24,9 +24,10 @@ export class PocketBaseManager {
         }
         await batch.send()
     }
-    async getFights(): Promise<DbFight[]> {
+    async getFights(tournamentId: string): Promise<DbFight[]> {
         return await pocketBase.collection("fight").getFullList({
             sort: "order",
+            filter: `tournamentId = '${tournamentId}'`,
         })
     }
     async getTournaments(): Promise<DbTournament[]> {
@@ -49,10 +50,16 @@ export class PocketBaseManager {
     async getBoxers(): Promise<DbBoxer[]> {
         return await pocketBase.collection("boxer").getFullList()
     }
+    async getBoxersForTournament(tournamentId: string): Promise<DbBoxer[]> {
+        return await pocketBase.collection("tournament_boxer").getFullList({
+            filter: `tournamentId = '${tournamentId}'`,
+            expand: "boxerId",
+        })
+    }
     async addBoxer(boxer: DbBoxer): Promise<DbBoxer> {
         boxer.userId = userStore.account?.id
         boxer.id = ""
-        return await pocketBase.collection("boxer").create(boxer)
+        return await pocketBase.collection("tournament_boxer").create(boxer)
     }
 }
 const instance = new PocketBaseManager()
