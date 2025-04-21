@@ -221,6 +221,10 @@ export class FightService {
     async switchFight(fightId: string) {
         await fightCardStore.switchFight(fightId)
     }
+
+    setCurrentTournament(tournamentId: string) {
+        fightCardStore.setCurrentTournament(tournamentId)
+    }
 }
 
 const instance = new FightService()

@@ -33,7 +33,6 @@ export class PocketBaseManager {
         return await pocketBase.collection("tournament").getFullList()
     }
     async addFight(fight: DbFight): Promise<DbFight> {
-        fight.userId = userStore.account?.id
         fight.id = ""
         return await pocketBase.collection("fight").create(fight)
     }

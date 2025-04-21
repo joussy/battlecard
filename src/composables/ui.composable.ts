@@ -5,6 +5,7 @@ const uiStore = reactive({
     theme: "auto" as UiTheme,
     hideNonMatchableOpponents: false,
     hideFightersWithNoMatch: false,
+    tournamentId: null as string | null,
     restored: false as boolean,
     boxers: new Map<string, BoxerUi>(),
     createOrGetBoxerUi(boxerId: string): BoxerUi {

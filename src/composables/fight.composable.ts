@@ -1,5 +1,5 @@
 import { reactive, readonly, toRaw, watchEffect } from "vue"
-import { Boxer, Fight, FightTournament, Opponent } from "@/types/boxing.d"
+import { Boxer, Fight, Tournament, Opponent } from "@/types/boxing.d"
 import { FightCardStorage, BoxerStorage, FightStorage } from "@/types/localstorage.d"
 import { BeaModality } from "@/fightModality/BeaModality"
 import pocketBaseManager from "@/managers/pocketbase.manager"
@@ -14,7 +14,8 @@ const fightCardStore = reactive({
     fightCard: [] as Fight[],
     boxers: [] as Boxer[],
     modality: new BeaModality() as IModality,
-    tournaments: [] as FightTournament[],
+    tournaments: [] as Tournament[],
+    currentTournament: null as Tournament | null,
 })
 
 export default {
@@ -42,15 +43,22 @@ export default {
         fightCardStore.fightCard = []
     },
     async addFight(boxer1: Boxer, boxer2: Boxer, order: number): Promise<Readonly<Fight>> {
+        if (fightCardStore.currentTournament == null) {
+            throw "CurrentTournament is null"
+        }
+
         let fight: Fight = {
             boxer1: boxer1,
             boxer2: boxer2,
             modalityErrors: [],
             id: generateRandomId(),
             order: order + 1,
+            tournamentId: fightCardStore.currentTournament.id,
         }
-        if (userStore.account?.id != null) {
-            const ret = await pocketBaseManager.addFight(DbConverter.toDbFight(fight, userStore.account?.id))
+        if (fightCardStore.currentTournament?.id != null) {
+            const ret = await pocketBaseManager.addFight(
+                DbConverter.toDbFight(fight, fightCardStore.currentTournament.id)
+            )
             fight = DbConverter.toFight(ret, boxer1, boxer2)
         }
 
@@ -187,6 +195,14 @@ export default {
         }
 
         console.debug("store loaded")
+    },
+
+    setCurrentTournament(tournamentId: string) {
+        const tournament = fightCardStore.tournaments.find((t) => t.id == tournamentId)
+
+        if (tournament) {
+            fightCardStore.currentTournament = tournament
+        }
     },
 }
 

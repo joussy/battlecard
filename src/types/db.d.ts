@@ -20,12 +20,18 @@ export interface DbFight {
     id: string
     boxer1Id: string
     boxer2Id: string
-    userId?: string
+    tournamentId: string
 }
 
 export interface DbTournament {
     id: string
     name: string
+}
+
+export interface DbTournament_Boxer {
+    id: string
+    tournamentId: string
+    boxerId: string
 }
 
 interface TypedPocketBase extends Client {
