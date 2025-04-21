@@ -28,7 +28,7 @@ export default defineComponent({
         loadUiStore()
         loadUserStore()
         watch(
-            () => userStore.account,
+            () => [userStore.account],
             async () => {
                 await fightService.loadFightStore()
             },

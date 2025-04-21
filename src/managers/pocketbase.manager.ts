@@ -1,5 +1,5 @@
 import PocketBase from "pocketbase"
-import { DbBoxer, DbFight, DbTournament, TypedPocketBase } from "@/types/db"
+import { DbBoxer, DbFight, DbTournament, DbTournament_Boxer, TypedPocketBase } from "@/types/db"
 import { userStore } from "@/composables/user.composable"
 
 const pocketBase = (
@@ -59,7 +59,11 @@ export class PocketBaseManager {
     async addBoxer(boxer: DbBoxer): Promise<DbBoxer> {
         boxer.userId = userStore.account?.id
         boxer.id = ""
-        return await pocketBase.collection("tournament_boxer").create(boxer)
+        return await pocketBase.collection("boxer").create(boxer)
+    }
+
+    async addBoxerToTournament(boxerId: string, tournamentId: string): Promise<DbTournament_Boxer> {
+        return await pocketBase.collection("tournament_boxer").create({ boxerId, tournamentId } as DbTournament_Boxer)
     }
 }
 const instance = new PocketBaseManager()

@@ -30,6 +30,9 @@ export default {
         if (userStore.account?.id) {
             const res = await pocketBaseManager.addBoxer(DbConverter.toDbBoxer(boxer.attributes))
             boxer = DbConverter.toBoxer(res)
+            if (this.store.currentTournament) {
+                await pocketBaseManager.addBoxerToTournament(boxer.attributes.id, this.store.currentTournament.id)
+            }
         }
         fightCardStore.boxers.push(boxer)
         return boxer
@@ -165,7 +168,12 @@ export default {
         }
     },
 
-    async loadTournamentFromDb(tournamentId: string) {
+    async loadTournamentFromDb(tournamentId: string | null) {
+        if (!tournamentId) {
+            //TODO: Handle that no tournament can be selected
+            return
+        }
+
         const boxers = await pocketBaseManager.getBoxersForTournament(tournamentId)
         const fights = await pocketBaseManager.getFights(tournamentId)
         fightCardStore.boxers = boxers.map((b) => DbConverter.toBoxer(b))
@@ -203,15 +211,15 @@ export default {
         console.debug("store loaded")
     },
 
-    async setCurrentTournament(tournamentId: string) {
+    async setCurrentTournament(tournamentId: string | null) {
         const tournament = fightCardStore.tournaments.find((t) => t.id == tournamentId)
 
-        if (!tournament) {
+        if (fightCardStore.currentTournament?.id == tournamentId) {
             return
         }
 
-        fightCardStore.currentTournament = tournament
-        await this.loadTournamentFromDb(fightCardStore.currentTournament.id)
+        fightCardStore.currentTournament = tournament || null
+        await this.loadTournamentFromDb(fightCardStore.currentTournament?.id || null)
     },
 }
 

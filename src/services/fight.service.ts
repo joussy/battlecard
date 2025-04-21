@@ -6,10 +6,12 @@ import { ApiService } from "@/services/api.service"
 import fightCardStore from "@/composables/fight.composable"
 import { generateRandomId } from "@/utils/string.utils"
 import { readonly } from "vue"
+import { uiStore } from "@/composables/ui.composable"
 
 export class FightService {
     async loadFightStore() {
         await fightCardStore.loadFightStore()
+        fightCardStore.setCurrentTournament(uiStore.currentTournamentId)
         this.computeBoxersCategory()
         this.computeBoxersOpponents()
     }
@@ -222,7 +224,8 @@ export class FightService {
         await fightCardStore.switchFight(fightId)
     }
 
-    setCurrentTournament(tournamentId: string) {
+    setCurrentTournament(tournamentId: string | null) {
+        uiStore.setCurrentTournament(tournamentId)
         fightCardStore.setCurrentTournament(tournamentId)
     }
 }
