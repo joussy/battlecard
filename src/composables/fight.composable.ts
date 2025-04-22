@@ -211,7 +211,7 @@ export default {
         console.debug("store loaded")
     },
 
-    async setCurrentTournament(tournamentId: string | null) {
+    setCurrentTournament(tournamentId: string | null) {
         const tournament = fightCardStore.tournaments.find((t) => t.id == tournamentId)
 
         if (fightCardStore.currentTournament?.id == tournamentId) {
@@ -219,7 +219,6 @@ export default {
         }
 
         fightCardStore.currentTournament = tournament || null
-        await this.loadTournamentFromDb(fightCardStore.currentTournament?.id || null)
     },
 }
 

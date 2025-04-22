@@ -11,7 +11,6 @@ import { uiStore } from "@/composables/ui.composable"
 export class FightService {
     async loadFightStore() {
         await fightCardStore.loadFightStore()
-        fightCardStore.setCurrentTournament(uiStore.currentTournamentId)
         this.computeBoxersCategory()
         this.computeBoxersOpponents()
     }
@@ -226,7 +225,10 @@ export class FightService {
 
     setCurrentTournament(tournamentId: string | null) {
         uiStore.setCurrentTournament(tournamentId)
-        fightCardStore.setCurrentTournament(tournamentId)
+        if (fightCardStore.store.currentTournament != tournamentId) {
+            fightCardStore.setCurrentTournament(tournamentId)
+            this.loadFightStore()
+        }
     }
 }
 

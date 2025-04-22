@@ -12,7 +12,7 @@ import MenuTopComponent from "@/components/menu/menu-top.component.vue"
 import MenuBottomComponent from "@/components/menu/menu-bottom.component.vue"
 import fightService from "@/services/fight.service"
 import { loadUserStore, userStore } from "@/composables/user.composable"
-import { loadUiStore } from "@/composables/ui.composable"
+import { loadUiStore, uiStore } from "@/composables/ui.composable"
 
 export default defineComponent({
     components: {
@@ -30,6 +30,7 @@ export default defineComponent({
         watch(
             () => [userStore.account],
             async () => {
+                fightService.setCurrentTournament(uiStore.currentTournamentId)
                 await fightService.loadFightStore()
             },
             {

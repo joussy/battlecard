@@ -32,6 +32,7 @@ export interface DbTournament_Boxer {
     id: string
     tournamentId: string
     boxerId: string
+    expand: { boxerId: DbBoxer }
 }
 
 interface TypedPocketBase extends Client {

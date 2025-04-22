@@ -51,11 +51,14 @@ export class PocketBaseManager {
         return await pocketBase.collection("boxer").getFullList()
     }
     async getBoxersForTournament(tournamentId: string): Promise<DbBoxer[]> {
-        return await pocketBase.collection("tournament_boxer").getFullList({
+        const ret = await pocketBase.collection("tournament_boxer").getFullList({
             filter: `tournamentId = '${tournamentId}'`,
             expand: "boxerId",
         })
+        const boxers = ret.map((r: DbTournament_Boxer) => r.expand.boxerId)
+        return boxers
     }
+
     async addBoxer(boxer: DbBoxer): Promise<DbBoxer> {
         boxer.userId = userStore.account?.id
         boxer.id = ""
