@@ -31,6 +31,7 @@
                 active-class="active"
             >
                 Card
+                <span class="badge rounded-pill bg-primary">{{ getNbFights() }}</span>
             </router-link>
         </div>
         <div class="nav-item">
@@ -84,6 +85,7 @@
 <script lang="ts">
 import Icon from "@/components/core/icon.component.vue"
 import { userStore } from "@/composables/user.composable"
+import fightService from "@/services/fight.service"
 
 export default {
     components: {
@@ -93,6 +95,11 @@ export default {
         return {
             userStore,
         }
+    },
+    methods: {
+        getNbFights() {
+            return fightService.store().fightCard.length
+        },
     },
 }
 </script>

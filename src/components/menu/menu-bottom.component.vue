@@ -35,9 +35,12 @@
         </router-link>
         <router-link
             :to="{ name: 'card' }"
-            class="nav-link text-center"
+            class="nav-link text-center position-relative"
             active-class="active"
         >
+            <span class="position-absolute top-50 start-100 translate-middle badge rounded-pill bg-primary">
+                {{ getNbFights() }}
+            </span>
             <Icon
                 name="headgear"
                 class="svg-2 mt-1"
@@ -57,6 +60,7 @@
 <script lang="ts">
 import Icon from "@/components/core/icon.component.vue"
 import { userStore } from "@/composables/user.composable"
+import fightService from "@/services/fight.service"
 
 export default {
     components: {
@@ -66,6 +70,11 @@ export default {
         return {
             userStore,
         }
+    },
+    methods: {
+        getNbFights() {
+            return fightService.store().fightCard.length
+        },
     },
 }
 </script>

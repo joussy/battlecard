@@ -98,7 +98,7 @@
             </thead>
             <tbody>
                 <tr
-                    v-for="(fight, index) in fightCard"
+                    v-for="fight in fightCard"
                     :key="fight.id"
                 >
                     <th scope="row">
