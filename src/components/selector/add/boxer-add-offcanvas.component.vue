@@ -30,7 +30,6 @@ import { defineComponent } from "vue"
 
 import { uiStore } from "@/composables/ui.composable"
 import BoxerAddFormComponent from "./boxer-add-form.component.vue"
-import bootstrap from "@/utils/bootstrap.singleton"
 import { closeModal } from "@/utils/ui.utils"
 
 export default defineComponent({

@@ -20,7 +20,7 @@
             >
                 <li
                     class="list-group-item d-flex"
-                    :class="{ 'text-bg-light': fightStore.currentTournament?.id == tournament.id }"
+                    :class="{ 'text-bg-secondary': fightStore.currentTournament?.id == tournament.id }"
                 >
                     <div
                         class="flex-fill"
