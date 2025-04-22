@@ -12,7 +12,6 @@
                 class="btn btn-outline-success mb-3 ms-2"
                 data-bs-toggle="offcanvas"
                 data-bs-target="#boxerAddOffcanvasNavbar"
-                @click="((boxerToEdit = null), (boxerAddMode = !boxerAddMode))"
             >
                 <i class="bi bi-person-add" />
             </button>
@@ -38,7 +37,6 @@
         >
             <BoxerTileComponent
                 :boxer="boxer"
-                @boxer-edit="editBoxer(boxer.attributes)"
                 @click="$router.push({ name: 'selector-tile', params: { id: boxer.attributes.id } })"
             />
         </div>
@@ -47,7 +45,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue"
-import { BoxerAttributes, Gender } from "@/types/boxing.d"
+import { Gender } from "@/types/boxing.d"
 import { ModalityErrorType } from "@/types/modality.d"
 import BoxerTileComponent from "@/components/selector/boxer-tile.component.vue"
 import BoxerAddOffcanvasComponent from "@/components/selector/add/boxer-add-offcanvas.component.vue"
@@ -67,17 +65,12 @@ export default defineComponent({
             store: fightService.store(),
             Gender: Gender,
             ModalityErrorType: ModalityErrorType,
-            boxerAddMode: false,
-            boxerToEdit: null as BoxerAttributes | null,
             fightService: fightService,
         }
     },
     methods: {
         async clear() {
             await fightService.clear()
-        },
-        collapseAll() {
-            uiStore.collapseAll()
         },
         downloadCsv() {
             const csv = fightService.getAvailableBoxersAsCsv()
@@ -88,10 +81,6 @@ export default defineComponent({
             document.body.appendChild(elem)
             elem.click()
             document.body.removeChild(elem)
-        },
-        editBoxer(boxer: Readonly<BoxerAttributes>) {
-            this.boxerToEdit = boxer
-            this.boxerAddMode = true
         },
         getBoxersToDisplay() {
             return fightService.store().boxers.filter((b) => {
