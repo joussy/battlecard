@@ -227,11 +227,11 @@ export class FightService {
         await fightCardStore.switchFight(fightId)
     }
 
-    setCurrentTournament(tournamentId: string | null) {
+    async setCurrentTournament(tournamentId: string | null) {
         uiStore.setCurrentTournament(tournamentId)
         if (fightCardStore.store.currentTournament != tournamentId) {
             fightCardStore.setCurrentTournament(tournamentId)
-            this.loadFightStore()
+            await this.loadFightStore()
         }
     }
     deleteTournament(tournamentId: string) {

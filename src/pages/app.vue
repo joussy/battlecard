@@ -30,8 +30,8 @@ export default defineComponent({
         watch(
             () => [userStore.account],
             async () => {
-                fightService.setCurrentTournament(uiStore.currentTournamentId)
                 await fightService.loadFightStore()
+                await fightService.setCurrentTournament(uiStore.currentTournamentId)
             },
             {
                 immediate: true,

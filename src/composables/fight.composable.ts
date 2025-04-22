@@ -220,7 +220,6 @@ export default {
 
     setCurrentTournament(tournamentId: string | null) {
         const tournament = fightCardStore.tournaments.find((t) => t.id == tournamentId)
-
         if (fightCardStore.currentTournament?.id == tournamentId) {
             return
         }
