@@ -39,6 +39,7 @@ export default class DbConverter {
         return {
             id: tournament.id,
             name: tournament.name,
+            userId: tournament.userId,
         }
     }
 
@@ -46,6 +47,7 @@ export default class DbConverter {
         return {
             id: tournament.id,
             name: tournament.name,
+            userId: tournament.userId,
         }
     }
 

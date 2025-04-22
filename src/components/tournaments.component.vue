@@ -10,6 +10,7 @@
                 <i class="bi bi-calendar-plus-fill" />
                 Create
             </button>
+            <TournamentAddOffcanvasComponent />
         </div>
         <div class="card mb-2">
             <div class="card-header">Select an event</div>
@@ -18,11 +19,23 @@
                 class="list-group list-group-flush"
             >
                 <li
-                    class="list-group-item"
-                    @click="setCurrentTournament(tournament)"
+                    class="list-group-item d-flex"
+                    :class="{ 'text-bg-light': fightStore.currentTournament?.id == tournament.id }"
                 >
-                    {{ fightStore.currentTournament?.id == tournament.id ? "X " : "" }}
-                    {{ tournament.name }}
+                    <div
+                        class="flex-fill"
+                        @click="setCurrentTournament(tournament)"
+                    >
+                        {{ tournament.name }}
+                    </div>
+                    <div>
+                        <button
+                            class="btn btn-outline-danger"
+                            @click="deleteTournament(tournament)"
+                        >
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </div>
                 </li>
             </ul>
         </div>
@@ -32,8 +45,12 @@
 import fightService from "@/services/fight.service"
 import { Tournament } from "@/types/boxing"
 import { defineComponent } from "vue"
+import TournamentAddOffcanvasComponent from "@/components/selector/add/tournament-add-offcanvas.component.vue"
 
 export default defineComponent({
+    components: {
+        TournamentAddOffcanvasComponent: TournamentAddOffcanvasComponent,
+    },
     data() {
         return {
             fightStore: fightService.store(),
@@ -43,6 +60,9 @@ export default defineComponent({
     methods: {
         setCurrentTournament(tournament: Tournament) {
             fightService.setCurrentTournament(tournament.id)
+        },
+        deleteTournament(tournament: Tournament) {
+            fightService.deleteTournament(tournament.id)
         },
     },
 })

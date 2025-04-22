@@ -1,4 +1,4 @@
-import { Boxer, BoxerAttributes, Fight, Gender, Opponent } from "@/types/boxing.d"
+import { Boxer, BoxerAttributes, Fight, Gender, Opponent, Tournament } from "@/types/boxing.d"
 import { ModalityError, ModalityErrorType } from "@/types/modality.d"
 import { stringify as stringifyCsv, parse as parseCsv } from "csv/browser/esm/sync"
 import { format, parse } from "date-fns"
@@ -148,6 +148,10 @@ export class FightService {
         this.computeBoxersOpponents()
     }
 
+    async addTournament(tournament: Tournament) {
+        await fightCardStore.addTournament(tournament)
+    }
+
     async importFromApiByIds(csv: string) {
         const parsedCsv = parseCsv(csv, {
             columns: ["license", "weight"],
@@ -229,6 +233,9 @@ export class FightService {
             fightCardStore.setCurrentTournament(tournamentId)
             this.loadFightStore()
         }
+    }
+    deleteTournament(tournamentId: string) {
+        fightCardStore.deleteTournament(tournamentId)
     }
 }
 

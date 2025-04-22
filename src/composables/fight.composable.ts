@@ -37,6 +37,13 @@ export default {
         fightCardStore.boxers.push(boxer)
         return boxer
     },
+    async addTournament(tournament: Tournament) {
+        if (userStore.account?.id) {
+            const res = await pocketBaseManager.addTournament(DbConverter.toDbTournament(tournament))
+            tournament = DbConverter.toTournament(res)
+        }
+        fightCardStore.tournaments.push(tournament)
+    },
     async clear() {
         if (userStore.account?.id) {
             await pocketBaseManager.deleteFights(fightCardStore.fightCard.map((b) => b.id))
@@ -219,6 +226,13 @@ export default {
         }
 
         fightCardStore.currentTournament = tournament || null
+    },
+    deleteTournament(tournamentId: string) {
+        if (userStore.account == null) {
+            return
+        }
+        pocketBaseManager.deleteTournament(tournamentId)
+        fightCardStore.tournaments = fightCardStore.tournaments.filter((t) => t.id != tournamentId)
     },
 }
 

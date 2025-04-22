@@ -72,4 +72,5 @@ export interface FightStore {
 export interface Tournament {
     id: string
     name: string
+    userId: string
 }

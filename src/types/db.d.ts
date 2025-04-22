@@ -26,6 +26,7 @@ export interface DbFight {
 export interface DbTournament {
     id: string
     name: string
+    userId: string
 }
 
 export interface DbTournament_Boxer {

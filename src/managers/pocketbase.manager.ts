@@ -65,8 +65,38 @@ export class PocketBaseManager {
         return await pocketBase.collection("boxer").create(boxer)
     }
 
+    async addTournament(tournament: DbTournament): Promise<DbTournament> {
+        if (!userStore.account) {
+            throw "Missing userId while creating tournament"
+        }
+
+        tournament.userId = userStore.account?.id
+        tournament.id = ""
+        return await pocketBase.collection("tournament").create(tournament)
+    }
+
     async addBoxerToTournament(boxerId: string, tournamentId: string): Promise<DbTournament_Boxer> {
         return await pocketBase.collection("tournament_boxer").create({ boxerId, tournamentId } as DbTournament_Boxer)
+    }
+    async deleteTournament(tournamentId: string) {
+        const tbs = (await pocketBase.collection("tournament_boxer").getFullList({
+            filter: `tournamentId = '${tournamentId}'`,
+            fields: "id",
+        })) as DbTournament_Boxer[]
+        const fights = (await pocketBase.collection("fight").getFullList({
+            filter: `tournamentId = '${tournamentId}'`,
+            fields: "id",
+        })) as DbFight[]
+
+        const batch = pocketBase.createBatch()
+        for (const fight of fights) {
+            batch.collection("fight").delete(fight.id)
+        }
+        for (const tb of tbs) {
+            batch.collection("tournament_boxer").delete(tb.id)
+        }
+        batch.collection("tournament").delete(tournamentId)
+        await batch.send()
     }
 }
 const instance = new PocketBaseManager()
