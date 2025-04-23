@@ -20,7 +20,12 @@
             ></button>
         </div>
         <div class="offcanvas-body">
-            <BoxerAddFormComponent @boxer-add="closeModal()"></BoxerAddFormComponent>
+            <BoxerSearchComponent @boxer-add="closeModal()"></BoxerSearchComponent>
+
+            <BoxerAddFormComponent
+                v-if="false"
+                @boxer-add="closeModal()"
+            ></BoxerAddFormComponent>
         </div>
     </div>
 </template>
@@ -31,10 +36,12 @@ import { defineComponent } from "vue"
 import { uiStore } from "@/composables/ui.composable"
 import BoxerAddFormComponent from "./boxer-add-form.component.vue"
 import { closeModal } from "@/utils/ui.utils"
+import BoxerSearchComponent from "./boxer-search.component.vue"
 
 export default defineComponent({
     components: {
         BoxerAddFormComponent,
+        BoxerSearchComponent,
     },
     data() {
         return {

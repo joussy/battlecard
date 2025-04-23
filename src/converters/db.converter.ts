@@ -18,20 +18,24 @@ export default class DbConverter {
 
     static toBoxer(boxer: DbBoxer): Boxer {
         return {
-            attributes: {
-                birthDate: new Date(boxer.birthDate),
-                club: boxer.club,
-                firstName: boxer.firstName,
-                lastName: boxer.lastName,
-                gender: boxer.gender == "female" ? Gender.FEMALE : Gender.MALE,
-                license: boxer.license,
-                nbFights: boxer.nbFights ?? 0,
-                weight: boxer.weight ?? 0,
-                category: "fakeCat",
-                categoryShortText: "fakeShortCat",
-                id: boxer.id,
-            },
+            attributes: this.toBoxerAttributes(boxer),
             opponents: [],
+        }
+    }
+
+    static toBoxerAttributes(boxer: DbBoxer): BoxerAttributes {
+        return {
+            birthDate: new Date(boxer.birthDate),
+            club: boxer.club,
+            firstName: boxer.firstName,
+            lastName: boxer.lastName,
+            gender: boxer.gender == "female" ? Gender.FEMALE : Gender.MALE,
+            license: boxer.license,
+            nbFights: boxer.nbFights ?? 0,
+            weight: boxer.weight ?? 0,
+            category: "fakeCat",
+            categoryShortText: "fakeShortCat",
+            id: boxer.id,
         }
     }
 

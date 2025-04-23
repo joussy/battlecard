@@ -1,5 +1,5 @@
 import { reactive, readonly, toRaw, watchEffect } from "vue"
-import { Boxer, Fight, Tournament, Opponent } from "@/types/boxing.d"
+import { Boxer, Fight, Tournament, Opponent, BoxerAttributes } from "@/types/boxing.d"
 import { FightCardStorage, BoxerStorage, FightStorage } from "@/types/localstorage.d"
 import { BeaModality } from "@/fightModality/BeaModality"
 import pocketBaseManager from "@/managers/pocketbase.manager"
@@ -36,6 +36,16 @@ export default {
         }
         fightCardStore.boxers.push(boxer)
         return boxer
+    },
+    async addBoxerToTournament(boxerId: string) {
+        if (!this.store.currentTournament) {
+            return
+        }
+        await pocketBaseManager.addBoxerToTournament(boxerId, this.store.currentTournament.id)
+        const res = await pocketBaseManager.getBoxer(boxerId)
+        const boxer = DbConverter.toBoxer(res)
+
+        fightCardStore.boxers.push(boxer)
     },
     async addTournament(tournament: Tournament) {
         if (userStore.account?.id) {
@@ -235,6 +245,13 @@ export default {
         }
         pocketBaseManager.deleteTournament(tournamentId)
         fightCardStore.tournaments = fightCardStore.tournaments.filter((t) => t.id != tournamentId)
+    },
+    async getAllBoxersAttributes(): Promise<Readonly<BoxerAttributes[]>> {
+        if (userStore.account == null) {
+            return []
+        }
+        const boxers = await pocketBaseManager.getAllBoxers()
+        return boxers.map((b) => DbConverter.toBoxerAttributes(b))
     },
 }
 

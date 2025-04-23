@@ -237,6 +237,16 @@ export class FightService {
     deleteTournament(tournamentId: string) {
         fightCardStore.deleteTournament(tournamentId)
     }
+    getAllBoxerAttributes(): Promise<Readonly<BoxerAttributes[]>> {
+        return fightCardStore.getAllBoxersAttributes()
+    }
+    async addBoxerToTournament(boxerId: string) {
+        const boxer = await fightCardStore.addBoxerToTournament(boxerId)
+        this.computeBoxersCategory()
+        this.computeBoxersOpponents()
+
+        return boxer
+    }
 }
 
 const instance = new FightService()

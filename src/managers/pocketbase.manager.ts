@@ -71,6 +71,9 @@ export class PocketBaseManager {
         boxer.id = ""
         return await pocketBase.collection("boxer").create(boxer)
     }
+    getBoxer(boxerId: string): Promise<DbBoxer> {
+        return pocketBase.collection("boxer").getOne(boxerId)
+    }
 
     async addTournament(tournament: DbTournament): Promise<DbTournament> {
         if (!userStore.account) {
@@ -104,6 +107,10 @@ export class PocketBaseManager {
         }
         batch.collection("tournament").delete(tournamentId)
         await batch.send()
+    }
+
+    getAllBoxers(): Promise<DbBoxer[]> {
+        return pocketBase.collection("boxer").getFullList() as Promise<DbBoxer[]>
     }
 }
 const instance = new PocketBaseManager()
