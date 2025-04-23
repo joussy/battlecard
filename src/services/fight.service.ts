@@ -28,8 +28,8 @@ export class FightService {
     store() {
         return readonly(fightCardStore.store)
     }
-    async clear() {
-        await fightCardStore.clear()
+    async removeBoxersFromTournament() {
+        await fightCardStore.removeBoxersFromTournament()
     }
     getNbFightsForBoxer(boxer: Boxer): number {
         return fightCardStore.store.fightCard.filter(

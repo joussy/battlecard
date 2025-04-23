@@ -44,10 +44,13 @@ export default {
         }
         fightCardStore.tournaments.push(tournament)
     },
-    async clear() {
-        if (userStore.account?.id) {
+    async removeBoxersFromTournament() {
+        if (userStore.account?.id && fightCardStore.currentTournament) {
             await pocketBaseManager.deleteFights(fightCardStore.fightCard.map((b) => b.id))
-            await pocketBaseManager.deleteBoxers(fightCardStore.boxers.map((b) => b.attributes.id))
+            await pocketBaseManager.deleteBoxersFromTournament(
+                fightCardStore.boxers.map((b) => b.attributes.id),
+                fightCardStore.currentTournament.id
+            )
         }
         fightCardStore.boxers = []
         fightCardStore.fightCard = []

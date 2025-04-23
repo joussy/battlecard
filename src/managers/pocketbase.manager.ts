@@ -37,13 +37,20 @@ export class PocketBaseManager {
         fight.id = ""
         return await pocketBase.collection("fight").create(fight)
     }
-    async deleteBoxers(ids: string[]) {
-        if (ids.length == 0) {
+    async deleteBoxersFromTournament(boxerIds: string[], tournamentId: string) {
+        if (boxerIds.length == 0) {
             return
         }
+
+        const tbs = (
+            (await pocketBase.collection("tournament_boxer").getFullList({
+                filter: `tournamentId = '${tournamentId}'`,
+            })) as DbTournament_Boxer[]
+        ).filter((tbs) => tbs.id)
+
         const batch = pocketBase.createBatch()
-        for (const id of ids) {
-            batch.collection("boxer").delete(id)
+        for (const tb of tbs) {
+            batch.collection("tournament_boxer").delete(tb.id)
         }
         await batch.send()
     }

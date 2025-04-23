@@ -70,7 +70,7 @@ export default defineComponent({
     },
     methods: {
         async clear() {
-            await fightService.clear()
+            await fightService.removeBoxersFromTournament()
         },
         downloadCsv() {
             const csv = fightService.getAvailableBoxersAsCsv()
