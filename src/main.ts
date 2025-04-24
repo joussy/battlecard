@@ -8,7 +8,6 @@ import BoxerSelectorComponent from "@/components/boxer-selector.component.vue"
 
 import "./style.scss"
 import "bootstrap-icons/font/bootstrap-icons.css"
-import ClubStatisticsComponent from "@/components/club-statistics.component.vue"
 import BoxerTileDetailsComponent from "@/components/selector/boxer-tile-details.component.vue"
 import TournamentsComponent from "@/components/tournaments.component.vue"
 
@@ -19,7 +18,6 @@ const routes = [
     { path: "/selector/tile/:id", name: "selector-tile", component: BoxerTileDetailsComponent },
     { path: "/settings", name: "settings", component: UploadComponent },
     { path: "/card", name: "card", component: FightCardComponent },
-    { path: "/metrics", name: "metrics", component: ClubStatisticsComponent },
 ]
 
 const router = createRouter({

@@ -19,6 +19,11 @@ const userStore = reactive({
         }
         updateAccount()
     },
+    getAccountOrThrow(): UserAccount {
+        if (!userStore.account) throw "Cannot before action because the user is disconnected"
+
+        return this.account!
+    },
     logout() {
         if (!pocketBase) return null
         pocketBase.authStore.clear()

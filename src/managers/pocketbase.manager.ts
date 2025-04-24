@@ -67,7 +67,7 @@ export class PocketBaseManager {
     }
 
     async addBoxer(boxer: DbBoxer): Promise<DbBoxer> {
-        boxer.userId = userStore.account?.id
+        boxer.userId = userStore.getAccountOrThrow().id
         boxer.id = ""
         return await pocketBase.collection("boxer").create(boxer)
     }
@@ -76,11 +76,7 @@ export class PocketBaseManager {
     }
 
     async addTournament(tournament: DbTournament): Promise<DbTournament> {
-        if (!userStore.account) {
-            throw "Missing userId while creating tournament"
-        }
-
-        tournament.userId = userStore.account?.id
+        tournament.userId = userStore.getAccountOrThrow().id
         tournament.id = ""
         return await pocketBase.collection("tournament").create(tournament)
     }

@@ -10,7 +10,7 @@ export interface DbBoxer {
     weight?: number
     gender?: "male" | "female"
     license: string
-    userId?: string
+    userId: string
     created?: string
     updated?: string
 }

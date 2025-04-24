@@ -15,7 +15,10 @@
                 Settings
             </router-link>
         </div>
-        <div class="nav-item">
+        <div
+            v-if="userStore.account != null"
+            class="nav-item"
+        >
             <router-link
                 :to="{ name: 'tournaments' }"
                 class="nav-link link-secondary"
@@ -24,7 +27,10 @@
                 Events
             </router-link>
         </div>
-        <div class="nav-item">
+        <div
+            v-if="userStore.account != null"
+            class="nav-item"
+        >
             <router-link
                 :to="{ name: 'selector' }"
                 class="nav-link link-secondary"
@@ -33,7 +39,10 @@
                 Selector
             </router-link>
         </div>
-        <div class="nav-item">
+        <div
+            v-if="userStore.account != null"
+            class="nav-item"
+        >
             <router-link
                 :to="{ name: 'card' }"
                 class="nav-link link-secondary"
@@ -41,15 +50,6 @@
             >
                 Card
                 <span class="badge rounded-pill bg-primary">{{ getNbFights() }}</span>
-            </router-link>
-        </div>
-        <div class="nav-item">
-            <router-link
-                :to="{ name: 'metrics' }"
-                class="nav-link link-secondary"
-                active-class="active"
-            >
-                Metrics
             </router-link>
         </div>
         <div
@@ -76,7 +76,7 @@
                 <li v-if="userStore.account">
                     <a
                         class="dropdown-item"
-                        @click="userStore.logout()"
+                        @click="logout()"
                         >Logout</a
                     >
                 </li>
@@ -108,6 +108,10 @@ export default {
     methods: {
         getNbFights() {
             return fightService.store().fightCard.length
+        },
+        logout() {
+            userStore.logout()
+            this.$router.push("settings")
         },
     },
 }
