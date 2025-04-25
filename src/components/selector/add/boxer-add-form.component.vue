@@ -299,8 +299,7 @@ export default defineComponent({
             }
             await fightService.addBoxer(boxerAttributes)
 
-            if (boxerAttributes.id != "")
-            {
+            if (boxerAttributes.id != "") {
                 emit("boxer-add", boxerAttributes)
             }
         })
