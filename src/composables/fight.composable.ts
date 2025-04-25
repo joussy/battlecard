@@ -30,17 +30,19 @@ export default {
                 const res = await pocketBaseManager.addBoxer(DbConverter.toDbBoxer(boxer.attributes))
                 boxer = DbConverter.toBoxer(res)
 
-                fightCardStore.boxers.push(boxer)
-                
-                return boxer
+                fightCardStore.boxers.push(boxer)       
             }
           } catch (error: any) {
             if (error.response?.status === 400) {
               alert('Impossible to save the boxer. Please check licence number');
+              boxer.attributes.id = ""
             } else {
               alert('Impossible to save the boxer.');
+              boxer.attributes.id = ""
             }
           }
+
+        return boxer
     },
     async clear() {
         if (userStore.account?.id) {

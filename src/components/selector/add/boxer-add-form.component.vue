@@ -298,7 +298,11 @@ export default defineComponent({
                 id: generateRandomId(),
             }
             await fightService.addBoxer(boxerAttributes)
-            emit("boxer-add", boxerAttributes)
+
+            if (boxerAttributes.id != "")
+            {
+                emit("boxer-add", boxerAttributes)
+            }
         })
         return {
             onSubmit,
