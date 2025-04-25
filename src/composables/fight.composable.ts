@@ -25,12 +25,22 @@ export default {
         return fightCardStore.fightCard.find((x) => x.id == id)
     },
     async addBoxer(boxer: Boxer) {
-        if (userStore.account?.id) {
-            const res = await pocketBaseManager.addBoxer(DbConverter.toDbBoxer(boxer.attributes))
-            boxer = DbConverter.toBoxer(res)
-        }
-        fightCardStore.boxers.push(boxer)
-        return boxer
+        try {
+            if (userStore.account?.id) {
+                const res = await pocketBaseManager.addBoxer(DbConverter.toDbBoxer(boxer.attributes))
+                boxer = DbConverter.toBoxer(res)
+
+                fightCardStore.boxers.push(boxer)
+                
+                return boxer
+            }
+          } catch (error: any) {
+            if (error.response?.status === 400) {
+              alert('Impossible to save the boxer. Please check licence number');
+            } else {
+              alert('Impossible to save the boxer.');
+            }
+          }
     },
     async clear() {
         if (userStore.account?.id) {
