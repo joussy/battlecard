@@ -42,16 +42,26 @@ function loadUiStore() {
     } else {
         console.debug("no store available ... ")
     }
+    listenWindowThemeChanges()
     uiStore.restored = true
 }
 
+function listenWindowThemeChanges() {
+    window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", (e: MediaQueryListEvent) => {
+        if (uiStore.theme != "auto") {
+            return
+        }
+        document.documentElement.setAttribute("data-bs-theme", e.matches ? "dark" : "light")
+    })
+}
+
 watchEffect(() => {
-    let theme = uiStore.theme == "dark" ? "dark" : "light"
-    const htmlElement = document.documentElement
+    let theme = uiStore.theme
     if (uiStore.theme == "auto") {
         theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"
     }
-    htmlElement.setAttribute("data-bs-theme", theme)
+
+    document.documentElement.setAttribute("data-bs-theme", theme)
 })
 
 watchEffect(() => {
