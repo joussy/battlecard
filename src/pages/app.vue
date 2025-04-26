@@ -31,6 +31,7 @@ export default defineComponent({
             () => [userStore.account],
             async () => {
                 if (userStore.account == null) {
+                    uiStore.currentTournamentId = null
                     this.$router.push("settings")
                 }
                 await fightService.loadFightStore()
@@ -42,7 +43,7 @@ export default defineComponent({
         )
         watch(
             () => [uiStore.currentTournamentId],
-            async () => {
+            () => {
                 if (userStore.account && uiStore.currentTournamentId == null) {
                     this.$router.push("tournaments")
                 }

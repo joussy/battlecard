@@ -30,7 +30,7 @@
                         for="name"
                         class="form-label"
                     >
-                        Last Name
+                        Name
                     </label>
                     <input
                         v-model="name"

@@ -35,7 +35,7 @@
             <div>Tournament</div>
         </router-link>
         <router-link
-            v-if="userStore.account && uiStore.currentTournamentId"
+            v-if="userStore.account && fightStore.currentTournament"
             :to="{ name: 'selector' }"
             class="nav-link text-center"
             :class="{ active: $route.path.startsWith('/selector') }"
@@ -47,7 +47,7 @@
             <div>Selector</div>
         </router-link>
         <router-link
-            v-if="userStore.account && uiStore.currentTournamentId"
+            v-if="userStore.account && fightStore.currentTournament"
             :to="{ name: 'card' }"
             class="nav-link text-center position-relative"
             active-class="active"
@@ -65,7 +65,6 @@
 </template>
 <script lang="ts">
 import Icon from "@/components/core/icon.component.vue"
-import { uiStore } from "@/composables/ui.composable"
 import { userStore } from "@/composables/user.composable"
 import fightService from "@/services/fight.service"
 
@@ -76,12 +75,12 @@ export default {
     data() {
         return {
             userStore,
-            uiStore,
+            fightStore: fightService.store(),
         }
     },
     methods: {
         getNbFights() {
-            return fightService.store().fightCard.length
+            return this.fightStore.fightCard.length
         },
         logout() {
             userStore.logout()

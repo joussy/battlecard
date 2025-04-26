@@ -101,6 +101,9 @@ export default {
     },
     async updateFightsOrder() {
         const fights = fightCardStore.fightCard
+        if (fights.length == 0) {
+            return
+        }
         fights.forEach((fight, index) => {
             fight.order = index + 1 // +1 because we want an order starting 1, not 0
         })
@@ -198,6 +201,9 @@ export default {
     deleteTournament(tournamentId: string) {
         pocketBaseManager.deleteTournament(tournamentId)
         fightCardStore.tournaments = fightCardStore.tournaments.filter((t) => t.id != tournamentId)
+        if (fightCardStore.currentTournament?.id == tournamentId) {
+            fightCardStore.currentTournament = null
+        }
     },
     async getAllBoxersAttributes(): Promise<Readonly<BoxerAttributes[]>> {
         const boxers = await pocketBaseManager.getAllBoxers()

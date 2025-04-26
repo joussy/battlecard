@@ -1,7 +1,30 @@
 <template>
     <div class="max-width-md">
         <div class="d-flex">
-            <h3 class="flex-grow-1"></h3>
+            <div class="flex-grow-1">
+                <div class="input-group">
+                    <span
+                        id="basic-addon1"
+                        class="input-group-text"
+                    >
+                        <Icon name="tournament"></Icon>
+                    </span>
+                    <select
+                        v-model="selectedTournamentId"
+                        class="form-select"
+                        aria-label="Default select example"
+                        @change="setTournament"
+                    >
+                        <option
+                            v-for="tournament in store.tournaments"
+                            :value="tournament.id"
+                            :selected="tournament.id == selectedTournamentId"
+                        >
+                            {{ tournament.name }}
+                        </option>
+                    </select>
+                </div>
+            </div>
             <button
                 class="btn btn-outline-danger mb-3 ms-2"
                 @click="clear()"
@@ -44,7 +67,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue"
+import { defineComponent, watch, watchEffect } from "vue"
 import { Gender } from "@/types/boxing.d"
 import { ModalityErrorType } from "@/types/modality.d"
 import BoxerTileComponent from "@/components/selector/boxer-tile.component.vue"
@@ -53,12 +76,14 @@ import BoxerAddOffcanvasComponent from "@/components/selector/add/boxer-add-offc
 import BoxerSelectorFiltersComponent from "@/components/selector/boxer-selector-filters.component.vue"
 import fightService from "@/services/fight.service"
 import { uiStore } from "@/composables/ui.composable"
+import IconComponent from "./core/icon.component.vue"
 
 export default defineComponent({
     components: {
         BoxerTileComponent: BoxerTileComponent,
         BoxerAddOffcanvasComponent: BoxerAddOffcanvasComponent,
         BoxerSelectorFiltersComponent: BoxerSelectorFiltersComponent,
+        Icon: IconComponent,
     },
     data() {
         return {
@@ -66,7 +91,14 @@ export default defineComponent({
             Gender: Gender,
             ModalityErrorType: ModalityErrorType,
             fightService: fightService,
+            selectedTournamentId: null as string | null,
         }
+    },
+    mounted() {
+        watchEffect(() => {
+            console.log(this.store.currentTournament)
+            this.selectedTournamentId = this.store.currentTournament?.id ?? null
+        })
     },
     methods: {
         async clear() {
@@ -87,6 +119,9 @@ export default defineComponent({
                 if (uiStore.hideFightersWithNoMatch && !b.opponents.some((o) => o.isEligible)) return false
                 return true
             })
+        },
+        setTournament() {
+            this.fightService.setCurrentTournament(this.selectedTournamentId)
         },
     },
 })

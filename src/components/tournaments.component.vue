@@ -60,6 +60,7 @@ export default defineComponent({
     methods: {
         setCurrentTournament(tournament: Tournament) {
             fightService.setCurrentTournament(tournament.id)
+            this.$router.push("selector")
         },
         deleteTournament(tournament: Tournament) {
             fightService.deleteTournament(tournament.id)

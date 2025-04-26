@@ -28,7 +28,7 @@
             </router-link>
         </div>
         <div
-            v-if="userStore.account != null"
+            v-if="userStore.account != null && fightStore.currentTournament != null"
             class="nav-item"
         >
             <router-link
@@ -40,7 +40,7 @@
             </router-link>
         </div>
         <div
-            v-if="userStore.account != null"
+            v-if="userStore.account != null && fightStore.currentTournament != null"
             class="nav-item"
         >
             <router-link
@@ -103,6 +103,7 @@ export default {
     data() {
         return {
             userStore,
+            fightStore: fightService.store(),
         }
     },
     methods: {
