@@ -197,7 +197,6 @@ export default {
             Sortable.create(tbody, {
                 animation: 150,
                 onEnd: async (evt: { oldIndex?: number; newIndex?: number }) => {
-                    console.log(evt)
                     if (evt?.oldIndex !== undefined && evt?.newIndex !== undefined) {
                         await fightService.moveFight(this.fightCard[evt.oldIndex].id, evt.newIndex)
                     }

@@ -96,7 +96,6 @@ export default defineComponent({
     },
     mounted() {
         watchEffect(() => {
-            console.log(this.store.currentTournament)
             this.selectedTournamentId = this.store.currentTournament?.id ?? null
         })
     },
