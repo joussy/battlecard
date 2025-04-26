@@ -1,6 +1,7 @@
 <template>
     <div
         id="boxerAddOffcanvasNavbar"
+        ref="offcanvas"
         class="offcanvas offcanvas-end"
         tabindex="-1"
         aria-labelledby="boxerAddOffcanvasNavbarLabel"
@@ -10,7 +11,7 @@
                 id="boxerAddOffcanvasNavbarLabel"
                 class="offcanvas-title"
             >
-                Add a new boxer
+                Add a boxer
             </h5>
             <button
                 type="button"
@@ -20,6 +21,29 @@
             ></button>
         </div>
         <div class="offcanvas-body">
+            <div class="bg-body-tertiary rounded">
+                <ul class="nav nav-pills nav-fill mb-3">
+                    <li class="nav-item">
+                        <a
+                            class="nav-link"
+                            aria-current="page"
+                            href="#"
+                            :class="{ active: displayMode == 'search' }"
+                            @click="displayMode = 'search'"
+                            >Import</a
+                        >
+                    </li>
+                    <li class="nav-item">
+                        <a
+                            class="nav-link"
+                            href="#"
+                            :class="{ active: displayMode == 'create' }"
+                            @click="displayMode = 'create'"
+                            >Create</a
+                        >
+                    </li>
+                </ul>
+            </div>
             <div v-if="displayMode == 'search'">
                 <BoxerSearchComponent @boxer-add="closeModal()"></BoxerSearchComponent>
                 <div class="mt-2 text-center">
@@ -59,9 +83,20 @@ export default defineComponent({
             displayMode: "search" as "search" | "create",
         }
     },
+    mounted() {
+        const offcanvasRef = this.$refs.offcanvas as HTMLElement
+        offcanvasRef.addEventListener("hidden.bs.offcanvas", (event) => {
+            this.clear()
+        })
+        this.clear()
+    },
     methods: {
         closeModal() {
+            console.log("ehho")
             closeModal("#boxerAddOffcanvasNavbar")
+        },
+        clear() {
+            this.displayMode = "search"
         },
     },
 })
