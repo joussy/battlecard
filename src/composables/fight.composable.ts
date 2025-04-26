@@ -46,10 +46,11 @@ export default {
 
         fightCardStore.boxers.push(boxer)
     },
-    async addTournament(tournament: Tournament) {
+    async addTournament(tournament: Tournament): Promise<Tournament> {
         const res = await pocketBaseManager.addTournament(DbConverter.toDbTournament(tournament))
         tournament = DbConverter.toTournament(res)
         fightCardStore.tournaments.push(tournament)
+        return tournament
     },
     async removeBoxersFromTournament() {
         if (fightCardStore.currentTournament) {

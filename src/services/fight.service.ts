@@ -149,7 +149,8 @@ export class FightService {
     }
 
     async addTournament(tournament: Tournament) {
-        await fightCardStore.addTournament(tournament)
+        tournament = await fightCardStore.addTournament(tournament)
+        this.setCurrentTournament(tournament.id)
     }
 
     async importFromApiByIds(csv: string) {
@@ -228,6 +229,8 @@ export class FightService {
     }
 
     async setCurrentTournament(tournamentId: string | null) {
+        const tournaments = fightCardStore.store.tournaments
+        tournamentId = tournaments.length == 1 ? tournaments[0].id : tournamentId
         uiStore.setCurrentTournament(tournamentId)
         if (fightCardStore.store.currentTournament != tournamentId) {
             fightCardStore.setCurrentTournament(tournamentId)
