@@ -22,11 +22,16 @@ export class ApiService {
             return null
         }
     }
-    static async downloadFightCard(fileType: FileType, fightCard: readonly Fight[], modality: IModality) {
+    static async downloadFightCard(
+        fileType: FileType,
+        fightCard: readonly Fight[],
+        modality: IModality,
+        tournamentId: string
+    ) {
         const cardExtraInfo = fightCard.map((f) => ApiConverter.ToFightCardExtraInfo(f, modality))
         await postAndDownload(
             `${import.meta.env.VITE_SERVER_URL}/api/printCard`,
-            { fileType, cardExtraInfo },
+            { fileType, cardExtraInfo, tournamentId },
             `fight-card.${fileType}`,
             {
                 Authorization: userStore.getAccountOrThrow().authToken ?? "",
