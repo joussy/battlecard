@@ -20,7 +20,22 @@
             ></button>
         </div>
         <div class="offcanvas-body">
-            <BoxerAddFormComponent @boxer-add="closeModal()"></BoxerAddFormComponent>
+            <div v-if="displayMode == 'search'">
+                <BoxerSearchComponent @boxer-add="closeModal()"></BoxerSearchComponent>
+                <div class="mt-2 text-center">
+                    <div class="mb-2"><i> Cannot find what you want ? </i></div>
+                    <button
+                        class="btn btn-sm btn-light"
+                        @click="displayMode = 'create'"
+                    >
+                        <i class="bi bi-person-add me-1"></i>Create one
+                    </button>
+                </div>
+            </div>
+            <BoxerAddFormComponent
+                v-if="displayMode == 'create'"
+                @boxer-add="closeModal()"
+            ></BoxerAddFormComponent>
         </div>
     </div>
 </template>
@@ -30,23 +45,23 @@ import { defineComponent } from "vue"
 
 import { uiStore } from "@/composables/ui.composable"
 import BoxerAddFormComponent from "./boxer-add-form.component.vue"
-import bootstrap from "@/utils/bootstrap.singleton"
+import { closeModal } from "@/utils/ui.utils"
+import BoxerSearchComponent from "./boxer-search.component.vue"
 
 export default defineComponent({
     components: {
         BoxerAddFormComponent,
+        BoxerSearchComponent,
     },
     data() {
         return {
             uiStore,
+            displayMode: "search" as "search" | "create",
         }
     },
     methods: {
         closeModal() {
-            const bsOffcanvas = bootstrap.getInstance().Offcanvas.getInstance("#boxerAddOffcanvasNavbar")
-            if (bsOffcanvas) {
-                bsOffcanvas.hide()
-            }
+            closeModal("#boxerAddOffcanvasNavbar")
         },
     },
 })

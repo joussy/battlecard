@@ -1,5 +1,5 @@
 import PocketBase from "pocketbase"
-import { DbBoxer, DbFight, TypedPocketBase } from "@/types/db"
+import { DbBoxer, DbFight, DbTournament, DbTournament_Boxer, TypedPocketBase } from "@/types/db"
 import { userStore } from "@/composables/user.composable"
 
 const pocketBase = (
@@ -24,33 +24,89 @@ export class PocketBaseManager {
         }
         await batch.send()
     }
-    async getFights(): Promise<DbFight[]> {
+    async getFights(tournamentId: string): Promise<DbFight[]> {
         return await pocketBase.collection("fight").getFullList({
             sort: "order",
+            filter: `tournamentId = '${tournamentId}'`,
         })
     }
+    async getTournaments(): Promise<DbTournament[]> {
+        return await pocketBase.collection("tournament").getFullList()
+    }
     async addFight(fight: DbFight): Promise<DbFight> {
-        fight.userId = userStore.account?.id
         fight.id = ""
         return await pocketBase.collection("fight").create(fight)
     }
-    async deleteBoxers(ids: string[]) {
-        if (ids.length == 0) {
+    async deleteBoxersFromTournament(boxerIds: string[], tournamentId: string) {
+        if (boxerIds.length == 0) {
             return
         }
+
+        const tbs = (
+            (await pocketBase.collection("tournament_boxer").getFullList({
+                filter: `tournamentId = '${tournamentId}'`,
+            })) as DbTournament_Boxer[]
+        ).filter((tbs) => tbs.id)
+
         const batch = pocketBase.createBatch()
-        for (const id of ids) {
-            batch.collection("boxer").delete(id)
+        for (const tb of tbs) {
+            batch.collection("tournament_boxer").delete(tb.id)
         }
         await batch.send()
     }
     async getBoxers(): Promise<DbBoxer[]> {
         return await pocketBase.collection("boxer").getFullList()
     }
+    async getBoxersForTournament(tournamentId: string): Promise<DbBoxer[]> {
+        const ret = await pocketBase.collection("tournament_boxer").getFullList({
+            filter: `tournamentId = '${tournamentId}'`,
+            expand: "boxerId",
+        })
+        const boxers = ret.map((r: DbTournament_Boxer) => r.expand.boxerId)
+        return boxers
+    }
+
     async addBoxer(boxer: DbBoxer): Promise<DbBoxer> {
-        boxer.userId = userStore.account?.id
+        boxer.userId = userStore.getAccountOrThrow().id
         boxer.id = ""
         return await pocketBase.collection("boxer").create(boxer)
+    }
+    getBoxer(boxerId: string): Promise<DbBoxer> {
+        return pocketBase.collection("boxer").getOne(boxerId)
+    }
+
+    async addTournament(tournament: DbTournament): Promise<DbTournament> {
+        tournament.userId = userStore.getAccountOrThrow().id
+        tournament.id = ""
+        return await pocketBase.collection("tournament").create(tournament)
+    }
+
+    async addBoxerToTournament(boxerId: string, tournamentId: string): Promise<DbTournament_Boxer> {
+        return await pocketBase.collection("tournament_boxer").create({ boxerId, tournamentId } as DbTournament_Boxer)
+    }
+    async deleteTournament(tournamentId: string) {
+        const tbs = (await pocketBase.collection("tournament_boxer").getFullList({
+            filter: `tournamentId = '${tournamentId}'`,
+            fields: "id",
+        })) as DbTournament_Boxer[]
+        const fights = (await pocketBase.collection("fight").getFullList({
+            filter: `tournamentId = '${tournamentId}'`,
+            fields: "id",
+        })) as DbFight[]
+
+        const batch = pocketBase.createBatch()
+        for (const fight of fights) {
+            batch.collection("fight").delete(fight.id)
+        }
+        for (const tb of tbs) {
+            batch.collection("tournament_boxer").delete(tb.id)
+        }
+        batch.collection("tournament").delete(tournamentId)
+        await batch.send()
+    }
+
+    getAllBoxers(): Promise<DbBoxer[]> {
+        return pocketBase.collection("boxer").getFullList() as Promise<DbBoxer[]>
     }
 }
 const instance = new PocketBaseManager()

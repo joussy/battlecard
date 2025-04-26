@@ -18,6 +18,7 @@ export interface BoxerAttributes {
     nbFights: number
     gender: Gender
     license: string
+    userId: string
 }
 
 export interface Opponent {
@@ -37,6 +38,7 @@ export interface Fight {
     modalityErrors: Readonly<ModalityError[]>
     id: string
     order: number
+    tournamentId: string
 }
 
 export interface BoxingData {
@@ -66,4 +68,10 @@ export interface FightStore {
     getBoxerDisplayName(boxer: Boxer): string
     removeFromFightCardByIndex(index: number): void
     getOpponentModalityErrors(boxer: Boxer, opponent: Boxer): ModalityError[]
+}
+
+export interface Tournament {
+    id: string
+    name: string
+    userId: string
 }

@@ -3,7 +3,6 @@
         <div
             class="card-body"
             role="tab"
-            @click="toggleCollapse(boxer)"
         >
             <div class="d-flex justify-content-between">
                 <div>
@@ -75,11 +74,6 @@ export default defineComponent({
         }
     },
     methods: {
-        toggleCollapse(boxer: Readonly<Boxer>): void {
-            const isCollapsed = uiStore.boxers.get(boxer.attributes.id)?.collapsed
-            uiStore.collapseAll()
-            uiStore.collapse(boxer.attributes.id, !isCollapsed)
-        },
         boxerEdit(): void {
             this.$emit("boxer-edit")
         },

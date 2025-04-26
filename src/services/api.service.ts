@@ -10,7 +10,7 @@ export class ApiService {
         try {
             const response = await fetch(`${import.meta.env.VITE_SERVER_URL}/api/getBoxerById?id=${id}`, {
                 headers: {
-                    Authorization: userStore.account?.authToken ?? "",
+                    Authorization: userStore.getAccountOrThrow().authToken ?? "",
                 },
             })
             if (!response.ok) {
@@ -29,7 +29,7 @@ export class ApiService {
             { fileType, cardExtraInfo },
             `fight-card.${fileType}`,
             {
-                Authorization: userStore.account?.authToken ?? "",
+                Authorization: userStore.getAccountOrThrow().authToken ?? "",
             }
         )
     }

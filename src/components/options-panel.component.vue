@@ -105,7 +105,10 @@
                 </div>
             </div>
         </div>
-        <div class="card mb-3">
+        <div
+            v-if="userStore.account != null"
+            class="card mb-3"
+        >
             <div class="card-header"><i class="bi bi-clipboard me-2" />Import from clibpoard</div>
             <div class="card-body">
                 <p class="card-text">
