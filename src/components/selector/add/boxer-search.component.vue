@@ -46,10 +46,6 @@
     >
         <div>No results found.</div>
     </div>
-    <div class="mt-2 text-center">
-        <div class="mb-2"><i> Cannot find what you want ? </i></div>
-        <button class="btn btn-sm btn-light"><i class="bi bi-person-add me-1"></i>Create one</button>
-    </div>
 </template>
 
 <script lang="ts">

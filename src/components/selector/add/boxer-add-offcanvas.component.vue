@@ -20,10 +20,20 @@
             ></button>
         </div>
         <div class="offcanvas-body">
-            <BoxerSearchComponent @boxer-add="closeModal()"></BoxerSearchComponent>
-
+            <div v-if="displayMode == 'search'">
+                <BoxerSearchComponent @boxer-add="closeModal()"></BoxerSearchComponent>
+                <div class="mt-2 text-center">
+                    <div class="mb-2"><i> Cannot find what you want ? </i></div>
+                    <button
+                        class="btn btn-sm btn-light"
+                        @click="displayMode = 'create'"
+                    >
+                        <i class="bi bi-person-add me-1"></i>Create one
+                    </button>
+                </div>
+            </div>
             <BoxerAddFormComponent
-                v-if="false"
+                v-if="displayMode == 'create'"
                 @boxer-add="closeModal()"
             ></BoxerAddFormComponent>
         </div>
@@ -46,6 +56,7 @@ export default defineComponent({
     data() {
         return {
             uiStore,
+            displayMode: "search" as "search" | "create",
         }
     },
     methods: {
