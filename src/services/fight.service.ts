@@ -7,6 +7,7 @@ import fightCardStore from "@/composables/fight.composable"
 import { generateRandomId } from "@/utils/string.utils"
 import { readonly } from "vue"
 import { uiStore } from "@/composables/ui.composable"
+import { userStore } from "@/composables/user.composable"
 
 export class FightService {
     async loadFightStore() {
@@ -154,6 +155,9 @@ export class FightService {
     }
 
     async importFromApiByIds(csv: string) {
+        if (userStore.account?.id) {
+            return
+        }
         const parsedCsv = parseCsv(csv, {
             columns: ["license", "weight"],
             skip_empty_lines: true,
@@ -174,12 +178,16 @@ export class FightService {
                     category: "fakeCat",
                     categoryShortText: "fakeCatShort",
                     gender: apiBoxer.gender == "male" ? Gender.MALE : Gender.FEMALE,
+                    userId: userStore.account!.id,
                 })
             }
         }
     }
 
     async importFromCsv(csv: string) {
+        if (!userStore.account?.id) {
+            return
+        }
         const parsedCsv = parseCsv(csv, {
             columns: ["lastName", "firstName", "nbFights", "gender", "weight", "club", "birthDate", "license"],
             skip_empty_lines: true,
@@ -198,6 +206,7 @@ export class FightService {
                 weight: parseFloat(entry.weight),
                 gender: entry.gender == "F" ? Gender.FEMALE : Gender.MALE,
                 license: entry.license,
+                userId: userStore.account.id,
             }
             await this.addBoxer(boxerAttributes)
         }

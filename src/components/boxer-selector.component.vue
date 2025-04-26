@@ -67,7 +67,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, watch, watchEffect } from "vue"
+import { defineComponent, watchEffect } from "vue"
 import { Gender } from "@/types/boxing.d"
 import { ModalityErrorType } from "@/types/modality.d"
 import BoxerTileComponent from "@/components/selector/boxer-tile.component.vue"

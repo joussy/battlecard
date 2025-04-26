@@ -18,6 +18,7 @@ export interface BoxerAttributes {
     nbFights: number
     gender: Gender
     license: string
+    userId: string
 }
 
 export interface Opponent {

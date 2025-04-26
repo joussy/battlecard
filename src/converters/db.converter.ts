@@ -13,6 +13,7 @@ export default class DbConverter {
             nbFights: boxerAttributes.nbFights,
             weight: boxerAttributes.weight,
             id: boxerAttributes.id,
+            userId: boxerAttributes.userId,
         }
     }
 
@@ -36,6 +37,7 @@ export default class DbConverter {
             category: "fakeCat",
             categoryShortText: "fakeShortCat",
             id: boxer.id,
+            userId: boxer.userId,
         }
     }
 

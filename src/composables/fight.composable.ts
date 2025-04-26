@@ -3,7 +3,6 @@ import { Boxer, Fight, Tournament, Opponent, BoxerAttributes } from "@/types/box
 import { BeaModality } from "@/fightModality/BeaModality"
 import pocketBaseManager from "@/managers/pocketbase.manager"
 import DbConverter from "@/converters/db.converter"
-import { userStore } from "./user.composable"
 import { ModalityError } from "@/types/modality"
 import { generateRandomId } from "@/utils/string.utils"
 import { IModality } from "@/fightModality/IModality"
@@ -77,9 +76,7 @@ export default {
             tournamentId: fightCardStore.currentTournament.id,
         }
         if (fightCardStore.currentTournament?.id != null) {
-            const ret = await pocketBaseManager.addFight(
-                DbConverter.toDbFight(fight, fightCardStore.currentTournament.id)
-            )
+            const ret = await pocketBaseManager.addFight(DbConverter.toDbFight(fight))
             fight = DbConverter.toFight(ret, boxer1, boxer2)
         }
 
@@ -107,9 +104,7 @@ export default {
         fights.forEach((fight, index) => {
             fight.order = index + 1 // +1 because we want an order starting 1, not 0
         })
-        await pocketBaseManager.updateFights(
-            fights.map((f) => DbConverter.toDbFight(f, userStore.getAccountOrThrow().id))
-        )
+        await pocketBaseManager.updateFights(fights.map((f) => DbConverter.toDbFight(f)))
     },
     async updateFightOrder(fightId: string, newIndex: number) {
         if (newIndex < 0) {

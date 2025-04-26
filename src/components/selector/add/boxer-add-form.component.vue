@@ -205,6 +205,7 @@ import { configure, defineRule, GenericObject, useForm } from "vee-validate"
 import { BoxerAttributes, Gender } from "@/types/boxing.d"
 import fightService from "@/services/fight.service"
 import { generateRandomId } from "@/utils/string.utils"
+import { userStore } from "@/composables/user.composable"
 
 configure({
     validateOnInput: true,
@@ -296,6 +297,7 @@ export default defineComponent({
                 license: form.license,
                 nbFights: 0,
                 id: generateRandomId(),
+                userId: userStore.getAccountOrThrow().id,
             }
             await fightService.addBoxer(boxerAttributes)
             emit("boxer-add", boxerAttributes)
