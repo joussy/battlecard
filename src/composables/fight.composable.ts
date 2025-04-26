@@ -147,7 +147,7 @@ export default {
             const boxer2 = fight.boxer2
             fight.boxer1 = boxer2
             fight.boxer2 = boxer1
-            await pocketBaseManager.updateFights([DbConverter.toDbFight(fight, userStore.getAccountOrThrow().id)])
+            await pocketBaseManager.updateFights([DbConverter.toDbFight(fight)])
         }
     },
     setModalityErrors(fightId: string, modalityErrors: ModalityError[]) {

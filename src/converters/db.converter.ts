@@ -66,12 +66,12 @@ export default class DbConverter {
         }
     }
 
-    static toDbFight(fight: Fight, tournamentId: string): DbFight {
+    static toDbFight(fight: Fight): DbFight {
         return {
             id: fight.id,
             boxer1Id: fight.boxer1.attributes.id,
             boxer2Id: fight.boxer2.attributes.id,
-            tournamentId: tournamentId,
+            tournamentId: fight.tournamentId,
             order: fight.order,
         }
     }
