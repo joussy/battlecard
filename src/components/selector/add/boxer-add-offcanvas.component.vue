@@ -30,7 +30,7 @@
                             href="#"
                             :class="{ active: displayMode == 'search' }"
                             @click="displayMode = 'search'"
-                            >Import</a
+                            >Search</a
                         >
                     </li>
                     <li class="nav-item">
@@ -40,6 +40,16 @@
                             :class="{ active: displayMode == 'create' }"
                             @click="displayMode = 'create'"
                             >Create</a
+                        >
+                    </li>
+                    <li class="nav-item">
+                        <a
+                            class="nav-link"
+                            aria-current="page"
+                            href="#"
+                            :class="{ active: displayMode == 'import' }"
+                            @click="displayMode = 'import'"
+                            >Import</a
                         >
                     </li>
                 </ul>
@@ -56,6 +66,10 @@
                     </button>
                 </div>
             </div>
+            <BoxerImportComponent
+                v-if="displayMode == 'import'"
+                @boxer-add="closeModal()"
+            ></BoxerImportComponent>
             <BoxerAddFormComponent
                 v-if="displayMode == 'create'"
                 @boxer-add="closeModal()"
@@ -71,16 +85,18 @@ import { uiStore } from "@/composables/ui.composable"
 import BoxerAddFormComponent from "./boxer-add-form.component.vue"
 import { closeModal } from "@/utils/ui.utils"
 import BoxerSearchComponent from "./boxer-search.component.vue"
+import BoxerImportComponent from "./boxer-import.component.vue"
 
 export default defineComponent({
     components: {
         BoxerAddFormComponent,
         BoxerSearchComponent,
+        BoxerImportComponent,
     },
     data() {
         return {
             uiStore,
-            displayMode: "search" as "search" | "create",
+            displayMode: "search" as "search" | "create" | "import",
         }
     },
     mounted() {

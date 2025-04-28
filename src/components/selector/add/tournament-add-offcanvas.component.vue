@@ -20,7 +20,6 @@
             ></button>
         </div>
         <div class="offcanvas-body">
-            <!-- <BoxerAddFormComponent @boxer-add="closeModal()"></BoxerAddFormComponent> -->
             <form
                 class=""
                 @submit="onSubmit"
