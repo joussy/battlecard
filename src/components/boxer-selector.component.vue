@@ -12,7 +12,7 @@
                     <select
                         v-model="selectedTournamentId"
                         class="form-select"
-                        aria-label="Default select example"
+                        aria-label="Choose an event"
                         @change="setTournament"
                     >
                         <option

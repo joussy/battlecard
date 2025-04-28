@@ -184,14 +184,14 @@ export class FightService {
         }
     }
 
-    async importFromCsv(csv: string) {
+    async importFromCsv(csv: string, delimiter: string) {
         if (!userStore.account?.id) {
             return
         }
         const parsedCsv = parseCsv(csv, {
             columns: ["lastName", "firstName", "nbFights", "gender", "weight", "club", "birthDate", "license"],
             skip_empty_lines: true,
-            delimiter: "\t",
+            delimiter,
         })
         for (const [, entry] of parsedCsv.entries()) {
             const boxerAttributes = {
