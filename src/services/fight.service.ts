@@ -136,13 +136,13 @@ export class FightService {
     }
 
     async addBoxer(boxerAttributes: BoxerAttributes) {
-        let boxer: Boxer = {
+        let boxer: Boxer | null = {
             attributes: boxerAttributes,
             opponents: [],
         }
         boxer = await fightCardStore.addBoxer(boxer)
 
-        if (boxer.attributes.id != "") {
+        if (boxer != null) {
             fightCardStore.setBoxerCategory(
                 boxer.attributes.id,
                 fightCardStore.store.modality.getCategoryName(boxer.attributes, false),
@@ -150,6 +150,8 @@ export class FightService {
             )
             this.computeBoxersOpponents()
         }
+
+        return boxer;
     }
 
     async addTournament(tournament: Tournament) {
