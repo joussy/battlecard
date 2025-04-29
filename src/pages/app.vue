@@ -12,7 +12,7 @@ import MenuTopComponent from "@/components/menu/menu-top.component.vue"
 import MenuBottomComponent from "@/components/menu/menu-bottom.component.vue"
 import fightService from "@/services/fight.service"
 import { loadUserStore, userStore } from "@/composables/user.composable"
-import { loadUiStore } from "@/composables/ui.composable"
+import { loadUiStore, uiStore } from "@/composables/ui.composable"
 
 export default defineComponent({
     components: {
@@ -28,12 +28,25 @@ export default defineComponent({
         loadUiStore()
         loadUserStore()
         watch(
-            () => userStore.account,
+            () => [userStore.account],
             async () => {
+                if (userStore.account == null) {
+                    uiStore.currentTournamentId = null
+                    this.$router.push("settings")
+                }
                 await fightService.loadFightStore()
+                await fightService.setCurrentTournament(uiStore.currentTournamentId)
             },
             {
                 immediate: true,
+            }
+        )
+        watch(
+            () => [uiStore.currentTournamentId],
+            () => {
+                if (userStore.account && uiStore.currentTournamentId == null) {
+                    this.$router.push("tournaments")
+                }
             }
         )
     },

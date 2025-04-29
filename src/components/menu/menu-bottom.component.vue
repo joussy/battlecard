@@ -23,6 +23,19 @@
             <div>Settings</div>
         </router-link>
         <router-link
+            v-if="userStore.account != null"
+            :to="{ name: 'tournaments' }"
+            class="nav-link text-center"
+            :class="{ active: $route.path.startsWith('/tournaments') }"
+        >
+            <Icon
+                name="tournament"
+                :style="{ height: '38px' }"
+            ></Icon>
+            <div>Tournament</div>
+        </router-link>
+        <router-link
+            v-if="userStore.account && fightStore.currentTournament"
             :to="{ name: 'selector' }"
             class="nav-link text-center"
             :class="{ active: $route.path.startsWith('/selector') }"
@@ -34,6 +47,7 @@
             <div>Selector</div>
         </router-link>
         <router-link
+            v-if="userStore.account && fightStore.currentTournament"
             :to="{ name: 'card' }"
             class="nav-link text-center position-relative"
             active-class="active"
@@ -46,14 +60,6 @@
                 class="svg-2 mt-1"
             ></Icon>
             <div>Card</div>
-        </router-link>
-        <router-link
-            :to="{ name: 'metrics' }"
-            class="nav-link text-center"
-            active-class="active"
-        >
-            <i class="bi bi-bar-chart-fill fs-2"></i>
-            <div>Metrics</div>
         </router-link>
     </nav>
 </template>
@@ -69,11 +75,16 @@ export default {
     data() {
         return {
             userStore,
+            fightStore: fightService.store(),
         }
     },
     methods: {
         getNbFights() {
-            return fightService.store().fightCard.length
+            return this.fightStore.fightCard.length
+        },
+        logout() {
+            userStore.logout()
+            this.$router.push("settings")
         },
     },
 }

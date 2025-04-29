@@ -1,29 +1,14 @@
 import { reactive, watchEffect } from "vue"
-import { BoxerUi, UiStorage, UiTheme } from "@/types/ui"
+import { UiStorage, UiTheme } from "@/types/ui"
 
 const uiStore = reactive({
     theme: "auto" as UiTheme,
     hideNonMatchableOpponents: false,
     hideFightersWithNoMatch: false,
     restored: false as boolean,
-    boxers: new Map<string, BoxerUi>(),
-    createOrGetBoxerUi(boxerId: string): BoxerUi {
-        if (!this.boxers.has(boxerId)) {
-            this.boxers.set(boxerId, { collapsed: true })
-        }
-        return this.boxers.get(boxerId)!
-    },
-    collapse(boxerId: string, collapsed?: boolean | null) {
-        const boxer = this.createOrGetBoxerUi(boxerId)
-        if (collapsed == null) {
-            collapsed = !boxer.collapsed
-        }
-        boxer.collapsed = collapsed
-    },
-    collapseAll() {
-        for (const boxer of this.boxers) {
-            boxer[1].collapsed = true
-        }
+    currentTournamentId: null as string | null,
+    setCurrentTournament(tournamentId: string | null) {
+        this.currentTournamentId = tournamentId
     },
 })
 
@@ -36,22 +21,32 @@ function loadUiStore() {
         uiStore.theme = localStorageData.theme
         uiStore.hideNonMatchableOpponents = localStorageData.hideNonMatchableOpponents
         uiStore.hideFightersWithNoMatch = localStorageData.hideFightersWithNoMatch
-        uiStore.boxers = new Map(localStorageData.boxers)
+        uiStore.currentTournamentId = localStorageData.currentTournamentId
 
         console.debug("store loaded")
     } else {
         console.debug("no store available ... ")
     }
+    listenWindowThemeChanges()
     uiStore.restored = true
 }
 
+function listenWindowThemeChanges() {
+    window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", (e: MediaQueryListEvent) => {
+        if (uiStore.theme != "auto") {
+            return
+        }
+        document.documentElement.setAttribute("data-bs-theme", e.matches ? "dark" : "light")
+    })
+}
+
 watchEffect(() => {
-    let theme = uiStore.theme == "dark" ? "dark" : "light"
-    const htmlElement = document.documentElement
+    let theme = uiStore.theme
     if (uiStore.theme == "auto") {
         theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"
     }
-    htmlElement.setAttribute("data-bs-theme", theme)
+
+    document.documentElement.setAttribute("data-bs-theme", theme)
 })
 
 watchEffect(() => {
@@ -63,9 +58,9 @@ watchEffect(() => {
         theme: uiStore.theme,
         hideNonMatchableOpponents: uiStore.hideNonMatchableOpponents,
         hideFightersWithNoMatch: uiStore.hideFightersWithNoMatch,
-        boxers: Array.from(uiStore.boxers),
+        currentTournamentId: uiStore.currentTournamentId,
     }
     localStorage.setItem("uiStore", JSON.stringify(localStorageData))
 })
-// const readOnlyUiStore = readonly(uiStore)
+
 export { loadUiStore, uiStore as uiStore }

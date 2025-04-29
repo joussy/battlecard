@@ -1,4 +1,4 @@
-import { Boxer, BoxerAttributes, Fight, Gender, Opponent } from "@/types/boxing.d"
+import { Boxer, BoxerAttributes, Fight, Gender, Opponent, Tournament } from "@/types/boxing.d"
 import { ModalityError, ModalityErrorType } from "@/types/modality.d"
 import { stringify as stringifyCsv, parse as parseCsv } from "csv/browser/esm/sync"
 import { format, parse } from "date-fns"
@@ -6,6 +6,8 @@ import { ApiService } from "@/services/api.service"
 import fightCardStore from "@/composables/fight.composable"
 import { generateRandomId } from "@/utils/string.utils"
 import { readonly } from "vue"
+import { uiStore } from "@/composables/ui.composable"
+import { userStore } from "@/composables/user.composable"
 
 export class FightService {
     async loadFightStore() {
@@ -27,8 +29,8 @@ export class FightService {
     store() {
         return readonly(fightCardStore.store)
     }
-    async clear() {
-        await fightCardStore.clear()
+    async removeBoxersFromTournament() {
+        await fightCardStore.removeBoxersFromTournament()
     }
     getNbFightsForBoxer(boxer: Boxer): number {
         return fightCardStore.store.fightCard.filter(
@@ -150,7 +152,15 @@ export class FightService {
         }
     }
 
+    async addTournament(tournament: Tournament) {
+        tournament = await fightCardStore.addTournament(tournament)
+        this.setCurrentTournament(tournament.id)
+    }
+
     async importFromApiByIds(csv: string) {
+        if (userStore.account?.id) {
+            return
+        }
         const parsedCsv = parseCsv(csv, {
             columns: ["license", "weight"],
             skip_empty_lines: true,
@@ -171,16 +181,20 @@ export class FightService {
                     category: "fakeCat",
                     categoryShortText: "fakeCatShort",
                     gender: apiBoxer.gender == "male" ? Gender.MALE : Gender.FEMALE,
+                    userId: userStore.account!.id,
                 })
             }
         }
     }
 
-    async importFromCsv(csv: string) {
+    async importFromCsv(csv: string, delimiter: string) {
+        if (!userStore.account?.id) {
+            return
+        }
         const parsedCsv = parseCsv(csv, {
             columns: ["lastName", "firstName", "nbFights", "gender", "weight", "club", "birthDate", "license"],
             skip_empty_lines: true,
-            delimiter: "\t",
+            delimiter,
         })
         for (const [, entry] of parsedCsv.entries()) {
             const boxerAttributes = {
@@ -195,6 +209,7 @@ export class FightService {
                 weight: parseFloat(entry.weight),
                 gender: entry.gender == "F" ? Gender.FEMALE : Gender.MALE,
                 license: entry.license,
+                userId: userStore.account.id,
             }
             await this.addBoxer(boxerAttributes)
         }
@@ -223,6 +238,29 @@ export class FightService {
     }
     async switchFight(fightId: string) {
         await fightCardStore.switchFight(fightId)
+    }
+
+    async setCurrentTournament(tournamentId: string | null) {
+        const tournaments = fightCardStore.store.tournaments
+        tournamentId = tournaments.length == 1 ? tournaments[0].id : tournamentId
+        uiStore.setCurrentTournament(tournamentId)
+        if (fightCardStore.store.currentTournament != tournamentId) {
+            fightCardStore.setCurrentTournament(tournamentId)
+            await this.loadFightStore()
+        }
+    }
+    deleteTournament(tournamentId: string) {
+        fightCardStore.deleteTournament(tournamentId)
+    }
+    getAllBoxerAttributes(): Promise<Readonly<BoxerAttributes[]>> {
+        return fightCardStore.getAllBoxersAttributes()
+    }
+    async addBoxerToTournament(boxerId: string) {
+        const boxer = await fightCardStore.addBoxerToTournament(boxerId)
+        this.computeBoxersCategory()
+        this.computeBoxersOpponents()
+
+        return boxer
     }
 }
 

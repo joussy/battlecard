@@ -6,6 +6,7 @@ const pocketBase = import.meta.env.VITE_SERVER_URL ? new PocketBase(import.meta.
 const userStore = reactive({
     restored: false as boolean,
     account: null as null | UserAccount,
+    tournamentId: null as string | null,
     authenticationAvailable: pocketBase != null,
     async authenticate() {
         if (!pocketBase || pocketBase.authStore.isValid) return null
@@ -17,6 +18,11 @@ const userStore = reactive({
             await pocketBase.collection("users").authWithOAuth2({ provider: "google" })
         }
         updateAccount()
+    },
+    getAccountOrThrow(): UserAccount {
+        if (!userStore.account) throw "Cannot before action because the user is disconnected"
+
+        return this.account!
     },
     logout() {
         if (!pocketBase) return null
