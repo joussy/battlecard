@@ -24,9 +24,18 @@ export default {
     getFightById(id: string) {
         return fightCardStore.fightCard.find((x) => x.id == id)
     },
-    async addBoxer(boxer: Boxer) {
-        const res = await pocketBaseManager.addBoxer(DbConverter.toDbBoxer(boxer.attributes))
-        boxer = DbConverter.toBoxer(res)
+    async addOrUpdateBoxer(boxer: Boxer) {
+        if (boxer.attributes.id == "")
+        {
+            const res = await pocketBaseManager.addBoxer(DbConverter.toDbBoxer(boxer.attributes))
+            boxer = DbConverter.toBoxer(res)
+        }
+        else
+        {
+            const res = await pocketBaseManager.updateBoxer(DbConverter.toDbBoxer(boxer.attributes))
+            boxer = DbConverter.toBoxer(res)
+        }
+
 
         if (this.store.currentTournament) {
             await pocketBaseManager.addBoxerToTournament(boxer.attributes.id, this.store.currentTournament.id)

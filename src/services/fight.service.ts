@@ -140,7 +140,7 @@ export class FightService {
             attributes: boxerAttributes,
             opponents: [],
         }
-        boxer = await fightCardStore.addBoxer(boxer)
+        boxer = await fightCardStore.addOrUpdateBoxer(boxer)
         fightCardStore.setBoxerCategory(
             boxer.attributes.id,
             fightCardStore.store.modality.getCategoryName(boxer.attributes, false),

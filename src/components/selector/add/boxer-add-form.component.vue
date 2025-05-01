@@ -228,12 +228,12 @@ defineRule("weightRequired", (value: string) => {
     }
 
     // Normalize and parse
-    const normalized = value.replace(",", ".")
-    const parsed = parseFloat(normalized)
+    // const normalized = value.replace(",", ".")
+    // const parsed = parseFloat(normalized)
 
-    if (isNaN(parsed) || parsed < 1) {
-        return "The number must be greater than or equal to 1"
-    }
+    // if (isNaN(parsed) || parsed < 1) {
+    //     return "The number must be greater than or equal to 1"
+    // }
 
     return true
 })
@@ -253,8 +253,19 @@ export default defineComponent({
         },
     },
     emits: ["boxer-add"],
-    setup(_, { emit }) {
+    setup(properties, { emit }) {
         // Create the form
+        const initialValues = {
+            lastname: properties.boxer ? properties.boxer.lastName : "",
+            firstname: properties.boxer ? properties.boxer.firstName : "",
+            weight: properties.boxer ? properties.boxer.weight : "",
+            license: properties.boxer ? properties.boxer.license : "",
+            club: properties.boxer ? properties.boxer.club : "",
+            birthdate: properties.boxer ? properties.boxer.birthDate : "1990-09-21",
+            gender: properties.boxer ? Gender[properties.boxer.gender] : Gender[Gender.FEMALE],
+            id: properties.boxer ? properties.boxer.id : ""
+        }
+
         const { defineField, handleSubmit, errors } = useForm({
             validationSchema: {
                 lastname: "required",
@@ -262,18 +273,10 @@ export default defineComponent({
                 weight: "weightRequired",
                 license: "required",
                 club: "required",
-                gender: "genderRequired",
                 birthdate: "required",
+                gender: "genderRequired",
             },
-            initialValues: {
-                lastname: "lastnametest",
-                firstname: "firstnametest",
-                weight: "123",
-                license: "licensetest",
-                club: "clubtest",
-                birthdate: "1990-09-21",
-                gender: Gender[Gender.FEMALE],
-            },
+            initialValues
         })
 
         // Define fields
@@ -296,7 +299,7 @@ export default defineComponent({
                 categoryShortText: "",
                 license: form.license,
                 nbFights: 0,
-                id: generateRandomId(),
+                id: form.id,
                 userId: userStore.getAccountOrThrow().id,
             }
             await fightService.addBoxer(boxerAttributes)
@@ -318,6 +321,15 @@ export default defineComponent({
     },
     mounted() {
         this.clubsAutoCompleteList = fightService.getClubs()
+
+        // if (this.isEditMode) {
+        //     console.log(this.boxer?.firstName)
+        // }
+    },
+    computed: {     
+        // isEditMode() {
+        //     return !!this.boxer;
+        // }
     },
 })
 </script>

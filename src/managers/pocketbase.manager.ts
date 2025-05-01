@@ -71,6 +71,9 @@ export class PocketBaseManager {
         boxer.id = ""
         return await pocketBase.collection("boxer").create(boxer)
     }
+    async updateBoxer(boxer: DbBoxer): Promise<DbBoxer> {
+        return await pocketBase.collection("boxer").update(boxer.id, boxer)
+    }
     getBoxer(boxerId: string): Promise<DbBoxer> {
         return pocketBase.collection("boxer").getOne(boxerId)
     }
