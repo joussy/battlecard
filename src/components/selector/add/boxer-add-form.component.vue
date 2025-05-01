@@ -1,16 +1,27 @@
 <template>
-
-<!-- Toast container -->
-<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 9999">
-  <div id="errorToast" class="toast align-items-center text-white bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
-    <div class="d-flex">
-      <div class="toast-body">
-        Error while saving boxer
-      </div>
-      <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+    <!-- Toast container -->
+    <div
+        class="position-fixed bottom-0 end-0 p-3"
+        style="z-index: 9999"
+    >
+        <div
+            id="errorToast"
+            class="toast align-items-center text-white bg-danger border-0"
+            role="alert"
+            aria-live="assertive"
+            aria-atomic="true"
+        >
+            <div class="d-flex">
+                <div class="toast-body">Error while saving boxer</div>
+                <button
+                    type="button"
+                    class="btn-close btn-close-white me-2 m-auto"
+                    data-bs-dismiss="toast"
+                    aria-label="Close"
+                ></button>
+            </div>
+        </div>
     </div>
-  </div>
-</div>
 
     <form
         class=""
@@ -220,8 +231,7 @@ import fightService from "@/services/fight.service"
 import { generateRandomId } from "@/utils/string.utils"
 import { userStore } from "@/composables/user.composable"
 
-import { Toast } from 'bootstrap'
-
+import { Toast } from "bootstrap"
 
 configure({
     validateOnInput: true,
@@ -319,11 +329,10 @@ export default defineComponent({
 
             if (boxer != null) {
                 emit("boxer-add", boxerAttributes)
-            }
-            else {
-                const toastEl = document.getElementById('errorToast') as HTMLElement;
-                const toast = new Toast(toastEl);
-                toast.show();
+            } else {
+                const toastEl = document.getElementById("errorToast") as HTMLElement
+                const toast = new Toast(toastEl)
+                toast.show()
             }
         })
         return {
