@@ -105,27 +105,6 @@
                 </div>
             </div>
         </div>
-        <div
-            v-if="userStore.account?.apiEnabled"
-            class="card"
-        >
-            <div class="card-header"><i class="bi bi-globe me-2" />Import from API</div>
-            <div class="card-body">
-                <p class="card-text">
-                    <span>unique Id , Weight</span>
-                    <textarea
-                        v-model="apiClipboard"
-                        class="d-block w-100 mb-2"
-                    />
-                    <button
-                        class="btn btn-primary"
-                        @click="processApiImport()"
-                    >
-                        Import
-                    </button>
-                </p>
-            </div>
-        </div>
     </div>
 </template>
 <script lang="ts">
@@ -143,20 +122,10 @@ export default defineComponent({
             userStore,
             uiStore,
             Gender: Gender,
-            apiClipboard: `279687,50
-279688,53
-279689,52
-`,
         }
     },
     mounted() {},
     methods: {
-        async processApiImport() {
-            await fightService.importFromApiByIds(this.apiClipboard)
-        },
-        clearStore() {
-            localStorage.removeItem("store")
-        },
         setTheme(mode: UiTheme) {
             uiStore.theme = mode
         },

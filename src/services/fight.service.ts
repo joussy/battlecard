@@ -155,9 +155,6 @@ export class FightService {
     }
 
     async importFromApiByIds(csv: string) {
-        if (userStore.account?.id) {
-            return
-        }
         const parsedCsv = parseCsv(csv, {
             columns: ["license", "weight"],
             skip_empty_lines: true,
@@ -167,7 +164,7 @@ export class FightService {
             const apiBoxer = await ApiService.getBoxerById(entry.license)
             if (apiBoxer) {
                 await this.addBoxer({
-                    id: generateRandomId(),
+                    id: "",
                     license: apiBoxer.license,
                     birthDate: new Date(apiBoxer.birth_date),
                     club: apiBoxer.club,
