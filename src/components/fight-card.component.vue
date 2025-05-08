@@ -6,6 +6,7 @@
                 type="button"
                 class="btn btn-outline-success mb-3 ms-2"
                 :class="{ active: editionMode }"
+                :disabled="getNbFights() == 0 && !editionMode"
                 @click="editionMode = !editionMode"
             >
                 <i class="bi bi-pencil" />
@@ -78,6 +79,7 @@
         </div>
         <div class="border border-light-subtle rounded-3 p-1">
             <table
+                v-if="getNbFights() > 0"
                 ref="sortableTable"
                 class="table table-striped table-borderless mb-0"
             >
@@ -167,6 +169,22 @@
                     </tr>
                 </tbody>
             </table>
+            <div
+                v-if="getNbFights() == 0"
+                class="justify-content-center m-4 text-center"
+            >
+                <div class="mb-4"><i>Your fight card is empty</i></div>
+                <div>
+                    Setup the first fight using the
+                    <router-link
+                        :to="{ name: 'selector' }"
+                        class=""
+                        :class="{ active: $route.path.startsWith('/selector') }"
+                    >
+                        Selector
+                    </router-link>
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -242,6 +260,9 @@ export default {
                 fight.boxer2.attributes
             )
             return getFightDurationAsString(fightDuration.rounds, fightDuration.roundDurationAsSeconds)
+        },
+        getNbFights() {
+            return this.fightCard.length
         },
     },
 }

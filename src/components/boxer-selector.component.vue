@@ -63,6 +63,21 @@
                 @click="$router.push({ name: 'selector-tile', params: { id: boxer.attributes.id } })"
             />
         </div>
+        <div
+            v-if="getBoxersToDisplay().length == 0"
+            class="justify-content-center m-4 text-center"
+        >
+            <div class="mb-4"><i>No boxer available ...</i></div>
+            <div>
+                <button
+                    class="btn btn-outline-success"
+                    data-bs-toggle="offcanvas"
+                    data-bs-target="#boxerAddOffcanvasNavbar"
+                >
+                    <i class="bi bi-person-add me-2"></i>Import or create a boxer
+                </button>
+            </div>
+        </div>
     </div>
 </template>
 
