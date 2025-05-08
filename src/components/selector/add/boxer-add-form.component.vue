@@ -1,9 +1,6 @@
 <template>
     <!-- Toast container -->
-    <div
-        class="position-fixed bottom-0 end-0 p-3"
-        style="z-index: 9999"
-    >
+    <div class="position-fixed bottom-0 end-0 p-3">
         <div
             id="errorToast"
             class="toast align-items-center text-white bg-danger border-0"
