@@ -79,13 +79,23 @@
         </div>
         <table
             ref="sortableTable"
-            class="table table-bordered"
+            class="table table-striped table-bordered"
         >
             <thead>
                 <tr>
                     <th scope="col">#</th>
-                    <th scope="col">Red</th>
-                    <th scope="col">Blue</th>
+                    <th
+                        class="cell-red"
+                        scope="col"
+                    >
+                        Red
+                    </th>
+                    <th
+                        scope="col"
+                        class="cell-blue"
+                    >
+                        Blue
+                    </th>
                     <th
                         class="fight-extra-infos"
                         scope="col"
@@ -96,24 +106,27 @@
                     />
                 </tr>
             </thead>
-            <tbody>
+            <tbody class="table-group-divider">
                 <tr
                     v-for="fight in fightCard"
                     :key="fight.id"
                 >
-                    <th scope="row">
-                        <span>
+                    <th
+                        scope="row"
+                        :class="{ handle: editionMode }"
+                    >
+                        <div class="d-flex justify-content-center">
                             {{ fight.order }}
-                        </span>
-                        <button
+                        </div>
+                        <div
                             v-if="editionMode"
-                            class="btn ms-0 handle p-0 ps-2"
+                            class="btn ms-0 p-0 d-flex justify-content-center"
                         >
-                            <i class="bi bi-grip-horizontal" />
-                        </button>
+                            <IconComponent name="drag-vertical" />
+                        </div>
                     </th>
-                    <td>{{ fightService.getBoxerDisplayName(fight.boxer1.attributes) }}</td>
-                    <td>{{ fightService.getBoxerDisplayName(fight.boxer2.attributes) }}</td>
+                    <td class="cell-red">{{ fightService.getBoxerDisplayName(fight.boxer1.attributes) }}</td>
+                    <td class="cell-blue">{{ fightService.getBoxerDisplayName(fight.boxer2.attributes) }}</td>
                     <td class="fight-extra-infos">
                         <div class="me-1">
                             <i
@@ -161,8 +174,12 @@ import { userStore } from "@/composables/user.composable"
 import { FileType } from "@/types/api"
 import { getFightDurationAsString } from "@/utils/string.utils"
 import Sortable from "sortablejs"
+import IconComponent from "./core/icon.component.vue"
 
 export default {
+    components: {
+        IconComponent,
+    },
     data() {
         return {
             Gender: Gender,
@@ -234,5 +251,11 @@ export default {
             display: block;
         }
     }
+}
+.cell-red {
+    background-color: #97161618 !important;
+}
+.cell-blue {
+    background-color: #1638972c !important;
 }
 </style>
