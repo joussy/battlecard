@@ -321,8 +321,6 @@ export default defineComponent({
     },
     mounted() {
         this.clubsAutoCompleteList = fightService.getClubs()
-
-        console.log(this.boxer)
     },
 })
 </script>

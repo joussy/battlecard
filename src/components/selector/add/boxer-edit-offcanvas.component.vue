@@ -52,12 +52,8 @@ export default defineComponent({
             uiStore,
         }
     },
-    mounted() {
-        //.log(this.boxer.attributes)
-    },
     methods: {
         closeModal() {
-            console.log("ehho")
             closeModal("#boxerEditOffcanvasNavbar")
         },
     },
