@@ -1,4 +1,25 @@
 <template>
+    <!-- Toast container -->
+    <div class="position-fixed bottom-0 end-0 p-3">
+        <div
+            id="errorToast"
+            class="toast align-items-center text-white bg-danger border-0"
+            role="alert"
+            aria-live="assertive"
+            aria-atomic="true"
+        >
+            <div class="d-flex">
+                <div class="toast-body">Error while saving boxer</div>
+                <button
+                    type="button"
+                    class="btn-close btn-close-white me-2 m-auto"
+                    data-bs-dismiss="toast"
+                    aria-label="Close"
+                ></button>
+            </div>
+        </div>
+    </div>
+
     <form
         class=""
         @submit="onSubmit"
@@ -214,6 +235,8 @@ import { userStore } from "@/composables/user.composable"
 import { isValid, format } from "date-fns"
 import IconComponent from "@/components/core/icon.component.vue"
 
+import { Toast } from "bootstrap"
+
 configure({
     validateOnInput: true,
 })
@@ -309,8 +332,15 @@ export default defineComponent({
                 id: form.id,
                 userId: userStore.getAccountOrThrow().id,
             }
-            await fightService.addBoxer(boxerAttributes)
-            emit("boxer-add", boxerAttributes)
+            let boxer = await fightService.addBoxer(boxerAttributes)
+
+            if (boxer != null) {
+                emit("boxer-add", boxerAttributes)
+            } else {
+                const toastEl = document.getElementById("errorToast") as HTMLElement
+                const toast = new Toast(toastEl)
+                toast.show()
+            }
         })
         return {
             onSubmit,

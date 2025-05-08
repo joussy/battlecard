@@ -136,17 +136,22 @@ export class FightService {
     }
 
     async addBoxer(boxerAttributes: BoxerAttributes) {
-        let boxer: Boxer = {
+        let boxer: Boxer | null = {
             attributes: boxerAttributes,
             opponents: [],
         }
         boxer = await fightCardStore.addOrUpdateBoxer(boxer)
-        fightCardStore.setBoxerCategory(
-            boxer.attributes.id,
-            fightCardStore.store.modality.getCategoryName(boxer.attributes, false),
-            fightCardStore.store.modality.getCategoryName(boxer.attributes, true)
-        )
-        this.computeBoxersOpponents()
+
+        if (boxer != null) {
+            fightCardStore.setBoxerCategory(
+                boxer.attributes.id,
+                fightCardStore.store.modality.getCategoryName(boxer.attributes, false),
+                fightCardStore.store.modality.getCategoryName(boxer.attributes, true)
+            )
+            this.computeBoxersOpponents()
+        }
+
+        return boxer
     }
 
     async addTournament(tournament: Tournament) {
