@@ -14,42 +14,42 @@
                 {{ boxer.attributes.lastName }} {{ boxer.attributes.firstName }}
             </h5>
             <div
-                 class="btn btn-sm btn-outline-light me-2"
-                 data-bs-toggle="modal"
-                 data-bs-target="#exampleModal"
-             >
-                 <Icon name="scale"></Icon>
-             </div>
-             <div 
+                class="btn btn-sm btn-outline-light me-2"
+                data-bs-toggle="modal"
+                data-bs-target="#exampleModal"
+            >
+                <Icon name="scale"></Icon>
+            </div>
+            <div
                 class="btn btn-sm btn-outline-success"
                 data-bs-toggle="offcanvas"
-                data-bs-target="#boxerEditOffcanvasNavbar">
-                 <i class="bi bi-pencil"></i>
-             </div>
-             <BoxerEditOffcanvasComponent :boxer=boxer
-              />
-         </div>
-         <!-- Modal -->
-         <div
-             id="exampleModal"
-             class="modal fade"
-             tabindex="-1"
-             aria-labelledby="exampleModalLabel"
-             aria-hidden="true"
-         >
-             <div class="modal-dialog">
-                 <div class="modal-content">
-                     <div class="modal-body">
-                         <input
-                             id="exampleFormControlInput1"
-                             type="email"
-                             class="form-control"
-                             placeholder="name@example.com"
-                             value="12.3"
-                         />
-                     </div>
-                 </div>
-             </div>
+                data-bs-target="#boxerEditOffcanvasNavbar"
+            >
+                <i class="bi bi-pencil"></i>
+            </div>
+            <BoxerEditOffcanvasComponent :boxer="boxer" />
+        </div>
+        <!-- Modal -->
+        <div
+            id="exampleModal"
+            class="modal fade"
+            tabindex="-1"
+            aria-labelledby="exampleModalLabel"
+            aria-hidden="true"
+        >
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <input
+                            id="exampleFormControlInput1"
+                            type="email"
+                            class="form-control"
+                            placeholder="name@example.com"
+                            value="12.3"
+                        />
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="card mb-3">
             <div class="card shadow rounded">
