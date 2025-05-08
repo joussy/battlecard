@@ -1,19 +1,5 @@
 <template>
     <div :class="{ 'edition-mode': editionMode }">
-        <div
-            v-if="editionMode"
-            id="editModeToast"
-            class="d-md-none toast show bg-success text-white position-fixed top-0 start-50 translate-middle-x mt-3"
-            role="alert"
-        >
-            <div class="toast-body text-center">
-                <a
-                    class="text-white fw-bold"
-                    @click="editionMode = false"
-                    >I'm Done editing</a
-                >
-            </div>
-        </div>
         <div class="d-flex menu-card-tools">
             <div class="flex-grow-1"></div>
             <button
@@ -75,98 +61,113 @@
                         >
                     </li>
                 </ul>
+                <div
+                    v-if="editionMode"
+                    id="editModeToast"
+                    class="d-md-none toast show bg-success text-white position-fixed top-0 start-50 translate-middle-x mt-3"
+                    role="alert"
+                >
+                    <div
+                        class="toast-body text-center"
+                        @click="editionMode = false"
+                    >
+                        I'm Done editing
+                    </div>
+                </div>
             </div>
         </div>
-        <table
-            ref="sortableTable"
-            class="table table-striped table-bordered"
-        >
-            <thead>
-                <tr>
-                    <th scope="col">#</th>
-                    <th
-                        class="cell-red"
-                        scope="col"
-                    >
-                        Red
-                    </th>
-                    <th
-                        scope="col"
-                        class="cell-blue"
-                    >
-                        Blue
-                    </th>
-                    <th
-                        class="fight-extra-infos"
-                        scope="col"
-                    />
-                    <th
-                        v-if="editionMode"
-                        scope="col"
-                    />
-                </tr>
-            </thead>
-            <tbody class="table-group-divider">
-                <tr
-                    v-for="fight in fightCard"
-                    :key="fight.id"
-                >
-                    <th
-                        scope="row"
-                        :class="{ handle: editionMode }"
-                    >
-                        <div class="d-flex justify-content-center">
-                            {{ fight.order }}
-                        </div>
-                        <div
+        <div class="border border-light-subtle rounded-3 p-1">
+            <table
+                ref="sortableTable"
+                class="table table-striped table-borderless mb-0"
+            >
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th
+                            class="cell-red"
+                            scope="col"
+                        >
+                            Red
+                        </th>
+                        <th
+                            scope="col"
+                            class="cell-blue"
+                        >
+                            Blue
+                        </th>
+                        <th
+                            class="fight-extra-infos"
+                            scope="col"
+                        />
+                        <th
                             v-if="editionMode"
-                            class="btn ms-0 p-0 d-flex justify-content-center"
+                            scope="col"
+                        />
+                    </tr>
+                </thead>
+                <tbody class="table-group-divider">
+                    <tr
+                        v-for="fight in fightCard"
+                        :key="fight.id"
+                    >
+                        <th
+                            scope="row"
+                            :class="{ handle: editionMode }"
                         >
-                            <IconComponent name="drag-vertical" />
-                        </div>
-                    </th>
-                    <td class="cell-red word-break-all">
-                        {{ fightService.getBoxerDisplayName(fight.boxer1.attributes) }}
-                    </td>
-                    <td class="cell-blue word-break-all">
-                        {{ fightService.getBoxerDisplayName(fight.boxer2.attributes) }}
-                    </td>
-                    <td class="fight-extra-infos">
-                        <div class="me-1">
-                            <i
-                                v-if="fight.boxer1.attributes.gender == Gender.FEMALE"
-                                class="bi bi-gender-female"
-                            ></i>
-                            <i
-                                v-if="fight.boxer1.attributes.gender == Gender.MALE"
-                                class="bi bi-gender-male"
-                            ></i>
-                            <span v-if="fight.modalityErrors.length > 0"
-                                ><i class="bi bi-exclamation-circle-fill"></i
-                            ></span>
-                        </div>
-                        <div>
-                            <i class="bi bi-stopwatch me-1 d-none d-md-inline"></i>
-                            <span>{{ getFightDuration(fight) }}</span>
-                        </div>
-                    </td>
-                    <td v-if="editionMode">
-                        <button
-                            class="btn ms-0"
-                            @click="fightService.switchFight(fight.id)"
-                        >
-                            <i class="bi bi-arrow-left-right" />
-                        </button>
-                        <button
-                            class="btn btn-outline-danger btn-sm ms-2"
-                            @click="fightService.removeFromFightCard(fight.boxer1, fight.boxer2)"
-                        >
-                            <i class="bi bi-person-dash-fill" />
-                        </button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+                            <div class="d-flex justify-content-center">
+                                {{ fight.order }}
+                            </div>
+                            <div
+                                v-if="editionMode"
+                                class="btn ms-0 p-0 d-flex justify-content-center"
+                            >
+                                <IconComponent name="drag-vertical" />
+                            </div>
+                        </th>
+                        <td class="cell-red word-break-all">
+                            {{ fightService.getBoxerDisplayName(fight.boxer1.attributes) }}
+                        </td>
+                        <td class="cell-blue word-break-all">
+                            {{ fightService.getBoxerDisplayName(fight.boxer2.attributes) }}
+                        </td>
+                        <td class="fight-extra-infos">
+                            <div class="me-1">
+                                <i
+                                    v-if="fight.boxer1.attributes.gender == Gender.FEMALE"
+                                    class="bi bi-gender-female"
+                                ></i>
+                                <i
+                                    v-if="fight.boxer1.attributes.gender == Gender.MALE"
+                                    class="bi bi-gender-male"
+                                ></i>
+                                <span v-if="fight.modalityErrors.length > 0"
+                                    ><i class="bi bi-exclamation-circle-fill"></i
+                                ></span>
+                            </div>
+                            <div>
+                                <i class="bi bi-stopwatch me-1 d-none d-md-inline"></i>
+                                <span>{{ getFightDuration(fight) }}</span>
+                            </div>
+                        </td>
+                        <td v-if="editionMode">
+                            <button
+                                class="btn ms-0"
+                                @click="fightService.switchFight(fight.id)"
+                            >
+                                <i class="bi bi-arrow-left-right" />
+                            </button>
+                            <button
+                                class="btn btn-outline-danger btn-sm ms-2"
+                                @click="fightService.removeFromFightCard(fight.boxer1, fight.boxer2)"
+                            >
+                                <i class="bi bi-person-dash-fill" />
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </template>
 
