@@ -127,10 +127,16 @@
                                 <IconComponent name="drag-vertical" />
                             </div>
                         </th>
-                        <td class="cell-red word-break-all">
+                        <td
+                            :ref="`fights-tr-red-${fight.id}`"
+                            class="cell-red word-break-all"
+                        >
                             {{ fightService.getBoxerDisplayName(fight.boxer1.attributes) }}
                         </td>
-                        <td class="cell-blue word-break-all">
+                        <td
+                            :ref="`fights-tr-blue-${fight.id}`"
+                            class="cell-blue word-break-all"
+                        >
                             {{ fightService.getBoxerDisplayName(fight.boxer2.attributes) }}
                         </td>
                         <td class="fight-extra-infos">
@@ -152,15 +158,18 @@
                                 <span>{{ getFightDuration(fight) }}</span>
                             </div>
                         </td>
-                        <td v-if="editionMode">
+                        <td
+                            v-if="editionMode"
+                            class="text-end"
+                        >
                             <button
-                                class="btn ms-0"
-                                @click="fightService.switchFight(fight.id)"
+                                class="btn btn-sm btn-light m-1"
+                                @click="switchFight(fight.id)"
                             >
                                 <i class="bi bi-arrow-left-right" />
                             </button>
                             <button
-                                class="btn btn-outline-danger btn-sm ms-2"
+                                class="btn btn-outline-danger btn-sm m-1"
                                 @click="fightService.removeFromFightCard(fight.boxer1, fight.boxer2)"
                             >
                                 <i class="bi bi-person-dash-fill" />
@@ -178,7 +187,6 @@
                     Setup the first fight using the
                     <router-link
                         :to="{ name: 'selector' }"
-                        class=""
                         :class="{ active: $route.path.startsWith('/selector') }"
                     >
                         Selector
@@ -226,6 +234,18 @@ export default {
         this.initSortable()
     },
     methods: {
+        switchFight(fightId: string) {
+            this.fightService.switchFight(fightId)
+            const divRed = (this.$refs[`fights-tr-red-${fightId}`] as HTMLElement[])[0]
+            const divBlue = (this.$refs[`fights-tr-blue-${fightId}`] as HTMLElement[])[0]
+
+            divRed.classList.add("halo")
+            divBlue.classList.add("halo")
+            setTimeout(() => {
+                divRed.classList.remove("halo")
+                return divBlue.classList.remove("halo")
+            }, 1000)
+        },
         initSortable() {
             const table = this.$refs.sortableTable as HTMLElement
             const tbody = table?.querySelector("tbody")
@@ -287,5 +307,40 @@ export default {
 
 .word-break-all {
     word-break: break-all;
+}
+
+/* Light mode halo */
+@keyframes halo-light {
+    0% {
+        box-shadow: 0 0 0 rgba(0, 123, 255, 0);
+    }
+    50% {
+        box-shadow: 0 0 20px 10px rgba(92, 94, 95, 0.7);
+    }
+    100% {
+        box-shadow: 0 0 0 rgba(0, 123, 255, 0);
+    }
+}
+
+/* Dark mode halo */
+@keyframes halo-dark {
+    0% {
+        box-shadow: 0 0 0 rgba(255, 193, 7, 0);
+    }
+    50% {
+        box-shadow: 0 0 20px 10px rgba(158, 158, 158, 0.7);
+    }
+    100% {
+        box-shadow: 0 0 0 rgb(255, 255, 255);
+    }
+}
+
+/* Halo animation based on theme */
+[data-bs-theme="light"] .halo {
+    animation: halo-light 1s ease-in-out;
+}
+
+[data-bs-theme="dark"] .halo {
+    animation: halo-dark 1s ease-in-out;
 }
 </style>
