@@ -24,20 +24,34 @@ export default {
     getFightById(id: string) {
         return fightCardStore.fightCard.find((x) => x.id == id)
     },
-    async addBoxer(boxer: Boxer) {
-
+    async addOrUpdateBoxer(boxer: Boxer) {
         try {
-            const res = await pocketBaseManager.addBoxer(DbConverter.toDbBoxer(boxer.attributes))
-            boxer = DbConverter.toBoxer(res)
-    
-            if (this.store.currentTournament) {
-                await pocketBaseManager.addBoxerToTournament(boxer.attributes.id, this.store.currentTournament.id)
+            const isNew = boxer.attributes.id === ""
+
+            const dbBoxer = DbConverter.toDbBoxer(boxer.attributes)
+            const result = isNew
+                ? await pocketBaseManager.addBoxer(dbBoxer)
+                : await pocketBaseManager.updateBoxer(dbBoxer)
+
+            const updatedBoxer = DbConverter.toBoxer(result)
+
+            //If the boxer already exist, we remove it from the store
+            if (!isNew) {
+                fightCardStore.boxers = fightCardStore.boxers.filter(
+                    (b) => b.attributes.id !== updatedBoxer.attributes.id
+                )
             }
-    
-            fightCardStore.boxers.push(boxer)
 
-            return boxer
+            fightCardStore.boxers.push(updatedBoxer)
 
+            if (isNew && this.store.currentTournament) {
+                await pocketBaseManager.addBoxerToTournament(
+                    updatedBoxer.attributes.id,
+                    this.store.currentTournament.id
+                )
+            }
+
+            return updatedBoxer
         } catch (err) {
             return null
         }
