@@ -68,9 +68,9 @@
                     :value="Gender[Gender.FEMALE]"
                 />
                 <label
-                    class="btn btn-outline-primary"
+                    class="btn btn-outline-danger"
                     for="gender_1"
-                    >Female</label
+                    ><i class="bi bi-gender-female me-2"></i>Female</label
                 >
 
                 <input
@@ -85,7 +85,7 @@
                 <label
                     class="btn btn-outline-primary"
                     for="gender_2"
-                    >Male</label
+                    ><i class="bi bi-gender-male me-2"></i> Male</label
                 >
             </div>
             <div
@@ -102,7 +102,10 @@
                 for="birthdate"
                 class="form-label"
             >
-                Birth Date
+                <IconComponent
+                    name="birthday-cake"
+                    class="me-1"
+                />Birth Date
             </label>
             <input
                 v-model="birthdate"
@@ -124,7 +127,10 @@
                 for="weight"
                 class="form-label"
             >
-                Weight
+                <IconComponent
+                    name="scale"
+                    class="me-2"
+                />Weight
             </label>
             <input
                 v-model="weight"
@@ -145,7 +151,7 @@
                 for="club"
                 class="form-label"
             >
-                Club
+                <i class="bi bi-house-fill me-2"></i>Club
             </label>
             <input
                 v-model="club"
@@ -173,7 +179,7 @@
                 for="license"
                 class="form-label"
             >
-                License
+                <i class="bi bi-person-vcard me-2"></i>License
             </label>
             <input
                 v-model="license"
@@ -204,8 +210,9 @@ import { defineComponent, PropType } from "vue"
 import { configure, defineRule, GenericObject, useForm } from "vee-validate"
 import { BoxerAttributes, Gender } from "@/types/boxing.d"
 import fightService from "@/services/fight.service"
-import { generateRandomId } from "@/utils/string.utils"
 import { userStore } from "@/composables/user.composable"
+import { isValid, format } from "date-fns"
+import IconComponent from "@/components/core/icon.component.vue"
 
 configure({
     validateOnInput: true,
@@ -228,12 +235,12 @@ defineRule("weightRequired", (value: string) => {
     }
 
     // Normalize and parse
-    const normalized = value.replace(",", ".")
-    const parsed = parseFloat(normalized)
+    // const normalized = value.replace(",", ".")
+    // const parsed = parseFloat(normalized)
 
-    if (isNaN(parsed) || parsed < 1) {
-        return "The number must be greater than or equal to 1"
-    }
+    // if (isNaN(parsed) || parsed < 1) {
+    //     return "The number must be greater than or equal to 1"
+    // }
 
     return true
 })
@@ -244,7 +251,7 @@ defineRule("genderRequired", (value: string) => {
     return true
 })
 export default defineComponent({
-    components: {},
+    components: { IconComponent },
     props: {
         boxer: {
             type: Object as PropType<BoxerAttributes | null>,
@@ -253,8 +260,19 @@ export default defineComponent({
         },
     },
     emits: ["boxer-add"],
-    setup(_, { emit }) {
+    setup(properties, { emit }) {
         // Create the form
+        const initialValues = {
+            lastname: properties.boxer?.lastName ?? "",
+            firstname: properties.boxer?.firstName ?? "",
+            weight: properties.boxer?.weight ?? "",
+            license: properties.boxer?.license ?? "",
+            club: properties.boxer?.club ?? "",
+            birthdate: isValid(properties.boxer?.birthDate) ? format(properties.boxer!.birthDate, "yyyy-MM-dd") : "",
+            gender: properties.boxer ? Gender[properties.boxer.gender] : Gender[Gender.FEMALE],
+            id: properties.boxer?.id ?? "",
+        }
+
         const { defineField, handleSubmit, errors } = useForm({
             validationSchema: {
                 lastname: "required",
@@ -262,18 +280,10 @@ export default defineComponent({
                 weight: "weightRequired",
                 license: "required",
                 club: "required",
-                gender: "genderRequired",
                 birthdate: "required",
+                gender: "genderRequired",
             },
-            initialValues: {
-                lastname: "lastnametest",
-                firstname: "firstnametest",
-                weight: "123",
-                license: "licensetest",
-                club: "clubtest",
-                birthdate: "1990-09-21",
-                gender: Gender[Gender.FEMALE],
-            },
+            initialValues,
         })
 
         // Define fields
@@ -296,7 +306,7 @@ export default defineComponent({
                 categoryShortText: "",
                 license: form.license,
                 nbFights: 0,
-                id: generateRandomId(),
+                id: form.id,
                 userId: userStore.getAccountOrThrow().id,
             }
             await fightService.addBoxer(boxerAttributes)
