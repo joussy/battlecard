@@ -22,8 +22,8 @@
         </div>
         <div class="offcanvas-body">
             <BoxerAddFormComponent
-                @boxer-add="closeModal()"
                 :boxer="boxer.attributes"
+                @boxer-add="closeModal()"
             ></BoxerAddFormComponent>
         </div>
     </div>
@@ -31,12 +31,11 @@
 
 <script lang="ts">
 import { PropType, defineComponent } from "vue"
-import { BoxerAttributes, Gender, Boxer } from "@/types/boxing.d"
+import { Boxer } from "@/types/boxing.d"
 
 import { uiStore } from "@/composables/ui.composable"
 import BoxerAddFormComponent from "./boxer-add-form.component.vue"
 import { closeModal } from "@/utils/ui.utils"
-
 
 export default defineComponent({
     components: {
@@ -54,16 +53,13 @@ export default defineComponent({
         }
     },
     mounted() {
-
         //.log(this.boxer.attributes)
-
     },
     methods: {
         closeModal() {
             console.log("ehho")
             closeModal("#boxerEditOffcanvasNavbar")
         },
-
     },
 })
 </script>
