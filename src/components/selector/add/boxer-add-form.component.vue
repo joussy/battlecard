@@ -204,8 +204,8 @@ import { defineComponent, PropType } from "vue"
 import { configure, defineRule, GenericObject, useForm } from "vee-validate"
 import { BoxerAttributes, Gender } from "@/types/boxing.d"
 import fightService from "@/services/fight.service"
-import { generateRandomId } from "@/utils/string.utils"
 import { userStore } from "@/composables/user.composable"
+import { isValid, format } from "date-fns"
 
 configure({
     validateOnInput: true,
@@ -256,14 +256,14 @@ export default defineComponent({
     setup(properties, { emit }) {
         // Create the form
         const initialValues = {
-            lastname: properties.boxer ? properties.boxer.lastName : "",
-            firstname: properties.boxer ? properties.boxer.firstName : "",
-            weight: properties.boxer ? properties.boxer.weight : "",
-            license: properties.boxer ? properties.boxer.license : "",
-            club: properties.boxer ? properties.boxer.club : "",
-            birthdate: properties.boxer ? properties.boxer.birthDate : "1990-09-21",
+            lastname: properties.boxer?.lastName ?? "",
+            firstname: properties.boxer?.firstName ?? "",
+            weight: properties.boxer?.weight ?? "",
+            license: properties.boxer?.license ?? "",
+            club: properties.boxer?.club ?? "",
+            birthdate: isValid(properties.boxer?.birthDate) ? format(properties.boxer!.birthDate, "yyyy-MM-dd") : "",
             gender: properties.boxer ? Gender[properties.boxer.gender] : Gender[Gender.FEMALE],
-            id: properties.boxer ? properties.boxer.id : ""
+            id: properties.boxer?.id ?? "",
         }
 
         const { defineField, handleSubmit, errors } = useForm({
@@ -276,7 +276,7 @@ export default defineComponent({
                 birthdate: "required",
                 gender: "genderRequired",
             },
-            initialValues
+            initialValues,
         })
 
         // Define fields
@@ -322,14 +322,7 @@ export default defineComponent({
     mounted() {
         this.clubsAutoCompleteList = fightService.getClubs()
 
-        // if (this.isEditMode) {
-        //     console.log(this.boxer?.firstName)
-        // }
-    },
-    computed: {     
-        // isEditMode() {
-        //     return !!this.boxer;
-        // }
+        console.log(this.boxer)
     },
 })
 </script>
