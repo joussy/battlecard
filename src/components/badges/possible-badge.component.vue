@@ -6,8 +6,8 @@
             'text-bg-light': !modalityError,
         }"
     >
-        <Icon name="glove" />
-        {{ selected }}/{{ available }}
+        <Icon name="group-of-people" />
+        {{ selected }}
     </span>
 </template>
 
