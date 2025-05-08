@@ -26,8 +26,17 @@
                             <i class="bi bi-person-vcard"></i> {{ boxer.attributes.license }} -
                             {{ boxer.attributes.category }}
                         </p>
-                        <p class="col-md-6 mb-1"><i class="bi bi-house-fill"></i> {{ boxer?.attributes.club }}</p>
-                        <p class="col-md-6 mb-1"><Icon name="scale"></Icon> {{ boxer.attributes.weight }} kg</p>
+                        <p class="col-md-6 mb-1"><i class="bi bi-house-fill me-1"></i>{{ boxer?.attributes.club }}</p>
+                        <p class="col-md-6 mb-1">
+                            <Icon
+                                name="scale"
+                                class="me-1"
+                            ></Icon
+                            >{{ boxer.attributes.weight }} kg
+                        </p>
+                        <p class="col-md-6 mb-1">
+                            <i class="bi bi-link me-1"></i>{{ fightService.getNbFightsForBoxer(boxer) }} selected fights
+                        </p>
                     </div>
                 </div>
             </div>

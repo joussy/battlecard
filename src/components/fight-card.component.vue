@@ -125,8 +125,12 @@
                             <IconComponent name="drag-vertical" />
                         </div>
                     </th>
-                    <td class="cell-red">{{ fightService.getBoxerDisplayName(fight.boxer1.attributes) }}</td>
-                    <td class="cell-blue">{{ fightService.getBoxerDisplayName(fight.boxer2.attributes) }}</td>
+                    <td class="cell-red word-break-all">
+                        {{ fightService.getBoxerDisplayName(fight.boxer1.attributes) }}
+                    </td>
+                    <td class="cell-blue word-break-all">
+                        {{ fightService.getBoxerDisplayName(fight.boxer2.attributes) }}
+                    </td>
                     <td class="fight-extra-infos">
                         <div class="me-1">
                             <i
@@ -257,5 +261,9 @@ export default {
 }
 .cell-blue {
     background-color: #1638972c !important;
+}
+
+.word-break-all {
+    word-break: break-all;
 }
 </style>
