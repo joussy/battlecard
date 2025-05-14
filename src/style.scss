@@ -8,3 +8,7 @@
   
     max-width: map-get($container-max-widths, md);
 }
+
+a:link {
+    text-decoration: none;
+  }

@@ -14,7 +14,7 @@
         />
         <label
             for="csvfile"
-            class="btn"
+            class="btn btn-outline-secondary"
             >CSV File</label
         >
         <input
@@ -27,7 +27,7 @@
         />
         <label
             for="csvclipboard"
-            class="btn"
+            class="btn btn-outline-secondary"
             >CSV from clipboard</label
         >
         <input
@@ -41,10 +41,55 @@
         />
         <label
             for="api"
-            class="btn"
+            class="btn btn-outline-secondary"
             >API</label
         >
+        <input
+            id="ffboxe"
+            v-model="importMode"
+            type="radio"
+            class="btn-check"
+            name="options-mode"
+            value="ffboxe"
+        />
+        <label
+            for="ffboxe"
+            class="btn btn-outline-secondary"
+            >FFBoxe</label
+        >
     </fieldset>
+    <div
+        v-if="importMode == 'ffboxe'"
+        class="mb-3"
+    >
+        <div class="w-100 justify-content-center mb-3">
+            Connect to your
+            <button class="btn btn-sm btn-outline-primary">
+                <a
+                    target="_blank"
+                    href="https://extranet.ffboxe.com/extractions/licences"
+                >
+                    <IconComponent
+                        name="ffboxe-without-text"
+                        class="me-1"
+                    ></IconComponent
+                    >FFBoxe account</a
+                >
+            </button>
+            and extract your licences as CSV
+        </div>
+        <div class="mb-3">
+            <input
+                id="formFileDisabled"
+                class="form-control"
+                type="file"
+            />
+        </div>
+        <div class="mb-3">
+            <button class="btn btn-primary">Import</button>
+        </div>
+    </div>
+
     <div v-if="importMode == 'csv-file' || importMode == 'csv-clipboard'">
         <fieldset class="mb-3">
             <legend class="col-form-label pt-0">
@@ -60,7 +105,7 @@
             />
             <label
                 for="tab"
-                class="btn"
+                class="btn btn-outline-secondary"
                 >Tab</label
             >
             <input
@@ -73,7 +118,7 @@
             />
             <label
                 for="semi-column"
-                class="btn"
+                class="btn btn-outline-secondary"
                 >Semi-column</label
             >
             <input
@@ -86,7 +131,7 @@
             />
             <label
                 for="comma"
-                class="btn"
+                class="btn btn-outline-secondary"
                 >Comma</label
             >
         </fieldset>
@@ -160,8 +205,12 @@
 import fightService from "@/services/fight.service"
 import { defineComponent } from "vue"
 import { userStore } from "@/composables/user.composable"
+import IconComponent from "@/components/core/icon.component.vue"
 
 export default defineComponent({
+    components: {
+        IconComponent,
+    },
     emits: ["boxer-add"],
     data() {
         let ret = {
@@ -181,7 +230,7 @@ SERRANO	Amanda	8	F	57	Club1	8/4/2014	A0008
 279689,52
 `,
             csvDelimiter: "" as string,
-            importMode: "" as "" | "csv-file" | "csv-clipboard" | "api",
+            importMode: "" as "" | "csv-file" | "csv-clipboard" | "api" | "ffboxe",
         }
         return ret
     },
@@ -214,5 +263,8 @@ SERRANO	Amanda	8	F	57	Club1	8/4/2014	A0008
 textarea {
     word-break: break-all;
     height: 300px;
+}
+fieldset label.btn {
+    margin: 5px;
 }
 </style>
