@@ -20,7 +20,8 @@ COPY server/ .
 
 COPY --from=client-builder /usr/src/app/dist ./src/public
 
-RUN npm ci --omit=dev
+RUN npm ci
+RUN npm run build
 
 ENV NODE_ENV production
 
@@ -31,4 +32,4 @@ USER node
 EXPOSE 3000
 
 # Run the application.
-CMD node dist/main.js
+CMD node dist/main
