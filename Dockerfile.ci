@@ -2,10 +2,11 @@ ARG NODE_VERSION=22
 
 FROM node:${NODE_VERSION}-alpine
 
-WORKDIR /usr/src/server
 
-COPY server .
+COPY server /usr/src/server
 COPY client/dist /usr/src/client/dist
+RUN ls -lR /usr/src
+WORKDIR /usr/src/server
 
 RUN npm install
 RUN npm run build
