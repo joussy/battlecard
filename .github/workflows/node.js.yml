@@ -90,7 +90,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: frontend-artifact
-          path: server/src/public
+          path: client/dist
 
       # Build and push Docker image with Buildx (don't push on PR)
       # https://github.com/docker/build-push-action
