@@ -27,6 +27,7 @@ jobs:
         run: |
           cd client
           npm ci
+          echo "VITE_SERVER_URL=${{ vars.VITE_SERVER_URL }}" >> .env          
           npm run build
       - name: Build backend
         run: |
