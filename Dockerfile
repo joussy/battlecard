@@ -14,13 +14,14 @@ RUN npm run build
 
 FROM node:${NODE_VERSION}-alpine
 
-WORKDIR /usr/src/app
+WORKDIR /usr/src/server
 
 COPY server/ .
 
-COPY --from=client-builder /usr/src/app/dist ./src/public
+COPY --from=client-builder /usr/src/app/dist public
 
-RUN npm ci --omit=dev
+RUN npm ci
+RUN npm run build
 
 ENV NODE_ENV production
 

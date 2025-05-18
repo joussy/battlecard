@@ -3,10 +3,11 @@ ARG NODE_VERSION=22
 FROM node:${NODE_VERSION}-alpine
 
 WORKDIR /usr/src/app
-
 COPY . .
+RUN ls -lR .
 
 RUN npm install
+RUN npm run build
 
 RUN find . -path ./node_modules -prune -o -print
 
