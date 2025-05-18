@@ -14,11 +14,11 @@ RUN npm run build
 
 FROM node:${NODE_VERSION}-alpine
 
-WORKDIR /usr/src/app
+WORKDIR /usr/src/server
 
 COPY server/ .
 
-COPY --from=client-builder /usr/src/app/dist ./src/public
+COPY --from=client-builder /usr/src/app/dist /usr/src/client/dist
 
 RUN npm ci
 RUN npm run build
