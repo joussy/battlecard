@@ -31,4 +31,4 @@ USER node
 EXPOSE 3000
 
 # Run the application.
-CMD node dist/main
+CMD node dist/main.js
