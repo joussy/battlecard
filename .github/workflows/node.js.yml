@@ -40,7 +40,7 @@ jobs:
           path: client/dist
 
   publish-docker:
-    # if: github.event_name == 'release'
+    if: github.event_name == 'release'
     needs: build
     runs-on: ubuntu-latest
     permissions:
