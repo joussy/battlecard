@@ -16,7 +16,8 @@ updates:
 
   - package-ecosystem: "npm"
     directories:
-      - "/"
+      - "/client"
+      - "/server"
     schedule:
       interval: monthly
     ignore:

@@ -124,7 +124,12 @@ export default defineComponent({
             Gender: Gender,
         }
     },
-    mounted() {},
+    async mounted() {
+        const response = await fetch("/api/hello", {
+            method: "GET",
+        })
+        console.log("hello")
+    },
     methods: {
         setTheme(mode: UiTheme) {
             uiStore.theme = mode
