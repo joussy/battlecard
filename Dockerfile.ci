@@ -3,8 +3,7 @@ ARG NODE_VERSION=22
 FROM node:${NODE_VERSION}-alpine
 
 
-COPY server /usr/src/server
-COPY client/dist /usr/src/client/dist
+COPY . .
 RUN ls -lR /usr/src
 WORKDIR /usr/src/server
 
