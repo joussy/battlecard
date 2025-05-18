@@ -18,7 +18,7 @@ WORKDIR /usr/src/server
 
 COPY server/ .
 
-COPY --from=client-builder /usr/src/app/dist /usr/src/client/dist
+COPY --from=client-builder /usr/src/app/dist public
 
 RUN npm ci
 RUN npm run build
