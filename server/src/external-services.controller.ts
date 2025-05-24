@@ -1,4 +1,13 @@
-import { Body, Controller, Get, Post, Req, Res } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Query,
+  Req,
+  Res,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Tournament } from './entities/tournament.entity';
@@ -71,14 +80,15 @@ export class ExternalServicesController {
 
   @Get('importBoxerById')
   async importBoxerById(
-    @Req() req: { id: string },
+    @Query('id') id: string,
     @Res() res: ExpressResponse,
   ): Promise<void> {
     // Call Node-RED
     let response: Response;
     try {
+      console.log('Calling Node-RED to import boxer by ID:', id);
       response = await fetch(
-        `${this.configService.get<string>('NODERED_HOST')}/battlecard/getById?id=${req.id}`,
+        `${this.configService.get<string>('NODERED_HOST')}/battlecard/getById?id=${id}`,
         {
           method: 'GET',
           headers: { 'Content-Type': 'application/json' },
