@@ -1,6 +1,6 @@
 import { uiStore } from "@/composables/ui.composable"
 import { DbBoxer, DbFight, DbTournament, DbTournament_Boxer } from "@/types/db"
-import { get, mutate } from "@/utils/manager.utils"
+import { get, mutate, mutateRaw } from "@/utils/manager.utils"
 
 export class DbManager {
     // BOXER
@@ -25,8 +25,8 @@ export class DbManager {
     addFight(fight: DbFight): Promise<DbFight> {
         return mutate<DbFight>("/api/fights", "POST", fight, "Failed to add fight")
     }
-    deleteFights(ids: string[]): Promise<void> {
-        return mutate<void>("/api/fights", "DELETE", { ids }, "Failed to delete fights")
+    async deleteFights(ids: string[]): Promise<void> {
+        await mutateRaw("/api/fights", "DELETE", { ids }, "Failed to delete fights")
     }
     reorderFights(fightIds: string[], tournamentId: string): Promise<void> {
         return mutate<void>("/api/fights/reorder", "POST", { fightIds, tournamentId }, "Failed to reorder fights")

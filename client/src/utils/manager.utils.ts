@@ -58,6 +58,21 @@ export async function mutate<T>(
     return await res.json()
 }
 
+export async function mutateRaw(
+    url: string,
+    method: "POST" | "PUT" | "DELETE",
+    body?: unknown,
+    errorMsg = "Request failed"
+): Promise<Response> {
+    const res = await fetch(url, {
+        method,
+        headers: mergeHeaders({ "Content-Type": "application/json" }),
+        body: body !== undefined ? JSON.stringify(body) : undefined,
+    })
+    if (!res.ok) throw new Error(errorMsg)
+    return await res
+}
+
 export async function postAndDownload(url: string, payload: object | [], filename: string): Promise<void> {
     try {
         const response = await fetch(url, {
