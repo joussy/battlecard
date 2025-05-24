@@ -24,13 +24,14 @@ export class AuthController {
   @UseGuards(AuthGuard('google'))
   @SetMetadata('isPublic', true)
   async googleAuthRedirect(
-    @Req() req: { user: { email: string; name: string } },
+    @Req() req: { user: { email: string; name: string; picture?: string } },
   ) {
+    console.log('Google Auth Redirect:', req.user);
     // Handles the Google OAuth2 callback
-    const { email, name } = req.user;
+    const { email, name, picture } = req.user;
     let user = await this.userRepository.findOneBy({ email });
     if (!user) {
-      user = this.userRepository.create({ email, name });
+      user = this.userRepository.create({ email, name, picture });
       await this.userRepository.save(user);
     }
     const token = await this.authService.generateJwt(user);

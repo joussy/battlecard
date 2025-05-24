@@ -20,6 +20,9 @@ export class User {
   @Column({ type: 'boolean', default: false })
   apiEnabled: boolean;
 
+  @Column({ nullable: true })
+  picture?: string;
+
   @CreateDateColumn()
   created: Date;
 

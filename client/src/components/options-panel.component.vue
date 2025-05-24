@@ -15,8 +15,8 @@
                     class="d-flex flex-row align-items-center"
                 >
                     <img
-                        v-if="uiStore.account.avatar"
-                        :src="uiStore.account.avatar"
+                        v-if="uiStore.account.picture"
+                        :src="uiStore.account.picture"
                         class="rounded-circle me-2 avatar-icon"
                         alt="User Avatar"
                     />

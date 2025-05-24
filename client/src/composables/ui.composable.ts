@@ -41,7 +41,7 @@ const uiStore = reactive({
                 id: user.id,
                 name: user.name,
                 email: user.email,
-                avatar: user.avatar || null,
+                picture: user.picture || null,
                 apiEnabled: user.apiEnabled,
                 authToken: uiStore.jwtToken,
             }
