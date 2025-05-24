@@ -12,7 +12,7 @@
                 <i class="bi bi-pencil" />
             </button>
             <div
-                v-if="userStore.account != null"
+                v-if="uiStore.account != null"
                 class="btn-group"
                 role="group"
             >
@@ -201,11 +201,11 @@
 import { Fight, Gender } from "@/types/boxing.d"
 import fightService from "@/services/fight.service"
 import { ApiService } from "@/services/api.service"
-import { userStore } from "@/composables/user.composable"
 import { FileType } from "@/types/api"
 import { getFightDurationAsString } from "@/utils/string.utils"
 import Sortable from "sortablejs"
 import IconComponent from "./core/icon.component.vue"
+import { uiStore } from "@/composables/ui.composable"
 
 export default {
     components: {
@@ -216,7 +216,7 @@ export default {
             Gender: Gender,
             fightStore: fightService.store(),
             fightService: fightService,
-            userStore: userStore,
+            uiStore: uiStore,
             editionMode: false,
         }
     },

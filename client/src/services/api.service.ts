@@ -1,5 +1,5 @@
+import { uiStore } from "@/composables/ui.composable"
 import { ApiBoxer, FileType } from "@/types/api"
-import { userStore } from "@/composables/user.composable"
 import { postAndDownload } from "@/utils/download.utils"
 
 export class ApiService {
@@ -7,7 +7,7 @@ export class ApiService {
         try {
             const response = await fetch(`${import.meta.env.VITE_SERVER_URL}/api/getBoxerById?id=${id}`, {
                 headers: {
-                    Authorization: userStore.getAccountOrThrow().authToken ?? "",
+                    Authorization: uiStore.getAccountOrThrow().authToken ?? "",
                 },
             })
             if (!response.ok) {
@@ -25,7 +25,7 @@ export class ApiService {
             { fileType, tournamentId },
             `fight-card.${fileType}`,
             {
-                Authorization: userStore.getAccountOrThrow().authToken ?? "",
+                Authorization: uiStore.getAccountOrThrow().authToken ?? "",
             }
         )
     }

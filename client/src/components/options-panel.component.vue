@@ -4,7 +4,7 @@
             <div class="card-header"><i class="bi bi-person me-2" />Account</div>
             <div class="card-body">
                 <button
-                    v-if="!userStore.account"
+                    v-if="!uiStore.account"
                     class="btn btn-warning ms-2"
                     @click="signInWithGoogle()"
                 >
@@ -15,8 +15,8 @@
                     class="d-flex flex-row align-items-center"
                 >
                     <img
-                        v-if="userStore.account.avatar"
-                        :src="userStore.account.avatar"
+                        v-if="uiStore.account.avatar"
+                        :src="uiStore.account.avatar"
                         class="rounded-circle me-2 avatar-icon"
                         alt="User Avatar"
                     />
@@ -26,12 +26,12 @@
                         :style="{ 'font-size': '2.5rem' }"
                     ></i>
                     <div class="flex-grow-1">
-                        <strong>{{ userStore.account?.name }}</strong>
+                        <strong>{{ uiStore.account?.name }}</strong>
                         <div
                             class="text-muted"
                             style="font-size: 0.85rem"
                         >
-                            {{ userStore.account?.email }}
+                            {{ uiStore.account?.email }}
                         </div>
                     </div>
                     <button
@@ -107,7 +107,6 @@
 <script lang="ts">
 import { defineComponent } from "vue"
 import { Gender } from "@/types/boxing.d"
-import { userStore } from "@/composables/user.composable"
 import fightService from "@/services/fight.service"
 import { uiStore } from "@/composables/ui.composable"
 import { UiTheme } from "@/types/ui"
@@ -116,7 +115,6 @@ export default defineComponent({
     data() {
         return {
             store: fightService.store(),
-            userStore,
             uiStore,
             Gender: Gender,
         }
@@ -125,14 +123,15 @@ export default defineComponent({
         // Listen for token from popup
         window.addEventListener("message", async (event) => {
             if (event.data && event.data.token) {
-                await userStore.setTokenAndFetchUser(event.data.token)
+                uiStore.jwtToken = event.data.token
+                await uiStore.setTokenAndFetchUser()
             }
         })
         // (Optional: handle token in URL for fallback)
         const urlParams = new URLSearchParams(window.location.search)
         const token = urlParams.get("token")
         if (token) {
-            await userStore.setTokenAndFetchUser(token)
+            await uiStore.setTokenAndFetchUser()
             window.history.replaceState({}, document.title, window.location.pathname)
         }
     },
@@ -141,10 +140,10 @@ export default defineComponent({
             uiStore.theme = mode
         },
         signInWithGoogle() {
-            userStore.authenticate()
+            uiStore.authenticate()
         },
         logout() {
-            userStore.logout()
+            uiStore.logout()
         },
     },
 })

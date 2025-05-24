@@ -84,7 +84,7 @@ import { configure, defineRule, GenericObject, useForm } from "vee-validate"
 import { Tournament } from "@/types/boxing.d"
 import fightService from "@/services/fight.service"
 import { closeModal } from "@/utils/ui.utils"
-import { userStore } from "@/composables/user.composable"
+import { uiStore } from "@/composables/ui.composable"
 
 configure({
     validateOnInput: true,
@@ -115,12 +115,12 @@ export default defineComponent({
         const [name] = defineField("name")
         const [date] = defineField("date")
         const onSubmit = handleSubmit(async (form: GenericObject) => {
-            if (!userStore.account) return
+            if (!uiStore.account) return
             const tournament: Tournament = {
                 name: form.name,
                 date: form.date,
                 id: "",
-                userId: userStore.account?.id,
+                userId: uiStore.account?.id,
             }
             await fightService.addTournament(tournament)
             resetForm()

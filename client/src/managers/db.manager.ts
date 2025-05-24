@@ -1,8 +1,8 @@
+import { uiStore } from "@/composables/ui.composable"
 import { DbBoxer, DbFight, DbTournament, DbTournament_Boxer } from "@/types/db"
-import { userStore } from "@/composables/user.composable"
 
 function getAuthHeaders(): Record<string, string> {
-    const token = userStore.account?.authToken || localStorage.getItem("jwtToken")
+    const token = uiStore.account?.authToken || localStorage.getItem("jwtToken")
     return token ? { Authorization: `Bearer ${token}` } : {}
 }
 
@@ -18,7 +18,7 @@ export class DbManager {
         return await res.json()
     }
     async addBoxer(boxer: DbBoxer): Promise<DbBoxer> {
-        boxer.userId = userStore.getAccountOrThrow().id
+        boxer.userId = uiStore.getAccountOrThrow().id
         const res = await fetch("/api/boxers", {
             method: "POST",
             headers: mergeHeaders({ "Content-Type": "application/json" }),
@@ -94,7 +94,7 @@ export class DbManager {
         return await res.json()
     }
     async addTournament(tournament: DbTournament): Promise<DbTournament> {
-        tournament.userId = userStore.getAccountOrThrow().id
+        tournament.userId = uiStore.getAccountOrThrow().id
         const res = await fetch("/api/tournaments", {
             method: "POST",
             headers: mergeHeaders({ "Content-Type": "application/json" }),
