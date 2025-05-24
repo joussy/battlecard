@@ -37,7 +37,7 @@
             class="btn-check"
             name="options-mode"
             value="api"
-            :disabled="!userStore.account?.apiEnabled"
+            :disabled="!uiStore.account?.apiEnabled"
         />
         <label
             for="api"
@@ -204,8 +204,8 @@
 <script lang="ts">
 import fightService from "@/services/fight.service"
 import { defineComponent } from "vue"
-import { userStore } from "@/composables/user.composable"
 import IconComponent from "@/components/core/icon.component.vue"
+import { uiStore } from "@/composables/ui.composable"
 
 export default defineComponent({
     components: {
@@ -214,7 +214,7 @@ export default defineComponent({
     emits: ["boxer-add"],
     data() {
         let ret = {
-            userStore,
+            uiStore,
             clipboard: `
 JOSHUA	Anthony	1	H	50.5	Club1	1/1/2010	A0001
 FURY	Tyson	2	H	51	Club2	2/1/2010	B0002

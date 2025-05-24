@@ -231,11 +231,11 @@ import { defineComponent, PropType } from "vue"
 import { configure, defineRule, GenericObject, useForm } from "vee-validate"
 import { BoxerAttributes, Gender } from "@/types/boxing.d"
 import fightService from "@/services/fight.service"
-import { userStore } from "@/composables/user.composable"
 import { isValid, format } from "date-fns"
 import IconComponent from "@/components/core/icon.component.vue"
 
 import { Toast } from "bootstrap"
+import { uiStore } from "@/composables/ui.composable"
 
 configure({
     validateOnInput: true,
@@ -330,7 +330,7 @@ export default defineComponent({
                 license: form.license,
                 nbFights: 0,
                 id: form.id,
-                userId: userStore.getAccountOrThrow().id,
+                userId: uiStore.getAccountOrThrow().id,
             }
             let boxer = await fightService.addBoxer(boxerAttributes)
 

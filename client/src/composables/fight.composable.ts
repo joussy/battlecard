@@ -1,10 +1,9 @@
 import { reactive, readonly } from "vue"
 import { Boxer, Fight, Tournament, Opponent, BoxerAttributes } from "@/types/boxing.d"
 import { BeaModality } from "@/fightModality/BeaModality"
-import pocketBaseManager from "@/managers/pocketbase.manager"
+import dbManager from "@/managers/db.manager"
 import DbConverter from "@/converters/db.converter"
 import { ModalityError } from "@/types/modality"
-import { generateRandomId } from "@/utils/string.utils"
 import { IModality } from "@/fightModality/IModality"
 
 const fightCardStore = reactive({
@@ -29,9 +28,7 @@ export default {
             const isNew = boxer.attributes.id === ""
 
             const dbBoxer = DbConverter.toDbBoxer(boxer.attributes)
-            const result = isNew
-                ? await pocketBaseManager.addBoxer(dbBoxer)
-                : await pocketBaseManager.updateBoxer(dbBoxer)
+            const result = isNew ? await dbManager.addBoxer(dbBoxer) : await dbManager.updateBoxer(dbBoxer)
 
             const updatedBoxer = DbConverter.toBoxer(result)
 
@@ -45,10 +42,7 @@ export default {
             fightCardStore.boxers.push(updatedBoxer)
 
             if (isNew && this.store.currentTournament) {
-                await pocketBaseManager.addBoxerToTournament(
-                    updatedBoxer.attributes.id,
-                    this.store.currentTournament.id
-                )
+                await dbManager.addBoxerToTournament(updatedBoxer.attributes.id, this.store.currentTournament.id)
             }
 
             return updatedBoxer
@@ -60,22 +54,22 @@ export default {
         if (!this.store.currentTournament) {
             return
         }
-        await pocketBaseManager.addBoxerToTournament(boxerId, this.store.currentTournament.id)
-        const res = await pocketBaseManager.getBoxer(boxerId)
+        await dbManager.addBoxerToTournament(boxerId, this.store.currentTournament.id)
+        const res = await dbManager.getBoxer(boxerId)
         const boxer = DbConverter.toBoxer(res)
 
         fightCardStore.boxers.push(boxer)
     },
     async addTournament(tournament: Tournament): Promise<Tournament> {
-        const res = await pocketBaseManager.addTournament(DbConverter.toDbTournament(tournament))
+        const res = await dbManager.addTournament(DbConverter.toDbTournament(tournament))
         tournament = DbConverter.toTournament(res)
         fightCardStore.tournaments.push(tournament)
         return tournament
     },
     async removeBoxersFromTournament() {
         if (fightCardStore.currentTournament) {
-            await pocketBaseManager.deleteFights(fightCardStore.fightCard.map((b) => b.id))
-            await pocketBaseManager.deleteBoxersFromTournament(
+            await dbManager.deleteFights(fightCardStore.fightCard.map((b) => b.id))
+            await dbManager.deleteBoxersFromTournament(
                 fightCardStore.boxers.map((b) => b.attributes.id),
                 fightCardStore.currentTournament.id
             )
@@ -92,12 +86,12 @@ export default {
             boxer1: boxer1,
             boxer2: boxer2,
             modalityErrors: [],
-            id: generateRandomId(),
+            id: "",
             order: order + 1,
             tournamentId: fightCardStore.currentTournament.id,
         }
         if (fightCardStore.currentTournament?.id != null) {
-            const ret = await pocketBaseManager.addFight(DbConverter.toDbFight(fight))
+            const ret = await dbManager.addFight(DbConverter.toDbFight(fight))
             fight = DbConverter.toFight(ret, boxer1, boxer2)
         }
 
@@ -112,7 +106,7 @@ export default {
         }
     },
     async removeFightById(id: string) {
-        await pocketBaseManager.deleteFights([id])
+        await dbManager.deleteFights([id])
         const index = fightCardStore.fightCard.findIndex((f) => f.id == id)
         if (index > -1) fightCardStore.fightCard.splice(index, 1)
         await this.updateFightsOrder()
@@ -125,7 +119,10 @@ export default {
         fights.forEach((fight, index) => {
             fight.order = index + 1 // +1 because we want an order starting 1, not 0
         })
-        await pocketBaseManager.updateFights(fights.map((f) => DbConverter.toDbFight(f)))
+        await dbManager.reorderFights(
+            fights.map((f) => f.id),
+            fightCardStore.currentTournament!.id
+        )
     },
     async updateFightOrder(fightId: string, newIndex: number) {
         if (newIndex < 0) {
@@ -163,7 +160,7 @@ export default {
             const boxer2 = fight.boxer2
             fight.boxer1 = boxer2
             fight.boxer2 = boxer1
-            await pocketBaseManager.updateFights([DbConverter.toDbFight(fight)])
+            await dbManager.updateFight(DbConverter.toDbFight(fight))
         }
     },
     setModalityErrors(fightId: string, modalityErrors: ModalityError[]) {
@@ -173,7 +170,7 @@ export default {
         }
     },
     async loadFightStore() {
-        const tournaments = await pocketBaseManager.getTournaments()
+        const tournaments = await dbManager.getTournaments()
         fightCardStore.tournaments = tournaments.map((t) => DbConverter.toTournament(t))
         if (fightCardStore.currentTournament) {
             await this.loadTournamentFromDb(fightCardStore.currentTournament.id)
@@ -194,8 +191,8 @@ export default {
             return
         }
 
-        const boxers = await pocketBaseManager.getBoxersForTournament(tournamentId)
-        const fights = await pocketBaseManager.getFights(tournamentId)
+        const boxers = await dbManager.getTournamentBoxers(tournamentId)
+        const fights = await dbManager.getFights(tournamentId)
         fightCardStore.boxers = boxers.map((b) => DbConverter.toBoxer(b))
         fightCardStore.fightCard = fights
             .map((f) => {
@@ -215,14 +212,14 @@ export default {
         fightCardStore.currentTournament = tournament || null
     },
     deleteTournament(tournamentId: string) {
-        pocketBaseManager.deleteTournament(tournamentId)
+        dbManager.deleteTournament(tournamentId)
         fightCardStore.tournaments = fightCardStore.tournaments.filter((t) => t.id != tournamentId)
         if (fightCardStore.currentTournament?.id == tournamentId) {
             fightCardStore.currentTournament = null
         }
     },
     async getAllBoxersAttributes(): Promise<Readonly<BoxerAttributes[]>> {
-        const boxers = await pocketBaseManager.getAllBoxers()
+        const boxers = await dbManager.getBoxers()
         return boxers.map((b) => DbConverter.toBoxerAttributes(b))
     },
 }

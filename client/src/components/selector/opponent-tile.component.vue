@@ -36,7 +36,7 @@
                 <div class="col-md-6 pb-1">
                     <i>{{ opponent.attributes.club }}</i>
                 </div>
-                <div class="col-md-6 d-flex justify-content-end flex-wrap">
+                <div class="col-md-6 d-flex align-items-end justify-content-end flex-wrap">
                     <LinkedFightsBadgeComponent :boxer="opponent" />
                     <AgeBadgeComponent
                         :boxer="opponent"

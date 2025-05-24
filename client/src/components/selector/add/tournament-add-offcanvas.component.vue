@@ -45,6 +45,27 @@
                         >{{ errors.name }}</span
                     >
                 </div>
+                <div class="mb-3">
+                    <label
+                        for="date"
+                        class="form-label"
+                    >
+                        Date
+                    </label>
+                    <input
+                        v-model="date"
+                        class="form-control"
+                        type="date"
+                        :class="{
+                            'is-invalid': errors.date?.length ?? 0 > 0,
+                        }"
+                    />
+                    <span
+                        name="date"
+                        class="invalid-feedback"
+                        >{{ errors.date }}</span
+                    >
+                </div>
                 <button
                     type="submit"
                     class="btn btn-primary"
@@ -62,9 +83,8 @@ import { defineComponent } from "vue"
 import { configure, defineRule, GenericObject, useForm } from "vee-validate"
 import { Tournament } from "@/types/boxing.d"
 import fightService from "@/services/fight.service"
-import { generateRandomId } from "@/utils/string.utils"
 import { closeModal } from "@/utils/ui.utils"
-import { userStore } from "@/composables/user.composable"
+import { uiStore } from "@/composables/ui.composable"
 
 configure({
     validateOnInput: true,
@@ -83,20 +103,24 @@ export default defineComponent({
         const { defineField, handleSubmit, errors, resetForm } = useForm({
             validationSchema: {
                 name: "required",
+                date: "required",
             },
             initialValues: {
                 name: "",
+                date: "",
             },
         })
 
         // Define fields
         const [name] = defineField("name")
+        const [date] = defineField("date")
         const onSubmit = handleSubmit(async (form: GenericObject) => {
-            if (!userStore.account) return
+            if (!uiStore.account) return
             const tournament: Tournament = {
                 name: form.name,
-                id: generateRandomId(),
-                userId: userStore.account?.id,
+                date: form.date,
+                id: "",
+                userId: uiStore.account?.id,
             }
             await fightService.addTournament(tournament)
             resetForm()
@@ -107,6 +131,7 @@ export default defineComponent({
             onSubmit,
             errors,
             name,
+            date,
         }
     },
     data() {

@@ -74,4 +74,5 @@ export interface Tournament {
     id: string
     name: string
     userId: string
+    date: string
 }
