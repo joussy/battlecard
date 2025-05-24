@@ -12,7 +12,7 @@
                 <i class="bi bi-pencil" />
             </button>
             <div
-                v-if="userStore.account != null"
+                v-if="uiStore.account != null"
                 class="btn-group"
                 role="group"
             >
@@ -201,11 +201,11 @@
 import { Fight, Gender } from "@/types/boxing.d"
 import fightService from "@/services/fight.service"
 import { ApiService } from "@/services/api.service"
-import { userStore } from "@/composables/user.composable"
 import { FileType } from "@/types/api"
 import { getFightDurationAsString } from "@/utils/string.utils"
 import Sortable from "sortablejs"
 import IconComponent from "./core/icon.component.vue"
+import { uiStore } from "@/composables/ui.composable"
 
 export default {
     components: {
@@ -216,7 +216,7 @@ export default {
             Gender: Gender,
             fightStore: fightService.store(),
             fightService: fightService,
-            userStore: userStore,
+            uiStore: uiStore,
             editionMode: false,
         }
     },
@@ -267,12 +267,7 @@ export default {
             })
         },
         async downloadFile(fileType: FileType) {
-            await ApiService.downloadFightCard(
-                fileType,
-                this.fightStore.fightCard,
-                this.fightStore.modality,
-                this.fightStore.currentTournament!.id
-            )
+            await ApiService.downloadFightCard(fileType, this.fightStore.currentTournament!.id)
         },
         getFightDuration(fight: Fight) {
             const fightDuration = this.fightStore.modality.getFightDuration(
@@ -315,7 +310,7 @@ export default {
         box-shadow: 0 0 0 rgba(0, 123, 255, 0);
     }
     50% {
-        box-shadow: 0 0 20px 10px rgba(92, 94, 95, 0.7);
+        box-shadow: 0 0 20px 10px rgba(92, 94, 95, 0.3);
     }
     100% {
         box-shadow: 0 0 0 rgba(0, 123, 255, 0);
@@ -328,7 +323,7 @@ export default {
         box-shadow: 0 0 0 rgba(255, 193, 7, 0);
     }
     50% {
-        box-shadow: 0 0 20px 10px rgba(158, 158, 158, 0.7);
+        box-shadow: 0 0 20px 10px rgba(158, 158, 158, 0.3);
     }
     100% {
         box-shadow: 0 0 0 rgb(255, 255, 255);

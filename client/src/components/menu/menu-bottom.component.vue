@@ -8,22 +8,22 @@
             active-class="active"
         >
             <i
-                v-if="!userStore.account"
+                v-if="!uiStore.account"
                 class="bi bi-gear-fill fs-2"
             ></i>
             <i
-                v-else-if="!userStore.account.avatar"
+                v-else-if="!uiStore.account.picture"
                 class="bi bi-person-circle fs-2"
             ></i>
             <img
                 v-else
-                :src="userStore.account.avatar"
+                :src="uiStore.account.picture"
                 class="rounded-circle icon-img-2 align-text-bottom"
             />
             <div>Settings</div>
         </router-link>
         <router-link
-            v-if="userStore.account != null"
+            v-if="uiStore.account != null"
             :to="{ name: 'tournaments' }"
             class="nav-link text-center"
             :class="{ active: $route.path.startsWith('/tournaments') }"
@@ -35,7 +35,7 @@
             <div>Tournament</div>
         </router-link>
         <router-link
-            v-if="userStore.account && fightStore.currentTournament"
+            v-if="uiStore.account && fightStore.currentTournament"
             :to="{ name: 'selector' }"
             class="nav-link text-center"
             :class="{ active: $route.path.startsWith('/selector') }"
@@ -47,7 +47,7 @@
             <div>Selector</div>
         </router-link>
         <router-link
-            v-if="userStore.account && fightStore.currentTournament"
+            v-if="uiStore.account && fightStore.currentTournament"
             :to="{ name: 'card' }"
             class="nav-link text-center position-relative"
             active-class="active"
@@ -65,7 +65,7 @@
 </template>
 <script lang="ts">
 import Icon from "@/components/core/icon.component.vue"
-import { userStore } from "@/composables/user.composable"
+import { uiStore } from "@/composables/ui.composable"
 import fightService from "@/services/fight.service"
 
 export default {
@@ -74,7 +74,7 @@ export default {
     },
     data() {
         return {
-            userStore,
+            uiStore,
             fightStore: fightService.store(),
         }
     },
@@ -83,7 +83,7 @@ export default {
             return this.fightStore.fightCard.length
         },
         logout() {
-            userStore.logout()
+            uiStore.logout()
             this.$router.push("settings")
         },
     },

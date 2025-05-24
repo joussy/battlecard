@@ -11,7 +11,6 @@ import { defineComponent, watch } from "vue"
 import MenuTopComponent from "@/components/menu/menu-top.component.vue"
 import MenuBottomComponent from "@/components/menu/menu-bottom.component.vue"
 import fightService from "@/services/fight.service"
-import { loadUserStore, userStore } from "@/composables/user.composable"
 import { loadUiStore, uiStore } from "@/composables/ui.composable"
 
 export default defineComponent({
@@ -26,13 +25,11 @@ export default defineComponent({
     },
     mounted() {
         loadUiStore()
-        loadUserStore()
         watch(
-            () => [userStore.account],
+            () => [uiStore.account],
             async () => {
-                if (userStore.account == null) {
-                    uiStore.currentTournamentId = null
-                    this.$router.push("settings")
+                if (uiStore.account == null) {
+                    return
                 }
                 await fightService.loadFightStore()
                 await fightService.setCurrentTournament(uiStore.currentTournamentId)
@@ -44,7 +41,7 @@ export default defineComponent({
         watch(
             () => [uiStore.currentTournamentId],
             () => {
-                if (userStore.account && uiStore.currentTournamentId == null) {
+                if (uiStore.account && uiStore.currentTournamentId == null) {
                     this.$router.push("tournaments")
                 }
             }
