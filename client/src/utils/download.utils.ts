@@ -1,8 +1,10 @@
-export async function postAndDownload(url: string, payload: object | [], filename: string, headers: object) {
+import { mergeHeaders } from "./manager.utils"
+
+export async function postAndDownload(url: string, payload: object | [], filename: string) {
     try {
         const response = await fetch(url, {
             method: "POST",
-            headers: { ...headers, "Content-Type": "application/json" },
+            headers: mergeHeaders({ "Content-Type": "application/json" }),
             body: JSON.stringify(payload),
         })
 

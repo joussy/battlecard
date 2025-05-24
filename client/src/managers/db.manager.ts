@@ -1,140 +1,76 @@
 import { uiStore } from "@/composables/ui.composable"
 import { DbBoxer, DbFight, DbTournament, DbTournament_Boxer } from "@/types/db"
-
-function getAuthHeaders(): Record<string, string> {
-    const token = uiStore.account?.authToken || localStorage.getItem("jwtToken")
-    return token ? { Authorization: `Bearer ${token}` } : {}
-}
-
-function mergeHeaders(extra: Record<string, string> = {}): Record<string, string> {
-    return { ...getAuthHeaders(), ...extra }
-}
+import { get, mutate } from "@/utils/manager.utils"
 
 export class DbManager {
     // BOXER
-    async getBoxers(): Promise<DbBoxer[]> {
-        const res = await fetch("/api/boxers", { headers: getAuthHeaders() })
-        if (!res.ok) throw new Error("Failed to fetch boxers")
-        return await res.json()
+    getBoxers(): Promise<DbBoxer[]> {
+        return get<DbBoxer[]>("/api/boxers", undefined, "Failed to fetch boxers")
     }
-    async addBoxer(boxer: DbBoxer): Promise<DbBoxer> {
+    addBoxer(boxer: DbBoxer): Promise<DbBoxer> {
         boxer.userId = uiStore.getAccountOrThrow().id
-        const res = await fetch("/api/boxers", {
-            method: "POST",
-            headers: mergeHeaders({ "Content-Type": "application/json" }),
-            body: JSON.stringify(boxer),
-        })
-        if (!res.ok) throw new Error("Failed to add boxer")
-        return await res.json()
+        return mutate<DbBoxer>("/api/boxers", "POST", boxer, "Failed to add boxer")
     }
-    async getBoxer(boxerId: string): Promise<DbBoxer> {
-        const res = await fetch(`/api/boxers/${encodeURIComponent(boxerId)}`, {
-            headers: getAuthHeaders(),
-        })
-        if (!res.ok) throw new Error("Failed to fetch boxer")
-        return await res.json()
+    getBoxer(boxerId: string): Promise<DbBoxer> {
+        return get<DbBoxer>(`/api/boxers/${encodeURIComponent(boxerId)}`, undefined, "Failed to fetch boxer")
     }
-    async updateBoxer(boxer: DbBoxer): Promise<DbBoxer> {
-        const res = await fetch(`/api/boxers/${encodeURIComponent(boxer.id)}`, {
-            method: "PUT",
-            headers: mergeHeaders({ "Content-Type": "application/json" }),
-            body: JSON.stringify(boxer),
-        })
-        if (!res.ok) throw new Error("Failed to update boxer")
-        return await res.json()
+    updateBoxer(boxer: DbBoxer): Promise<DbBoxer> {
+        return mutate<DbBoxer>(`/api/boxers/${encodeURIComponent(boxer.id)}`, "PUT", boxer, "Failed to update boxer")
     }
 
     // FIGHT
-    async getFights(tournamentId: string): Promise<DbFight[]> {
-        const res = await fetch(`/api/fights?tournamentId=${encodeURIComponent(tournamentId)}`, {
-            headers: getAuthHeaders(),
-        })
-        if (!res.ok) throw new Error("Failed to fetch fights")
-        return await res.json()
+    getFights(tournamentId: string): Promise<DbFight[]> {
+        return get<DbFight[]>("/api/fights", { tournamentId }, "Failed to fetch fights")
     }
-    async addFight(fight: DbFight): Promise<DbFight> {
-        const res = await fetch("/api/fights", {
-            method: "POST",
-            headers: mergeHeaders({ "Content-Type": "application/json" }),
-            body: JSON.stringify(fight),
-        })
-        if (!res.ok) throw new Error("Failed to add fight")
-        return await res.json()
+    addFight(fight: DbFight): Promise<DbFight> {
+        return mutate<DbFight>("/api/fights", "POST", fight, "Failed to add fight")
     }
-    async deleteFights(ids: string[]): Promise<void> {
-        const res = await fetch(`/api/fights`, {
-            method: "DELETE",
-            headers: mergeHeaders({ "Content-Type": "application/json" }),
-            body: JSON.stringify({ ids }),
-        })
-        if (!res.ok) throw new Error("Failed to delete fights")
+    deleteFights(ids: string[]): Promise<void> {
+        return mutate<void>("/api/fights", "DELETE", { ids }, "Failed to delete fights")
     }
-    async reorderFights(fightIds: string[], tournamentId: string): Promise<void> {
-        const res = await fetch(`/api/fights/reorder`, {
-            method: "POST",
-            headers: mergeHeaders({ "Content-Type": "application/json" }),
-            body: JSON.stringify({ fightIds, tournamentId }),
-        })
-        if (!res.ok) throw new Error("Failed to reorder fights")
+    reorderFights(fightIds: string[], tournamentId: string): Promise<void> {
+        return mutate<void>("/api/fights/reorder", "POST", { fightIds, tournamentId }, "Failed to reorder fights")
     }
-    async updateFight(fight: DbFight): Promise<DbFight> {
-        const res = await fetch(`/api/fights/${encodeURIComponent(fight.id)}`, {
-            method: "PUT",
-            headers: mergeHeaders({ "Content-Type": "application/json" }),
-            body: JSON.stringify(fight),
-        })
-        if (!res.ok) throw new Error("Failed to update fight")
-        return await res.json()
+    updateFight(fight: DbFight): Promise<DbFight> {
+        return mutate<DbFight>(`/api/fights/${encodeURIComponent(fight.id)}`, "PUT", fight, "Failed to update fight")
     }
 
     // TOURNAMENT
-    async getTournaments(): Promise<DbTournament[]> {
-        const res = await fetch("/api/tournaments", { headers: getAuthHeaders() })
-        if (!res.ok) throw new Error("Failed to fetch tournaments")
-        return await res.json()
+    getTournaments(): Promise<DbTournament[]> {
+        return get<DbTournament[]>("/api/tournaments", undefined, "Failed to fetch tournaments")
     }
-    async addTournament(tournament: DbTournament): Promise<DbTournament> {
+    addTournament(tournament: DbTournament): Promise<DbTournament> {
         tournament.userId = uiStore.getAccountOrThrow().id
-        const res = await fetch("/api/tournaments", {
-            method: "POST",
-            headers: mergeHeaders({ "Content-Type": "application/json" }),
-            body: JSON.stringify(tournament),
-        })
-        if (!res.ok) throw new Error("Failed to add tournament")
-        return await res.json()
+        return mutate<DbTournament>("/api/tournaments", "POST", tournament, "Failed to add tournament")
     }
-    async deleteTournament(tournamentId: string): Promise<void> {
-        const res = await fetch(`/api/tournaments/${encodeURIComponent(tournamentId)}`, {
-            method: "DELETE",
-            headers: getAuthHeaders(),
-        })
-        if (!res.ok) throw new Error("Failed to delete tournament")
+    deleteTournament(tournamentId: string): Promise<void> {
+        return mutate<void>(
+            `/api/tournaments/${encodeURIComponent(tournamentId)}`,
+            "DELETE",
+            undefined,
+            "Failed to delete tournament"
+        )
     }
 
     // TOURNAMENT_BOXER
-    async getTournamentBoxers(tournamentId: string): Promise<DbBoxer[]> {
-        const res = await fetch(`/api/tournament-boxers?tournamentId=${encodeURIComponent(tournamentId)}`, {
-            headers: getAuthHeaders(),
-        })
-        if (!res.ok) throw new Error("Failed to fetch tournament boxers")
-        return await res.json()
+    getTournamentBoxers(tournamentId: string): Promise<DbBoxer[]> {
+        return get<DbBoxer[]>("/api/tournament-boxers", { tournamentId }, "Failed to fetch tournament boxers")
     }
-    async addBoxerToTournament(boxerId: string, tournamentId: string): Promise<DbTournament_Boxer> {
-        const res = await fetch("/api/tournament-boxers", {
-            method: "POST",
-            headers: mergeHeaders({ "Content-Type": "application/json" }),
-            body: JSON.stringify({ boxerId, tournamentId }),
-        })
-        if (!res.ok) throw new Error("Failed to add boxer to tournament")
-        return await res.json()
+    addBoxerToTournament(boxerId: string, tournamentId: string): Promise<DbTournament_Boxer> {
+        return mutate<DbTournament_Boxer>(
+            "/api/tournament-boxers",
+            "POST",
+            { boxerId, tournamentId },
+            "Failed to add boxer to tournament"
+        )
     }
-    async deleteBoxersFromTournament(boxerIds: string[], tournamentId: string): Promise<void> {
-        const res = await fetch(`/api/tournament-boxers`, {
-            method: "DELETE",
-            headers: mergeHeaders({ "Content-Type": "application/json" }),
-            body: JSON.stringify({ boxerIds, tournamentId }),
-        })
-        if (!res.ok) throw new Error("Failed to delete boxers from tournament")
+    deleteBoxersFromTournament(boxerIds: string[], tournamentId: string): Promise<void> {
+        return mutate<void>(
+            "/api/tournament-boxers",
+            "DELETE",
+            { boxerIds, tournamentId },
+            "Failed to delete boxers from tournament"
+        )
     }
 }
 

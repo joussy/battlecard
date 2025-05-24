@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Req, Res } from '@nestjs/common';
+import { Body, Controller, Get, Post, Req, Res } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Tournament } from './entities/tournament.entity';
@@ -69,7 +69,7 @@ export class ExternalServicesController {
     res.send(Buffer.from(arrBuf));
   }
 
-  @Post('importBoxerById')
+  @Get('importBoxerById')
   async importBoxerById(
     @Req() req: { id: string },
     @Res() res: ExpressResponse,

@@ -23,10 +23,7 @@ export class ApiService {
         await postAndDownload(
             `${import.meta.env.VITE_SERVER_URL}/external/printCard`,
             { fileType, tournamentId },
-            `fight-card.${fileType}`,
-            {
-                Authorization: uiStore.getAccountOrThrow().authToken ?? "",
-            }
+            `fight-card.${fileType}`
         )
     }
 }
