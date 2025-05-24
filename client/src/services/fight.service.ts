@@ -4,7 +4,6 @@ import { stringify as stringifyCsv, parse as parseCsv } from "csv/browser/esm/sy
 import { format, parse } from "date-fns"
 import { ApiService } from "@/services/api.service"
 import fightCardStore from "@/composables/fight.composable"
-import { generateRandomId } from "@/utils/string.utils"
 import { readonly } from "vue"
 import { uiStore } from "@/composables/ui.composable"
 import { userStore } from "@/composables/user.composable"
@@ -197,7 +196,7 @@ export class FightService {
         })
         for (const [, entry] of parsedCsv.entries()) {
             const boxerAttributes = {
-                id: generateRandomId(),
+                id: "",
                 lastName: entry.lastName,
                 firstName: entry.firstName,
                 birthDate: parse(entry.birthDate, "dd/MM/yyyy", new Date()),

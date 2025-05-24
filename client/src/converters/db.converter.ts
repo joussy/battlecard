@@ -46,6 +46,7 @@ export default class DbConverter {
             id: tournament.id,
             name: tournament.name,
             userId: tournament.userId,
+            date: tournament.date,
         }
     }
 
@@ -54,6 +55,7 @@ export default class DbConverter {
             id: tournament.id,
             name: tournament.name,
             userId: tournament.userId,
+            date: tournament.date,
         }
     }
 

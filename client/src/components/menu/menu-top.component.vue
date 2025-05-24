@@ -52,10 +52,7 @@
                 <span class="badge rounded-pill bg-primary">{{ getNbFights() }}</span>
             </router-link>
         </div>
-        <div
-            v-if="userStore.authenticationAvailable"
-            class="nav-item dropdown ms-auto me-3"
-        >
+        <div class="nav-item dropdown ms-auto me-3">
             <div
                 class="border-0 d-flex align-items-center icon-img-2"
                 type="button"

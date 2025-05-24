@@ -1,17 +1,14 @@
 <template>
     <div class="max-width-md">
-        <div
-            v-if="userStore.authenticationAvailable"
-            class="card mb-3"
-        >
+        <div class="card mb-3">
             <div class="card-header"><i class="bi bi-person me-2" />Account</div>
             <div class="card-body">
                 <button
                     v-if="!userStore.account"
                     class="btn btn-warning ms-2"
-                    @click="signIn()"
+                    @click="signInWithGoogle()"
                 >
-                    Sign In
+                    <i class="bi bi-google me-2"></i>Sign In with Google
                 </button>
                 <div
                     v-else
@@ -125,17 +122,26 @@ export default defineComponent({
         }
     },
     async mounted() {
-        const response = await fetch("/api/hello", {
-            method: "GET",
+        // Listen for token from popup
+        window.addEventListener("message", async (event) => {
+            if (event.data && event.data.token) {
+                await userStore.setTokenAndFetchUser(event.data.token)
+            }
         })
-        console.log("hello")
+        // (Optional: handle token in URL for fallback)
+        const urlParams = new URLSearchParams(window.location.search)
+        const token = urlParams.get("token")
+        if (token) {
+            await userStore.setTokenAndFetchUser(token)
+            window.history.replaceState({}, document.title, window.location.pathname)
+        }
     },
     methods: {
         setTheme(mode: UiTheme) {
             uiStore.theme = mode
         },
-        async signIn() {
-            await userStore.authenticate()
+        signInWithGoogle() {
+            userStore.authenticate()
         },
         logout() {
             userStore.logout()

@@ -1,23 +1,44 @@
 import { reactive, readonly } from "vue"
-import PocketBase from "pocketbase"
 import { UserAccount } from "@/types/user"
 
-const pocketBase = import.meta.env.VITE_SERVER_URL ? new PocketBase(import.meta.env.VITE_SERVER_URL) : null
+let jwtToken: string | null = localStorage.getItem("jwtToken")
+
 const userStore = reactive({
     restored: false as boolean,
     account: null as null | UserAccount,
     tournamentId: null as string | null,
-    authenticationAvailable: pocketBase != null,
-    async authenticate() {
-        if (!pocketBase || pocketBase.authStore.isValid) return null
-        if (import.meta.env.VITE_LOCAL_USER) {
-            pocketBase
-                .collection("users")
-                .authWithPassword(import.meta.env.VITE_LOCAL_USER, import.meta.env.VITE_LOCAL_PASSWORD)
+    authenticate() {
+        // Open popup for Google OAuth
+        const width = 500
+        const height = 600
+        const left = window.screenX + (window.outerWidth - width) / 2
+        const top = window.screenY + (window.outerHeight - height) / 2
+        window.open(
+            "/api/auth/google",
+            "GoogleAuth",
+            `width=${width},height=${height},left=${left},top=${top},resizable,scrollbars=yes,status=1`
+        )
+    },
+    async setTokenAndFetchUser(token: string) {
+        jwtToken = token
+        localStorage.setItem("jwtToken", token)
+        // Fetch user profile from backend
+        const res = await fetch("/api/users/me", {
+            headers: { Authorization: `Bearer ${token}` },
+        })
+        if (res.ok) {
+            const user = await res.json()
+            this.account = {
+                id: user.id,
+                name: user.name,
+                email: user.email,
+                avatar: user.avatar || null,
+                apiEnabled: true,
+                authToken: token,
+            }
         } else {
-            await pocketBase.collection("users").authWithOAuth2({ provider: "google" })
+            this.account = null
         }
-        updateAccount()
     },
     getAccountOrThrow(): UserAccount {
         if (!userStore.account) throw "Cannot before action because the user is disconnected"
@@ -25,40 +46,20 @@ const userStore = reactive({
         return this.account!
     },
     logout() {
-        if (!pocketBase) return null
-        pocketBase.authStore.clear()
+        jwtToken = null
+        localStorage.removeItem("jwtToken")
+        this.account = null
     },
 })
 
-function updateAccount() {
-    if (!pocketBase?.authStore.isValid) {
-        userStore.account = null
-    } else if (pocketBase?.authStore.record) {
-        userStore.account = {
-            id: pocketBase.authStore.record.id,
-            name: pocketBase.authStore.record.name as string,
-            email: pocketBase.authStore.record.email as string,
-            avatar: null,
-            apiEnabled: false,
-            authToken: pocketBase.authStore.token,
-        }
-        if (pocketBase.authStore.record?.avatar) {
-            userStore.account.avatar = pocketBase.files.getURL(
-                pocketBase.authStore.record,
-                pocketBase.authStore.record.avatar,
-                {}
-            )
-        }
-
-        userStore.account.apiEnabled = true
-    }
-}
+function updateAccount() {}
 
 function loadUserStore() {
     console.debug("loading user ... ")
-    pocketBase?.authStore.onChange(() => {
-        updateAccount()
-    })
+    const token = localStorage.getItem("jwtToken")
+    if (token) {
+        userStore.setTokenAndFetchUser(token)
+    }
     updateAccount()
     userStore.restored = true
 }
