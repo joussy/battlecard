@@ -30,8 +30,11 @@ export class PrintCardController {
       res.status(404).json({ error: 'Tournament not found' });
       return;
     }
-    // Fetch fights for tournament
-    const fights = await this.fightRepository.find({ where: { tournamentId } });
+    // Fetch fights for tournament, including boxer1 and boxer2 details
+    const fights = await this.fightRepository.find({
+      where: { tournamentId },
+      relations: ['boxer1', 'boxer2'],
+    });
     // Prepare payload for Node-RED
     const payload = {
       fights,
