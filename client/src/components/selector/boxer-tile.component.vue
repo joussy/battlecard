@@ -20,7 +20,7 @@
                 <div class="col-md-6 pb-1">
                     <i>{{ boxer.attributes.club }}</i>
                 </div>
-                <div class="col-md-6 d-flex justify-content-end flex-wrap">
+                <div class="col-md-6 d-flex align-items-end justify-content-end flex-wrap">
                     <LinkedFightsBadgeComponent :boxer="boxer" />
                     <PossibleBadgeComponent
                         :selected="boxer.opponents.filter((o) => o.isEligible).length"
