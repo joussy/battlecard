@@ -1,9 +1,6 @@
 import { ApiBoxer, FileType } from "@/types/api"
 import { userStore } from "@/composables/user.composable"
 import { postAndDownload } from "@/utils/download.utils"
-import { Fight } from "@/types/boxing"
-import ApiConverter from "@/converters/api.converter"
-import { IModality } from "@/fightModality/IModality"
 
 export class ApiService {
     static async getBoxerById(id: string): Promise<ApiBoxer | null> {
@@ -22,16 +19,10 @@ export class ApiService {
             return null
         }
     }
-    static async downloadFightCard(
-        fileType: FileType,
-        fightCard: readonly Fight[],
-        modality: IModality,
-        tournamentId: string
-    ) {
-        const cardExtraInfo = fightCard.map((f) => ApiConverter.ToFightCardExtraInfo(f, modality))
+    static async downloadFightCard(fileType: FileType, tournamentId: string) {
         await postAndDownload(
-            `${import.meta.env.VITE_SERVER_URL}/api/printCard`,
-            { fileType, cardExtraInfo, tournamentId },
+            `${import.meta.env.VITE_SERVER_URL}/printCard`,
+            { fileType, tournamentId },
             `fight-card.${fileType}`,
             {
                 Authorization: userStore.getAccountOrThrow().authToken ?? "",

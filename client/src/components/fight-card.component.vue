@@ -267,12 +267,7 @@ export default {
             })
         },
         async downloadFile(fileType: FileType) {
-            await ApiService.downloadFightCard(
-                fileType,
-                this.fightStore.fightCard,
-                this.fightStore.modality,
-                this.fightStore.currentTournament!.id
-            )
+            await ApiService.downloadFightCard(fileType, this.fightStore.currentTournament!.id)
         },
         getFightDuration(fight: Fight) {
             const fightDuration = this.fightStore.modality.getFightDuration(

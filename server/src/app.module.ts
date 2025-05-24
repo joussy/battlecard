@@ -20,6 +20,7 @@ import { Fight } from './entities/fight.entity';
 import { TournamentBoxer } from './entities/tournament_boxer.entity';
 import { FightController } from './fight.controller';
 import { TournamentBoxerController } from './tournament_boxer.controller';
+import { PrintCardController } from './print-card.controller';
 
 @Module({
   imports: [
@@ -54,6 +55,7 @@ import { TournamentBoxerController } from './tournament_boxer.controller';
     BoxerController,
     FightController,
     TournamentBoxerController,
+    PrintCardController,
   ],
   providers: [AppService, GoogleStrategy, AuthService, JwtStrategy],
 })
