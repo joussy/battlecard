@@ -310,7 +310,7 @@ export default {
         box-shadow: 0 0 0 rgba(0, 123, 255, 0);
     }
     50% {
-        box-shadow: 0 0 20px 10px rgba(92, 94, 95, 0.7);
+        box-shadow: 0 0 20px 10px rgba(92, 94, 95, 0.3);
     }
     100% {
         box-shadow: 0 0 0 rgba(0, 123, 255, 0);
@@ -323,7 +323,7 @@ export default {
         box-shadow: 0 0 0 rgba(255, 193, 7, 0);
     }
     50% {
-        box-shadow: 0 0 20px 10px rgba(158, 158, 158, 0.7);
+        box-shadow: 0 0 20px 10px rgba(158, 158, 158, 0.3);
     }
     100% {
         box-shadow: 0 0 0 rgb(255, 255, 255);

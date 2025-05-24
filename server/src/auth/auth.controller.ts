@@ -1,4 +1,4 @@
-import { Controller, Get, Req, UseGuards } from '@nestjs/common';
+import { Controller, Get, Req, SetMetadata, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -15,12 +15,14 @@ export class AuthController {
 
   @Get('google')
   @UseGuards(AuthGuard('google'))
+  @SetMetadata('isPublic', true)
   async googleAuth() {
     // Initiates the Google OAuth2 login flow
   }
 
   @Get('google/callback')
   @UseGuards(AuthGuard('google'))
+  @SetMetadata('isPublic', true)
   async googleAuthRedirect(
     @Req() req: { user: { email: string; name: string } },
   ) {

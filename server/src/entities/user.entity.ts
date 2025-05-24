@@ -17,6 +17,9 @@ export class User {
   @Column({ unique: true })
   email: string;
 
+  @Column({ type: 'boolean', default: false })
+  apiEnabled: boolean;
+
   @CreateDateColumn()
   created: Date;
 

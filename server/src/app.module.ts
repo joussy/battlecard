@@ -1,6 +1,4 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -20,7 +18,9 @@ import { Fight } from './entities/fight.entity';
 import { TournamentBoxer } from './entities/tournament_boxer.entity';
 import { FightController } from './fight.controller';
 import { TournamentBoxerController } from './tournament_boxer.controller';
-import { PrintCardController } from './print-card.controller';
+import { ExternalServicesController } from './external-services.controller';
+import { APP_GUARD } from '@nestjs/core';
+import { JwtAuthGuard } from './auth/jwt-auth.guard';
 
 @Module({
   imports: [
@@ -48,15 +48,22 @@ import { PrintCardController } from './print-card.controller';
     }),
   ],
   controllers: [
-    AppController,
     UserController,
     AuthController,
     TournamentController,
     BoxerController,
     FightController,
     TournamentBoxerController,
-    PrintCardController,
+    ExternalServicesController,
   ],
-  providers: [AppService, GoogleStrategy, AuthService, JwtStrategy],
+  providers: [
+    GoogleStrategy,
+    AuthService,
+    JwtStrategy,
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
+  ],
 })
 export class AppModule {}

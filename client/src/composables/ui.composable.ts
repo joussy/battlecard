@@ -42,7 +42,7 @@ const uiStore = reactive({
                 name: user.name,
                 email: user.email,
                 avatar: user.avatar || null,
-                apiEnabled: true,
+                apiEnabled: user.apiEnabled,
                 authToken: uiStore.jwtToken,
             }
         } else {

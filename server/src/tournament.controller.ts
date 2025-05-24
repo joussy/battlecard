@@ -13,7 +13,6 @@ import { Tournament } from './entities/tournament.entity';
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
 
 @Controller('tournaments')
-@UseGuards(JwtAuthGuard)
 export class TournamentController {
   constructor(
     @InjectRepository(Tournament)

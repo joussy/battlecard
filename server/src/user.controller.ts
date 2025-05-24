@@ -1,15 +1,7 @@
-import {
-  Controller,
-  Get,
-  Param,
-  NotFoundException,
-  UseGuards,
-  Req,
-} from '@nestjs/common';
+import { Controller, Get, Param, NotFoundException, Req } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
-import { JwtAuthGuard } from './auth/jwt-auth.guard';
 import { Request } from 'express';
 
 interface RequestWithUser extends Request {
@@ -17,7 +9,6 @@ interface RequestWithUser extends Request {
 }
 
 @Controller('users')
-@UseGuards(JwtAuthGuard)
 export class UserController {
   constructor(
     @InjectRepository(User)

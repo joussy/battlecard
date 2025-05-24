@@ -5,7 +5,7 @@ import { postAndDownload } from "@/utils/download.utils"
 export class ApiService {
     static async getBoxerById(id: string): Promise<ApiBoxer | null> {
         try {
-            const response = await fetch(`${import.meta.env.VITE_SERVER_URL}/api/getBoxerById?id=${id}`, {
+            const response = await fetch(`${import.meta.env.VITE_SERVER_URL}/external/importBoxerById?id=${id}`, {
                 headers: {
                     Authorization: uiStore.getAccountOrThrow().authToken ?? "",
                 },
@@ -21,7 +21,7 @@ export class ApiService {
     }
     static async downloadFightCard(fileType: FileType, tournamentId: string) {
         await postAndDownload(
-            `${import.meta.env.VITE_SERVER_URL}/printCard`,
+            `${import.meta.env.VITE_SERVER_URL}/external/printCard`,
             { fileType, tournamentId },
             `fight-card.${fileType}`,
             {
