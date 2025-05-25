@@ -2,6 +2,8 @@ import { Controller, Get, Body, Post, Param, Delete } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Tournament } from './entities/tournament.entity';
+import { toTournament, toApiTournament } from './adapters/tournament.adapter';
+import { ApiTournament } from '@/shared/types/api';
 
 @Controller('tournaments')
 export class TournamentController {
@@ -11,16 +13,22 @@ export class TournamentController {
   ) {}
 
   @Get()
-  async findAll(): Promise<Tournament[]> {
-    return this.tournamentRepository.find();
+  async findAll(): Promise<ApiTournament[]> {
+    const dbTournaments = await this.tournamentRepository.find();
+    return dbTournaments.map(toApiTournament);
   }
 
   @Post()
-  async create(@Body() tournament: Partial<Tournament>): Promise<Tournament> {
+  async create(
+    @Body() tournament: Partial<ApiTournament>,
+  ): Promise<ApiTournament> {
     if ('id' in tournament) {
       delete tournament.id;
     }
-    return this.tournamentRepository.save(tournament);
+    const dbTournament = await this.tournamentRepository.save(
+      toTournament(tournament as ApiTournament),
+    );
+    return toApiTournament(dbTournament);
   }
 
   @Delete(':id')

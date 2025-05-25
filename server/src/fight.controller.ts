@@ -11,6 +11,8 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Fight } from './entities/fight.entity';
+import { toFight, toApiFight } from './adapters/fight.adapter';
+import { ApiFight } from '@/shared/types/api';
 
 @Controller('fights')
 export class FightController {
@@ -20,16 +22,18 @@ export class FightController {
   ) {}
 
   @Get()
-  async findAll(): Promise<Fight[]> {
-    return this.fightRepository.find();
+  async findAll(): Promise<ApiFight[]> {
+    const dbFights = await this.fightRepository.find();
+    return dbFights.map(toApiFight);
   }
 
   @Post()
-  async create(@Body() fight: Partial<Fight>): Promise<Fight> {
+  async create(@Body() fight: Partial<ApiFight>): Promise<ApiFight> {
     if ('id' in fight) {
       delete fight.id;
     }
-    return this.fightRepository.save(fight);
+    const dbFight = await this.fightRepository.save(toFight(fight as ApiFight));
+    return toApiFight(dbFight);
   }
 
   @Delete()
@@ -63,11 +67,11 @@ export class FightController {
   @Put(':id')
   async update(
     @Param('id') id: string,
-    @Body() fight: Partial<Fight>,
-  ): Promise<Fight> {
-    await this.fightRepository.update(id, fight);
+    @Body() fight: Partial<ApiFight>,
+  ): Promise<ApiFight> {
+    await this.fightRepository.update(id, toFight(fight as ApiFight));
     const updated = await this.fightRepository.findOneBy({ id });
     if (!updated) throw new NotFoundException('Fight not found');
-    return updated;
+    return toApiFight(updated);
   }
 }

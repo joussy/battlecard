@@ -10,6 +10,8 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Boxer } from './entities/boxer.entity';
+import { toBoxer, toApiBoxer } from './adapters/boxer.adapter';
+import { ApiBoxer } from '@/shared/types/api';
 
 @Controller('boxers')
 export class BoxerController {
@@ -19,31 +21,34 @@ export class BoxerController {
   ) {}
 
   @Get()
-  async findAll(): Promise<Boxer[]> {
-    return this.boxerRepository.find();
+  async findAll(): Promise<ApiBoxer[]> {
+    const dbBoxers = await this.boxerRepository.find();
+    return dbBoxers.map(toApiBoxer);
   }
 
   @Post()
-  async create(@Body() boxer: Partial<Boxer>): Promise<Boxer> {
+  async create(@Body() boxer: Partial<ApiBoxer>): Promise<ApiBoxer> {
     if ('id' in boxer) {
       delete boxer.id;
     }
-    return this.boxerRepository.save(boxer);
+    const dbBoxer = await this.boxerRepository.save(toBoxer(boxer as ApiBoxer));
+    return toApiBoxer(dbBoxer);
   }
 
   @Get(':id')
-  async getBoxer(@Param('id') id: string): Promise<Boxer> {
-    return this.boxerRepository.findOneByOrFail({ id });
+  async getBoxer(@Param('id') id: string): Promise<ApiBoxer> {
+    const dbBoxer = await this.boxerRepository.findOneByOrFail({ id });
+    return toApiBoxer(dbBoxer);
   }
 
   @Put(':id')
   async update(
     @Param('id') id: string,
-    @Body() boxer: Partial<Boxer>,
-  ): Promise<Boxer> {
-    await this.boxerRepository.update(id, boxer);
+    @Body() boxer: Partial<ApiBoxer>,
+  ): Promise<ApiBoxer> {
+    await this.boxerRepository.update(id, toBoxer(boxer as ApiBoxer));
     const updated = await this.boxerRepository.findOneBy({ id });
     if (!updated) throw new NotFoundException('Boxer not found');
-    return updated;
+    return toApiBoxer(updated);
   }
 }

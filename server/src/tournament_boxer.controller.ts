@@ -3,6 +3,13 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, In } from 'typeorm';
 import { TournamentBoxer } from './entities/tournament_boxer.entity';
 import { Boxer } from './entities/boxer.entity';
+import {
+  toTournamentBoxer,
+  toApiTournamentBoxer,
+} from './adapters/tournamentBoxer.adapter';
+import { ApiTournament_Boxer } from '@/shared/types/api';
+import { ApiBoxer } from '@/shared/types/api';
+import { toApiBoxer } from './adapters/boxer.adapter';
 
 @Controller('tournament-boxers')
 export class TournamentBoxerController {
@@ -16,26 +23,28 @@ export class TournamentBoxerController {
   @Get()
   async findAll(
     @Query('tournamentId') tournamentId?: string,
-  ): Promise<Boxer[]> {
+  ): Promise<ApiTournament_Boxer[]> {
     if (tournamentId) {
       const tournamentBoxers = await this.tournamentBoxerRepository.find({
         where: { tournamentId },
       });
-      const boxerIds = tournamentBoxers.map((tb) => tb.boxerId);
-      if (boxerIds.length === 0) return [];
-      return this.boxerRepository.findByIds(boxerIds);
+      return tournamentBoxers.map(toApiTournamentBoxer);
     }
-    return this.boxerRepository.find();
+    const all = await this.tournamentBoxerRepository.find();
+    return all.map(toApiTournamentBoxer);
   }
 
   @Post()
   async create(
-    @Body() tournamentBoxer: Partial<TournamentBoxer>,
-  ): Promise<TournamentBoxer> {
+    @Body() tournamentBoxer: Partial<ApiTournament_Boxer>,
+  ): Promise<ApiTournament_Boxer> {
     if ('id' in tournamentBoxer) {
       delete tournamentBoxer.id;
     }
-    return this.tournamentBoxerRepository.save(tournamentBoxer);
+    const dbTournamentBoxer = await this.tournamentBoxerRepository.save(
+      toTournamentBoxer(tournamentBoxer as ApiTournament_Boxer),
+    );
+    return toApiTournamentBoxer(dbTournamentBoxer);
   }
 
   @Delete()
@@ -54,7 +63,7 @@ export class TournamentBoxerController {
   async getPossibleOpponents(
     @Query('boxerId') boxerId?: string,
     @Query('tournamentId') tournamentId?: string,
-  ): Promise<Boxer[]> {
+  ): Promise<ApiBoxer[]> {
     if (!boxerId || !tournamentId) {
       return [];
     }
@@ -71,6 +80,7 @@ export class TournamentBoxerController {
       return [];
     }
 
-    return this.boxerRepository.findByIds(boxerIds);
+    const boxers = await this.boxerRepository.findByIds(boxerIds);
+    return boxers.map((b): ApiBoxer => toApiBoxer(b));
   }
 }
