@@ -199,7 +199,7 @@
 
 <script lang="ts">
 import { Fight, Gender } from "@/types/boxing.d"
-import { ApiService } from "@/services/api.service"
+import { ExternalService } from "@/services/external.service"
 import { FileType } from "@/types/api"
 import { getFightDurationAsString } from "@/utils/string.utils"
 import Sortable from "sortablejs"
@@ -273,7 +273,7 @@ export default {
             if (!this.tournamentStore.currentTournamentId) {
                 return
             }
-            await ApiService.downloadFightCard(fileType, this.tournamentStore.currentTournamentId)
+            await ExternalService.downloadFightCard(fileType, this.tournamentStore.currentTournamentId)
         },
         getFightDuration(fight: Fight) {
             //TODO: Use fightStore to get fight duration

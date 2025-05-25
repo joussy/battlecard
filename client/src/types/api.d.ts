@@ -1,4 +1,4 @@
-export interface ApiBoxer {
+export interface ApiImportBoxer {
     name: string
     firstname: string
     birth_date: Date
