@@ -1,8 +1,8 @@
 import { defineStore } from "pinia"
 import type { Fight, Boxer } from "@/types/boxing.d"
-import type { DbFight } from "@/shared/types/db"
-import DbAdapter from "@/adapters/db.adapter"
-import dbManager from "@/managers/db.manager"
+import type { ApiFight } from "@/shared/types/api"
+import ApiAdapter from "@/adapters/api.adapter"
+import dbManager from "@/managers/api.manager"
 import { useTournamentStore } from "./tournament.store"
 
 export const useFightStore = defineStore("fight", {
@@ -16,13 +16,13 @@ export const useFightStore = defineStore("fight", {
             this.loading = true
             this.error = null
             try {
-                const dbFights: DbFight[] = await dbManager.getFights(tournamentId)
-                // Map DbFight to Fight, resolving boxer1/boxer2 from the provided boxers array
-                this.fights = dbFights
+                const apiFights: ApiFight[] = await dbManager.getFights(tournamentId)
+                // Map ApiFight to Fight, resolving boxer1/boxer2 from the provided boxers array
+                this.fights = apiFights
                     .map((f) => {
                         const boxer1 = boxers.find((b) => b.id === f.boxer1Id)
                         const boxer2 = boxers.find((b) => b.id === f.boxer2Id)
-                        if (boxer1 && boxer2) return DbAdapter.toFight(f, boxer1, boxer2)
+                        if (boxer1 && boxer2) return ApiAdapter.toFight(f, boxer1, boxer2)
                         return null
                     })
                     .filter((f): f is Fight => f !== null)
@@ -48,9 +48,9 @@ export const useFightStore = defineStore("fight", {
                 tournamentId: tournamentStore.currentTournamentId,
             }
             try {
-                const dbFight: DbFight = DbAdapter.toDbFight(fight)
-                const created: DbFight = await dbManager.addFight(dbFight)
-                const newFight = DbAdapter.toFight(created, fight.boxer1, fight.boxer2)
+                const apiFight: ApiFight = ApiAdapter.toApiFight(fight)
+                const created: ApiFight = await dbManager.addFight(apiFight)
+                const newFight = ApiAdapter.toFight(created, fight.boxer1, fight.boxer2)
                 this.fights.push(newFight)
                 return newFight
             } catch (e: unknown) {
@@ -140,7 +140,7 @@ export const useFightStore = defineStore("fight", {
                 const boxer2 = fight.boxer2
                 fight.boxer1 = boxer2
                 fight.boxer2 = boxer1
-                await dbManager.updateFight(DbAdapter.toDbFight(fight))
+                await dbManager.updateFight(ApiAdapter.toApiFight(fight))
             }
         },
         getFightById(fightId: string): Fight | undefined {

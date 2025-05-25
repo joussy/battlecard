@@ -1,9 +1,9 @@
 import { defineStore } from "pinia"
 import type { Boxer, Opponent } from "@/types/boxing.d"
-import DbAdapter from "@/adapters/db.adapter"
-import dbManager from "@/managers/db.manager"
+import ApiAdapter from "@/adapters/api.adapter"
+import dbManager from "@/managers/api.manager"
 import { ModalityError, ModalityErrorType } from "@/shared/types/modality.type"
-import { DbBoxer } from "@/shared/types/db"
+import { ApiBoxer } from "@/shared/types/api"
 
 export const useBoxerStore = defineStore("boxer", {
     state: () => ({
@@ -16,8 +16,8 @@ export const useBoxerStore = defineStore("boxer", {
             this.loading = true
             this.error = null
             try {
-                const dbBoxers: DbBoxer[] = await dbManager.getBoxers()
-                this.boxers = dbBoxers.map(DbAdapter.toBoxer)
+                const apiBoxers: ApiBoxer[] = await dbManager.getBoxers()
+                this.boxers = apiBoxers.map(ApiAdapter.toBoxer)
             } catch (e: unknown) {
                 this.error = e instanceof Error ? e.message : "Unknown error"
             } finally {
@@ -26,9 +26,9 @@ export const useBoxerStore = defineStore("boxer", {
         },
         async createBoxer(boxer: Boxer) {
             try {
-                const dbBoxer: DbBoxer = DbAdapter.toDbBoxer(boxer)
-                const created: DbBoxer = await dbManager.addBoxer(dbBoxer)
-                const newBoxer = DbAdapter.toBoxer(created)
+                const apiBoxer: ApiBoxer = ApiAdapter.toApiBoxer(boxer)
+                const created: ApiBoxer = await dbManager.addBoxer(apiBoxer)
+                const newBoxer = ApiAdapter.toBoxer(created)
                 this.boxers.push(newBoxer)
                 return newBoxer
             } catch (e: unknown) {

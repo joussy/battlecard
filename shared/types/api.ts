@@ -1,4 +1,4 @@
-export interface DbBoxer {
+export interface ApiBoxer {
     id: string
     lastName: string
     firstName: string
@@ -13,7 +13,7 @@ export interface DbBoxer {
     updated?: string
 }
 
-export interface DbFight {
+export interface ApiFight {
     order: number
     id: string
     boxer1Id: string
@@ -21,16 +21,15 @@ export interface DbFight {
     tournamentId: string
 }
 
-export interface DbTournament {
+export interface ApiTournament {
     id: string
     name: string
     userId: string
     date: string
 }
 
-export interface DbTournament_Boxer {
+export interface ApiTournament_Boxer {
     id: string
     tournamentId: string
     boxerId: string
-    expand: { boxerId: DbBoxer }
 }

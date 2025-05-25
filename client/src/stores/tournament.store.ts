@@ -1,8 +1,8 @@
 import { defineStore } from "pinia"
 import type { Tournament } from "@/types/boxing.d"
-import type { DbTournament } from "@/shared/types/db"
-import DbAdapter from "@/adapters/db.adapter"
-import dbManager from "@/managers/db.manager"
+import type { ApiTournament } from "@/shared/types/api"
+import ApiAdapter from "@/adapters/api.adapter"
+import dbManager from "@/managers/api.manager"
 
 export const useTournamentStore = defineStore("tournament", {
     state: () => ({
@@ -16,8 +16,8 @@ export const useTournamentStore = defineStore("tournament", {
             this.loading = true
             this.error = null
             try {
-                const dbTournaments: DbTournament[] = await dbManager.getTournaments()
-                this.tournaments = dbTournaments.map(DbAdapter.toTournament)
+                const apiTournaments: ApiTournament[] = await dbManager.getTournaments()
+                this.tournaments = apiTournaments.map(ApiAdapter.toTournament)
             } catch (e: unknown) {
                 this.error = e instanceof Error ? e.message : "Unknown error"
             } finally {
@@ -26,9 +26,9 @@ export const useTournamentStore = defineStore("tournament", {
         },
         async createTournament(tournament: Tournament) {
             try {
-                const dbTournament: DbTournament = DbAdapter.toDbTournament(tournament)
-                const created: DbTournament = await dbManager.addTournament(dbTournament)
-                const newTournament = DbAdapter.toTournament(created)
+                const apiTournament: ApiTournament = ApiAdapter.toApiTournament(tournament)
+                const created: ApiTournament = await dbManager.addTournament(apiTournament)
+                const newTournament = ApiAdapter.toTournament(created)
                 this.tournaments.push(newTournament)
                 return newTournament
             } catch (e: unknown) {
