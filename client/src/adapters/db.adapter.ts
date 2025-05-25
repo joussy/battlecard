@@ -1,4 +1,4 @@
-import { DbBoxer, DbFight, DbTournament } from "@/types/db"
+import { DbBoxer, DbFight, DbTournament } from "@/shared/types/db"
 import { Boxer, Fight, Gender, Tournament } from "@/types/boxing.d"
 
 export default class DbAdapter {

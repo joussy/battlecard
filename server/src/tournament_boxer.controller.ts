@@ -49,4 +49,28 @@ export class TournamentBoxerController {
       boxerId: In(boxerIds),
     });
   }
+
+  @Get()
+  async getPossibleOpponents(
+    @Query('boxerId') boxerId?: string,
+    @Query('tournamentId') tournamentId?: string,
+  ): Promise<Boxer[]> {
+    if (!boxerId || !tournamentId) {
+      return [];
+    }
+
+    const tournamentBoxers = await this.tournamentBoxerRepository.find({
+      where: { tournamentId },
+    });
+
+    const boxerIds = tournamentBoxers
+      .filter((tb) => tb.boxerId !== boxerId)
+      .map((tb) => tb.boxerId);
+
+    if (boxerIds.length === 0) {
+      return [];
+    }
+
+    return this.boxerRepository.findByIds(boxerIds);
+  }
 }

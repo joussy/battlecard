@@ -1,10 +1,10 @@
-import { BoxerAttributes } from "../types/boxing"
+import { Boxer } from "@/types/boxing"
 import { BeaCategory, FightDuration, ModalityError, ModalityErrorType } from "../types/modality.d"
 import { BaseModality } from "./BaseModality"
 import { differenceInDays } from "date-fns"
 
 export class BeaModality extends BaseModality {
-    getFightDuration(boxer1: BoxerAttributes, boxer2: BoxerAttributes): FightDuration {
+    getFightDuration(boxer1: Boxer, boxer2: Boxer): FightDuration {
         const boxer1Category = this.getCategory(boxer1)
         const boxer2Category = this.getCategory(boxer2)
         const roundDuration = Math.min(boxer1Category.roundDurationAsSeconds, boxer2Category.roundDurationAsSeconds)
@@ -82,7 +82,7 @@ export class BeaModality extends BaseModality {
         },
     ]
 
-    getModalityProblems(boxer1: BoxerAttributes, boxer2: BoxerAttributes): ModalityError[] {
+    getModalityProblems(boxer1: Boxer, boxer2: Boxer): ModalityError[] {
         const errors: ModalityError[] = []
         if (Math.abs(differenceInDays(boxer1.birthDate, boxer2.birthDate)) > 365 * 2) {
             //formatDistance
@@ -107,7 +107,7 @@ export class BeaModality extends BaseModality {
         return errors
     }
 
-    private getCategory(boxer: BoxerAttributes): BeaCategory {
+    private getCategory(boxer: Boxer): BeaCategory {
         let category: BeaCategory | null = null
         const birthYear = boxer.birthDate.getFullYear()
         let thisYear = new Date().getFullYear()
@@ -123,7 +123,7 @@ export class BeaModality extends BaseModality {
         return category
     }
 
-    getCategoryName(boxer: BoxerAttributes, shortText: boolean): string {
+    getCategoryName(boxer: Boxer, shortText: boolean): string {
         const category = this.getCategory(boxer)
         const categoryName = shortText ? category.shortName : category.name
         return categoryName

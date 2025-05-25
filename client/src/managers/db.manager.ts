@@ -1,4 +1,4 @@
-import { DbBoxer, DbFight, DbTournament, DbTournament_Boxer } from "@/types/db"
+import { DbBoxer, DbFight, DbTournament, DbTournament_Boxer } from "@/shared/types/db"
 import { get, mutate, mutateRaw } from "@/utils/manager.utils"
 
 export class DbManager {

@@ -1,9 +1,8 @@
 import { defineStore } from "pinia"
 import type { Tournament } from "@/types/boxing.d"
-import type { DbTournament } from "@/types/db"
+import type { DbTournament } from "@/shared/types/db"
 import DbAdapter from "@/adapters/db.adapter"
 import dbManager from "@/managers/db.manager"
-import { get } from "sortablejs"
 
 export const useTournamentStore = defineStore("tournament", {
     state: () => ({

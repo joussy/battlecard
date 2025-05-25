@@ -21,8 +21,8 @@ export class Boxer {
   @Column({ type: 'date' })
   birthDate: string;
 
-  @Column({ type: 'int', nullable: true })
-  nbFights?: number;
+  @Column({ type: 'int', nullable: false })
+  nbFights: number;
 
   @Column()
   club: string;

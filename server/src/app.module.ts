@@ -21,6 +21,7 @@ import { TournamentBoxerController } from './tournament_boxer.controller';
 import { ExternalServicesController } from './external-services.controller';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
+import { ModalityService } from './modality/modality.service';
 
 @Module({
   imports: [
@@ -64,6 +65,8 @@ import { JwtAuthGuard } from './auth/jwt-auth.guard';
       provide: APP_GUARD,
       useClass: JwtAuthGuard,
     },
+    ModalityService,
   ],
+  exports: [ModalityService],
 })
 export class AppModule {}

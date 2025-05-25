@@ -1,6 +1,6 @@
 import { defineStore } from "pinia"
 import type { Fight, Boxer } from "@/types/boxing.d"
-import type { DbFight } from "@/types/db"
+import type { DbFight } from "@/shared/types/db"
 import DbAdapter from "@/adapters/db.adapter"
 import dbManager from "@/managers/db.manager"
 import { useTournamentStore } from "./tournament.store"
