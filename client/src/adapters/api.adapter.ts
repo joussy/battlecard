@@ -3,8 +3,8 @@ import { IModality } from "@/fightModality/IModality"
 import { getFightDurationAsString } from "@/utils/string.utils"
 import { FightExtraInfo } from "@/types/api"
 
-export default class ApiConverter {
-    static ToFightCardExtraInfo(fight: Fight, modality: IModality): FightExtraInfo {
+export default class ApiAdapters {
+    static toFightCardExtraInfo(fight: Fight, modality: IModality): FightExtraInfo {
         const fightDuration = modality.getFightDuration(fight.boxer1.attributes, fight.boxer2.attributes)
         return {
             fightId: fight.id,

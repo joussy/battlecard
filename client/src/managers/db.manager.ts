@@ -1,4 +1,3 @@
-import { uiStore } from "@/composables/ui.composable"
 import { DbBoxer, DbFight, DbTournament, DbTournament_Boxer } from "@/types/db"
 import { get, mutate, mutateRaw } from "@/utils/manager.utils"
 
@@ -8,7 +7,6 @@ export class DbManager {
         return get<DbBoxer[]>("/api/boxers", undefined, "Failed to fetch boxers")
     }
     addBoxer(boxer: DbBoxer): Promise<DbBoxer> {
-        boxer.userId = uiStore.getAccountOrThrow().id
         return mutate<DbBoxer>("/api/boxers", "POST", boxer, "Failed to add boxer")
     }
     getBoxer(boxerId: string): Promise<DbBoxer> {
@@ -40,7 +38,6 @@ export class DbManager {
         return get<DbTournament[]>("/api/tournaments", undefined, "Failed to fetch tournaments")
     }
     addTournament(tournament: DbTournament): Promise<DbTournament> {
-        tournament.userId = uiStore.getAccountOrThrow().id
         return mutate<DbTournament>("/api/tournaments", "POST", tournament, "Failed to add tournament")
     }
     deleteTournament(tournamentId: string): Promise<void> {

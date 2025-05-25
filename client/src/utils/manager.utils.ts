@@ -1,7 +1,7 @@
-import { uiStore } from "@/composables/ui.composable"
+import { useUiStore } from "@/stores/ui.store"
 
 function getAuthHeaders(): Record<string, string> {
-    const token = uiStore.account?.authToken || localStorage.getItem("jwtToken")
+    const token = useUiStore().jwtToken
     return token ? { Authorization: `Bearer ${token}` } : {}
 }
 

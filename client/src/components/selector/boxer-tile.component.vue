@@ -7,7 +7,7 @@
             <div class="d-flex justify-content-between">
                 <div>
                     <IconComponent :name="boxer.attributes.gender == Gender.MALE ? 'male' : 'female'"></IconComponent>
-                    {{ fightService.getBoxerDisplayName(boxer.attributes) }}
+                    {{ boxerDisplayName }}
                 </div>
                 <div
                     class="font-italic text-right"
@@ -45,9 +45,9 @@ import WeightBadgeComponent from "@/components/badges/weight-badge.component.vue
 import PossibleBadgeComponent from "@/components/badges/possible-badge.component.vue"
 import LinkedFightsBadgeComponent from "@/components/badges/linked-fights-badge.component.vue"
 
-import fightService from "@/services/fight.service"
-import { uiStore } from "@/composables/ui.composable"
 import IconComponent from "../core/icon.component.vue"
+import { useUiStore } from "@/stores/ui.store"
+import { useBoxerStore } from "@/stores/boxer.store"
 
 export default defineComponent({
     components: {
@@ -67,11 +67,16 @@ export default defineComponent({
     emits: ["boxer-edit"],
     data() {
         return {
-            store: fightService.store(),
             Gender: Gender,
             ModalityErrorType: ModalityErrorType,
-            fightService: fightService,
+            uiStore: useUiStore(),
+            boxerStore: useBoxerStore(),
         }
+    },
+    computed: {
+        boxerDisplayName(): string {
+            return this.boxerStore.getBoxerDisplayName(this.boxer)
+        },
     },
     methods: {
         boxerEdit(): void {
@@ -79,7 +84,7 @@ export default defineComponent({
         },
         getOpponentsToDisplay(): Readonly<Opponent[]> {
             return this.boxer.opponents.filter((o) => {
-                if (uiStore.hideNonMatchableOpponents && !o.isEligible) return false
+                if (this.uiStore.hideNonMatchableOpponents && !o.isEligible) return false
                 return true
             })
         },

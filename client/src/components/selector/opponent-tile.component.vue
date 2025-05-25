@@ -2,28 +2,28 @@
     <div
         class="card mb-2"
         :class="{
-            'border-success': fightService.isCompeting(boxer, opponent),
+            'border-success': fightStore.isCompeting(boxer, opponent),
         }"
     >
         <div class="card-body">
             <div class="d-flex justify-content-between">
                 <div>
                     <button
-                        v-if="fightService.canCompete(boxer, opponent)"
+                        v-if="fightStore.canCompete(boxer, opponent)"
                         class="btn btn-outline-success btn-sm"
-                        @click="fightService.addToFightCard(boxer, opponent)"
+                        @click="fightStore.addToFightCard(boxer, opponent)"
                     >
                         <i class="bi bi-person-plus-fill" />
                     </button>
                     <button
-                        v-if="fightService.isCompeting(boxer, opponent)"
+                        v-if="fightStore.isCompeting(boxer, opponent)"
                         class="btn btn-outline-danger btn-sm"
-                        @click="fightService.removeFromFightCard(boxer, opponent)"
+                        @click="fightStore.removeFromFightCard(boxer, opponent)"
                     >
                         <i class="bi bi-person-dash-fill" />
                     </button>
 
-                    {{ fightService.getBoxerDisplayName(opponent.attributes) }}
+                    {{ boxerStore.getBoxerDisplayName(opponent) }}
                 </div>
                 <div
                     class="font-italic text-right"
@@ -40,19 +40,17 @@
                     <LinkedFightsBadgeComponent :boxer="opponent" />
                     <AgeBadgeComponent
                         :boxer="opponent"
-                        :modality-error="fightService.getOpponentModalityError(boxer, opponent, ModalityErrorType.AGE)"
+                        :modality-error="boxerStore.getOpponentModalityError(boxer, opponent, ModalityErrorType.AGE)"
                     />
                     <RecordBadgeComponent
                         :boxer="opponent"
                         :modality-error="
-                            fightService.getOpponentModalityError(boxer, opponent, ModalityErrorType.PRIZE_LIST)
+                            boxerStore.getOpponentModalityError(boxer, opponent, ModalityErrorType.PRIZE_LIST)
                         "
                     />
                     <WeightBadgeComponent
                         :boxer="opponent"
-                        :modality-error="
-                            fightService.getOpponentModalityError(boxer, opponent, ModalityErrorType.WEIGHT)
-                        "
+                        :modality-error="boxerStore.getOpponentModalityError(boxer, opponent, ModalityErrorType.WEIGHT)"
                     />
                 </div>
             </div>
@@ -68,8 +66,8 @@ import RecordBadgeComponent from "@/components/badges/record-badge.component.vue
 import LinkedFightsBadgeComponent from "@/components/badges/linked-fights-badge.component.vue"
 import WeightBadgeComponent from "@/components/badges/weight-badge.component.vue"
 import AgeBadgeComponent from "@/components/badges/age-badge.component.vue"
-import FightService from "@/services/fight.service"
-import fightService from "@/services/fight.service"
+import { useFightStore } from "@/stores/fight.store"
+import { useBoxerStore } from "@/stores/boxer.store"
 
 export default defineComponent({
     components: {
@@ -90,9 +88,9 @@ export default defineComponent({
     },
     data() {
         let ret = {
-            store: fightService.store(),
-            fightService: FightService,
             ModalityErrorType: ModalityErrorType,
+            fightStore: useFightStore(),
+            boxerStore: useBoxerStore(),
         }
 
         return ret

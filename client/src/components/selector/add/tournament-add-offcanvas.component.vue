@@ -82,9 +82,9 @@ import { defineComponent } from "vue"
 
 import { configure, defineRule, GenericObject, useForm } from "vee-validate"
 import { Tournament } from "@/types/boxing.d"
-import fightService from "@/services/fight.service"
 import { closeModal } from "@/utils/ui.utils"
-import { uiStore } from "@/composables/ui.composable"
+import { useUiStore } from "@/stores/ui.store"
+import { useTournamentStore } from "@/stores/tournament.store"
 
 configure({
     validateOnInput: true,
@@ -99,6 +99,8 @@ defineRule("required", (value: string) => {
 export default defineComponent({
     components: {},
     setup() {
+        const uiStore = useUiStore()
+        const tournamentStore = useTournamentStore()
         // Create the form
         const { defineField, handleSubmit, errors, resetForm } = useForm({
             validationSchema: {
@@ -122,7 +124,7 @@ export default defineComponent({
                 id: "",
                 userId: uiStore.account?.id,
             }
-            await fightService.addTournament(tournament)
+            await tournamentStore.createTournament(tournament)
             resetForm()
             closeModal("#tournamentAddOffcanvasNavbar")
             // emit("boxer-add", tournament)
@@ -132,6 +134,7 @@ export default defineComponent({
             errors,
             name,
             date,
+            uiStore,
         }
     },
     data() {

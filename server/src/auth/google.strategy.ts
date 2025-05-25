@@ -1,6 +1,13 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { PassportStrategy } from '@nestjs/passport';
 import { Injectable } from '@nestjs/common';
-import { Strategy, VerifyCallback } from 'passport-google-oauth20';
+import {
+  Strategy,
+  VerifyCallback,
+  Profile as GoogleProfile,
+} from 'passport-google-oauth20';
 
 @Injectable()
 export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
@@ -13,28 +20,26 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
     });
   }
 
-  async validate(
+  validate(
     accessToken: string,
     refreshToken: string,
-    profile: any,
+    profile: GoogleProfile,
     done: VerifyCallback,
-  ): Promise<any> {
-    const { name, emails, id } = profile;
+  ) {
+    const { name, emails, id, photos } = profile;
     let picture: string | undefined = undefined;
-    if (
-      Array.isArray(profile.photos) &&
-      profile.photos.length > 0 &&
-      profile.photos[0] &&
-      profile.photos[0].value
-    ) {
-      picture = profile.photos[0].value;
+    if (Array.isArray(photos) && photos.length > 0 && photos[0]?.value) {
+      picture = photos[0].value;
     }
     const user = {
       googleId: id,
-      email: emails[0].value,
-      name: name.givenName + ' ' + name.familyName,
+      email: emails && emails.length > 0 ? emails[0].value : undefined,
+      name: name
+        ? `${name.givenName ?? ''} ${name.familyName ?? ''}`.trim()
+        : undefined,
       picture,
     };
+
     done(null, user);
   }
 }

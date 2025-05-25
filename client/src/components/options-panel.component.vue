@@ -107,15 +107,13 @@
 <script lang="ts">
 import { defineComponent } from "vue"
 import { Gender } from "@/types/boxing.d"
-import fightService from "@/services/fight.service"
-import { uiStore } from "@/composables/ui.composable"
 import { UiTheme } from "@/types/ui"
+import { useUiStore } from "@/stores/ui.store"
 
 export default defineComponent({
     data() {
         return {
-            store: fightService.store(),
-            uiStore,
+            uiStore: useUiStore(),
             Gender: Gender,
         }
     },
@@ -123,27 +121,27 @@ export default defineComponent({
         // Listen for token from popup
         window.addEventListener("message", async (event) => {
             if (event.data && event.data.token) {
-                uiStore.jwtToken = event.data.token
-                await uiStore.setTokenAndFetchUser()
+                this.uiStore.jwtToken = event.data.token
+                await this.uiStore.setTokenAndFetchUser()
             }
         })
         // (Optional: handle token in URL for fallback)
         const urlParams = new URLSearchParams(window.location.search)
         const token = urlParams.get("token")
         if (token) {
-            await uiStore.setTokenAndFetchUser()
+            await this.uiStore.setTokenAndFetchUser()
             window.history.replaceState({}, document.title, window.location.pathname)
         }
     },
     methods: {
         setTheme(mode: UiTheme) {
-            uiStore.theme = mode
+            this.uiStore.theme = mode
         },
         signInWithGoogle() {
-            uiStore.authenticate()
+            this.uiStore.authenticate()
         },
         logout() {
-            uiStore.logout()
+            this.uiStore.logout()
         },
     },
 })

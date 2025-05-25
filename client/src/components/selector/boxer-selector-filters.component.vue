@@ -49,14 +49,13 @@
 </template>
 
 <script lang="ts">
+import { useUiStore } from "@/stores/ui.store"
 import { defineComponent } from "vue"
-
-import { uiStore } from "@/composables/ui.composable"
 
 export default defineComponent({
     data() {
         return {
-            uiStore,
+            uiStore: useUiStore(),
         }
     },
 })

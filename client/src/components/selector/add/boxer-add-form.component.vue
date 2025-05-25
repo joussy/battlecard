@@ -230,12 +230,11 @@ import { defineComponent, PropType } from "vue"
 
 import { configure, defineRule, GenericObject, useForm } from "vee-validate"
 import { BoxerAttributes, Gender } from "@/types/boxing.d"
-import fightService from "@/services/fight.service"
 import { isValid, format } from "date-fns"
 import IconComponent from "@/components/core/icon.component.vue"
 
 import { Toast } from "bootstrap"
-import { uiStore } from "@/composables/ui.composable"
+import { useBoxerStore } from "@/stores/boxer.store"
 
 configure({
     validateOnInput: true,
@@ -318,6 +317,7 @@ export default defineComponent({
         const [gender] = defineField("gender")
         const [birthdate] = defineField("birthdate")
         const onSubmit = handleSubmit(async (form: GenericObject) => {
+            const boxerStore = useBoxerStore()
             const boxerAttributes: BoxerAttributes = {
                 birthDate: new Date(form.birthdate),
                 club: form.club,
@@ -330,9 +330,9 @@ export default defineComponent({
                 license: form.license,
                 nbFights: 0,
                 id: form.id,
-                userId: uiStore.getAccountOrThrow().id,
+                userId: "",
             }
-            let boxer = await fightService.addBoxer(boxerAttributes)
+            let boxer = await boxerStore.createBoxer(boxerAttributes)
 
             if (boxer != null) {
                 emit("boxer-add", boxerAttributes)
@@ -357,7 +357,7 @@ export default defineComponent({
         }
     },
     mounted() {
-        this.clubsAutoCompleteList = fightService.getClubs()
+        this.clubsAutoCompleteList = []
     },
 })
 </script>

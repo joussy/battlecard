@@ -10,8 +10,8 @@
 import { defineComponent, watch } from "vue"
 import MenuTopComponent from "@/components/menu/menu-top.component.vue"
 import MenuBottomComponent from "@/components/menu/menu-bottom.component.vue"
-import fightService from "@/services/fight.service"
-import { loadUiStore, uiStore } from "@/composables/ui.composable"
+import { useUiStore } from "@/stores/ui.store"
+import { useTournamentStore } from "@/stores/tournament.store"
 
 export default defineComponent({
     components: {
@@ -24,27 +24,22 @@ export default defineComponent({
         }
     },
     mounted() {
-        loadUiStore()
+        const uiStore = useUiStore()
+        uiStore.loadUiStore()
+        const tournamentStore = useTournamentStore()
         watch(
-            () => [uiStore.account],
-            async () => {
-                if (uiStore.account == null) {
-                    return
+            () => [tournamentStore.currentTournamentId],
+            () => {
+                if (uiStore.account && tournamentStore.currentTournamentId == null) {
+                    this.$router.push("tournaments")
                 }
-                await fightService.loadFightStore()
-                await fightService.setCurrentTournament(uiStore.currentTournamentId)
-            },
-            {
-                immediate: true,
+                uiStore.saveUiStore()
             }
         )
         watch(
-            () => [uiStore.currentTournamentId],
-            () => {
-                if (uiStore.account && uiStore.currentTournamentId == null) {
-                    this.$router.push("tournaments")
-                }
-            }
+            () => [uiStore.theme, uiStore.hideNonMatchableOpponents, uiStore.hideFightersWithNoMatch, uiStore.jwtToken],
+            () => uiStore.saveUiStore(),
+            { deep: true }
         )
     },
 })

@@ -81,11 +81,11 @@
 <script lang="ts">
 import { defineComponent } from "vue"
 
-import { uiStore } from "@/composables/ui.composable"
 import BoxerAddFormComponent from "./boxer-add-form.component.vue"
 import { closeModal } from "@/utils/ui.utils"
 import BoxerSearchComponent from "./boxer-search.component.vue"
 import BoxerImportComponent from "./boxer-import.component.vue"
+import { useUiStore } from "@/stores/ui.store"
 
 export default defineComponent({
     components: {
@@ -95,7 +95,7 @@ export default defineComponent({
     },
     data() {
         return {
-            uiStore,
+            uiStore: useUiStore(),
             displayMode: "search" as "search" | "create" | "import",
         }
     },

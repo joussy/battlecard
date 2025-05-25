@@ -28,7 +28,7 @@
             </router-link>
         </div>
         <div
-            v-if="uiStore.account != null && fightStore.currentTournament != null"
+            v-if="uiStore.account != null && isTournamentSelected != null"
             class="nav-item"
         >
             <router-link
@@ -40,7 +40,7 @@
             </router-link>
         </div>
         <div
-            v-if="uiStore.account != null && fightStore.currentTournament != null"
+            v-if="uiStore.account != null && isTournamentSelected != null"
             class="nav-item"
         >
             <router-link
@@ -90,8 +90,8 @@
 </template>
 <script lang="ts">
 import Icon from "@/components/core/icon.component.vue"
-import { uiStore } from "@/composables/ui.composable"
-import fightService from "@/services/fight.service"
+import { useTournamentStore } from "@/stores/tournament.store"
+import { useUiStore } from "@/stores/ui.store"
 
 export default {
     components: {
@@ -99,16 +99,21 @@ export default {
     },
     data() {
         return {
-            uiStore,
-            fightStore: fightService.store(),
+            uiStore: useUiStore(),
+            tournamentStore: useTournamentStore(),
         }
+    },
+    computed: {
+        isTournamentSelected() {
+            return !!this.tournamentStore.currentTournamentId
+        },
     },
     methods: {
         getNbFights() {
-            return fightService.store().fightCard.length
+            return 111
         },
         logout() {
-            uiStore.logout()
+            this.uiStore.logout()
             this.$router.push("settings")
         },
     },

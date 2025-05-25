@@ -33,9 +33,9 @@
 import { PropType, defineComponent } from "vue"
 import { Boxer } from "@/types/boxing.d"
 
-import { uiStore } from "@/composables/ui.composable"
 import BoxerAddFormComponent from "./boxer-add-form.component.vue"
 import { closeModal } from "@/utils/ui.utils"
+import { useUiStore } from "@/stores/ui.store"
 
 export default defineComponent({
     components: {
@@ -49,7 +49,7 @@ export default defineComponent({
     },
     data() {
         return {
-            uiStore,
+            uiStore: useUiStore(),
         }
     },
     methods: {

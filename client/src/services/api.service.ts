@@ -1,5 +1,5 @@
 import { ApiBoxer, FileType } from "@/types/api"
-import { get, getRaw, postAndDownload } from "@/utils/manager.utils"
+import { getRaw, postAndDownload } from "@/utils/manager.utils"
 
 export class ApiService {
     static async getBoxerById(id: string): Promise<ApiBoxer | null> {

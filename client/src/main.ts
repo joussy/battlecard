@@ -10,6 +10,7 @@ import "./style.scss"
 import "bootstrap-icons/font/bootstrap-icons.css"
 import BoxerTileDetailsComponent from "@/components/selector/boxer-tile-details.component.vue"
 import TournamentsComponent from "@/components/tournaments.component.vue"
+import { createPinia } from "pinia"
 
 const routes = [
     { path: "/", redirect: { name: "selector" } },
@@ -25,4 +26,8 @@ const router = createRouter({
     routes,
 })
 
-createApp(App).use(router).mount("#app")
+const pinia = createPinia()
+const app = createApp(App)
+app.use(pinia)
+app.use(router)
+app.mount("#app")

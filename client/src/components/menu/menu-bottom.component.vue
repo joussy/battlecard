@@ -35,7 +35,7 @@
             <div>Tournament</div>
         </router-link>
         <router-link
-            v-if="uiStore.account && fightStore.currentTournament"
+            v-if="uiStore.account && tournamentStore.currentTournamentId"
             :to="{ name: 'selector' }"
             class="nav-link text-center"
             :class="{ active: $route.path.startsWith('/selector') }"
@@ -47,7 +47,7 @@
             <div>Selector</div>
         </router-link>
         <router-link
-            v-if="uiStore.account && fightStore.currentTournament"
+            v-if="uiStore.account && tournamentStore.currentTournamentId"
             :to="{ name: 'card' }"
             class="nav-link text-center position-relative"
             active-class="active"
@@ -65,8 +65,10 @@
 </template>
 <script lang="ts">
 import Icon from "@/components/core/icon.component.vue"
-import { uiStore } from "@/composables/ui.composable"
-import fightService from "@/services/fight.service"
+import { useBoxerStore } from "@/stores/boxer.store"
+import { useFightStore } from "@/stores/fight.store"
+import { useTournamentStore } from "@/stores/tournament.store"
+import { useUiStore } from "@/stores/ui.store"
 
 export default {
     components: {
@@ -74,16 +76,18 @@ export default {
     },
     data() {
         return {
-            uiStore,
-            fightStore: fightService.store(),
+            uiStore: useUiStore(),
+            boxerStore: useBoxerStore(),
+            fightStore: useFightStore(),
+            tournamentStore: useTournamentStore(),
         }
     },
     methods: {
         getNbFights() {
-            return this.fightStore.fightCard.length
+            return this.fightStore.fights.length
         },
         logout() {
-            uiStore.logout()
+            this.uiStore.logout()
             this.$router.push("settings")
         },
     },

@@ -1,7 +1,7 @@
 import { DbBoxer, DbFight, DbTournament } from "@/types/db"
 import { Boxer, BoxerAttributes, Fight, Gender, Tournament } from "@/types/boxing.d"
 
-export default class DbConverter {
+export default class DbAdapter {
     static toDbBoxer(boxerAttributes: BoxerAttributes): DbBoxer {
         return {
             birthDate: boxerAttributes.birthDate?.toISOString(),

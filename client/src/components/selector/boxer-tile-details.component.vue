@@ -43,9 +43,7 @@
                             ></Icon
                             >{{ boxer.attributes.weight }} kg
                         </p>
-                        <p class="col-md-6 mb-1">
-                            <i class="bi bi-link me-1"></i>{{ fightService.getNbFightsForBoxer(boxer) }} selected fights
-                        </p>
+                        <p class="col-md-6 mb-1"><i class="bi bi-link me-1"></i>{{ getNbFights }} selected fights</p>
                     </div>
                 </div>
             </div>
@@ -73,9 +71,10 @@ import BoxerEditOffcanvasComponent from "@/components/selector/add/boxer-edit-of
 
 import IconComponent from "@/components/core/icon.component.vue"
 
-import fightService from "@/services/fight.service"
-import { uiStore } from "@/composables/ui.composable"
 import { differenceInYears, format } from "date-fns"
+import { useFightStore } from "@/stores/fight.store"
+import { useBoxerStore } from "@/stores/boxer.store"
+import { useUiStore } from "@/stores/ui.store"
 
 export default defineComponent({
     components: {
@@ -86,22 +85,29 @@ export default defineComponent({
     setup() {},
     data() {
         return {
-            fightStore: fightService.store(),
+            fightStore: useFightStore(),
+            boxersStore: useBoxerStore(),
+            uiStore: useUiStore(),
             Gender: Gender,
             ModalityErrorType: ModalityErrorType,
-            fightService: fightService,
         }
     },
     computed: {
         boxer() {
             const boxerId = this.$route.params.id
-            return this.fightStore.boxers.find((b) => b.attributes.id == boxerId)
+            return this.boxersStore.boxers.find((b) => b.attributes.id == boxerId)
+        },
+        getNbFights(): number {
+            if (!this.boxer) {
+                return 0
+            }
+            return this.boxersStore.getNbFightsForBoxer(this.boxer)
         },
     },
     mounted() {},
     methods: {
         getOpponentsToDisplay(): Readonly<Opponent[]> {
-            return this.boxer?.opponents.filter((o) => !uiStore.hideNonMatchableOpponents || o.isEligible) ?? []
+            return this.boxer?.opponents.filter((o) => !this.uiStore.hideNonMatchableOpponents || o.isEligible) ?? []
         },
         getBirthDateAndAge(boxer: Boxer): string {
             const age = differenceInYears(new Date(), boxer.attributes.birthDate)

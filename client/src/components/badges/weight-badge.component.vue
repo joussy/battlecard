@@ -27,7 +27,7 @@ export default defineComponent({
             required: true,
         },
         modalityError: {
-            type: Object as PropType<ModalityError>,
+            type: Object as PropType<ModalityError | null>,
             required: false,
             default: null,
         },

@@ -131,13 +131,13 @@
                             :ref="`fights-tr-red-${fight.id}`"
                             class="cell-red word-break-all"
                         >
-                            {{ fightService.getBoxerDisplayName(fight.boxer1.attributes) }}
+                            {{ boxerStore.getBoxerDisplayName(fight.boxer1) }}
                         </td>
                         <td
                             :ref="`fights-tr-blue-${fight.id}`"
                             class="cell-blue word-break-all"
                         >
-                            {{ fightService.getBoxerDisplayName(fight.boxer2.attributes) }}
+                            {{ boxerStore.getBoxerDisplayName(fight.boxer2) }}
                         </td>
                         <td class="fight-extra-infos">
                             <div class="me-1">
@@ -170,7 +170,7 @@
                             </button>
                             <button
                                 class="btn btn-outline-danger btn-sm m-1"
-                                @click="fightService.removeFromFightCard(fight.boxer1, fight.boxer2)"
+                                @click="fightStore.removeFromFightCard(fight.boxer1, fight.boxer2)"
                             >
                                 <i class="bi bi-person-dash-fill" />
                             </button>
@@ -199,13 +199,15 @@
 
 <script lang="ts">
 import { Fight, Gender } from "@/types/boxing.d"
-import fightService from "@/services/fight.service"
 import { ApiService } from "@/services/api.service"
 import { FileType } from "@/types/api"
 import { getFightDurationAsString } from "@/utils/string.utils"
 import Sortable from "sortablejs"
 import IconComponent from "./core/icon.component.vue"
-import { uiStore } from "@/composables/ui.composable"
+import { useFightStore } from "@/stores/fight.store"
+import { useUiStore } from "@/stores/ui.store"
+import { useBoxerStore } from "@/stores/boxer.store"
+import { useTournamentStore } from "@/stores/tournament.store"
 
 export default {
     components: {
@@ -214,16 +216,17 @@ export default {
     data() {
         return {
             Gender: Gender,
-            fightStore: fightService.store(),
-            fightService: fightService,
-            uiStore: uiStore,
+            fightStore: useFightStore(),
+            uiStore: useUiStore(),
+            boxerStore: useBoxerStore(),
+            tournamentStore: useTournamentStore(),
             editionMode: false,
         }
     },
     computed: {
         fightCard: {
             get() {
-                return fightService.store().fightCard
+                return this.fightStore.fights
             },
             set() {
                 /* Avoid error on readonly collection */
@@ -235,7 +238,7 @@ export default {
     },
     methods: {
         switchFight(fightId: string) {
-            this.fightService.switchFight(fightId)
+            this.fightStore.switchFight(fightId)
             const divRed = (this.$refs[`fights-tr-red-${fightId}`] as HTMLElement[])[0]
             const divBlue = (this.$refs[`fights-tr-blue-${fightId}`] as HTMLElement[])[0]
 
@@ -258,7 +261,7 @@ export default {
                 animation: 150,
                 onEnd: async (evt: { oldIndex?: number; newIndex?: number }) => {
                     if (evt?.oldIndex !== undefined && evt?.newIndex !== undefined) {
-                        await fightService.moveFight(this.fightCard[evt.oldIndex].id, evt.newIndex)
+                        await this.fightStore.updateFightOrder(this.fightCard[evt.oldIndex].id, evt.newIndex)
                     }
                 },
                 handle: ".handle",
@@ -267,14 +270,19 @@ export default {
             })
         },
         async downloadFile(fileType: FileType) {
-            await ApiService.downloadFightCard(fileType, this.fightStore.currentTournament!.id)
+            if (!this.tournamentStore.currentTournamentId) {
+                return
+            }
+            await ApiService.downloadFightCard(fileType, this.tournamentStore.currentTournamentId)
         },
         getFightDuration(fight: Fight) {
-            const fightDuration = this.fightStore.modality.getFightDuration(
-                fight.boxer1.attributes,
-                fight.boxer2.attributes
-            )
-            return getFightDurationAsString(fightDuration.rounds, fightDuration.roundDurationAsSeconds)
+            //TODO: Use fightStore to get fight duration
+            // const fightDuration = this.fightStore.modality.getFightDuration(
+            //     fight.boxer1.attributes,
+            //     fight.boxer2.attributes
+            // )
+            // return getFightDurationAsString(fightDuration.rounds, fightDuration.roundDurationAsSeconds)
+            return getFightDurationAsString(0, 0)
         },
         getNbFights() {
             return this.fightCard.length
