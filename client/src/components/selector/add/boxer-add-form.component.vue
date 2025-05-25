@@ -229,7 +229,7 @@
 import { defineComponent, PropType } from "vue"
 
 import { configure, defineRule, GenericObject, useForm } from "vee-validate"
-import { BoxerAttributes, Gender } from "@/types/boxing.d"
+import { Boxer, Gender } from "@/types/boxing.d"
 import { isValid, format } from "date-fns"
 import IconComponent from "@/components/core/icon.component.vue"
 
@@ -276,7 +276,7 @@ export default defineComponent({
     components: { IconComponent },
     props: {
         boxer: {
-            type: Object as PropType<BoxerAttributes | null>,
+            type: Object as PropType<Boxer | null>,
             required: false,
             default: null,
         },
@@ -318,7 +318,7 @@ export default defineComponent({
         const [birthdate] = defineField("birthdate")
         const onSubmit = handleSubmit(async (form: GenericObject) => {
             const boxerStore = useBoxerStore()
-            const boxerAttributes: BoxerAttributes = {
+            let boxer: Boxer = {
                 birthDate: new Date(form.birthdate),
                 club: form.club,
                 firstName: form.firstname,
@@ -332,10 +332,10 @@ export default defineComponent({
                 id: form.id,
                 userId: "",
             }
-            let boxer = await boxerStore.createBoxer(boxerAttributes)
+            boxer = await boxerStore.createBoxer(boxer)
 
             if (boxer != null) {
-                emit("boxer-add", boxerAttributes)
+                emit("boxer-add", boxer)
             } else {
                 const toastEl = document.getElementById("errorToast") as HTMLElement
                 const toast = new Toast(toastEl)

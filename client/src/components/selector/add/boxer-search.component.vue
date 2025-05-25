@@ -49,7 +49,7 @@
 </template>
 
 <script lang="ts">
-import { BoxerAttributes } from "@/types/boxing"
+import { Boxer } from "@/types/boxing"
 import { defineComponent } from "vue"
 
 export default defineComponent({
@@ -58,7 +58,7 @@ export default defineComponent({
         let ret = {
             license: null as string | null,
             timeout: null as ReturnType<typeof setTimeout> | null,
-            filteredResults: [] as BoxerAttributes[],
+            filteredResults: [] as Boxer[],
         }
         return ret
     },
@@ -85,7 +85,7 @@ export default defineComponent({
             //         item.license.toLowerCase().includes(term)
             // )
         },
-        selectBoxer(boxer: BoxerAttributes) {
+        selectBoxer(boxer: Boxer) {
             // await fightService.addBoxerToTournament(boxer.id)
             this.$emit("boxer-add", boxer)
         },

@@ -6,25 +6,25 @@
         >
             <div class="d-flex justify-content-between">
                 <div>
-                    <IconComponent :name="boxer.attributes.gender == Gender.MALE ? 'male' : 'female'"></IconComponent>
+                    <IconComponent :name="boxer.gender == Gender.MALE ? 'male' : 'female'"></IconComponent>
                     {{ boxerDisplayName }}
                 </div>
                 <div
                     class="font-italic text-right"
                     style="font-size: 14px"
                 >
-                    {{ boxer.attributes.categoryShortText }}
+                    {{ boxer.categoryShortText }}
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-6 pb-1">
-                    <i>{{ boxer.attributes.club }}</i>
+                    <i>{{ boxer.club }}</i>
                 </div>
                 <div class="col-md-6 d-flex align-items-end justify-content-end flex-wrap">
                     <LinkedFightsBadgeComponent :boxer="boxer" />
                     <PossibleBadgeComponent
-                        :selected="boxer.opponents.filter((o) => o.isEligible).length"
-                        :available="boxer.opponents.length"
+                        :selected="opponents.filter((o) => o.isEligible).length"
+                        :available="opponents.length"
                     />
                     <AgeBadgeComponent :boxer="boxer" />
                     <RecordBadgeComponent :boxer="boxer" />
@@ -77,13 +77,16 @@ export default defineComponent({
         boxerDisplayName(): string {
             return this.boxerStore.getBoxerDisplayName(this.boxer)
         },
+        opponents(): Opponent[] {
+            return this.boxerStore.getOpponents(this.boxer)
+        },
     },
     methods: {
         boxerEdit(): void {
             this.$emit("boxer-edit")
         },
         getOpponentsToDisplay(): Readonly<Opponent[]> {
-            return this.boxer.opponents.filter((o) => {
+            return this.opponents.filter((o) => {
                 if (this.uiStore.hideNonMatchableOpponents && !o.isEligible) return false
                 return true
             })

@@ -142,11 +142,11 @@
                         <td class="fight-extra-infos">
                             <div class="me-1">
                                 <i
-                                    v-if="fight.boxer1.attributes.gender == Gender.FEMALE"
+                                    v-if="fight.boxer1.gender == Gender.FEMALE"
                                     class="bi bi-gender-female"
                                 ></i>
                                 <i
-                                    v-if="fight.boxer1.attributes.gender == Gender.MALE"
+                                    v-if="fight.boxer1.gender == Gender.MALE"
                                     class="bi bi-gender-male"
                                 ></i>
                                 <span v-if="fight.modalityErrors.length > 0"

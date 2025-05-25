@@ -45,7 +45,7 @@ export const useTournamentBoxerStore = defineStore("tournamentBoxer", {
         },
         async removeBoxersFromTournamentAll(tournamentId: string) {
             try {
-                const boxerIds = this.tournamentBoxers.map((b) => b.attributes.id)
+                const boxerIds = this.tournamentBoxers.map((b) => b.id)
                 if (boxerIds.length === 0) return
                 await dbManager.deleteBoxersFromTournament(boxerIds, tournamentId)
                 await this.fetchTournamentBoxers(tournamentId)

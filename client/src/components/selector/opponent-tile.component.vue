@@ -29,12 +29,12 @@
                     class="font-italic text-right"
                     style="font-size: 14px"
                 >
-                    {{ opponent.attributes.categoryShortText }}
+                    {{ opponent.categoryShortText }}
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-6 pb-1">
-                    <i>{{ opponent.attributes.club }}</i>
+                    <i>{{ opponent.club }}</i>
                 </div>
                 <div class="col-md-6 d-flex align-items-end justify-content-end flex-wrap">
                     <LinkedFightsBadgeComponent :boxer="opponent" />

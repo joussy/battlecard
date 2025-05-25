@@ -2,11 +2,6 @@ import { IModality } from "../fightModality/IModality"
 import { ModalityError } from "./modality"
 
 export interface Boxer {
-    attributes: BoxerAttributes
-    opponents: Readonly<Opponent[]>
-}
-
-export interface BoxerAttributes {
     id: string
     firstName: string
     lastName: string

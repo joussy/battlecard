@@ -34,7 +34,7 @@ export default defineComponent({
     },
     methods: {
         displayWeight() {
-            const weight = this.boxer.attributes.weight
+            const weight = this.boxer.weight
             return weight % 1 === 0 ? weight.toFixed(0) : weight.toFixed(1)
         },
     },

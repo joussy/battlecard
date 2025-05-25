@@ -1,5 +1,5 @@
 import { defineStore } from "pinia"
-import type { Boxer, BoxerAttributes } from "@/types/boxing.d"
+import type { Boxer, Opponent } from "@/types/boxing.d"
 import type { DbBoxer } from "@/types/db"
 import DbAdapter from "@/adapters/db.adapter"
 import dbManager from "@/managers/db.manager"
@@ -24,7 +24,7 @@ export const useBoxerStore = defineStore("boxer", {
                 this.loading = false
             }
         },
-        async createBoxer(boxer: BoxerAttributes) {
+        async createBoxer(boxer: Boxer) {
             try {
                 const dbBoxer: DbBoxer = DbAdapter.toDbBoxer(boxer)
                 const created: DbBoxer = await dbManager.addBoxer(dbBoxer)
@@ -40,9 +40,9 @@ export const useBoxerStore = defineStore("boxer", {
             return 0
         },
         getBoxerDisplayName(boxer: Boxer): string {
-            return `${boxer.attributes.firstName} ${boxer.attributes.lastName}`
+            return `${boxer.firstName} ${boxer.lastName}`
         },
-        getOpponentModalityErrors(boxer: BoxerAttributes, opponent: BoxerAttributes): ModalityError[] {
+        getOpponentModalityErrors(boxer: Boxer, opponent: Boxer): ModalityError[] {
             //TODO: Implement modality logic
             // return this.modality.getModalityErrors(boxer, opponent)
             return []
@@ -55,6 +55,10 @@ export const useBoxerStore = defineStore("boxer", {
             //TODO: Implement modality logic
             // return this.modality.getModalityErrors(boxer, opponent)
             return null
+        },
+        getOpponents(boxer: Boxer): Opponent[] {
+            //TODO: Implement logic to get opponents for a boxer
+            return []
         },
     },
 })

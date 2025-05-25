@@ -7,7 +7,7 @@
         }"
     >
         <Icon name="medal" />
-        {{ boxer.attributes.nbFights }}
+        {{ boxer.nbFights }}
     </span>
 </template>
 

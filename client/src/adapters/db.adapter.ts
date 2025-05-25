@@ -1,30 +1,23 @@
 import { DbBoxer, DbFight, DbTournament } from "@/types/db"
-import { Boxer, BoxerAttributes, Fight, Gender, Tournament } from "@/types/boxing.d"
+import { Boxer, Fight, Gender, Tournament } from "@/types/boxing.d"
 
 export default class DbAdapter {
-    static toDbBoxer(boxerAttributes: BoxerAttributes): DbBoxer {
+    static toDbBoxer(boxer: Boxer): DbBoxer {
         return {
-            birthDate: boxerAttributes.birthDate?.toISOString(),
-            club: boxerAttributes.club,
-            firstName: boxerAttributes.firstName,
-            lastName: boxerAttributes.lastName,
-            license: boxerAttributes.license,
-            gender: boxerAttributes.gender == Gender.FEMALE ? "female" : "male",
-            nbFights: boxerAttributes.nbFights,
-            weight: boxerAttributes.weight,
-            id: boxerAttributes.id,
-            userId: boxerAttributes.userId,
+            birthDate: boxer.birthDate?.toISOString(),
+            club: boxer.club,
+            firstName: boxer.firstName,
+            lastName: boxer.lastName,
+            license: boxer.license,
+            gender: boxer.gender == Gender.FEMALE ? "female" : "male",
+            nbFights: boxer.nbFights,
+            weight: boxer.weight,
+            id: boxer.id,
+            userId: boxer.userId,
         }
     }
 
     static toBoxer(boxer: DbBoxer): Boxer {
-        return {
-            attributes: this.toBoxerAttributes(boxer),
-            opponents: [],
-        }
-    }
-
-    static toBoxerAttributes(boxer: DbBoxer): BoxerAttributes {
         return {
             birthDate: new Date(boxer.birthDate),
             club: boxer.club,
@@ -73,8 +66,8 @@ export default class DbAdapter {
     static toDbFight(fight: Fight): DbFight {
         return {
             id: fight.id,
-            boxer1Id: fight.boxer1.attributes.id,
-            boxer2Id: fight.boxer2.attributes.id,
+            boxer1Id: fight.boxer1.id,
+            boxer2Id: fight.boxer2.id,
             tournamentId: fight.tournamentId,
             order: fight.order,
         }

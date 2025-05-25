@@ -35,7 +35,7 @@ export default defineComponent({
     },
     methods: {
         getBoxerAge(): number {
-            return differenceInYears(new Date(), this.boxer.attributes.birthDate)
+            return differenceInYears(new Date(), this.boxer.birthDate)
         },
     },
 })

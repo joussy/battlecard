@@ -5,12 +5,12 @@ import { FightExtraInfo } from "@/types/api"
 
 export default class ApiAdapters {
     static toFightCardExtraInfo(fight: Fight, modality: IModality): FightExtraInfo {
-        const fightDuration = modality.getFightDuration(fight.boxer1.attributes, fight.boxer2.attributes)
+        const fightDuration = modality.getFightDuration(fight.boxer1, fight.boxer2)
         return {
             fightId: fight.id,
             duration: getFightDurationAsString(fightDuration.rounds, fightDuration.roundDurationAsSeconds),
-            boxer1Category: fight.boxer1.attributes.category,
-            boxer2Category: fight.boxer2.attributes.category,
+            boxer1Category: fight.boxer1.category,
+            boxer2Category: fight.boxer2.category,
         }
     }
 }

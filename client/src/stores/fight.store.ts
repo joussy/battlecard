@@ -20,8 +20,8 @@ export const useFightStore = defineStore("fight", {
                 // Map DbFight to Fight, resolving boxer1/boxer2 from the provided boxers array
                 this.fights = dbFights
                     .map((f) => {
-                        const boxer1 = boxers.find((b) => b.attributes.id === f.boxer1Id)
-                        const boxer2 = boxers.find((b) => b.attributes.id === f.boxer2Id)
+                        const boxer1 = boxers.find((b) => b.id === f.boxer1Id)
+                        const boxer2 = boxers.find((b) => b.id === f.boxer2Id)
                         if (boxer1 && boxer2) return DbAdapter.toFight(f, boxer1, boxer2)
                         return null
                     })
@@ -58,12 +58,17 @@ export const useFightStore = defineStore("fight", {
                 throw e
             }
         },
+        getOpponents(boxer: Boxer): Boxer[] {
+            return this.fights
+                .filter((fight) => fight.boxer1.id === boxer.id || fight.boxer2.id === boxer.id)
+                .map((fight) => (fight.boxer1.id === boxer.id ? fight.boxer2 : fight.boxer1))
+        },
+
         async removeFromFightCard(boxer1: Boxer, boxer2: Boxer): Promise<void> {
             const fight = this.fights.find(
                 (f) =>
-                    (f.boxer1.attributes.id === boxer1.attributes.id &&
-                        f.boxer2.attributes.id === boxer2.attributes.id) ||
-                    (f.boxer1.attributes.id === boxer2.attributes.id && f.boxer2.attributes.id === boxer1.attributes.id)
+                    (f.boxer1.id === boxer1.id && f.boxer2.id === boxer2.id) ||
+                    (f.boxer1.id === boxer2.id && f.boxer2.id === boxer1.id)
             )
             if (fight) {
                 // Remove from backend first
@@ -78,10 +83,8 @@ export const useFightStore = defineStore("fight", {
         isCompeting(boxer1: Boxer, boxer2: Boxer): boolean {
             return this.fights.some(
                 (fight) =>
-                    (fight.boxer1.attributes.id === boxer1.attributes.id &&
-                        fight.boxer2.attributes.id === boxer2.attributes.id) ||
-                    (fight.boxer1.attributes.id === boxer2.attributes.id &&
-                        fight.boxer2.attributes.id === boxer1.attributes.id)
+                    (fight.boxer1.id === boxer1.id && fight.boxer2.id === boxer2.id) ||
+                    (fight.boxer1.id === boxer2.id && fight.boxer2.id === boxer1.id)
             )
         },
         async updateFightOrder(fightId: string, newIndex: number) {

@@ -22,7 +22,7 @@
         </div>
         <div class="offcanvas-body">
             <BoxerAddFormComponent
-                :boxer="boxer.attributes"
+                :boxer="boxer"
                 @boxer-add="closeModal()"
             ></BoxerAddFormComponent>
         </div>

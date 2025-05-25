@@ -11,7 +11,7 @@
                 <i class="bi bi-arrow-left-circle fs-2"></i>
             </router-link>
             <h5 class="ps-2 card-title fw-bold flex-fill">
-                {{ boxer.attributes.lastName }} {{ boxer.attributes.firstName }}
+                {{ boxerStore.getBoxerDisplayName(boxer) }}
             </h5>
             <div
                 class="btn btn-sm btn-outline-success"
@@ -28,20 +28,20 @@
                 <div class="card-body p-1 p-md-3">
                     <div class="row">
                         <p class="col-md-6 mb-1">
-                            <Icon :name="boxer.attributes.gender == Gender.MALE ? 'male' : 'female'"></Icon>
+                            <Icon :name="boxer.gender == Gender.MALE ? 'male' : 'female'"></Icon>
                             {{ getBirthDateAndAge(boxer) }}
                         </p>
                         <p class="col-md-6 mb-1">
-                            <i class="bi bi-person-vcard"></i> {{ boxer.attributes.license }} -
-                            {{ boxer.attributes.category }}
+                            <i class="bi bi-person-vcard"></i> {{ boxer.license }} -
+                            {{ boxer.category }}
                         </p>
-                        <p class="col-md-6 mb-1"><i class="bi bi-house-fill me-1"></i>{{ boxer?.attributes.club }}</p>
+                        <p class="col-md-6 mb-1"><i class="bi bi-house-fill me-1"></i>{{ boxer?.club }}</p>
                         <p class="col-md-6 mb-1">
                             <Icon
                                 name="scale"
                                 class="me-1"
                             ></Icon
-                            >{{ boxer.attributes.weight }} kg
+                            >{{ boxer.weight }} kg
                         </p>
                         <p class="col-md-6 mb-1"><i class="bi bi-link me-1"></i>{{ getNbFights }} selected fights</p>
                     </div>
@@ -86,7 +86,7 @@ export default defineComponent({
     data() {
         return {
             fightStore: useFightStore(),
-            boxersStore: useBoxerStore(),
+            boxerStore: useBoxerStore(),
             uiStore: useUiStore(),
             Gender: Gender,
             ModalityErrorType: ModalityErrorType,
@@ -95,23 +95,26 @@ export default defineComponent({
     computed: {
         boxer() {
             const boxerId = this.$route.params.id
-            return this.boxersStore.boxers.find((b) => b.attributes.id == boxerId)
+            return this.boxerStore.boxers.find((b) => b.id == boxerId)
         },
         getNbFights(): number {
             if (!this.boxer) {
                 return 0
             }
-            return this.boxersStore.getNbFightsForBoxer(this.boxer)
+            return this.boxerStore.getNbFightsForBoxer(this.boxer)
         },
     },
     mounted() {},
     methods: {
-        getOpponentsToDisplay(): Readonly<Opponent[]> {
-            return this.boxer?.opponents.filter((o) => !this.uiStore.hideNonMatchableOpponents || o.isEligible) ?? []
+        getOpponentsToDisplay(): Opponent[] {
+            if (!this.boxer) {
+                return []
+            }
+            return this.boxerStore.getOpponents(this.boxer)
         },
         getBirthDateAndAge(boxer: Boxer): string {
-            const age = differenceInYears(new Date(), boxer.attributes.birthDate)
-            const birthDate = format(boxer.attributes.birthDate, "dd/MM/yyyy")
+            const age = differenceInYears(new Date(), boxer.birthDate)
+            const birthDate = format(boxer.birthDate, "dd/MM/yyyy")
             return `${birthDate} (${age})`
         },
     },

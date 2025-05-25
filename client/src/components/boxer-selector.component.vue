@@ -53,11 +53,11 @@
         </div>
         <div
             v-for="boxer in getBoxersToDisplay()"
-            :key="boxer.attributes.id"
+            :key="boxer.id"
         >
             <BoxerTileComponent
                 :boxer="boxer"
-                @click="$router.push({ name: 'selector-tile', params: { id: boxer.attributes.id } })"
+                @click="$router.push({ name: 'selector-tile', params: { id: boxer.id } })"
             />
         </div>
         <div
@@ -121,10 +121,7 @@ export default defineComponent({
             await this.tournamentBoxerStore.removeBoxersFromTournamentAll(this.selectedTournamentId)
         },
         getBoxersToDisplay() {
-            return this.boxersStore.boxers.filter((b) => {
-                if (this.uiStore.hideFightersWithNoMatch && !b.opponents.some((o) => o.isEligible)) return false
-                return true
-            })
+            return this.boxersStore.boxers
         },
         setTournament() {
             this.tournamentStore.setCurrentTournament(this.selectedTournamentId)
