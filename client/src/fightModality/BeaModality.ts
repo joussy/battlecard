@@ -1,5 +1,5 @@
 import { Boxer } from "@/types/boxing"
-import { BeaCategory, FightDuration, ModalityError, ModalityErrorType } from "../types/modality.d"
+import { BeaCategory, FightDuration, ModalityError, ModalityErrorType } from "@/shared/types/modality.type"
 import { BaseModality } from "./BaseModality"
 import { differenceInDays } from "date-fns"
 

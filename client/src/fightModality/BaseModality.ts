@@ -1,5 +1,5 @@
 import { IModality } from "./IModality"
-import { FightDuration, ModalityError } from "../types/modality"
+import { FightDuration, ModalityError } from "@/shared/types/modality.type"
 import { Boxer } from "@/types/boxing"
 
 export abstract class BaseModality implements IModality {

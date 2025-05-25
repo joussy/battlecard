@@ -2,7 +2,7 @@ import { defineStore } from "pinia"
 import type { Boxer, Opponent } from "@/types/boxing.d"
 import DbAdapter from "@/adapters/db.adapter"
 import dbManager from "@/managers/db.manager"
-import { ModalityError, ModalityErrorType } from "@/types/modality"
+import { ModalityError, ModalityErrorType } from "@/shared/types/modality.type"
 import { DbBoxer } from "@/shared/types/db"
 
 export const useBoxerStore = defineStore("boxer", {

@@ -6,7 +6,7 @@ import {
   ModalityError,
   BeaCategory,
   ModalityErrorType,
-} from '@/shared/types/modality';
+} from '@/shared/types/modality.type';
 
 export class BeaModality extends BaseModality {
   categories: BeaCategory[] = [

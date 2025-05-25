@@ -65,7 +65,7 @@
 <script lang="ts">
 import { defineComponent } from "vue"
 import { Boxer, Gender, Opponent } from "@/types/boxing.d"
-import { ModalityErrorType } from "@/types/modality.d"
+import { ModalityErrorType } from "@/shared/types/modality.type"
 import OpponentTileComponent from "@/components/selector/opponent-tile.component.vue"
 import BoxerEditOffcanvasComponent from "@/components/selector/add/boxer-edit-offcanvas.component.vue"
 

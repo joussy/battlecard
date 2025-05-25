@@ -81,7 +81,7 @@
 <script lang="ts">
 import { defineComponent, watchEffect } from "vue"
 import { Gender } from "@/types/boxing.d"
-import { ModalityErrorType } from "@/types/modality.d"
+import { ModalityErrorType } from "@/shared/types/modality.type"
 import BoxerTileComponent from "@/components/selector/boxer-tile.component.vue"
 import BoxerAddOffcanvasComponent from "@/components/selector/add/boxer-add-offcanvas.component.vue"
 

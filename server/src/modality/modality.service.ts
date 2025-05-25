@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Boxer } from 'src/entities/boxer.entity';
-import { FightDuration, ModalityError } from '@/shared/types/modality';
+import { FightDuration, ModalityError } from '@/shared/types/modality.type';
 import { BeaModality } from './BeaModality';
 
 @Injectable()

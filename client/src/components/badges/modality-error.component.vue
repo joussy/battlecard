@@ -12,7 +12,7 @@
 </template>
 
 <script lang="ts">
-import { ModalityError, ModalityErrorType } from "@/types/modality.d"
+import { ModalityError, ModalityErrorType } from "@/shared/types/modality.type"
 import { PropType } from "vue"
 import Icon from "@/components/core/icon.component.vue"
 

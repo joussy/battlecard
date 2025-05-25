@@ -13,7 +13,7 @@
 
 <script lang="ts">
 import { Boxer } from "@/types/boxing"
-import { ModalityError } from "@/types/modality"
+import { ModalityError } from "@/shared/types/modality.type"
 import { PropType, defineComponent } from "vue"
 import IconComponent from "@/components/core/icon.component.vue"
 

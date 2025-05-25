@@ -1,5 +1,5 @@
 import { Boxer } from "@/types/boxing"
-import { FightDuration, ModalityError } from "../types/modality"
+import { FightDuration, ModalityError } from "@/shared/types/modality.type"
 
 export interface IModality {
     isEligible(boxer1: Boxer, boxer2: Boxer): boolean

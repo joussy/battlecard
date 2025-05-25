@@ -18,9 +18,9 @@
     "strictBindCallApply": false,
     "noFallthroughCasesInSwitch": false,
     "paths": {
-        "@/shared/*": ["../shared/*"],
+        "@/shared/*": ["./../shared/*"],
         "@/*": ["./src/*", "./dist/*"],
     },
   },
-  "include": ["src/**/*.ts", "src/**/*.d.ts", "../shared/**/*.d.ts"],
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "../shared/**/*.d.ts", "../shared/types/**/*.ts"],
 }
