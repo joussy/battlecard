@@ -1,4 +1,3 @@
-version: "3.9"
 services:
   battlecard:
     image: mcr.microsoft.com/vscode/devcontainers/typescript-node:22
@@ -6,8 +5,6 @@ services:
       - ../battlecard:/workspace/battlecard
     depends_on:
       - postgres
-    # environment:
-    #   DATABASE_URL: postgresql://postgres:postgres@db:5432/postgres
     command: bash -c "while sleep 1000; do :; done"
 
   postgres:

@@ -12,6 +12,8 @@ import { Repository } from 'typeorm';
 import { Boxer } from './entities/boxer.entity';
 import { toBoxer, toApiBoxer } from './adapters/boxer.adapter';
 import { ApiBoxer } from '@/shared/types/api';
+import { User } from './decorators/user.decorator';
+import { AuthenticatedUser } from './interfaces/auth.interface';
 
 @Controller('boxers')
 export class BoxerController {
@@ -25,12 +27,14 @@ export class BoxerController {
     const dbBoxers = await this.boxerRepository.find();
     return dbBoxers.map(toApiBoxer);
   }
-
   @Post()
-  async create(@Body() boxer: Partial<ApiBoxer>): Promise<ApiBoxer> {
-    if ('id' in boxer) {
-      delete boxer.id;
-    }
+  async create(
+    @Body() boxer: Partial<ApiBoxer>,
+    @User() user: AuthenticatedUser,
+  ): Promise<ApiBoxer> {
+    boxer.id = undefined;
+    boxer.userId = user.id;
+
     const dbBoxer = await this.boxerRepository.save(toBoxer(boxer as ApiBoxer));
     return toApiBoxer(dbBoxer);
   }
