@@ -1,13 +1,14 @@
 {
-    "name": "Devcontainer",
-    "image": "mcr.microsoft.com/vscode/devcontainers/typescript-node:22",
-    "customizations": {
-        "vscode": {
-            "extensions": ["Vue.volar", "ms-edgedevtools.vscode-edge-devtools"]
-        }
-    },
+    "name": "Battlecard + PostgreSQL",
+    "dockerComposeFile": "docker-compose.yml",
+    "service": "battlecard",
+    "workspaceFolder": "/workspace/battlecard",
+    "extensions": ["Vue.volar", "ms-edgedevtools.vscode-edge-devtools"],
     "postCreateCommand": {
         "server": "cd server && npm install",
         "client": "cd client && npm install"
+    },
+    "remoteEnv": {
+      "DATABASE_URL": "postgresql://postgres:postgres@db:5432/postgres"
     }
 }

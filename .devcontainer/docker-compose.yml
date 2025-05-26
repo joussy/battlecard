@@ -1,0 +1,23 @@
+version: "3.9"
+services:
+  battlecard:
+    image: mcr.microsoft.com/vscode/devcontainers/typescript-node:22
+    volumes:
+      - ../battlecard:/workspace/battlecard
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@db:5432/postgres
+    command: bash -c "while sleep 1000; do :; done"
+
+  db:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    volumes:
+      - ../db-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
