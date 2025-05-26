@@ -9,6 +9,11 @@
         "client": "cd client && npm install"
     },
     "remoteEnv": {
-      "DATABASE_URL": "postgresql://postgres:postgres@db:5432/postgres"
+      "GOOGLE_CALLBACK_URL": "http://localhost:5173/api/auth/google/callback",
+      "DB_HOST": "postgres",
+      "DB_PORT": "5432",
+      "DB_USER": "postgres",
+      "DB_PASS": "postgres",
+      "DB_NAME": "battlecard"
     }
 }
