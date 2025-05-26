@@ -135,7 +135,7 @@ export default defineComponent({
     },
     methods: {
         setTheme(mode: UiTheme) {
-            this.uiStore.theme = mode
+            this.uiStore.setTheme(mode)
         },
         signInWithGoogle() {
             this.uiStore.authenticate()

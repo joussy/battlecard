@@ -73,6 +73,7 @@ export const useUiStore = defineStore("ui", {
                 console.debug("no store available ... ")
             }
             this.listenWindowThemeChanges()
+            this.setTheme(this.theme)
             this.restored = true
         },
         listenWindowThemeChanges() {
