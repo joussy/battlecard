@@ -235,6 +235,7 @@ import IconComponent from "@/components/core/icon.component.vue"
 
 import { Toast } from "bootstrap"
 import { useBoxerStore } from "@/stores/boxer.store"
+import { useTournamentStore } from "@/stores/tournament.store"
 
 configure({
     validateOnInput: true,
@@ -318,6 +319,7 @@ export default defineComponent({
         const [birthdate] = defineField("birthdate")
         const onSubmit = handleSubmit(async (form: GenericObject) => {
             const boxerStore = useBoxerStore()
+            const tournamentStore = useTournamentStore()
             let boxer: Boxer = {
                 birthDate: new Date(form.birthdate),
                 club: form.club,
@@ -332,7 +334,7 @@ export default defineComponent({
                 id: form.id,
                 userId: "",
             }
-            boxer = await boxerStore.createBoxer(boxer)
+            boxer = await boxerStore.createBoxer(boxer, tournamentStore.currentTournamentId || undefined)
 
             if (boxer != null) {
                 emit("boxer-add", boxer)

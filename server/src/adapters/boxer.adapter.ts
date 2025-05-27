@@ -1,9 +1,8 @@
-import { ApiBoxer } from '@/shared/types/api';
+import { ApiBoxerCreate, ApiBoxerGet } from '@/shared/types/api';
 import { Boxer } from '../entities/boxer.entity';
 
-export function toBoxer(apiBoxer: ApiBoxer): Boxer {
+export function toBoxer(apiBoxer: ApiBoxerCreate, userId: string): Boxer {
   const boxer = new Boxer();
-  boxer.id = apiBoxer.id;
   boxer.lastName = apiBoxer.lastName;
   boxer.firstName = apiBoxer.firstName;
   boxer.birthDate = apiBoxer.birthDate;
@@ -11,13 +10,11 @@ export function toBoxer(apiBoxer: ApiBoxer): Boxer {
   boxer.weight = apiBoxer.weight;
   boxer.gender = apiBoxer.gender;
   boxer.license = apiBoxer.license;
-  boxer.userId = apiBoxer.userId;
-  boxer.created = apiBoxer.created;
-  boxer.updated = apiBoxer.updated;
+  boxer.userId = userId;
   return boxer;
 }
 
-export function toApiBoxer(boxer: Boxer): ApiBoxer {
+export function toApiBoxerGet(boxer: Boxer): ApiBoxerGet {
   return {
     id: boxer.id,
     lastName: boxer.lastName,

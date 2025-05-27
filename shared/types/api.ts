@@ -1,4 +1,4 @@
-export interface ApiBoxer {
+export interface ApiBoxerGet {
     id: string
     lastName: string
     firstName: string
@@ -11,6 +11,18 @@ export interface ApiBoxer {
     userId: string
     created?: string
     updated?: string
+}
+
+export interface ApiBoxerCreate {
+    lastName: string
+    firstName: string
+    birthDate: string
+    nbFights?: number
+    club: string
+    weight?: number
+    gender: "male" | "female"
+    license: string
+    tournamentId?: string
 }
 
 export interface ApiFight {

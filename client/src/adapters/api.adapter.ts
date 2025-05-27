@@ -1,4 +1,4 @@
-import { ApiBoxer, ApiFight, ApiTournament } from "@/shared/types/api"
+import { ApiBoxerCreate, ApiBoxerGet, ApiFight, ApiTournament } from "@/shared/types/api"
 import { Boxer, Fight, Gender, Tournament } from "@/types/boxing.d"
 import { IModality } from "@/fightModality/IModality"
 import { getFightDurationAsString } from "@/utils/string.utils"
@@ -14,7 +14,7 @@ export default class ApiAdapter {
             boxer2Category: fight.boxer2.category,
         }
     }
-    static toApiBoxer(boxer: Boxer): ApiBoxer {
+    static toApiBoxer(boxer: Boxer): ApiBoxerGet {
         return {
             birthDate: boxer.birthDate?.toISOString(),
             club: boxer.club,
@@ -29,7 +29,21 @@ export default class ApiAdapter {
         }
     }
 
-    static toBoxer(boxer: ApiBoxer): Boxer {
+    static toApiBoxerCreate(boxer: Boxer, tournamentId: string | undefined): ApiBoxerCreate {
+        return {
+            birthDate: boxer.birthDate?.toISOString(),
+            club: boxer.club,
+            firstName: boxer.firstName,
+            lastName: boxer.lastName,
+            license: boxer.license,
+            gender: boxer.gender == Gender.FEMALE ? "female" : "male",
+            nbFights: boxer.nbFights,
+            weight: boxer.weight,
+            tournamentId: tournamentId,
+        }
+    }
+
+    static toBoxer(boxer: ApiBoxerGet): Boxer {
         return {
             birthDate: new Date(boxer.birthDate),
             club: boxer.club,

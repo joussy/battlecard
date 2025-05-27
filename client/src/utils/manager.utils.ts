@@ -42,11 +42,12 @@ export async function getRaw(
     return await res
 }
 
-export async function mutate<T>(
+export async function mutate<T = Response>(
     url: string,
     method: "POST" | "PUT" | "DELETE",
     body?: unknown,
-    errorMsg = "Request failed"
+    errorMsg = "Request failed",
+    raw: boolean = false
 ): Promise<T> {
     const res = await fetch(url, {
         method,
@@ -54,23 +55,9 @@ export async function mutate<T>(
         body: body !== undefined ? JSON.stringify(body) : undefined,
     })
     if (!res.ok) throw new Error(errorMsg)
+    if (raw) return res as unknown as T
     if (res.status === 204) return undefined as unknown as T
     return await res.json()
-}
-
-export async function mutateRaw(
-    url: string,
-    method: "POST" | "PUT" | "DELETE",
-    body?: unknown,
-    errorMsg = "Request failed"
-): Promise<Response> {
-    const res = await fetch(url, {
-        method,
-        headers: mergeHeaders({ "Content-Type": "application/json" }),
-        body: body !== undefined ? JSON.stringify(body) : undefined,
-    })
-    if (!res.ok) throw new Error(errorMsg)
-    return await res
 }
 
 export async function postAndDownload(url: string, payload: object | [], filename: string): Promise<void> {

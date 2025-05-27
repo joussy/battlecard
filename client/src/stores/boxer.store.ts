@@ -3,7 +3,7 @@ import type { Boxer, Opponent } from "@/types/boxing.d"
 import ApiAdapter from "@/adapters/api.adapter"
 import dbManager from "@/managers/api.manager"
 import { ModalityError, ModalityErrorType } from "@/shared/types/modality.type"
-import { ApiBoxer } from "@/shared/types/api"
+import { ApiBoxerGet } from "@/shared/types/api"
 
 export const useBoxerStore = defineStore("boxer", {
     state: () => ({
@@ -12,11 +12,11 @@ export const useBoxerStore = defineStore("boxer", {
         error: null as string | null,
     }),
     actions: {
-        async fetchBoxers() {
+        async fetchBoxers(tournamentId: string) {
             this.loading = true
             this.error = null
             try {
-                const apiBoxers: ApiBoxer[] = await dbManager.getBoxers()
+                const apiBoxers: ApiBoxerGet[] = await dbManager.getTournamentBoxers(tournamentId)
                 this.boxers = apiBoxers.map(ApiAdapter.toBoxer)
             } catch (e: unknown) {
                 this.error = e instanceof Error ? e.message : "Unknown error"
@@ -24,10 +24,10 @@ export const useBoxerStore = defineStore("boxer", {
                 this.loading = false
             }
         },
-        async createBoxer(boxer: Boxer) {
+        async createBoxer(boxer: Boxer, tournamentId?: string): Promise<Boxer> {
             try {
-                const apiBoxer: ApiBoxer = ApiAdapter.toApiBoxer(boxer)
-                const created: ApiBoxer = await dbManager.addBoxer(apiBoxer)
+                const apiBoxerCreate = ApiAdapter.toApiBoxerCreate(boxer, tournamentId)
+                const created: ApiBoxerGet = await dbManager.addBoxer(apiBoxerCreate)
                 const newBoxer = ApiAdapter.toBoxer(created)
                 this.boxers.push(newBoxer)
                 return newBoxer

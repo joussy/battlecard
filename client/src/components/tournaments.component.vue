@@ -58,9 +58,7 @@ export default defineComponent({
             return this.tournamentStore.currentTournamentId || null
         },
     },
-    mounted() {
-        this.tournamentStore.fetchTournaments()
-    },
+    mounted() {},
     methods: {
         setCurrentTournament(tournament: Tournament) {
             this.tournamentStore.setCurrentTournament(tournament.id)

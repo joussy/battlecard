@@ -30,8 +30,8 @@ export class Boxer {
   @Column({ type: 'float', nullable: true })
   weight?: number;
 
-  @Column({ nullable: true })
-  gender?: 'male' | 'female';
+  @Column({ nullable: false })
+  gender: 'male' | 'female';
 
   @Column()
   license: string;
@@ -39,11 +39,19 @@ export class Boxer {
   @Column()
   userId: string;
 
-  @Column({ type: 'timestamp', nullable: true })
-  created?: string;
+  @Column({
+    type: 'timestamp',
+    nullable: false,
+    default: () => 'now()',
+  })
+  created: string;
 
-  @Column({ type: 'timestamp', nullable: true })
-  updated?: string;
+  @Column({
+    type: 'timestamp',
+    nullable: false,
+    default: () => 'now()',
+  })
+  updated: string;
 
   @ManyToOne(() => User, { eager: false })
   @JoinColumn({ name: 'userId' })
