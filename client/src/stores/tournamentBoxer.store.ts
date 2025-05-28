@@ -1,6 +1,6 @@
 import { defineStore } from "pinia"
-import type { Boxer } from "@/types/boxing.d"
-import type { ApiBoxerGet } from "@/shared/types/api"
+import type { Boxer, Opponent } from "@/types/boxing.d"
+import type { ApiBoxerGet, ApiOpponentGet } from "@/shared/types/api"
 import ApiAdapter from "@/adapters/api.adapter"
 import dbManager from "@/managers/api.manager"
 
@@ -49,6 +49,15 @@ export const useTournamentBoxerStore = defineStore("tournamentBoxer", {
                 if (boxerIds.length === 0) return
                 await dbManager.deleteBoxersFromTournament(boxerIds, tournamentId)
                 await this.fetchTournamentBoxers(tournamentId)
+            } catch (e: unknown) {
+                this.error = e instanceof Error ? e.message : "Unknown error"
+                throw e
+            }
+        },
+        async fetchBoxerOpponents(boxerId: string, tournamentId: string): Promise<Opponent[]> {
+            try {
+                const apiBoxers: ApiOpponentGet[] = await dbManager.getPossibleOpponents(boxerId, tournamentId)
+                return apiBoxers.map(ApiAdapter.toOpponent)
             } catch (e: unknown) {
                 this.error = e instanceof Error ? e.message : "Unknown error"
                 throw e

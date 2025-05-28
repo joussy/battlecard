@@ -65,10 +65,10 @@ export class TournamentController {
     return boxers.map(toApiBoxerGet);
   }
 
-  @Get(':tournamentId/boxers/:boxerId/possible-opponents')
+  @Get(':tournamentId/boxers/:boxerId/opponents')
   async getPossibleOpponents(
-    @Query('boxerId') boxerId?: string,
-    @Query('tournamentId') tournamentId?: string,
+    @Query('boxerId') boxerId: string,
+    @Query('tournamentId') tournamentId: string,
   ): Promise<ApiBoxerGet[]> {
     if (!boxerId || !tournamentId) {
       return [];

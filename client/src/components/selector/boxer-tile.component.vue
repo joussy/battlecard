@@ -22,10 +22,11 @@
                 </div>
                 <div class="col-md-6 d-flex align-items-end justify-content-end flex-wrap">
                     <LinkedFightsBadgeComponent :boxer="boxer" />
-                    <PossibleBadgeComponent
+                    <!-- TODO: Add a badge for the number of possible opponents -->
+                    <!-- <PossibleBadgeComponent
                         :selected="opponents.filter((o) => o.isEligible).length"
                         :available="opponents.length"
-                    />
+                    /> -->
                     <AgeBadgeComponent :boxer="boxer" />
                     <RecordBadgeComponent :boxer="boxer" />
                     <WeightBadgeComponent :boxer="boxer" />
@@ -37,7 +38,7 @@
 
 <script lang="ts">
 import { PropType, defineComponent } from "vue"
-import { Gender, Boxer, Opponent } from "@/types/boxing.d"
+import { Gender, Boxer } from "@/types/boxing.d"
 import { ModalityErrorType } from "@/shared/types/modality.type"
 import RecordBadgeComponent from "@/components/badges/record-badge.component.vue"
 import AgeBadgeComponent from "@/components/badges/age-badge.component.vue"
@@ -48,12 +49,14 @@ import LinkedFightsBadgeComponent from "@/components/badges/linked-fights-badge.
 import IconComponent from "../core/icon.component.vue"
 import { useUiStore } from "@/stores/ui.store"
 import { useBoxerStore } from "@/stores/boxer.store"
+import { useTournamentBoxerStore } from "@/stores/tournamentBoxer.store"
+import { useTournamentStore } from "@/stores/tournament.store"
 
 export default defineComponent({
     components: {
         RecordBadgeComponent,
         WeightBadgeComponent,
-        PossibleBadgeComponent,
+        // PossibleBadgeComponent,
         AgeBadgeComponent,
         LinkedFightsBadgeComponent,
         IconComponent,
@@ -71,25 +74,19 @@ export default defineComponent({
             ModalityErrorType: ModalityErrorType,
             uiStore: useUiStore(),
             boxerStore: useBoxerStore(),
+            tournamentBoxerStore: useTournamentBoxerStore(),
+            tournamentStore: useTournamentStore(),
         }
     },
     computed: {
         boxerDisplayName(): string {
             return this.boxerStore.getBoxerDisplayName(this.boxer)
         },
-        opponents(): Opponent[] {
-            return this.boxerStore.getOpponents(this.boxer)
-        },
     },
+
     methods: {
         boxerEdit(): void {
             this.$emit("boxer-edit")
-        },
-        getOpponentsToDisplay(): Readonly<Opponent[]> {
-            return this.opponents.filter((o) => {
-                if (this.uiStore.hideNonMatchableOpponents && !o.isEligible) return false
-                return true
-            })
         },
     },
 })

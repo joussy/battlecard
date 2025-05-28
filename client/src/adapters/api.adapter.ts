@@ -1,5 +1,5 @@
-import { ApiBoxerCreate, ApiBoxerGet, ApiFight, ApiTournament } from "@/shared/types/api"
-import { Boxer, Fight, Gender, Tournament } from "@/types/boxing.d"
+import { ApiBoxerCreate, ApiBoxerGet, ApiFight, ApiOpponentGet, ApiTournament } from "@/shared/types/api"
+import { Boxer, Fight, Gender, Opponent, Tournament } from "@/types/boxing.d"
 import { IModality } from "@/fightModality/IModality"
 import { getFightDurationAsString } from "@/utils/string.utils"
 import { FightExtraInfo } from "@/types/api"
@@ -40,6 +40,16 @@ export default class ApiAdapter {
             nbFights: boxer.nbFights,
             weight: boxer.weight,
             tournamentId: tournamentId,
+        }
+    }
+
+    static toOpponent(opponent: ApiOpponentGet): Opponent {
+        return {
+            ...ApiAdapter.toBoxer(opponent),
+            // modalityErrors: opponent.modalityErrors,
+            modalityErrors: [],
+            weightDifference: opponent.weightDifference,
+            isEligible: opponent.isEligible,
         }
     }
 

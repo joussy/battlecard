@@ -1,17 +1,27 @@
-import { ApiBoxerCreate, ApiBoxerGet, ApiFight, ApiTournament, ApiTournament_Boxer } from "@/shared/types/api"
+import {
+    ApiBoxerCreate,
+    ApiBoxerGet,
+    ApiFight,
+    ApiOpponentGet,
+    ApiTournament,
+    ApiTournament_Boxer,
+} from "@/shared/types/api"
 import { get, mutate } from "@/utils/manager.utils"
 
 export class ApiManager {
+    getPossibleOpponents(boxerId: string, tournamentId: string): PromiseLike<ApiOpponentGet[]> {
+        return get<ApiOpponentGet[]>(
+            `/api/tournaments/${encodeURIComponent(tournamentId)}/boxers/${encodeURIComponent(boxerId)}/opponents`,
+            undefined,
+            "Failed to fetch possible opponents"
+        )
+    }
     // BOXER
     addBoxer(boxer: ApiBoxerCreate): Promise<ApiBoxerGet> {
         return mutate<ApiBoxerGet>("/api/boxers", "POST", boxer, "Failed to add boxer")
     }
     getBoxer(boxerId: string): Promise<ApiBoxerGet> {
-        return get<ApiBoxerGet>(
-            `/api/boxers/tournament/${encodeURIComponent(boxerId)}`,
-            undefined,
-            "Failed to fetch boxer"
-        )
+        return get<ApiBoxerGet>(`/api/boxers/${encodeURIComponent(boxerId)}`, undefined, "Failed to fetch boxer")
     }
     updateBoxer(boxer: ApiBoxerGet): Promise<ApiBoxerGet> {
         return mutate<ApiBoxerGet>(

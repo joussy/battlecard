@@ -24,6 +24,17 @@ export const useBoxerStore = defineStore("boxer", {
                 this.loading = false
             }
         },
+        async fetchBoxerById(boxerId: string): Promise<Boxer> {
+            this.loading = true
+            this.error = null
+            try {
+                const apiBoxer: ApiBoxerGet = await dbManager.getBoxer(boxerId)
+                const boxer = ApiAdapter.toBoxer(apiBoxer)
+                return boxer
+            } finally {
+                this.loading = false
+            }
+        },
         async createBoxer(boxer: Boxer, tournamentId?: string): Promise<Boxer> {
             try {
                 const apiBoxerCreate = ApiAdapter.toApiBoxerCreate(boxer, tournamentId)
@@ -55,10 +66,6 @@ export const useBoxerStore = defineStore("boxer", {
             //TODO: Implement modality logic
             // return this.modality.getModalityErrors(boxer, opponent)
             return null
-        },
-        getOpponents(boxer: Boxer): Opponent[] {
-            //TODO: Implement logic to get opponents for a boxer
-            return []
         },
     },
 })

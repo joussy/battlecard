@@ -75,6 +75,8 @@ import { differenceInYears, format } from "date-fns"
 import { useFightStore } from "@/stores/fight.store"
 import { useBoxerStore } from "@/stores/boxer.store"
 import { useUiStore } from "@/stores/ui.store"
+import { useTournamentStore } from "@/stores/tournament.store"
+import { useTournamentBoxerStore } from "@/stores/tournamentBoxer.store"
 
 export default defineComponent({
     components: {
@@ -89,14 +91,14 @@ export default defineComponent({
             boxerStore: useBoxerStore(),
             uiStore: useUiStore(),
             Gender: Gender,
+            opponents: [] as Opponent[],
             ModalityErrorType: ModalityErrorType,
+            tournamentStore: useTournamentStore(),
+            tournamentBoxerStore: useTournamentBoxerStore(),
+            boxer: undefined as Boxer | undefined,
         }
     },
     computed: {
-        boxer() {
-            const boxerId = this.$route.params.id
-            return this.boxerStore.boxers.find((b) => b.id == boxerId)
-        },
         getNbFights(): number {
             if (!this.boxer) {
                 return 0
@@ -104,13 +106,26 @@ export default defineComponent({
             return this.boxerStore.getNbFightsForBoxer(this.boxer)
         },
     },
-    mounted() {},
+    async mounted() {
+        const boxerId = this.$route.params.id as string
+        if (!this.tournamentStore.currentTournamentId || !boxerId) {
+            return
+        }
+        this.boxer = await this.boxerStore.fetchBoxerById(boxerId)
+        this.opponents = await this.tournamentBoxerStore.fetchBoxerOpponents(
+            this.boxer.id,
+            this.tournamentStore.currentTournamentId
+        )
+    },
     methods: {
-        getOpponentsToDisplay(): Opponent[] {
-            if (!this.boxer) {
+        getOpponentsToDisplay(): Readonly<Opponent[]> {
+            if (!this.opponents) {
                 return []
             }
-            return this.boxerStore.getOpponents(this.boxer)
+            return this.opponents.filter((o) => {
+                if (this.uiStore.hideNonMatchableOpponents && !o.isEligible) return false
+                return true
+            })
         },
         getBirthDateAndAge(boxer: Boxer): string {
             const age = differenceInYears(new Date(), boxer.birthDate)

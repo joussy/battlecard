@@ -13,6 +13,12 @@ export interface ApiBoxerGet {
     updated?: string
 }
 
+export interface ApiOpponentGet extends ApiBoxerGet {
+    // modalityErrors: Readonly<ApiModalityError[]>
+    weightDifference: number
+    isEligible: boolean
+}
+
 export interface ApiBoxerCreate {
     lastName: string
     firstName: string
