@@ -16,6 +16,7 @@ import { TournamentBoxer } from './entities/tournament_boxer.entity';
 import { Boxer } from './entities/boxer.entity';
 import { toApiBoxerGet, toApiOpponentGet } from './adapters/boxer.adapter';
 import { ApiBoxerGet } from '@/shared/types/api';
+import { Fight } from './entities/fight.entity';
 
 @Controller('tournaments')
 export class TournamentController {
@@ -26,6 +27,8 @@ export class TournamentController {
     private readonly tournamentBoxerRepository: Repository<TournamentBoxer>,
     @InjectRepository(Boxer)
     private readonly boxerRepository: Repository<Boxer>,
+    @InjectRepository(Fight)
+    private readonly fightRepository: Repository<Fight>,
   ) {}
 
   @Get()
@@ -87,6 +90,25 @@ export class TournamentController {
     }
 
     const boxers = await this.boxerRepository.findByIds(boxerIds);
-    return boxers.map((b): ApiOpponentGet => toApiOpponentGet(b));
+
+    // Find all fights in this tournament involving the main boxer and any opponent
+    const fights = await this.fightRepository.find({
+      where: [
+        { tournamentId, boxer1Id: boxerId },
+        { tournamentId, boxer2Id: boxerId },
+      ],
+    });
+
+    const opponents = boxers.map((b) => {
+      const fightId = fights.find(
+        (f) =>
+          (f.boxer1Id === boxerId && f.boxer2Id === b.id) ||
+          (f.boxer2Id === boxerId && f.boxer1Id === b.id),
+      )?.id;
+
+      return toApiOpponentGet(b, fightId);
+    });
+
+    return opponents;
   }
 }

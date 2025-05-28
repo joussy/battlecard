@@ -2,23 +2,23 @@
     <div
         class="card mb-2"
         :class="{
-            'border-success': fightStore.isCompeting(boxer, opponent),
+            'border-success': opponent.fightId,
         }"
     >
         <div class="card-body">
             <div class="d-flex justify-content-between">
                 <div>
                     <button
-                        v-if="fightStore.canCompete(boxer, opponent)"
+                        v-if="!opponent.fightId"
                         class="btn btn-outline-success btn-sm"
-                        @click="fightStore.addToFightCard(boxer, opponent)"
+                        @click="addToFightCard(opponent)"
                     >
                         <i class="bi bi-person-plus-fill" />
                     </button>
                     <button
-                        v-if="fightStore.isCompeting(boxer, opponent)"
+                        v-if="opponent.fightId"
                         class="btn btn-outline-danger btn-sm"
-                        @click="fightStore.removeFromFightCard(boxer, opponent)"
+                        @click="removeFromFightCard(opponent)"
                     >
                         <i class="bi bi-person-dash-fill" />
                     </button>
@@ -61,7 +61,7 @@
 <script lang="ts">
 import { PropType, defineComponent } from "vue"
 import { ModalityErrorType } from "@/shared/types/modality.type"
-import { Boxer } from "@/types/boxing.d"
+import { Boxer, Opponent } from "@/types/boxing.d"
 import RecordBadgeComponent from "@/components/badges/record-badge.component.vue"
 import LinkedFightsBadgeComponent from "@/components/badges/linked-fights-badge.component.vue"
 import WeightBadgeComponent from "@/components/badges/weight-badge.component.vue"
@@ -82,7 +82,7 @@ export default defineComponent({
             required: true,
         },
         opponent: {
-            type: Object as PropType<Boxer>,
+            type: Object as PropType<Opponent>,
             required: true,
         },
     },
@@ -94,6 +94,23 @@ export default defineComponent({
         }
 
         return ret
+    },
+    mounted() {
+        // Ensure the fight store is initialized
+        console.log(this.opponent)
+    },
+    methods: {
+        addToFightCard(opponent: Opponent) {
+            this.fightStore.addToFightCard(this.boxer, opponent)
+            this.fightStore.fetchFights()
+        },
+        removeFromFightCard(opponent: Opponent) {
+            if (!opponent.fightId) {
+                return
+            }
+            this.fightStore.removeFromFightCard(opponent.fightId)
+            //emit event to update opponent list in parent component
+        },
     },
 })
 </script>

@@ -50,6 +50,7 @@ export default class ApiAdapter {
             modalityErrors: [],
             weightDifference: opponent.weightDifference,
             isEligible: opponent.isEligible,
+            fightId: opponent.fightId,
         }
     }
 
@@ -88,10 +89,10 @@ export default class ApiAdapter {
         }
     }
 
-    static toFight(fight: ApiFight, boxer1: Boxer, boxer2: Boxer): Fight {
+    static toFight(fight: ApiFight): Fight {
         return {
-            boxer1,
-            boxer2,
+            boxer1Id: fight.boxer1Id,
+            boxer2Id: fight.boxer2Id,
             id: fight.id,
             order: fight.order,
             modalityErrors: [],
@@ -102,8 +103,8 @@ export default class ApiAdapter {
     static toApiFight(fight: Fight): ApiFight {
         return {
             id: fight.id,
-            boxer1Id: fight.boxer1.id,
-            boxer2Id: fight.boxer2.id,
+            boxer1Id: fight.boxer1Id,
+            boxer2Id: fight.boxer2Id,
             tournamentId: fight.tournamentId,
             order: fight.order,
         }

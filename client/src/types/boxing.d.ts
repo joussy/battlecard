@@ -20,6 +20,7 @@ export interface Opponent extends Boxer {
     modalityErrors: Readonly<ModalityError[]>
     weightDifference: number
     isEligible: boolean
+    fightId?: string
 }
 
 export enum Gender {
@@ -27,8 +28,8 @@ export enum Gender {
     MALE,
 }
 export interface Fight {
-    boxer1: Boxer
-    boxer2: Boxer
+    boxer1Id: string
+    boxer2Id: string
     modalityErrors: Readonly<ModalityError[]>
     id: string
     order: number

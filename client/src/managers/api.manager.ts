@@ -40,7 +40,7 @@ export class ApiManager {
         return mutate<ApiFight>("/api/fights", "POST", fight, "Failed to add fight")
     }
     async deleteFights(ids: string[]): Promise<void> {
-        await mutate("/api/fights", "DELETE", { ids }, "Failed to delete fights")
+        await mutate("/api/fights", "DELETE", { ids }, "Failed to delete fights", true)
     }
     reorderFights(fightIds: string[], tournamentId: string): Promise<void> {
         return mutate<void>("/api/fights/reorder", "POST", { fightIds, tournamentId }, "Failed to reorder fights")

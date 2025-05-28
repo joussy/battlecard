@@ -35,11 +35,15 @@ export function toApiBoxerGet(boxer: Boxer): ApiBoxerGet {
   };
 }
 
-export function toApiOpponentGet(boxer: Boxer): ApiOpponentGet {
+export function toApiOpponentGet(
+  boxer: Boxer,
+  fightId?: string,
+): ApiOpponentGet {
   return {
     ...toApiBoxerGet(boxer),
     // modalityErrors: [], // Assuming modalityErrors is not available in Boxer entity
     weightDifference: 0, // Placeholder value, adjust as needed
     isEligible: true, // Placeholder value, adjust as needed
+    fightId: fightId,
   };
 }

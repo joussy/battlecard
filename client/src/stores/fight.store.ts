@@ -12,20 +12,18 @@ export const useFightStore = defineStore("fight", {
         error: null as string | null,
     }),
     actions: {
-        async fetchFights(tournamentId: string, boxers: Boxer[]) {
+        async fetchFights() {
+            const tournamentStore = useTournamentStore()
+            const tournamentId = tournamentStore.currentTournamentId
+            if (!tournamentId) {
+                throw new Error("No current tournament selected")
+            }
+
             this.loading = true
             this.error = null
             try {
                 const apiFights: ApiFight[] = await dbManager.getFights(tournamentId)
-                // Map ApiFight to Fight, resolving boxer1/boxer2 from the provided boxers array
-                this.fights = apiFights
-                    .map((f) => {
-                        const boxer1 = boxers.find((b) => b.id === f.boxer1Id)
-                        const boxer2 = boxers.find((b) => b.id === f.boxer2Id)
-                        if (boxer1 && boxer2) return ApiAdapter.toFight(f, boxer1, boxer2)
-                        return null
-                    })
-                    .filter((f): f is Fight => f !== null)
+                this.fights = apiFights.map((apiFight) => ApiAdapter.toFight(apiFight))
             } catch (e: unknown) {
                 this.error = e instanceof Error ? e.message : "Unknown error"
             } finally {
@@ -34,23 +32,22 @@ export const useFightStore = defineStore("fight", {
         },
         async addToFightCard(boxer1: Boxer, boxer2: Boxer) {
             const tournamentStore = useTournamentStore()
-
-            // Check if the fight already exists before adding to the fight card
-            if (!tournamentStore.currentTournamentId || this.isCompeting(boxer1, boxer2)) {
-                return
+            if (!tournamentStore.currentTournamentId) {
+                throw new Error("No current tournament selected")
             }
-            const fight: Fight = {
-                boxer1,
-                boxer2,
-                modalityErrors: [],
+            this.loading = true
+
+            const apiFight: ApiFight = {
+                boxer1Id: boxer1.id,
+                boxer2Id: boxer2.id,
+                // modalityErrors: [],
                 order: this.fights.length + 1,
                 id: "",
                 tournamentId: tournamentStore.currentTournamentId,
             }
             try {
-                const apiFight: ApiFight = ApiAdapter.toApiFight(fight)
                 const created: ApiFight = await dbManager.addFight(apiFight)
-                const newFight = ApiAdapter.toFight(created, fight.boxer1, fight.boxer2)
+                const newFight = ApiAdapter.toFight(created)
                 this.fights.push(newFight)
                 return newFight
             } catch (e: unknown) {
@@ -58,35 +55,26 @@ export const useFightStore = defineStore("fight", {
                 throw e
             }
         },
-        getOpponents(boxer: Boxer): Boxer[] {
-            return this.fights
-                .filter((fight) => fight.boxer1.id === boxer.id || fight.boxer2.id === boxer.id)
-                .map((fight) => (fight.boxer1.id === boxer.id ? fight.boxer2 : fight.boxer1))
-        },
+        // getOpponents(boxer: Boxer): Boxer[] {
+        //     return this.fights
+        //         .filter((fight) => fight.boxer1.id === boxer.id || fight.boxer2.id === boxer.id)
+        //         .map((fight) => (fight.boxer1.id === boxer.id ? fight.boxer2 : fight.boxer1))
+        // },
 
-        async removeFromFightCard(boxer1: Boxer, boxer2: Boxer): Promise<void> {
-            const fight = this.fights.find(
-                (f) =>
-                    (f.boxer1.id === boxer1.id && f.boxer2.id === boxer2.id) ||
-                    (f.boxer1.id === boxer2.id && f.boxer2.id === boxer1.id)
-            )
-            if (fight) {
-                // Remove from backend first
-                await dbManager.deleteFights([fight.id])
-                // Then update local state
-                this.fights = this.fights.filter((f) => f.id !== fight.id)
-            }
+        async removeFromFightCard(fightId: string): Promise<void> {
+            // Remove from backend first
+            await dbManager.deleteFights([fightId])
         },
-        canCompete(boxer1: Boxer, boxer2: Boxer): boolean {
-            return !this.isCompeting(boxer1, boxer2)
-        },
-        isCompeting(boxer1: Boxer, boxer2: Boxer): boolean {
-            return this.fights.some(
-                (fight) =>
-                    (fight.boxer1.id === boxer1.id && fight.boxer2.id === boxer2.id) ||
-                    (fight.boxer1.id === boxer2.id && fight.boxer2.id === boxer1.id)
-            )
-        },
+        // canCompete(boxer1: Boxer, boxer2: Boxer): boolean {
+        //     return !this.isCompeting(boxer1, boxer2)
+        // },
+        // isCompeting(boxer1: Boxer, boxer2: Boxer): boolean {
+        //     return this.fights.some(
+        //         (fight) =>
+        //             (fight.boxer1.id === boxer1.id && fight.boxer2.id === boxer2.id) ||
+        //             (fight.boxer1.id === boxer2.id && fight.boxer2.id === boxer1.id)
+        //     )
+        // },
         async updateFightOrder(fightId: string, newIndex: number) {
             if (newIndex < 0) {
                 return
@@ -136,10 +124,10 @@ export const useFightStore = defineStore("fight", {
         async switchFight(fightId: string) {
             const fight = this.getFightById(fightId)
             if (fight) {
-                const boxer1 = fight.boxer1
-                const boxer2 = fight.boxer2
-                fight.boxer1 = boxer2
-                fight.boxer2 = boxer1
+                const boxer1Id = fight.boxer1Id
+                const boxer2Id = fight.boxer2Id
+                fight.boxer1Id = boxer2Id
+                fight.boxer2Id = boxer1Id
                 await dbManager.updateFight(ApiAdapter.toApiFight(fight))
             }
         },

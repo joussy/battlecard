@@ -17,6 +17,7 @@ export interface ApiOpponentGet extends ApiBoxerGet {
     // modalityErrors: Readonly<ApiModalityError[]>
     weightDifference: number
     isEligible: boolean
+    fightId?: string
 }
 
 export interface ApiBoxerCreate {
