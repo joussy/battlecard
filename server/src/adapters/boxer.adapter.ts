@@ -1,4 +1,8 @@
-import { ApiBoxerCreate, ApiBoxerGet } from '@/shared/types/api';
+import {
+  ApiBoxerCreate,
+  ApiBoxerGet,
+  ApiOpponentGet,
+} from '@/shared/types/api';
 import { Boxer } from '../entities/boxer.entity';
 
 export function toBoxer(apiBoxer: ApiBoxerCreate, userId: string): Boxer {
@@ -28,5 +32,14 @@ export function toApiBoxerGet(boxer: Boxer): ApiBoxerGet {
     userId: boxer.userId,
     created: boxer.created,
     updated: boxer.updated,
+  };
+}
+
+export function toApiOpponentGet(boxer: Boxer): ApiOpponentGet {
+  return {
+    ...toApiBoxerGet(boxer),
+    // modalityErrors: [], // Assuming modalityErrors is not available in Boxer entity
+    weightDifference: 0, // Placeholder value, adjust as needed
+    isEligible: true, // Placeholder value, adjust as needed
   };
 }

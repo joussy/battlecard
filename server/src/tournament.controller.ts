@@ -11,10 +11,10 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Tournament } from './entities/tournament.entity';
 import { toTournament, toApiTournament } from './adapters/tournament.adapter';
-import { ApiTournament } from '@/shared/types/api';
+import { ApiOpponentGet, ApiTournament } from '@/shared/types/api';
 import { TournamentBoxer } from './entities/tournament_boxer.entity';
 import { Boxer } from './entities/boxer.entity';
-import { toApiBoxerGet } from './adapters/boxer.adapter';
+import { toApiBoxerGet, toApiOpponentGet } from './adapters/boxer.adapter';
 import { ApiBoxerGet } from '@/shared/types/api';
 
 @Controller('tournaments')
@@ -69,7 +69,7 @@ export class TournamentController {
   async getPossibleOpponents(
     @Param('boxerId') boxerId: string,
     @Param('tournamentId') tournamentId: string,
-  ): Promise<ApiBoxerGet[]> {
+  ): Promise<ApiOpponentGet[]> {
     if (!boxerId || !tournamentId) {
       return [];
     }
@@ -87,6 +87,6 @@ export class TournamentController {
     }
 
     const boxers = await this.boxerRepository.findByIds(boxerIds);
-    return boxers.map((b): ApiBoxerGet => toApiBoxerGet(b));
+    return boxers.map((b): ApiOpponentGet => toApiOpponentGet(b));
   }
 }
