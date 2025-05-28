@@ -11,7 +11,7 @@ import { get, mutate } from "@/utils/manager.utils"
 export class ApiManager {
     getPossibleOpponents(boxerId: string, tournamentId: string): PromiseLike<ApiOpponentGet[]> {
         return get<ApiOpponentGet[]>(
-            `/api/tournaments/${encodeURIComponent(tournamentId)}/boxers/${encodeURIComponent(boxerId)}/opponents`,
+            `/api/tournaments/${encodeURIComponent(tournamentId)}/opponents/${encodeURIComponent(boxerId)}`,
             undefined,
             "Failed to fetch possible opponents"
         )

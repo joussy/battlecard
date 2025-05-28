@@ -54,7 +54,7 @@
                 <div v-for="opponent in getOpponentsToDisplay()">
                     <OpponentTileComponent
                         :boxer="boxer"
-                        :opponent="opponent.boxer"
+                        :opponent="opponent"
                     />
                 </div>
             </div>
@@ -116,6 +116,7 @@ export default defineComponent({
             this.boxer.id,
             this.tournamentStore.currentTournamentId
         )
+        console.log("opponents", this.opponents)
     },
     methods: {
         getOpponentsToDisplay(): Readonly<Opponent[]> {
