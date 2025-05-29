@@ -1,9 +1,10 @@
 import { FightCardTemplate } from '@/interfaces/template.interface';
+import * as Mustache from 'mustache';
 
 export function generateFightCardHtml(
   fightCardTemplate: FightCardTemplate,
 ): string {
-  return `
+  const template = `
     <!DOCTYPE html>
     <html lang="en">
       <head>
@@ -32,8 +33,8 @@ export function generateFightCardHtml(
           }
         </style>
         <div class="title">
-          <h3>${fightCardTemplate.title}</h3>
-          <br/><i>${fightCardTemplate.subtitle}</i><br/>
+          <h3>{{title}}</h3>
+          <br/><i>{{subtitle}}</i><br/>
         </div>
         <div class="table-container">
           <table>
@@ -49,24 +50,22 @@ export function generateFightCardHtml(
                 <th>Duration</th>
               </tr>
             </thead>
-            ${fightCardTemplate.fights
-              .map(
-                (fight) => `
-                  <tr>
-                    <td>${fight.order}</td>
-                    <td>${fight.boxer1License}</td>
-                    <td>${fight.boxer1FirstName} ${fight.boxer1LastName}</td>
-                    <td>${fight.boxer1Club}</td>
-                    <td>${fight.boxer2License}</td>
-                    <td>${fight.boxer2FirstName} ${fight.boxer2LastName}</td>
-                    <td>${fight.boxer2Club}</td>
-                    <td>${fight.fightDuration}</td>
-                  </tr>`,
-              )
-              .join('')}
+            {{#fights}}
+              <tr>
+                <td>{{order}}</td>
+                <td>{{boxer1License}}</td>
+                <td>{{boxer1FirstName}} {{boxer1LastName}}</td>
+                <td>{{boxer1Club}}</td>
+                <td>{{boxer2License}}</td>
+                <td>{{boxer2FirstName}} {{boxer2LastName}}</td>
+                <td>{{boxer2Club}}</td>
+                <td>{{fightDuration}}</td>
+              </tr>
+            {{/fights}}
           </table>
         </div>
       </body>
     </html>
   `;
+  return Mustache.render(template, fightCardTemplate);
 }

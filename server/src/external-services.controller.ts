@@ -113,7 +113,7 @@ export class ExternalServicesController {
     const htmlBlob = new Blob([html], { type: 'text/html' });
     formData.append('files', htmlBlob, 'index.html');
     formData.append('index.html', 'index.html');
-    formData.append('clip', 'true');
+    formData.append('clip', 'false');
     formData.append('skipNetworkIdleEvent', 'false');
     try {
       // Send HTML to Gotenberg for PNG conversion
