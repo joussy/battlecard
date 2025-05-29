@@ -106,9 +106,9 @@
 </template>
 <script lang="ts">
 import { defineComponent } from "vue"
-import { Gender } from "@/types/boxing.d"
 import { UiTheme } from "@/types/ui"
 import { useUiStore } from "@/stores/ui.store"
+import { Gender } from "@/shared/types/modality.type"
 
 export default defineComponent({
     data() {

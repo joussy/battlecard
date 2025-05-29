@@ -38,8 +38,8 @@
 
 <script lang="ts">
 import { PropType, defineComponent } from "vue"
-import { Gender, Boxer } from "@/types/boxing.d"
-import { ModalityErrorType } from "@/shared/types/modality.type"
+import { Boxer } from "@/types/boxing.d"
+import { Gender, ModalityErrorType } from "@/shared/types/modality.type"
 import RecordBadgeComponent from "@/components/badges/record-badge.component.vue"
 import AgeBadgeComponent from "@/components/badges/age-badge.component.vue"
 import WeightBadgeComponent from "@/components/badges/weight-badge.component.vue"

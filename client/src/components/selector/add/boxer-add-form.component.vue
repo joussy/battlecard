@@ -86,7 +86,7 @@
                     class="btn-check"
                     name="gender"
                     autocomplete="off"
-                    :value="Gender[Gender.FEMALE]"
+                    :value="Gender.FEMALE"
                 />
                 <label
                     class="btn btn-outline-danger"
@@ -101,7 +101,7 @@
                     class="btn-check"
                     name="gender"
                     autocomplete="off"
-                    :value="Gender[Gender.MALE]"
+                    :value="Gender.MALE"
                 />
                 <label
                     class="btn btn-outline-primary"
@@ -229,13 +229,14 @@
 import { defineComponent, PropType } from "vue"
 
 import { configure, defineRule, GenericObject, useForm } from "vee-validate"
-import { Boxer, Gender } from "@/types/boxing.d"
+import { Boxer } from "@/types/boxing.d"
 import { isValid, format } from "date-fns"
 import IconComponent from "@/components/core/icon.component.vue"
 
 import { Toast } from "bootstrap"
 import { useBoxerStore } from "@/stores/boxer.store"
 import { useTournamentStore } from "@/stores/tournament.store"
+import { Gender } from "@/shared/types/modality.type"
 
 configure({
     validateOnInput: true,
@@ -292,7 +293,7 @@ export default defineComponent({
             license: properties.boxer?.license ?? "",
             club: properties.boxer?.club ?? "",
             birthdate: isValid(properties.boxer?.birthDate) ? format(properties.boxer!.birthDate, "yyyy-MM-dd") : "",
-            gender: properties.boxer ? Gender[properties.boxer.gender] : Gender[Gender.FEMALE],
+            gender: properties.boxer ? properties.boxer.gender : Gender.FEMALE,
             id: properties.boxer?.id ?? "",
         }
 
@@ -325,7 +326,7 @@ export default defineComponent({
                 club: form.club,
                 firstName: form.firstname,
                 lastName: form.lastname,
-                gender: form.gender == Gender[Gender.FEMALE] ? Gender.FEMALE : Gender.MALE,
+                gender: form.gender == Gender.FEMALE ? Gender.FEMALE : Gender.MALE,
                 weight: parseInt(form.weight),
                 category: "",
                 categoryShortText: "",
