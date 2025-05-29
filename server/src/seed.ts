@@ -68,6 +68,7 @@ async function seed() {
 
   // Create mock tournament
   const tournament = tournamentRepo.create({
+    id: '4f331141-e0e4-4a6b-bcec-2f92bfff0c04',
     name: 'Mock Tournament',
     userId: user.id,
     date: new Date().toISOString().slice(0, 10),
