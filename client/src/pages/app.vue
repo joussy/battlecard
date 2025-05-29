@@ -25,19 +25,20 @@ export default defineComponent({
             currentPath: window.location.hash,
         }
     },
-    mounted() {
+    async mounted() {
         const uiStore = useUiStore()
         uiStore.loadUiStore()
         const tournamentStore = useTournamentStore()
         const boxerStore = useBoxerStore()
         const fightStore = useFightStore()
+        await tournamentStore.fetchTournaments()
         watch(
             () => [tournamentStore.currentTournamentId],
             async () => {
                 if (uiStore.account && tournamentStore.currentTournamentId == null) {
                     this.$router.push("tournaments")
                 }
-                if (tournamentStore.currentTournamentId) {
+                if (tournamentStore.currentTournamentId != null) {
                     await boxerStore.fetchBoxers()
                     await fightStore.fetchFights()
                 }
@@ -50,7 +51,6 @@ export default defineComponent({
             () => uiStore.saveUiStore(),
             { deep: true }
         )
-        tournamentStore.fetchTournaments()
     },
 })
 </script>
