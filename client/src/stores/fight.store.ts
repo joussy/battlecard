@@ -61,9 +61,9 @@ export const useFightStore = defineStore("fight", {
         //         .map((fight) => (fight.boxer1.id === boxer.id ? fight.boxer2 : fight.boxer1))
         // },
 
-        async removeFromFightCard(fightId: string): Promise<void> {
-            // Remove from backend first
-            await dbManager.deleteFights([fightId])
+        async removeFromFightCard(fightIds: string[]): Promise<void> {
+            await dbManager.deleteFights(fightIds)
+            await this.fetchFights()
         },
         // canCompete(boxer1: Boxer, boxer2: Boxer): boolean {
         //     return !this.isCompeting(boxer1, boxer2)

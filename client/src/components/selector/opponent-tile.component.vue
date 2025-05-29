@@ -108,7 +108,7 @@ export default defineComponent({
             if (!opponent.fightId) {
                 return
             }
-            this.fightStore.removeFromFightCard(opponent.fightId)
+            this.fightStore.removeFromFightCard([opponent.fightId])
             //emit event to update opponent list in parent component
         },
     },

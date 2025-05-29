@@ -63,7 +63,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue"
+import { defineComponent, watch } from "vue"
 import { Boxer, Gender, Opponent } from "@/types/boxing.d"
 import { ModalityErrorType } from "@/shared/types/modality.type"
 import OpponentTileComponent from "@/components/selector/opponent-tile.component.vue"
@@ -112,11 +112,23 @@ export default defineComponent({
             return
         }
         this.boxer = await this.boxerStore.fetchBoxerById(boxerId)
-        this.opponents = await this.tournamentBoxerStore.fetchBoxerOpponents(
-            this.boxer.id,
-            this.tournamentStore.currentTournamentId
+        // this.opponents = await this.tournamentBoxerStore.fetchBoxerOpponents(
+        //     this.boxer.id,
+        //     this.tournamentStore.currentTournamentId
+        // )
+        // Watch for changes in fightStore.fights and refresh opponents
+        watch(
+            () => this.fightStore.fights,
+            async () => {
+                if (this.boxer && this.tournamentStore.currentTournamentId) {
+                    this.opponents = await this.tournamentBoxerStore.fetchBoxerOpponents(
+                        this.boxer.id,
+                        this.tournamentStore.currentTournamentId
+                    )
+                }
+            },
+            { immediate: true }
         )
-        console.log("opponents", this.opponents)
     },
     methods: {
         getOpponentsToDisplay(): Readonly<Opponent[]> {
