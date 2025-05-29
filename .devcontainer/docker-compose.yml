@@ -18,3 +18,8 @@ services:
       - ../db-data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
+  gotenberg:
+    image: gotenberg/gotenberg:8
+    restart: unless-stopped
+    ports:
+      - "3001:3000"
