@@ -7,7 +7,12 @@ export class AuthService {
   constructor(private readonly jwtService: JwtService) {}
 
   async generateJwt(user: User): Promise<string> {
-    const payload = { sub: user.id, email: user.email, name: user.name };
+    const payload = {
+      sub: user.id,
+      email: user.email,
+      name: user.name,
+      apiEnabled: user.apiEnabled,
+    };
     return this.jwtService.signAsync(payload);
   }
 }

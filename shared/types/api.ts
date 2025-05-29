@@ -126,6 +126,13 @@ export interface ApiTournament {
     date: string;
 }
 
+export interface ApiTournamentCreate {
+    /** Tournament name */
+    name: string;
+    /** Tournament date (YYYY-MM-DD) */
+    date: string;
+}
+
 /**
  * Tournament-boxer association object.
  */

@@ -1,11 +1,13 @@
-import { ApiTournament } from '@/shared/types/api';
+import { ApiTournament, ApiTournamentCreate } from '@/shared/types/api';
 import { Tournament } from '../entities/tournament.entity';
 
-export function toTournament(apiTournament: ApiTournament): Tournament {
+export function toTournament(
+  apiTournament: ApiTournamentCreate,
+  userId: string,
+): Tournament {
   const tournament = new Tournament();
-  tournament.id = apiTournament.id;
   tournament.name = apiTournament.name;
-  tournament.userId = apiTournament.userId;
+  tournament.userId = userId;
   tournament.date = apiTournament.date;
   return tournament;
 }
