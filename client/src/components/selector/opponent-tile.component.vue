@@ -23,7 +23,7 @@
                         <i class="bi bi-person-dash-fill" />
                     </button>
 
-                    {{ boxerStore.getBoxerDisplayName(opponent) }}
+                    {{ getBoxerDisplayName(opponent) }}
                 </div>
                 <div
                     class="font-italic text-right"
@@ -68,6 +68,7 @@ import WeightBadgeComponent from "@/components/badges/weight-badge.component.vue
 import AgeBadgeComponent from "@/components/badges/age-badge.component.vue"
 import { useFightStore } from "@/stores/fight.store"
 import { useBoxerStore } from "@/stores/boxer.store"
+import { getBoxerDisplayName } from "@/utils/labels.utils"
 
 export default defineComponent({
     components: {
@@ -88,6 +89,7 @@ export default defineComponent({
     },
     data() {
         let ret = {
+            getBoxerDisplayName,
             ModalityErrorType: ModalityErrorType,
             fightStore: useFightStore(),
             boxerStore: useBoxerStore(),
@@ -95,14 +97,10 @@ export default defineComponent({
 
         return ret
     },
-    mounted() {
-        // Ensure the fight store is initialized
-        console.log(this.opponent)
-    },
+    mounted() {},
     methods: {
         addToFightCard(opponent: Opponent) {
             this.fightStore.addToFightCard(this.boxer, opponent)
-            this.fightStore.fetchFights()
         },
         removeFromFightCard(opponent: Opponent) {
             if (!opponent.fightId) {

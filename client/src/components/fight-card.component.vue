@@ -131,13 +131,13 @@
                             :ref="`fights-tr-red-${fight.id}`"
                             class="cell-red word-break-all"
                         >
-                            {{ boxerStore.getBoxerDisplayName(fight.boxer1) }}
+                            {{ getBoxerDisplayName(fight.boxer1) }}
                         </td>
                         <td
                             :ref="`fights-tr-blue-${fight.id}`"
                             class="cell-blue word-break-all"
                         >
-                            {{ boxerStore.getBoxerDisplayName(fight.boxer2) }}
+                            {{ getBoxerDisplayName(fight.boxer2) }}
                         </td>
                         <td class="fight-extra-infos">
                             <div class="me-1">
@@ -170,7 +170,7 @@
                             </button>
                             <button
                                 class="btn btn-outline-danger btn-sm m-1"
-                                @click="fightStore.removeFromFightCard(fight.boxer1, fight.boxer2)"
+                                @click="removeFromFightCard(fight.id)"
                             >
                                 <i class="bi bi-person-dash-fill" />
                             </button>
@@ -198,7 +198,7 @@
 </template>
 
 <script lang="ts">
-import { Fight, Gender } from "@/types/boxing.d"
+import { Boxer, Fight, Gender } from "@/types/boxing.d"
 import { ExternalService } from "@/services/external.service"
 import { FileType } from "@/types/api"
 import { getFightDurationAsString } from "@/utils/string.utils"
@@ -208,6 +208,8 @@ import { useFightStore } from "@/stores/fight.store"
 import { useUiStore } from "@/stores/ui.store"
 import { useBoxerStore } from "@/stores/boxer.store"
 import { useTournamentStore } from "@/stores/tournament.store"
+import { watch } from "vue"
+import { getBoxerDisplayName } from "@/utils/labels.utils"
 
 export default {
     components: {
@@ -215,26 +217,35 @@ export default {
     },
     data() {
         return {
+            getBoxerDisplayName,
             Gender: Gender,
             fightStore: useFightStore(),
             uiStore: useUiStore(),
             boxerStore: useBoxerStore(),
             tournamentStore: useTournamentStore(),
             editionMode: false,
+            fightCard: [] as (Fight & {
+                boxer1: Boxer
+                boxer2: Boxer
+            })[],
         }
-    },
-    computed: {
-        fightCard: {
-            get() {
-                return this.fightStore.fights
-            },
-            set() {
-                /* Avoid error on readonly collection */
-            },
-        },
     },
     mounted() {
         this.initSortable()
+
+        watch(
+            () => this.fightStore.fights,
+            () => {
+                this.fightCard = this.fightStore.fights.map((fight: Fight) => {
+                    return {
+                        ...fight,
+                        boxer1: this.boxerStore.getBoxerById(fight.boxer1Id) as Boxer,
+                        boxer2: this.boxerStore.getBoxerById(fight.boxer2Id) as Boxer,
+                    }
+                })
+            },
+            { immediate: true }
+        )
     },
     methods: {
         switchFight(fightId: string) {
@@ -286,6 +297,9 @@ export default {
         },
         getNbFights() {
             return this.fightCard.length
+        },
+        removeFromFightCard(fightId: string) {
+            this.fightStore.removeFromFightCard([fightId])
         },
     },
 }

@@ -49,7 +49,7 @@
                 active-class="active"
             >
                 Card
-                <span class="badge rounded-pill bg-primary">{{ getNbFights() }}</span>
+                <span class="badge rounded-pill bg-primary">{{ nbFights }}</span>
             </router-link>
         </div>
         <div class="nav-item dropdown ms-auto me-3">
@@ -90,6 +90,7 @@
 </template>
 <script lang="ts">
 import Icon from "@/components/core/icon.component.vue"
+import { useFightStore } from "@/stores/fight.store"
 import { useTournamentStore } from "@/stores/tournament.store"
 import { useUiStore } from "@/stores/ui.store"
 
@@ -101,17 +102,18 @@ export default {
         return {
             uiStore: useUiStore(),
             tournamentStore: useTournamentStore(),
+            fightStore: useFightStore(),
         }
     },
     computed: {
+        nbFights() {
+            return this.fightStore.fights.length
+        },
         isTournamentSelected() {
             return !!this.tournamentStore.currentTournamentId
         },
     },
     methods: {
-        getNbFights() {
-            return 111
-        },
         logout() {
             this.uiStore.logout()
             this.$router.push("settings")

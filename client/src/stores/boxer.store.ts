@@ -4,6 +4,7 @@ import ApiAdapter from "@/adapters/api.adapter"
 import dbManager from "@/managers/api.manager"
 import { ModalityError, ModalityErrorType } from "@/shared/types/modality.type"
 import { ApiBoxerGet } from "@/shared/types/api"
+import { useTournamentStore } from "./tournament.store"
 
 export const useBoxerStore = defineStore("boxer", {
     state: () => ({
@@ -12,11 +13,17 @@ export const useBoxerStore = defineStore("boxer", {
         error: null as string | null,
     }),
     actions: {
-        async fetchBoxers(tournamentId: string) {
+        async fetchBoxers() {
+            const tournamentStore = useTournamentStore()
             this.loading = true
             this.error = null
             try {
-                const apiBoxers: ApiBoxerGet[] = await dbManager.getTournamentBoxers(tournamentId)
+                if (!tournamentStore.currentTournamentId) {
+                    return
+                }
+                const apiBoxers: ApiBoxerGet[] = await dbManager.getTournamentBoxers(
+                    tournamentStore.currentTournamentId
+                )
                 this.boxers = apiBoxers.map(ApiAdapter.toBoxer)
             } catch (e: unknown) {
                 this.error = e instanceof Error ? e.message : "Unknown error"
@@ -50,9 +57,6 @@ export const useBoxerStore = defineStore("boxer", {
         getNbFightsForBoxer(boxer: Boxer): number {
             return 0
         },
-        getBoxerDisplayName(boxer: Boxer): string {
-            return `${boxer.firstName} ${boxer.lastName}`
-        },
         getOpponentModalityErrors(boxer: Boxer, opponent: Boxer): ModalityError[] {
             //TODO: Implement modality logic
             // return this.modality.getModalityErrors(boxer, opponent)
@@ -66,6 +70,9 @@ export const useBoxerStore = defineStore("boxer", {
             //TODO: Implement modality logic
             // return this.modality.getModalityErrors(boxer, opponent)
             return null
+        },
+        getBoxerById(boxerId: string): Boxer | undefined {
+            return this.boxers.find((b) => b.id === boxerId)
         },
     },
 })

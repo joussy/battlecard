@@ -7,12 +7,14 @@ import {
   Param,
   Put,
   NotFoundException,
+  Res,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Fight } from './entities/fight.entity';
 import { toFight, toApiFight } from './adapters/fight.adapter';
 import { ApiFight } from '@/shared/types/api';
+import { Response } from 'express';
 
 @Controller('fights')
 export class FightController {
@@ -28,12 +30,36 @@ export class FightController {
   }
 
   @Post()
-  async create(@Body() fight: Partial<ApiFight>): Promise<ApiFight> {
+  async create(
+    @Body() fight: Partial<ApiFight>,
+    @Res() res: Response,
+  ): Promise<any> {
     if ('id' in fight) {
       delete fight.id;
     }
+    // Check if a fight already exists between these two boxers in the same tournament
+    const existingFight = await this.fightRepository.findOne({
+      where: [
+        {
+          tournamentId: fight.tournamentId,
+          boxer1Id: fight.boxer1Id,
+          boxer2Id: fight.boxer2Id,
+        },
+        {
+          tournamentId: fight.tournamentId,
+          boxer1Id: fight.boxer2Id,
+          boxer2Id: fight.boxer1Id,
+        },
+      ],
+    });
+    if (existingFight) {
+      return res.status(409).json({
+        error:
+          'A fight between these two boxers already exists in this tournament.',
+      });
+    }
     const dbFight = await this.fightRepository.save(toFight(fight as ApiFight));
-    return toApiFight(dbFight);
+    return res.json(toApiFight(dbFight));
   }
 
   @Delete()

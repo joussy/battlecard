@@ -13,6 +13,7 @@ import MenuBottomComponent from "@/components/menu/menu-bottom.component.vue"
 import { useUiStore } from "@/stores/ui.store"
 import { useTournamentStore } from "@/stores/tournament.store"
 import { useBoxerStore } from "@/stores/boxer.store"
+import { useFightStore } from "@/stores/fight.store"
 
 export default defineComponent({
     components: {
@@ -29,6 +30,7 @@ export default defineComponent({
         uiStore.loadUiStore()
         const tournamentStore = useTournamentStore()
         const boxerStore = useBoxerStore()
+        const fightStore = useFightStore()
         watch(
             () => [tournamentStore.currentTournamentId],
             async () => {
@@ -36,7 +38,8 @@ export default defineComponent({
                     this.$router.push("tournaments")
                 }
                 if (tournamentStore.currentTournamentId) {
-                    await boxerStore.fetchBoxers(tournamentStore.currentTournamentId)
+                    await boxerStore.fetchBoxers()
+                    await fightStore.fetchFights()
                 }
                 uiStore.saveUiStore()
             },

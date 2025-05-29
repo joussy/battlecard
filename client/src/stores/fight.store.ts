@@ -23,6 +23,7 @@ export const useFightStore = defineStore("fight", {
             this.error = null
             try {
                 const apiFights: ApiFight[] = await dbManager.getFights(tournamentId)
+                console.log("Fetched fights:", apiFights)
                 this.fights = apiFights.map((apiFight) => ApiAdapter.toFight(apiFight))
             } catch (e: unknown) {
                 this.error = e instanceof Error ? e.message : "Unknown error"

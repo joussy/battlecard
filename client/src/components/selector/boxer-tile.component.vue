@@ -7,7 +7,7 @@
             <div class="d-flex justify-content-between">
                 <div>
                     <IconComponent :name="boxer.gender == Gender.MALE ? 'male' : 'female'"></IconComponent>
-                    {{ boxerDisplayName }}
+                    {{ getBoxerDisplayName(boxer) }}
                 </div>
                 <div
                     class="font-italic text-right"
@@ -43,7 +43,6 @@ import { ModalityErrorType } from "@/shared/types/modality.type"
 import RecordBadgeComponent from "@/components/badges/record-badge.component.vue"
 import AgeBadgeComponent from "@/components/badges/age-badge.component.vue"
 import WeightBadgeComponent from "@/components/badges/weight-badge.component.vue"
-import PossibleBadgeComponent from "@/components/badges/possible-badge.component.vue"
 import LinkedFightsBadgeComponent from "@/components/badges/linked-fights-badge.component.vue"
 
 import IconComponent from "../core/icon.component.vue"
@@ -51,6 +50,7 @@ import { useUiStore } from "@/stores/ui.store"
 import { useBoxerStore } from "@/stores/boxer.store"
 import { useTournamentBoxerStore } from "@/stores/tournamentBoxer.store"
 import { useTournamentStore } from "@/stores/tournament.store"
+import { getBoxerDisplayName } from "@/utils/labels.utils"
 
 export default defineComponent({
     components: {
@@ -70,6 +70,7 @@ export default defineComponent({
     emits: ["boxer-edit"],
     data() {
         return {
+            getBoxerDisplayName,
             Gender: Gender,
             ModalityErrorType: ModalityErrorType,
             uiStore: useUiStore(),
@@ -78,12 +79,6 @@ export default defineComponent({
             tournamentStore: useTournamentStore(),
         }
     },
-    computed: {
-        boxerDisplayName(): string {
-            return this.boxerStore.getBoxerDisplayName(this.boxer)
-        },
-    },
-
     methods: {
         boxerEdit(): void {
             this.$emit("boxer-edit")

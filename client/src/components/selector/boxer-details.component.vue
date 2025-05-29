@@ -11,7 +11,7 @@
                 <i class="bi bi-arrow-left-circle fs-2"></i>
             </router-link>
             <h5 class="ps-2 card-title fw-bold flex-fill">
-                {{ boxerStore.getBoxerDisplayName(boxer) }}
+                {{ getBoxerDisplayName(boxer) }}
             </h5>
             <div
                 class="btn btn-sm btn-outline-success"
@@ -77,6 +77,7 @@ import { useBoxerStore } from "@/stores/boxer.store"
 import { useUiStore } from "@/stores/ui.store"
 import { useTournamentStore } from "@/stores/tournament.store"
 import { useTournamentBoxerStore } from "@/stores/tournamentBoxer.store"
+import { getBoxerDisplayName } from "@/utils/labels.utils"
 
 export default defineComponent({
     components: {
@@ -87,6 +88,7 @@ export default defineComponent({
     setup() {},
     data() {
         return {
+            getBoxerDisplayName,
             fightStore: useFightStore(),
             boxerStore: useBoxerStore(),
             uiStore: useUiStore(),
@@ -120,6 +122,11 @@ export default defineComponent({
         watch(
             () => this.fightStore.fights,
             async () => {
+                console.log(
+                    "Refreshing opponents for boxer and tournament:",
+                    this.boxer?.id,
+                    this.tournamentStore.currentTournamentId
+                )
                 if (this.boxer && this.tournamentStore.currentTournamentId) {
                     this.opponents = await this.tournamentBoxerStore.fetchBoxerOpponents(
                         this.boxer.id,
@@ -127,7 +134,7 @@ export default defineComponent({
                     )
                 }
             },
-            { immediate: true }
+            { immediate: true, deep: true }
         )
     },
     methods: {
