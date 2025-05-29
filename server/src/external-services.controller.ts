@@ -5,7 +5,7 @@ import { Tournament } from './entities/tournament.entity';
 import { Fight } from './entities/fight.entity';
 import { ConfigService } from '@nestjs/config';
 import { Response as ExpressResponse } from 'express';
-import { format } from 'date-fns';
+import { generateFightCardHtml } from './templates/fight-card-html.template';
 
 @Controller('external')
 export class ExternalServicesController {
@@ -72,71 +72,8 @@ export class ExternalServicesController {
       res.status(404).json({ error: 'No fights found for this tournament.' });
       return;
     }
-    const displayableTournamentDate = format(
-      new Date(tournament.date),
-      'dd/MM/yyyy',
-    );
     // Prepare HTML template
-    const html = `
-      <!DOCTYPE html>
-      <html lang="en">
-        <head>
-        <meta charset="utf-8" />
-        </head>
-        <body>
-          <style>
-            table, th, td {
-              border: 2px solid black;
-              border-collapse: collapse;
-              padding: 5px;
-            }
-            .title {
-              text-align: center;
-              padding-bottom: 15px;
-            }
-            .title h3 {
-              display: inline;
-            }
-            .table-container {
-              height: 100%;
-              display: flex;
-              justify-content: center;
-              align-items: center;
-              margin: 0;
-            }
-          </style>
-          <div class="title">
-            <h3>${tournament?.name}</h3>
-            <br/><i>${displayableTournamentDate}</i><br/>
-          </div>
-          <div class="table-container">
-            <table>
-              <thead>
-                <tr>
-                  <th>#</th>
-                  <th>Red</th>
-                  <th>Club (Red)</th>
-                  <th>Blue</th>
-                  <th>Club (Blue)</th>
-                </tr>
-              </thead>
-                ${fights
-                  .map(
-                    (fight) => `
-                      <tr>
-                        <td>${fight.order + 1}</td>
-                        <td>${fight.boxer1?.firstName || ''} ${fight.boxer1?.lastName || ''}</td>
-                        <td>${fight.boxer1?.club}</td>
-                        <td>${fight.boxer2?.firstName || ''} ${fight.boxer2?.lastName || ''}</td>
-                        <td>${fight.boxer2?.club}</td>
-                      </tr>`,
-                  )
-                  .join('')}
-            </table>
-          </div>
-        </body>
-      </html>
-    `;
+    const html = generateFightCardHtml(tournament, fights);
     console.log(html);
     // Send HTML to Gotenberg for PDF conversion
     const gotenbergUrl = this.configService.get<string>('GOTENBERG_URL');
