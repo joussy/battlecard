@@ -109,7 +109,8 @@ export class ExternalServicesController {
     const htmlBlob = new Blob([html], { type: 'text/html' });
     formData.append('files', htmlBlob, 'index.html');
     formData.append('index.html', 'index.html');
-    formData.append('clip', 'true'); // Set viewport size for PNG
+    formData.append('clip', 'true');
+    formData.append('skipNetworkIdleEvent', 'false');
     try {
       // Send HTML to Gotenberg for PNG conversion
       const gotenbergUrl = this.configService.get<string>('GOTENBERG_URL');
