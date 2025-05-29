@@ -1,4 +1,4 @@
-import { ApiBoxerCreate, ApiBoxerGet, ApiFight, ApiOpponentGet, ApiTournament } from "@/shared/types/api"
+import { ApiBoxerCreate, ApiBoxerGet, ApiFightGet, ApiOpponentGet, ApiTournament } from "@/shared/types/api"
 import { Boxer, Fight, Gender, Opponent, Tournament } from "@/types/boxing.d"
 
 export default class ApiAdapter {
@@ -64,7 +64,7 @@ export default class ApiAdapter {
         }
     }
 
-    static toFight(fight: ApiFight): Fight {
+    static toFight(fight: ApiFightGet): Fight {
         return {
             boxer1Id: fight.boxer1Id,
             boxer2Id: fight.boxer2Id,
@@ -77,7 +77,7 @@ export default class ApiAdapter {
         }
     }
 
-    static toApiFight(fight: Fight, roundDurationSeconds: number, rounds: number): ApiFight {
+    static toApiFight(fight: Fight, roundDurationSeconds: number, rounds: number): ApiFightGet {
         return {
             id: fight.id,
             boxer1Id: fight.boxer1Id,

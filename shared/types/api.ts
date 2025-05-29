@@ -84,7 +84,7 @@ export interface ApiBoxerCreate {
 /**
  * Fight object returned from the API.
  */
-export interface ApiFight {
+export interface ApiFightGet {
     /** Fight order in the tournament */
     order: number;
     /** Unique fight ID */

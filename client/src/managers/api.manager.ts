@@ -1,7 +1,7 @@
 import {
     ApiBoxerCreate,
     ApiBoxerGet,
-    ApiFight,
+    ApiFightGet,
     ApiFightCreate,
     ApiOpponentGet,
     ApiTournament,
@@ -34,11 +34,11 @@ export class ApiManager {
     }
 
     // FIGHT
-    getFights(tournamentId: string): Promise<ApiFight[]> {
-        return get<ApiFight[]>("/api/fights", { tournamentId }, "Failed to fetch fights")
+    getFights(tournamentId: string): Promise<ApiFightGet[]> {
+        return get<ApiFightGet[]>("/api/fights", { tournamentId }, "Failed to fetch fights")
     }
-    addFight(fight: ApiFightCreate): Promise<ApiFight> {
-        return mutate<ApiFight>("/api/fights", "POST", fight, "Failed to add fight")
+    addFight(fight: ApiFightCreate): Promise<ApiFightGet> {
+        return mutate<ApiFightGet>("/api/fights", "POST", fight, "Failed to add fight")
     }
     async deleteFights(ids: string[]): Promise<void> {
         await mutate("/api/fights", "DELETE", { ids }, "Failed to delete fights", true)
@@ -46,8 +46,13 @@ export class ApiManager {
     reorderFights(fightIds: string[], tournamentId: string): Promise<void> {
         return mutate("/api/fights/reorder", "POST", { fightIds, tournamentId }, "Failed to reorder fights", true)
     }
-    updateFight(fight: ApiFight): Promise<ApiFight> {
-        return mutate<ApiFight>(`/api/fights/${encodeURIComponent(fight.id)}`, "PUT", fight, "Failed to update fight")
+    updateFight(fight: ApiFightGet): Promise<ApiFightGet> {
+        return mutate<ApiFightGet>(
+            `/api/fights/${encodeURIComponent(fight.id)}`,
+            "PUT",
+            fight,
+            "Failed to update fight"
+        )
     }
 
     // TOURNAMENT

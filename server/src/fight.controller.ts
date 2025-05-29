@@ -14,7 +14,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Fight } from './entities/fight.entity';
 import { toFight, toApiFight } from './adapters/fight.adapter';
-import { ApiFight, ApiFightCreate } from '@/shared/types/api';
+import { ApiFightGet, ApiFightCreate } from '@/shared/types/api';
 import { Response } from 'express';
 import { ModalityService } from './modality/modality.service';
 
@@ -28,7 +28,7 @@ export class FightController {
   ) {}
 
   @Get()
-  async findAll(): Promise<ApiFight[]> {
+  async findAll(): Promise<ApiFightGet[]> {
     const dbFights = await this.fightRepository.find({
       order: { order: 'ASC' },
       relations: ['boxer1', 'boxer2'],
@@ -73,7 +73,7 @@ export class FightController {
           'A fight between these two boxers already exists in this tournament.',
       });
     }
-    await this.fightRepository.save(toFight(fight as ApiFight));
+    await this.fightRepository.save(toFight(fight as ApiFightGet));
     const dbFight = await this.fightRepository.findOne({
       where: {
         boxer1Id: fight.boxer1Id,
@@ -122,9 +122,9 @@ export class FightController {
   @Put(':id')
   async update(
     @Param('id') id: string,
-    @Body() fight: Partial<ApiFight>,
-  ): Promise<ApiFight> {
-    await this.fightRepository.update(id, toFight(fight as ApiFight));
+    @Body() fight: ApiFightGet,
+  ): Promise<ApiFightGet> {
+    await this.fightRepository.update(id, toFight(fight));
     const updated = await this.fightRepository.findOneBy({ id });
     if (!updated) throw new NotFoundException('Fight not found');
     const fightDuration = this.modalityService

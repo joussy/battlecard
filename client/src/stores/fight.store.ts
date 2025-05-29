@@ -1,6 +1,6 @@
 import { defineStore } from "pinia"
 import type { Fight, Boxer } from "@/types/boxing.d"
-import type { ApiFight, ApiFightCreate } from "@/shared/types/api"
+import type { ApiFightGet, ApiFightCreate } from "@/shared/types/api"
 import ApiAdapter from "@/adapters/api.adapter"
 import dbManager from "@/managers/api.manager"
 import { useTournamentStore } from "./tournament.store"
@@ -22,7 +22,7 @@ export const useFightStore = defineStore("fight", {
             this.loading = true
             this.error = null
             try {
-                const apiFights: ApiFight[] = await dbManager.getFights(tournamentId)
+                const apiFights: ApiFightGet[] = await dbManager.getFights(tournamentId)
                 this.fights = apiFights.map((apiFight) => ApiAdapter.toFight(apiFight))
             } catch (e: unknown) {
                 this.error = e instanceof Error ? e.message : "Unknown error"
@@ -45,7 +45,7 @@ export const useFightStore = defineStore("fight", {
                 tournamentId: tournamentStore.currentTournamentId,
             }
             try {
-                const created: ApiFight = await dbManager.addFight(apiFight)
+                const created: ApiFightGet = await dbManager.addFight(apiFight)
                 const newFight = ApiAdapter.toFight(created)
                 this.fights.push(newFight)
                 return newFight

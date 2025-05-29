@@ -1,15 +1,8 @@
-import { Fight } from '../entities/fight.entity';
-import { Tournament } from '../entities/tournament.entity';
-import { format } from 'date-fns';
+import { FightCardTemplate } from '@/interfaces/template.interface';
 
 export function generateFightCardHtml(
-  tournament: Tournament,
-  fights: Fight[],
+  fightCardTemplate: FightCardTemplate,
 ): string {
-  const displayableTournamentDate = format(
-    new Date(tournament.date),
-    'dd/MM/yyyy',
-  );
   return `
     <!DOCTYPE html>
     <html lang="en">
@@ -39,29 +32,35 @@ export function generateFightCardHtml(
           }
         </style>
         <div class="title">
-          <h3>${tournament?.name}</h3>
-          <br/><i>${displayableTournamentDate}</i><br/>
+          <h3>${fightCardTemplate.title}</h3>
+          <br/><i>${fightCardTemplate.subtitle}</i><br/>
         </div>
         <div class="table-container">
           <table>
             <thead>
               <tr>
                 <th>#</th>
+                <th>License (Red)</th>
                 <th>Red</th>
                 <th>Club (Red)</th>
+                <th>License (Blue)</th>
                 <th>Blue</th>
                 <th>Club (Blue)</th>
+                <th>Duration</th>
               </tr>
             </thead>
-            ${fights
+            ${fightCardTemplate.fights
               .map(
                 (fight) => `
                   <tr>
                     <td>${fight.order}</td>
-                    <td>${fight.boxer1?.firstName || ''} ${fight.boxer1?.lastName || ''}</td>
-                    <td>${fight.boxer1?.club}</td>
-                    <td>${fight.boxer2?.firstName || ''} ${fight.boxer2?.lastName || ''}</td>
-                    <td>${fight.boxer2?.club}</td>
+                    <td>${fight.boxer1License}</td>
+                    <td>${fight.boxer1FirstName} ${fight.boxer1LastName}</td>
+                    <td>${fight.boxer1Club}</td>
+                    <td>${fight.boxer2License}</td>
+                    <td>${fight.boxer2FirstName} ${fight.boxer2LastName}</td>
+                    <td>${fight.boxer2Club}</td>
+                    <td>${fight.fightDuration}</td>
                   </tr>`,
               )
               .join('')}

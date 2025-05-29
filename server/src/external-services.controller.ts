@@ -8,6 +8,8 @@ import { Response as ExpressResponse } from 'express';
 import { generateFightCardHtml } from './templates/fight-card-html.template';
 import * as XLSX from 'xlsx';
 import { stringify } from 'csv-stringify/sync';
+import { ModalityService } from './modality/modality.service';
+import { toFightCardTemplate } from './adapters/fight.adapter';
 
 @Controller('external')
 export class ExternalServicesController {
@@ -17,6 +19,7 @@ export class ExternalServicesController {
     @InjectRepository(Fight)
     private readonly fightRepository: Repository<Fight>,
     private readonly configService: ConfigService,
+    private readonly modalityService: ModalityService,
   ) {}
 
   @Get('importBoxerById')
@@ -63,6 +66,7 @@ export class ExternalServicesController {
     const htmlBlob = new Blob([html], { type: 'text/html' });
     formData.append('files', htmlBlob, 'index.html');
     formData.append('index.html', 'index.html');
+    formData.append('landscape', 'true');
     try {
       // Send HTML to Gotenberg for PDF conversion
       const gotenbergUrl = this.configService.get<string>('GOTENBERG_URL');
@@ -231,8 +235,14 @@ export class ExternalServicesController {
     if (!fights.length) {
       throw new Error('No fights found for this tournament');
     }
+
     // Prepare HTML template
-    const html = generateFightCardHtml(tournament, fights);
+    const template = toFightCardTemplate(
+      fights,
+      tournament,
+      this.modalityService.getModality(),
+    );
+    const html = generateFightCardHtml(template);
     return html;
   }
 }
