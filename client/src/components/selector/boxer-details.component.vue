@@ -108,6 +108,7 @@ export default defineComponent({
             return
         }
         this.boxer = await this.boxerStore.fetchBoxerById(boxerId)
+        //TODO: this watch does not kill when component is unmounted
         watch(
             () => this.fightStore.fights,
             async () => {

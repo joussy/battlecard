@@ -54,27 +54,13 @@ export const useFightStore = defineStore("fight", {
                 throw e
             }
         },
-        // getOpponents(boxer: Boxer): Boxer[] {
-        //     return this.fights
-        //         .filter((fight) => fight.boxer1.id === boxer.id || fight.boxer2.id === boxer.id)
-        //         .map((fight) => (fight.boxer1.id === boxer.id ? fight.boxer2 : fight.boxer1))
-        // },
 
         async removeFromFightCard(fightIds: string[]): Promise<void> {
             await dbManager.deleteFights(fightIds)
             await this.fetchFights()
         },
-        // canCompete(boxer1: Boxer, boxer2: Boxer): boolean {
-        //     return !this.isCompeting(boxer1, boxer2)
-        // },
-        // isCompeting(boxer1: Boxer, boxer2: Boxer): boolean {
-        //     return this.fights.some(
-        //         (fight) =>
-        //             (fight.boxer1.id === boxer1.id && fight.boxer2.id === boxer2.id) ||
-        //             (fight.boxer1.id === boxer2.id && fight.boxer2.id === boxer1.id)
-        //     )
-        // },
         async updateFightOrder(fightId: string, newIndex: number) {
+            //TODO: there is useless logic here, since the backend does it all
             if (newIndex < 0) {
                 return
             }

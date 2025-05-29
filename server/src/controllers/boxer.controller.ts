@@ -41,7 +41,7 @@ export class BoxerController {
     @User() user: AuthenticatedUser,
   ): Promise<ApiBoxerGet> {
     const tournament = await this.tournamentRepository.findOne({
-      where: [{ id: boxer.tournamentId }, { userId: user.id }],
+      where: [{ id: boxer.tournamentId, userId: user.id }],
     });
     if (tournament?.userId !== user.id) {
       throw new NotFoundException(
@@ -65,7 +65,7 @@ export class BoxerController {
     @User() user: AuthenticatedUser,
   ): Promise<ApiBoxerGet> {
     const dbBoxer = await this.boxerRepository.findOneOrFail({
-      where: [{ id }, { userId: user.id }],
+      where: [{ id, userId: user.id }],
     });
     const modality = this.modalityService.getModality();
     const selectedFights = await this.fightRepository.count({
@@ -81,7 +81,7 @@ export class BoxerController {
     @User() user: AuthenticatedUser,
   ): Promise<ApiBoxerGet> {
     await this.boxerRepository.findOneOrFail({
-      where: [{ id: boxerId }, { userId: user.id }],
+      where: [{ id: boxerId, userId: user.id }],
     });
     await this.boxerRepository.update(boxerId, toBoxer(boxer, user.id));
     const updated = await this.boxerRepository.findOneBy({ id: boxerId });

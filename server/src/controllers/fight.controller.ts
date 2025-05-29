@@ -57,10 +57,10 @@ export class FightController {
     @Res() res: Response,
   ): Promise<any> {
     await this.boxerRepository.findOneOrFail({
-      where: [{ id: fight.boxer1Id }, { userId: user.id }],
+      where: [{ id: fight.boxer1Id, userId: user.id }],
     });
     await this.boxerRepository.findOneOrFail({
-      where: [{ id: fight.boxer2Id }, { userId: user.id }],
+      where: [{ id: fight.boxer2Id, userId: user.id }],
     });
     // Check if a fight already exists between these two boxers in the same tournament
     const existingFight = await this.fightRepository.findOne({
