@@ -43,7 +43,7 @@ export class ApiManager {
         await mutate("/api/fights", "DELETE", { ids }, "Failed to delete fights", true)
     }
     reorderFights(fightIds: string[], tournamentId: string): Promise<void> {
-        return mutate<void>("/api/fights/reorder", "POST", { fightIds, tournamentId }, "Failed to reorder fights")
+        return mutate("/api/fights/reorder", "POST", { fightIds, tournamentId }, "Failed to reorder fights", true)
     }
     updateFight(fight: ApiFight): Promise<ApiFight> {
         return mutate<ApiFight>(`/api/fights/${encodeURIComponent(fight.id)}`, "PUT", fight, "Failed to update fight")

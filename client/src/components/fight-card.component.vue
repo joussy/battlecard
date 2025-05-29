@@ -231,8 +231,6 @@ export default {
         }
     },
     mounted() {
-        this.initSortable()
-
         watch(
             () => this.fightStore.fights,
             () => {
@@ -245,6 +243,12 @@ export default {
                 })
             },
             { immediate: true, deep: true }
+        )
+        watch(
+            () => this.editionMode,
+            () => {
+                this.initSortable()
+            }
         )
     },
     methods: {

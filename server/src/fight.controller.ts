@@ -25,7 +25,9 @@ export class FightController {
 
   @Get()
   async findAll(): Promise<ApiFight[]> {
-    const dbFights = await this.fightRepository.find();
+    const dbFights = await this.fightRepository.find({
+      order: { order: 'ASC' },
+    });
     return dbFights.map(toApiFight);
   }
 
