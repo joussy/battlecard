@@ -336,7 +336,11 @@ export default defineComponent({
                 userId: "",
                 categoryShort: "",
             }
-            boxer = await boxerStore.createBoxer(boxer, tournamentStore.currentTournamentId || undefined)
+            if (form.id) {
+                boxer = await boxerStore.updateBoxer(boxer)
+            } else {
+                boxer = await boxerStore.createBoxer(boxer)
+            }
 
             if (boxer != null) {
                 emit("boxer-add", boxer)

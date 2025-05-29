@@ -24,13 +24,8 @@ export class ApiManager {
     getBoxer(boxerId: string): Promise<ApiBoxerGet> {
         return get<ApiBoxerGet>(`/api/boxers/${encodeURIComponent(boxerId)}`, undefined, "Failed to fetch boxer")
     }
-    updateBoxer(boxer: ApiBoxerGet): Promise<ApiBoxerGet> {
-        return mutate<ApiBoxerGet>(
-            `/api/boxers/${encodeURIComponent(boxer.id)}`,
-            "PUT",
-            boxer,
-            "Failed to update boxer"
-        )
+    updateBoxer(boxer: ApiBoxerCreate, boxerId: string): Promise<ApiBoxerGet> {
+        return mutate<ApiBoxerGet>(`/api/boxers/${encodeURIComponent(boxerId)}`, "PUT", boxer, "Failed to update boxer")
     }
 
     // FIGHT

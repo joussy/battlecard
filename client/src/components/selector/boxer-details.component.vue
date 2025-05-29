@@ -108,11 +108,6 @@ export default defineComponent({
             return
         }
         this.boxer = await this.boxerStore.fetchBoxerById(boxerId)
-        // this.opponents = await this.tournamentBoxerStore.fetchBoxerOpponents(
-        //     this.boxer.id,
-        //     this.tournamentStore.currentTournamentId
-        // )
-        // Watch for changes in fightStore.fights and refresh opponents
         watch(
             () => this.fightStore.fights,
             async () => {
