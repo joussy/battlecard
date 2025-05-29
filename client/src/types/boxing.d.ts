@@ -14,6 +14,10 @@ export interface Boxer {
     gender: Gender
     license: string
     userId: string
+    category: string
+    categoryShort: string
+    eligibleFights?: number
+    selectedFights?: number
 }
 
 export interface Opponent extends Boxer {

@@ -25,10 +25,6 @@ export default defineComponent({
             type: Number,
             required: true,
         },
-        available: {
-            type: Number,
-            required: true,
-        },
         modalityError: {
             type: Object as PropType<ModalityError>,
             required: false,

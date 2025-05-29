@@ -108,7 +108,6 @@ export default defineComponent({
     },
     methods: {
         closeModal() {
-            console.log("ehho")
             closeModal("#boxerAddOffcanvasNavbar")
         },
         clear() {

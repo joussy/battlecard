@@ -57,6 +57,7 @@
         >
             <BoxerTileComponent
                 :boxer="boxer"
+                :nb-opponents="boxer.eligibleFights"
                 @click="$router.push({ name: 'selector-tile', params: { id: boxer.id } })"
             />
         </div>

@@ -22,11 +22,11 @@
                 </div>
                 <div class="col-md-6 d-flex align-items-end justify-content-end flex-wrap">
                     <LinkedFightsBadgeComponent :boxer="boxer" />
-                    <!-- TODO: Add a badge for the number of possible opponents -->
-                    <!-- <PossibleBadgeComponent
-                        :selected="opponents.filter((o) => o.isEligible).length"
-                        :available="opponents.length"
-                    /> -->
+                    <PossibleBadgeComponent
+                        v-if="boxer.selectedFights"
+                        :selected="boxer.selectedFights"
+                        :available="nbOpponents"
+                    />
                     <AgeBadgeComponent :boxer="boxer" />
                     <RecordBadgeComponent :boxer="boxer" />
                     <WeightBadgeComponent :boxer="boxer" />
@@ -44,6 +44,7 @@ import RecordBadgeComponent from "@/components/badges/record-badge.component.vue
 import AgeBadgeComponent from "@/components/badges/age-badge.component.vue"
 import WeightBadgeComponent from "@/components/badges/weight-badge.component.vue"
 import LinkedFightsBadgeComponent from "@/components/badges/linked-fights-badge.component.vue"
+import PossibleBadgeComponent from "@/components/badges/possible-badge.component.vue"
 
 import IconComponent from "../core/icon.component.vue"
 import { useUiStore } from "@/stores/ui.store"
@@ -56,7 +57,7 @@ export default defineComponent({
     components: {
         RecordBadgeComponent,
         WeightBadgeComponent,
-        // PossibleBadgeComponent,
+        PossibleBadgeComponent,
         AgeBadgeComponent,
         LinkedFightsBadgeComponent,
         IconComponent,
@@ -65,6 +66,10 @@ export default defineComponent({
         boxer: {
             type: Object as PropType<Boxer>,
             required: true,
+        },
+        nbOpponents: {
+            type: Object as PropType<number | undefined>,
+            default: undefined,
         },
     },
     emits: ["boxer-edit"],

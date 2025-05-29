@@ -1,54 +1,120 @@
+/**
+ * API types for the battlecard application.
+ * These interfaces define the structure of data exchanged between frontend and backend.
+ */
+
+/**
+ * Boxer returned from the API.
+ */
 export interface ApiBoxerGet {
-    id: string
-    lastName: string
-    firstName: string
-    birthDate: string
-    nbFights?: number
-    club: string
-    weight?: number
-    gender?: "male" | "female"
-    license: string
-    userId: string
-    created?: string
-    updated?: string
+    /** Unique boxer ID */
+    id: string;
+    /** Boxer's last name */
+    lastName: string;
+    /** Boxer's first name */
+    firstName: string;
+    /** Date of birth (YYYY-MM-DD) */
+    birthDate: string;
+    /** Number of past fights of the boxer */
+    nbFights?: number;
+    /** Club name */
+    club: string;
+    /** Weight in kg (optional) */
+    weight?: number;
+    /** Gender */
+    gender: "male" | "female";
+    /** License number */
+    license: string;
+    /** User who created this boxer */
+    userId: string;
+    /** Creation timestamp */
+    created?: string;
+    /** Update timestamp */
+    updated?: string;
+    /** Weight/age category */
+    category: string;
+    /** Short category label */
+    categoryShort: string;
+    /** Number of eligible fights (optional) */
+    eligibleFights?: number;
+    /** Number of fights selected for the fight card (optional) */
+    selectedFights?: number;
 }
 
+/**
+ * Opponent returned from the API, extends ApiBoxerGet.
+ */
 export interface ApiOpponentGet extends ApiBoxerGet {
-    // modalityErrors: Readonly<ApiModalityError[]>
-    weightDifference: number
-    isEligible: boolean
-    fightId?: string
+    /** Difference in weight between main boxer and opponent */
+    weightDifference: number;
+    /** Whether this opponent is eligible for a fight */
+    isEligible: boolean;
+    /** Existing fight ID if a fight already exists */
+    fightId?: string;
 }
 
+/**
+ * Boxer creation payload.
+ */
 export interface ApiBoxerCreate {
-    lastName: string
-    firstName: string
-    birthDate: string
-    nbFights?: number
-    club: string
-    weight?: number
-    gender: "male" | "female"
-    license: string
-    tournamentId?: string
+    /** Last name */
+    lastName: string;
+    /** First name */
+    firstName: string;
+    /** Date of birth (YYYY-MM-DD) */
+    birthDate: string;
+    /** Number of fights (optional) */
+    nbFights?: number;
+    /** Club name */
+    club: string;
+    /** Weight in kg (optional) */
+    weight?: number;
+    /** Gender */
+    gender: "male" | "female";
+    /** License number */
+    license: string;
+    /** Tournament ID (optional) */
+    tournamentId?: string;
 }
 
+/**
+ * Fight object returned from the API.
+ */
 export interface ApiFight {
-    order: number
-    id: string
-    boxer1Id: string
-    boxer2Id: string
-    tournamentId: string
+    /** Fight order in the tournament */
+    order: number;
+    /** Unique fight ID */
+    id: string;
+    /** Red corner boxer ID */
+    boxer1Id: string;
+    /** Blue corner boxer ID */
+    boxer2Id: string;
+    /** Tournament ID */
+    tournamentId: string;
 }
 
+/**
+ * Tournament object returned from the API.
+ */
 export interface ApiTournament {
-    id: string
-    name: string
-    userId: string
-    date: string
+    /** Unique tournament ID */
+    id: string;
+    /** Tournament name */
+    name: string;
+    /** User who created the tournament */
+    userId: string;
+    /** Tournament date (YYYY-MM-DD) */
+    date: string;
 }
 
+/**
+ * Tournament-boxer association object.
+ */
 export interface ApiTournament_Boxer {
-    id: string
-    tournamentId: string
-    boxerId: string
+    /** Unique association ID */
+    id: string;
+    /** Tournament ID */
+    tournamentId: string;
+    /** Boxer ID */
+    boxerId: string;
 }

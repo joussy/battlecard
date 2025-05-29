@@ -6,7 +6,7 @@ export const mockBoxers: DeepPartial<Boxer>[] = [
   {
     lastName: 'Ali',
     firstName: 'Muhammad',
-    birthDate: '1942-01-17',
+    birthDate: '2012-01-17',
     nbFights: 61,
     club: 'Louisville Boxing Club',
     weight: 107,
@@ -16,7 +16,7 @@ export const mockBoxers: DeepPartial<Boxer>[] = [
   {
     lastName: 'Tyson',
     firstName: 'Mike',
-    birthDate: '1966-06-30',
+    birthDate: '2011-06-30',
     nbFights: 58,
     club: 'Catskill Boxing Club',
     weight: 100,
@@ -26,7 +26,7 @@ export const mockBoxers: DeepPartial<Boxer>[] = [
   {
     lastName: 'Mayweather',
     firstName: 'Floyd',
-    birthDate: '1977-02-24',
+    birthDate: '2010-02-24',
     nbFights: 50,
     club: 'Mayweather Boxing Club',
     weight: 68,
@@ -36,7 +36,7 @@ export const mockBoxers: DeepPartial<Boxer>[] = [
   {
     lastName: 'Pacquiao',
     firstName: 'Manny',
-    birthDate: '1978-12-17',
+    birthDate: '2009-12-17',
     nbFights: 72,
     club: 'General Santos Gym',
     weight: 66,
@@ -46,7 +46,7 @@ export const mockBoxers: DeepPartial<Boxer>[] = [
   {
     lastName: 'Holm',
     firstName: 'Holly',
-    birthDate: '1981-10-17',
+    birthDate: '2008-10-17',
     nbFights: 41,
     club: 'Jackson Wink MMA Academy',
     weight: 61,
@@ -56,7 +56,7 @@ export const mockBoxers: DeepPartial<Boxer>[] = [
   {
     lastName: 'Shields',
     firstName: 'Claressa',
-    birthDate: '1995-03-17',
+    birthDate: '2007-03-17',
     nbFights: 14,
     club: 'Salita Promotions',
     weight: 75,
@@ -66,7 +66,7 @@ export const mockBoxers: DeepPartial<Boxer>[] = [
   {
     lastName: 'Taylor',
     firstName: 'Katie',
-    birthDate: '1986-07-02',
+    birthDate: '2006-07-02',
     nbFights: 23,
     club: 'Bray Boxing Club',
     weight: 60,
@@ -76,7 +76,7 @@ export const mockBoxers: DeepPartial<Boxer>[] = [
   {
     lastName: 'Serrano',
     firstName: 'Amanda',
-    birthDate: '1988-10-09',
+    birthDate: '2015-10-09',
     nbFights: 47,
     club: 'Gleason’s Gym',
     weight: 57,
@@ -86,7 +86,7 @@ export const mockBoxers: DeepPartial<Boxer>[] = [
   {
     lastName: 'Jonas',
     firstName: 'Natasha',
-    birthDate: '1984-06-18',
+    birthDate: '2014-06-18',
     nbFights: 18,
     club: 'Rotunda ABC',
     weight: 63,
@@ -96,7 +96,7 @@ export const mockBoxers: DeepPartial<Boxer>[] = [
   {
     lastName: 'Joshua',
     firstName: 'Anthony',
-    birthDate: '1989-10-15',
+    birthDate: '2013-10-15',
     nbFights: 28,
     club: 'Finchley ABC',
     weight: 109,

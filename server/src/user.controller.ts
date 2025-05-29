@@ -22,8 +22,6 @@ export class UserController {
 
   @Get('me')
   async getMe(@Req() req: RequestWithUser): Promise<User> {
-    // Debug log for userId from JWT
-    // console.log('userId from JWT:', req);
     const userId = req.user?.id;
     if (!userId) {
       throw new NotFoundException('User not found');

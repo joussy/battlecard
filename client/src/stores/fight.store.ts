@@ -15,7 +15,6 @@ export const useFightStore = defineStore("fight", {
         async fetchFights() {
             const tournamentStore = useTournamentStore()
             const tournamentId = tournamentStore.currentTournamentId
-            console.log("Fetching fights for tournament:", tournamentId)
             if (!tournamentId) {
                 return
             }

@@ -1,4 +1,12 @@
-import { Controller, Get, Body, Post, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Body,
+  Post,
+  Param,
+  Delete,
+  Inject,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Tournament } from './entities/tournament.entity';
@@ -9,6 +17,7 @@ import { Boxer } from './entities/boxer.entity';
 import { toApiBoxerGet, toApiOpponentGet } from './adapters/boxer.adapter';
 import { ApiBoxerGet } from '@/shared/types/api';
 import { Fight } from './entities/fight.entity';
+import { ModalityService } from './modality/modality.service';
 
 @Controller('tournaments')
 export class TournamentController {
@@ -21,6 +30,8 @@ export class TournamentController {
     private readonly boxerRepository: Repository<Boxer>,
     @InjectRepository(Fight)
     private readonly fightRepository: Repository<Fight>,
+    @Inject(ModalityService)
+    private readonly modalityService: ModalityService,
   ) {}
 
   @Get()
@@ -57,7 +68,9 @@ export class TournamentController {
     const boxerIds = tournamentBoxers.map((tb) => tb.boxerId);
     if (boxerIds.length === 0) return [];
     const boxers = await this.boxerRepository.findByIds(boxerIds);
-    return boxers.map(toApiBoxerGet);
+    return boxers.map((b) =>
+      toApiBoxerGet(b, this.modalityService.getModality()),
+    );
   }
 
   @Get(':tournamentId/opponents/:boxerId')
@@ -69,36 +82,45 @@ export class TournamentController {
       return [];
     }
 
+    // Get the gender of the main boxer
+    const mainBoxer = await this.boxerRepository.findOne({
+      where: { id: boxerId },
+    });
+    if (!mainBoxer) {
+      return [];
+    }
+
     const tournamentBoxers = await this.tournamentBoxerRepository.find({
       where: { tournamentId },
     });
 
+    // Only keep boxers of the same gender
     const boxerIds = tournamentBoxers
-      .filter((tb) => tb.boxerId !== boxerId)
-      .map((tb) => tb.boxerId);
+      .map((tb) => tb.boxerId)
+      .filter((id) => id !== boxerId);
+    let boxers = await this.boxerRepository.findByIds(boxerIds);
+    boxers = boxers.filter((b) => b.gender === mainBoxer.gender);
 
-    if (boxerIds.length === 0) {
+    if (boxers.length === 0) {
       return [];
     }
 
-    const boxers = await this.boxerRepository.findByIds(boxerIds);
-
     // Find all fights in this tournament involving the main boxer and any opponent
     const fights = await this.fightRepository.find({
-      where: [
-        { tournamentId, boxer1Id: boxerId },
-        { tournamentId, boxer2Id: boxerId },
-      ],
+      where: [{ tournamentId }],
     });
 
-    const opponents = boxers.map((b) => {
+    const opponents = boxers.map((o) => {
       const fightId = fights.find(
         (f) =>
-          (f.boxer1Id === boxerId && f.boxer2Id === b.id) ||
-          (f.boxer2Id === boxerId && f.boxer1Id === b.id),
+          (f.boxer1Id === boxerId && f.boxer2Id === o.id) ||
+          (f.boxer2Id === boxerId && f.boxer1Id === o.id),
       )?.id;
-
-      return toApiOpponentGet(b, fightId);
+      const selectedFights = fights.filter(
+        (f) => f.boxer1Id === o.id || f.boxer2Id === o.id,
+      )?.length;
+      const modality = this.modalityService.getModality();
+      return toApiOpponentGet(o, modality, selectedFights, fightId);
     });
 
     return opponents;

@@ -54,9 +54,6 @@ export const useBoxerStore = defineStore("boxer", {
                 throw e
             }
         },
-        getNbFightsForBoxer(boxer: Boxer): number {
-            return 0
-        },
         getOpponentModalityErrors(boxer: Boxer, opponent: Boxer): ModalityError[] {
             //TODO: Implement modality logic
             // return this.modality.getModalityErrors(boxer, opponent)

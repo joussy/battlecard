@@ -43,7 +43,9 @@
                             ></Icon
                             >{{ boxer.weight }} kg
                         </p>
-                        <p class="col-md-6 mb-1"><i class="bi bi-link me-1"></i>{{ getNbFights }} selected fights</p>
+                        <p class="col-md-6 mb-1">
+                            <i class="bi bi-link me-1"></i>{{ boxer.selectedFights }} selected fights
+                        </p>
                     </div>
                 </div>
             </div>
@@ -100,20 +102,12 @@ export default defineComponent({
             boxer: undefined as Boxer | undefined,
         }
     },
-    computed: {
-        getNbFights(): number {
-            if (!this.boxer) {
-                return 0
-            }
-            return this.boxerStore.getNbFightsForBoxer(this.boxer)
-        },
-    },
     async mounted() {
         const boxerId = this.$route.params.id as string
         if (!this.tournamentStore.currentTournamentId || !boxerId) {
             return
         }
-        this.boxer = await this.boxerStore.fetchBoxerById(boxerId)
+        this.boxer = await this.boxerStore.getBoxerById(boxerId)
         // this.opponents = await this.tournamentBoxerStore.fetchBoxerOpponents(
         //     this.boxer.id,
         //     this.tournamentStore.currentTournamentId
@@ -122,11 +116,6 @@ export default defineComponent({
         watch(
             () => this.fightStore.fights,
             async () => {
-                console.log(
-                    "Refreshing opponents for boxer and tournament:",
-                    this.boxer?.id,
-                    this.tournamentStore.currentTournamentId
-                )
                 if (this.boxer && this.tournamentStore.currentTournamentId) {
                     this.opponents = await this.tournamentBoxerStore.fetchBoxerOpponents(
                         this.boxer.id,

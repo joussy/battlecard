@@ -1,15 +1,16 @@
 <template>
     <span
+        v-if="boxer.selectedFights"
         class="badge ms-1"
         :class="{
-            'text-bg-success': boxerStore.getNbFightsForBoxer(boxer) < 2,
-            'text-bg-warning': boxerStore.getNbFightsForBoxer(boxer) == 2,
-            'text-bg-danger': boxerStore.getNbFightsForBoxer(boxer) > 2,
-            invisible: boxerStore.getNbFightsForBoxer(boxer) < 1,
+            'text-bg-success': boxer.selectedFights < 2,
+            'text-bg-warning': boxer.selectedFights == 2,
+            'text-bg-danger': boxer.selectedFights > 2,
+            invisible: boxer.selectedFights < 1,
         }"
     >
         <Icon name="link" />
-        {{ boxerStore.getNbFightsForBoxer(boxer) }}
+        {{ boxer.selectedFights }}
     </span>
 </template>
 

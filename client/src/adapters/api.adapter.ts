@@ -2,21 +2,6 @@ import { ApiBoxerCreate, ApiBoxerGet, ApiFight, ApiOpponentGet, ApiTournament } 
 import { Boxer, Fight, Gender, Opponent, Tournament } from "@/types/boxing.d"
 
 export default class ApiAdapter {
-    static toApiBoxer(boxer: Boxer): ApiBoxerGet {
-        return {
-            birthDate: boxer.birthDate?.toISOString(),
-            club: boxer.club,
-            firstName: boxer.firstName,
-            lastName: boxer.lastName,
-            license: boxer.license,
-            gender: boxer.gender == Gender.FEMALE ? "female" : "male",
-            nbFights: boxer.nbFights,
-            weight: boxer.weight,
-            id: boxer.id,
-            userId: boxer.userId,
-        }
-    }
-
     static toApiBoxerCreate(boxer: Boxer, tournamentId: string | undefined): ApiBoxerCreate {
         return {
             birthDate: boxer.birthDate?.toISOString(),
@@ -52,10 +37,13 @@ export default class ApiAdapter {
             license: boxer.license,
             nbFights: boxer.nbFights ?? 0,
             weight: boxer.weight ?? 0,
-            category: "fakeCat",
-            categoryShortText: "fakeShortCat",
+            categoryShortText: boxer.categoryShort,
             id: boxer.id,
             userId: boxer.userId,
+            categoryShort: boxer.categoryShort,
+            category: boxer.category,
+            eligibleFights: boxer.eligibleFights,
+            selectedFights: boxer.selectedFights,
         }
     }
 

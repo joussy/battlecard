@@ -333,6 +333,7 @@ export default defineComponent({
                 nbFights: 0,
                 id: form.id,
                 userId: "",
+                categoryShort: "",
             }
             boxer = await boxerStore.createBoxer(boxer, tournamentStore.currentTournamentId || undefined)
 

@@ -2,10 +2,15 @@ import { Injectable } from '@nestjs/common';
 import { Boxer } from 'src/entities/boxer.entity';
 import { FightDuration, ModalityError } from '@/shared/types/modality.type';
 import { BeaModality } from './BeaModality';
+import { IModality } from './IModality';
 
 @Injectable()
 export class ModalityService {
   private beaModality = new BeaModality();
+
+  getModality(): IModality {
+    return this.beaModality;
+  }
 
   isEligible(boxer1: Boxer, boxer2: Boxer): boolean {
     return this.beaModality.isEligible(boxer1, boxer2);

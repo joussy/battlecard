@@ -6,6 +6,7 @@ import {
   Param,
   Put,
   NotFoundException,
+  Inject,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -15,6 +16,8 @@ import { ApiBoxerGet, ApiBoxerCreate } from '@/shared/types/api';
 import { User } from './decorators/user.decorator';
 import { AuthenticatedUser } from './interfaces/auth.interface';
 import { TournamentBoxer } from './entities/tournament_boxer.entity';
+import { ModalityService } from './modality/modality.service';
+import { Fight } from './entities/fight.entity';
 
 @Controller('boxers')
 export class BoxerController {
@@ -23,6 +26,10 @@ export class BoxerController {
     private readonly boxerRepository: Repository<Boxer>,
     @InjectRepository(TournamentBoxer)
     private readonly tournamentBoxerRepository: Repository<TournamentBoxer>,
+    @InjectRepository(Fight)
+    private readonly fightRepository: Repository<Fight>,
+    @Inject()
+    private readonly modalityService: ModalityService,
   ) {}
 
   @Post()
@@ -37,13 +44,18 @@ export class BoxerController {
       tournamentBoxer.boxerId = dbBoxer.id;
       await this.tournamentBoxerRepository.save(tournamentBoxer);
     }
-    return toApiBoxerGet(dbBoxer);
+    const modality = this.modalityService.getModality();
+    return toApiBoxerGet(dbBoxer, modality);
   }
 
   @Get(':id')
   async getBoxer(@Param('id') id: string): Promise<ApiBoxerGet> {
     const dbBoxer = await this.boxerRepository.findOneByOrFail({ id });
-    return toApiBoxerGet(dbBoxer);
+    const modality = this.modalityService.getModality();
+    const selectedFights = await this.fightRepository.count({
+      where: [{ boxer1Id: id }, { boxer2Id: id }],
+    });
+    return toApiBoxerGet(dbBoxer, modality, selectedFights);
   }
 
   @Put(':id')
@@ -55,6 +67,7 @@ export class BoxerController {
     await this.boxerRepository.update(boxerId, toBoxer(boxer, user.id));
     const updated = await this.boxerRepository.findOneBy({ id: boxerId });
     if (!updated) throw new NotFoundException('Boxer not found');
-    return toApiBoxerGet(updated);
+    const modality = this.modalityService.getModality();
+    return toApiBoxerGet(updated, modality);
   }
 }
