@@ -32,6 +32,8 @@ export const useUiStore = defineStore("ui", {
             const res = await fetch("/api/users/me", {
                 headers: { Authorization: `Bearer ${this.jwtToken}` },
             })
+            const tournamentStore = useTournamentStore()
+            tournamentStore.setCurrentTournament(null) // Reset current tournament when user logs in
             if (res.ok) {
                 const user = await res.json()
                 this.account = {

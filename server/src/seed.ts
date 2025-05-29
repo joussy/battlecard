@@ -5,6 +5,8 @@ import { Boxer } from './entities/boxer.entity';
 import { Fight } from './entities/fight.entity';
 import { TournamentBoxer } from './entities/tournament_boxer.entity';
 import * as dotenv from 'dotenv';
+import { mockBoxers } from './mock/boxers.mock';
+import { mockFights } from './mock/fights.mock';
 dotenv.config({ path: '.env.local' });
 
 const dataSource = new DataSource({
@@ -19,6 +21,28 @@ const dataSource = new DataSource({
 });
 
 async function seed() {
+  console.warn(
+    '\n⚠️  WARNING: This operation will DELETE ALL tournament, boxer, and fight data in your database!',
+  );
+  console.warn(
+    'All tables (fight, tournament_boxer, boxer, tournament) will be truncated and replaced with mock data.',
+  );
+  console.warn('If you wish to keep your data, stop this script now (Ctrl+C).');
+  process.stdout.write('Type YES to continue: ');
+  const userInput = await new Promise((resolve) => {
+    process.stdin.resume();
+    process.stdin.setEncoding('utf8');
+    process.stdin.once('data', (data: string | Buffer) => {
+      const str = typeof data === 'string' ? data : data.toString('utf8');
+      process.stdin.pause();
+      resolve(str.trim());
+    });
+  });
+  if (userInput !== 'YES') {
+    console.log('Aborted by user.');
+    process.exit(0);
+  }
+
   await dataSource.initialize();
 
   // Truncate all tables with CASCADE to handle foreign keys
@@ -51,63 +75,9 @@ async function seed() {
   await tournamentRepo.save(tournament);
 
   // Create mock boxers (real world)
-  const boxers = [
-    boxerRepo.create({
-      lastName: 'Ali',
-      firstName: 'Muhammad',
-      birthDate: '1942-01-17',
-      nbFights: 61,
-      club: 'Louisville Boxing Club',
-      weight: 107,
-      gender: 'male',
-      license: 'ALI001',
-      userId: user.id,
-    }),
-    boxerRepo.create({
-      lastName: 'Tyson',
-      firstName: 'Mike',
-      birthDate: '1966-06-30',
-      nbFights: 58,
-      club: 'Catskill Boxing Club',
-      weight: 100,
-      gender: 'male',
-      license: 'TYS002',
-      userId: user.id,
-    }),
-    boxerRepo.create({
-      lastName: 'Mayweather',
-      firstName: 'Floyd',
-      birthDate: '1977-02-24',
-      nbFights: 50,
-      club: 'Mayweather Boxing Club',
-      weight: 68,
-      gender: 'male',
-      license: 'MAY003',
-      userId: user.id,
-    }),
-    boxerRepo.create({
-      lastName: 'Pacquiao',
-      firstName: 'Manny',
-      birthDate: '1978-12-17',
-      nbFights: 72,
-      club: 'General Santos Gym',
-      weight: 66,
-      gender: 'male',
-      license: 'PAC004',
-      userId: user.id,
-    }),
-    boxerRepo.create({
-      lastName: 'Holm',
-      firstName: 'Holly',
-      birthDate: '1981-10-17',
-      nbFights: 41,
-      club: 'Jackson Wink MMA Academy',
-      weight: 61,
-      gender: 'female',
-      license: 'HOL005',
-      userId: user.id,
-    }),
-  ];
+  const boxers = mockBoxers.map((b) =>
+    boxerRepo.create({ ...b, userId: user.id }),
+  );
   await boxerRepo.save(boxers);
 
   // Add boxers to tournament
@@ -117,20 +87,23 @@ async function seed() {
   await tournamentBoxerRepo.save(tournamentBoxers);
 
   // Create a few fights between the boxers
-  const fights = [
-    fightRepo.create({
-      order: 1,
-      boxer1Id: boxers[0].id, // Ali
-      boxer2Id: boxers[1].id, // Tyson
-      tournamentId: tournament.id,
-    }),
-    fightRepo.create({
-      order: 2,
-      boxer1Id: boxers[2].id, // Mayweather
-      boxer2Id: boxers[3].id, // Pacquiao
-      tournamentId: tournament.id,
-    }),
+  // Ensure boxer1Id and boxer2Id are always set and not null
+  const fightBoxerPairs = [
+    [0, 1], // Ali vs Tyson
+    [2, 3], // Mayweather vs Pacquiao
+    [4, 5], // Holm vs Shields
+    [6, 7], // Taylor vs Serrano
+    [8, 5], // Jonas vs Shields
+    [9, 1], // Joshua vs Tyson
   ];
+  const fights = mockFights.map((f, i) =>
+    fightRepo.create({
+      ...f,
+      boxer1Id: boxers[fightBoxerPairs[i][0]].id,
+      boxer2Id: boxers[fightBoxerPairs[i][1]].id,
+      tournamentId: tournament.id,
+    }),
+  );
   await fightRepo.save(fights);
 
   console.log(`Database seeded with mock data for user {email} !`, user.email);

@@ -28,7 +28,7 @@
             </router-link>
         </div>
         <div
-            v-if="uiStore.account != null && isTournamentSelected != null"
+            v-if="uiStore.account != null && isTournamentSelected"
             class="nav-item"
         >
             <router-link
@@ -40,7 +40,7 @@
             </router-link>
         </div>
         <div
-            v-if="uiStore.account != null && isTournamentSelected != null"
+            v-if="uiStore.account != null && isTournamentSelected"
             class="nav-item"
         >
             <router-link
@@ -109,8 +109,8 @@ export default {
         nbFights() {
             return this.fightStore.fights.length
         },
-        isTournamentSelected() {
-            return !!this.tournamentStore.currentTournamentId
+        isTournamentSelected(): boolean {
+            return this.tournamentStore.currentTournamentId != null
         },
     },
     methods: {
