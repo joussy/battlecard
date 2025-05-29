@@ -31,6 +31,12 @@ export function generateFightCardHtml(
             align-items: center;
             margin: 0;
           }
+          .cell-red {
+              background-color: #97161618 !important;
+          }
+          .cell-blue {
+              background-color: #1638972c !important;
+          }
         </style>
         <div class="title">
           <h3>{{title}}</h3>
@@ -41,12 +47,8 @@ export function generateFightCardHtml(
             <thead>
               <tr>
                 <th>#</th>
-                <th>License (Red)</th>
-                <th>Red</th>
-                <th>Club (Red)</th>
-                <th>License (Blue)</th>
-                <th>Blue</th>
-                <th>Club (Blue)</th>
+                <th colspan=3>Red Corner</th>
+                <th colspan=3>Blue Corner</th>
                 <th>Duration</th>
                 <th>Gender</th>
               </tr>
@@ -54,12 +56,12 @@ export function generateFightCardHtml(
             {{#fights}}
               <tr>
                 <td>{{order}}</td>
-                <td>{{boxer1License}}</td>
-                <td>{{boxer1FirstName}} {{boxer1LastName}}</td>
-                <td>{{boxer1Club}}</td>
-                <td>{{boxer2License}}</td>
-                <td>{{boxer2FirstName}} {{boxer2LastName}}</td>
-                <td>{{boxer2Club}}</td>
+                <td class="cell-red">{{boxer1License}}</td>
+                <td class="cell-red">{{boxer1FirstName}} {{boxer1LastName}}</td>
+                <td class="cell-red">{{boxer1Club}}</td>
+                <td class="cell-blue">{{boxer2License}}</td>
+                <td class="cell-blue">{{boxer2FirstName}} {{boxer2LastName}}</td>
+                <td class="cell-blue">{{boxer2Club}}</td>
                 <td>{{fightDuration}}</td>
                 <td>{{gender}}</td>
               </tr>

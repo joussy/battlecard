@@ -1,5 +1,5 @@
 <template>
-    <span class="badge ms-1">
+    <span class="badge ms-1 text-bg-light">
         <Icon name="group-of-people" />
         {{ selected }}
     </span>
