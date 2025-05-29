@@ -1,19 +1,7 @@
 import { ApiBoxerCreate, ApiBoxerGet, ApiFight, ApiOpponentGet, ApiTournament } from "@/shared/types/api"
 import { Boxer, Fight, Gender, Opponent, Tournament } from "@/types/boxing.d"
-import { IModality } from "@/fightModality/IModality"
-import { getFightDurationAsString } from "@/utils/string.utils"
-import { FightExtraInfo } from "@/types/api"
 
 export default class ApiAdapter {
-    static toFightCardExtraInfo(fight: Fight, modality: IModality): FightExtraInfo {
-        const fightDuration = modality.getFightDuration(fight.boxer1, fight.boxer2)
-        return {
-            fightId: fight.id,
-            duration: getFightDurationAsString(fightDuration.rounds, fightDuration.roundDurationAsSeconds),
-            boxer1Category: fight.boxer1.category,
-            boxer2Category: fight.boxer2.category,
-        }
-    }
     static toApiBoxer(boxer: Boxer): ApiBoxerGet {
         return {
             birthDate: boxer.birthDate?.toISOString(),
