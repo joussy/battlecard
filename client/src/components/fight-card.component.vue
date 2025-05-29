@@ -288,7 +288,18 @@ export default {
             if (!this.tournamentStore.currentTournamentId) {
                 return
             }
-            await ExternalService.downloadFightCard(fileType, this.tournamentStore.currentTournamentId)
+            if (fileType === "xlsx") {
+                await ExternalService.downloadFightCardXlsx(this.tournamentStore.currentTournamentId)
+            }
+            if (fileType === "csv") {
+                await ExternalService.downloadFightCardCsv(this.tournamentStore.currentTournamentId)
+            }
+            if (fileType === "png") {
+                await ExternalService.downloadFightCardPng(this.tournamentStore.currentTournamentId)
+            }
+            if (fileType === "pdf") {
+                await ExternalService.downloadFightCardPdf(this.tournamentStore.currentTournamentId)
+            }
         },
         getFightDuration(fight: Fight) {
             //TODO: Use fightStore to get fight duration
