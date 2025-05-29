@@ -198,7 +198,7 @@
 </template>
 
 <script lang="ts">
-import { Boxer, Fight, Gender } from "@/types/boxing.d"
+import { Boxer, Fight } from "@/types/boxing.d"
 import { ExternalService } from "@/services/external.service"
 import { FileType } from "@/types/api"
 import { getFightDurationAsString } from "@/utils/string.utils"
@@ -210,6 +210,7 @@ import { useBoxerStore } from "@/stores/boxer.store"
 import { useTournamentStore } from "@/stores/tournament.store"
 import { watch } from "vue"
 import { getBoxerDisplayName } from "@/utils/labels.utils"
+import { Gender } from "@/shared/types/modality.type"
 
 export default {
     components: {

@@ -22,3 +22,8 @@ export interface BeaCategory {
   shortName: string;
   roundDurationAsSeconds: number;
 }
+
+export enum Gender {
+    FEMALE = 'female',
+    MALE = 'male',
+}

@@ -1,5 +1,6 @@
 import { ApiBoxerCreate, ApiBoxerGet, ApiFightGet, ApiOpponentGet, ApiTournament } from "@/shared/types/api"
-import { Boxer, Fight, Gender, Opponent, Tournament } from "@/types/boxing.d"
+import { Gender } from "@/shared/types/modality.type"
+import { Boxer, Fight, Opponent, Tournament } from "@/types/boxing.d"
 
 export default class ApiAdapter {
     static toApiBoxerCreate(boxer: Boxer, tournamentId: string | undefined): ApiBoxerCreate {
@@ -9,7 +10,7 @@ export default class ApiAdapter {
             firstName: boxer.firstName,
             lastName: boxer.lastName,
             license: boxer.license,
-            gender: boxer.gender == Gender.FEMALE ? "female" : "male",
+            gender: boxer.gender,
             nbFights: boxer.nbFights,
             weight: boxer.weight,
             tournamentId: tournamentId,

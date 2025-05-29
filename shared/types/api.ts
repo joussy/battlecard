@@ -3,7 +3,7 @@
  * These interfaces define the structure of data exchanged between frontend and backend.
  */
 
-import { ModalityError } from "./modality.type";
+import { Gender, ModalityError } from "./modality.type";
 
 /**
  * Boxer returned from the API.
@@ -74,7 +74,7 @@ export interface ApiBoxerCreate {
     /** Weight in kg (optional) */
     weight?: number;
     /** Gender */
-    gender: "male" | "female";
+    gender: Gender;
     /** License number */
     license: string;
     /** Tournament ID (optional) */

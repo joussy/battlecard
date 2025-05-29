@@ -6,6 +6,7 @@ import {
   JoinColumn,
 } from 'typeorm';
 import { User } from './user.entity';
+import { Gender } from '@/shared/types/modality.type';
 
 @Entity()
 export class Boxer {
@@ -31,7 +32,7 @@ export class Boxer {
   weight?: number;
 
   @Column({ nullable: false })
-  gender: 'male' | 'female';
+  gender: Gender;
 
   @Column()
   license: string;

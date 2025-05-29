@@ -1,5 +1,6 @@
 import { DeepPartial } from 'typeorm';
 import { Boxer } from '../entities/boxer.entity';
+import { Gender } from '@/shared/types/modality.type';
 
 // Returns an array of DeepPartial<Boxer> objects for seeding
 export const mockBoxers: DeepPartial<Boxer>[] = [
@@ -10,7 +11,7 @@ export const mockBoxers: DeepPartial<Boxer>[] = [
     nbFights: 61,
     club: 'Louisville Boxing Club',
     weight: 107,
-    gender: 'male',
+    gender: Gender.MALE,
     license: 'ALI001',
   },
   {
@@ -20,7 +21,7 @@ export const mockBoxers: DeepPartial<Boxer>[] = [
     nbFights: 58,
     club: 'Catskill Boxing Club',
     weight: 100,
-    gender: 'male',
+    gender: Gender.MALE,
     license: 'TYS002',
   },
   {
@@ -30,7 +31,7 @@ export const mockBoxers: DeepPartial<Boxer>[] = [
     nbFights: 50,
     club: 'Mayweather Boxing Club',
     weight: 68,
-    gender: 'male',
+    gender: Gender.MALE,
     license: 'MAY003',
   },
   {
@@ -40,7 +41,7 @@ export const mockBoxers: DeepPartial<Boxer>[] = [
     nbFights: 72,
     club: 'General Santos Gym',
     weight: 66,
-    gender: 'male',
+    gender: Gender.MALE,
     license: 'PAC004',
   },
   {
@@ -50,7 +51,7 @@ export const mockBoxers: DeepPartial<Boxer>[] = [
     nbFights: 41,
     club: 'Jackson Wink MMA Academy',
     weight: 61,
-    gender: 'female',
+    gender: Gender.FEMALE,
     license: 'HOL005',
   },
   {
@@ -60,7 +61,7 @@ export const mockBoxers: DeepPartial<Boxer>[] = [
     nbFights: 14,
     club: 'Salita Promotions',
     weight: 75,
-    gender: 'female',
+    gender: Gender.FEMALE,
     license: 'SHI006',
   },
   {
@@ -70,7 +71,7 @@ export const mockBoxers: DeepPartial<Boxer>[] = [
     nbFights: 23,
     club: 'Bray Boxing Club',
     weight: 60,
-    gender: 'female',
+    gender: Gender.FEMALE,
     license: 'TAY007',
   },
   {
@@ -80,7 +81,7 @@ export const mockBoxers: DeepPartial<Boxer>[] = [
     nbFights: 47,
     club: 'Gleason’s Gym',
     weight: 57,
-    gender: 'female',
+    gender: Gender.FEMALE,
     license: 'SER008',
   },
   {
@@ -90,7 +91,7 @@ export const mockBoxers: DeepPartial<Boxer>[] = [
     nbFights: 18,
     club: 'Rotunda ABC',
     weight: 63,
-    gender: 'female',
+    gender: Gender.FEMALE,
     license: 'JON009',
   },
   {
@@ -100,7 +101,7 @@ export const mockBoxers: DeepPartial<Boxer>[] = [
     nbFights: 28,
     club: 'Finchley ABC',
     weight: 109,
-    gender: 'male',
+    gender: Gender.MALE,
     license: 'JOS010',
   },
 ];

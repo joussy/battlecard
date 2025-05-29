@@ -1,6 +1,6 @@
 import { ApiFightGet } from '@/shared/types/api';
 import { Fight } from '../entities/fight.entity';
-import { FightDuration } from '@/shared/types/modality.type';
+import { FightDuration, Gender } from '@/shared/types/modality.type';
 import { FightCardTemplate } from '@/interfaces/template.interface';
 import { IModality } from '@/modality/IModality';
 import { Tournament } from '@/entities/tournament.entity';
@@ -52,6 +52,7 @@ export function toFightCardTemplate(
         boxer2FirstName: fight.boxer2.firstName,
         boxer2LastName: fight.boxer2.lastName,
         fightDuration: `${duration.rounds}x${duration.roundDurationAsSeconds / 60}'`,
+        gender: fight.boxer1.gender === Gender.MALE ? '♂️' : '♀️',
       };
     }),
   };

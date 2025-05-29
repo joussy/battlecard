@@ -12,5 +12,6 @@ export interface FightCardTemplate {
     boxer2Club: string;
     order: number;
     fightDuration: string; // e.g., "3x2'"
+    gender: string;
   }[];
 }

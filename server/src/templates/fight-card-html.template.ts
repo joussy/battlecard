@@ -48,6 +48,7 @@ export function generateFightCardHtml(
                 <th>Blue</th>
                 <th>Club (Blue)</th>
                 <th>Duration</th>
+                <th>Gender</th>
               </tr>
             </thead>
             {{#fights}}
@@ -60,6 +61,7 @@ export function generateFightCardHtml(
                 <td>{{boxer2FirstName}} {{boxer2LastName}}</td>
                 <td>{{boxer2Club}}</td>
                 <td>{{fightDuration}}</td>
+                <td>{{gender}}</td>
               </tr>
             {{/fights}}
           </table>

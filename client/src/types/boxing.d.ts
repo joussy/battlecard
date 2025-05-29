@@ -27,10 +27,6 @@ export interface Opponent extends Boxer {
     fightId?: string
 }
 
-export enum Gender {
-    FEMALE,
-    MALE,
-}
 export interface Fight {
     boxer1Id: string
     boxer2Id: string
