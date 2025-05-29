@@ -65,12 +65,22 @@ export class TournamentController {
     const tournamentBoxers = await this.tournamentBoxerRepository.find({
       where: { tournamentId },
     });
+    const fights = await this.fightRepository.find({
+      where: [{ tournamentId }],
+    });
     const boxerIds = tournamentBoxers.map((tb) => tb.boxerId);
     if (boxerIds.length === 0) return [];
     const boxers = await this.boxerRepository.findByIds(boxerIds);
-    return boxers.map((b) =>
-      toApiBoxerGet(b, this.modalityService.getModality()),
-    );
+    return boxers.map((b) => {
+      const selectedFights = fights.filter(
+        (f) => f.boxer1Id === b.id || f.boxer2Id === b.id,
+      ).length;
+      return toApiBoxerGet(
+        b,
+        this.modalityService.getModality(),
+        selectedFights,
+      );
+    });
   }
 
   @Get(':tournamentId/opponents/:boxerId')

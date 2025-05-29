@@ -107,7 +107,7 @@ export default defineComponent({
         if (!this.tournamentStore.currentTournamentId || !boxerId) {
             return
         }
-        this.boxer = await this.boxerStore.getBoxerById(boxerId)
+        this.boxer = await this.boxerStore.fetchBoxerById(boxerId)
         // this.opponents = await this.tournamentBoxerStore.fetchBoxerOpponents(
         //     this.boxer.id,
         //     this.tournamentStore.currentTournamentId

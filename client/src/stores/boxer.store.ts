@@ -37,6 +37,13 @@ export const useBoxerStore = defineStore("boxer", {
             try {
                 const apiBoxer: ApiBoxerGet = await dbManager.getBoxer(boxerId)
                 const boxer = ApiAdapter.toBoxer(apiBoxer)
+                // Update or insert the boxer in the store
+                const idx = this.boxers.findIndex((b) => b.id === boxerId)
+                if (idx !== -1) {
+                    this.boxers[idx] = boxer
+                } else {
+                    this.boxers.push(boxer)
+                }
                 return boxer
             } finally {
                 this.loading = false
