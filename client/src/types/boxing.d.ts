@@ -38,6 +38,8 @@ export interface Fight {
     id: string
     order: number
     tournamentId: string
+    roundDurationSeconds: number
+    rounds: number
 }
 
 export interface BoxingData {

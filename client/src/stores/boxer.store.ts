@@ -1,8 +1,7 @@
 import { defineStore } from "pinia"
-import type { Boxer, Opponent } from "@/types/boxing.d"
+import type { Boxer } from "@/types/boxing.d"
 import ApiAdapter from "@/adapters/api.adapter"
 import dbManager from "@/managers/api.manager"
-import { ModalityError, ModalityErrorType } from "@/shared/types/modality.type"
 import { ApiBoxerGet } from "@/shared/types/api"
 import { useTournamentStore } from "./tournament.store"
 
@@ -60,20 +59,6 @@ export const useBoxerStore = defineStore("boxer", {
                 this.error = e instanceof Error ? e.message : "Unknown error"
                 throw e
             }
-        },
-        getOpponentModalityErrors(boxer: Boxer, opponent: Boxer): ModalityError[] {
-            //TODO: Implement modality logic
-            // return this.modality.getModalityErrors(boxer, opponent)
-            return []
-        },
-        getOpponentModalityError(
-            boxer: Boxer,
-            opponent: Boxer,
-            modalityErrorType: ModalityErrorType
-        ): ModalityError | null {
-            //TODO: Implement modality logic
-            // return this.modality.getModalityErrors(boxer, opponent)
-            return null
         },
         getBoxerById(boxerId: string): Boxer | undefined {
             return this.boxers.find((b) => b.id === boxerId)

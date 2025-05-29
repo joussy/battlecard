@@ -40,17 +40,15 @@
                     <LinkedFightsBadgeComponent :boxer="opponent" />
                     <AgeBadgeComponent
                         :boxer="opponent"
-                        :modality-error="boxerStore.getOpponentModalityError(boxer, opponent, ModalityErrorType.AGE)"
+                        :modality-errors="opponent.modalityErrors"
                     />
                     <RecordBadgeComponent
                         :boxer="opponent"
-                        :modality-error="
-                            boxerStore.getOpponentModalityError(boxer, opponent, ModalityErrorType.PRIZE_LIST)
-                        "
+                        :modality-errors="opponent.modalityErrors"
                     />
                     <WeightBadgeComponent
                         :boxer="opponent"
-                        :modality-error="boxerStore.getOpponentModalityError(boxer, opponent, ModalityErrorType.WEIGHT)"
+                        :modality-errors="opponent.modalityErrors"
                     />
                 </div>
             </div>

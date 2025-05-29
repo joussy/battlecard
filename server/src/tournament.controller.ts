@@ -130,7 +130,14 @@ export class TournamentController {
         (f) => f.boxer1Id === o.id || f.boxer2Id === o.id,
       )?.length;
       const modality = this.modalityService.getModality();
-      return toApiOpponentGet(o, modality, selectedFights, fightId);
+      const modalityErrors = modality.getModalityErrors(mainBoxer, o);
+      return toApiOpponentGet(
+        o,
+        modality,
+        selectedFights,
+        modalityErrors,
+        fightId,
+      );
     });
 
     return opponents;

@@ -8,32 +8,45 @@ import {
   Put,
   NotFoundException,
   Res,
+  Inject,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Fight } from './entities/fight.entity';
 import { toFight, toApiFight } from './adapters/fight.adapter';
-import { ApiFight } from '@/shared/types/api';
+import { ApiFight, ApiFightCreate } from '@/shared/types/api';
 import { Response } from 'express';
+import { ModalityService } from './modality/modality.service';
 
 @Controller('fights')
 export class FightController {
   constructor(
     @InjectRepository(Fight)
     private readonly fightRepository: Repository<Fight>,
+    @Inject()
+    private readonly modalityService: ModalityService,
   ) {}
 
   @Get()
   async findAll(): Promise<ApiFight[]> {
     const dbFights = await this.fightRepository.find({
       order: { order: 'ASC' },
+      relations: ['boxer1', 'boxer2'],
     });
-    return dbFights.map(toApiFight);
+    const modality = this.modalityService.getModality();
+    const fights = dbFights.map((fight) => {
+      const fightDuration = modality.getFightDuration(
+        fight.boxer1,
+        fight.boxer2,
+      );
+      return toApiFight(fight, fightDuration);
+    });
+    return fights;
   }
 
   @Post()
   async create(
-    @Body() fight: Partial<ApiFight>,
+    @Body() fight: ApiFightCreate,
     @Res() res: Response,
   ): Promise<any> {
     if ('id' in fight) {
@@ -60,8 +73,22 @@ export class FightController {
           'A fight between these two boxers already exists in this tournament.',
       });
     }
-    const dbFight = await this.fightRepository.save(toFight(fight as ApiFight));
-    return res.json(toApiFight(dbFight));
+    await this.fightRepository.save(toFight(fight as ApiFight));
+    const dbFight = await this.fightRepository.findOne({
+      where: {
+        boxer1Id: fight.boxer1Id,
+        boxer2Id: fight.boxer2Id,
+        tournamentId: fight.tournamentId,
+      },
+      relations: ['boxer1', 'boxer2'],
+    });
+    if (!dbFight) {
+      return res.status(404).json({ error: 'Fight not found' });
+    }
+    const fightDuration = this.modalityService
+      .getModality()
+      .getFightDuration(dbFight.boxer1, dbFight.boxer2);
+    return res.json(toApiFight(dbFight, fightDuration));
   }
 
   @Delete()
@@ -100,6 +127,9 @@ export class FightController {
     await this.fightRepository.update(id, toFight(fight as ApiFight));
     const updated = await this.fightRepository.findOneBy({ id });
     if (!updated) throw new NotFoundException('Fight not found');
-    return toApiFight(updated);
+    const fightDuration = this.modalityService
+      .getModality()
+      .getFightDuration(updated.boxer1, updated.boxer2);
+    return toApiFight(updated, fightDuration);
   }
 }

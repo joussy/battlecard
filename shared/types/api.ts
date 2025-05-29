@@ -3,6 +3,8 @@
  * These interfaces define the structure of data exchanged between frontend and backend.
  */
 
+import { ModalityError } from "./modality.type";
+
 /**
  * Boxer returned from the API.
  */
@@ -51,6 +53,8 @@ export interface ApiOpponentGet extends ApiBoxerGet {
     isEligible: boolean;
     /** Existing fight ID if a fight already exists */
     fightId?: string;
+    /** Modality errors for this boxer */
+    modalityErrors?: ModalityError[]
 }
 
 /**
@@ -91,6 +95,21 @@ export interface ApiFight {
     boxer2Id: string;
     /** Tournament ID */
     tournamentId: string;
+    /** Fight duration in seconds */
+    roundDurationAsSeconds: number;
+    /** Rounds in the fight */
+    rounds: number;
+}
+
+export interface ApiFightCreate {
+    /** Red corner boxer ID */
+    boxer1Id: string;
+    /** Blue corner boxer ID */
+    boxer2Id: string;
+    /** Tournament ID */
+    tournamentId: string;
+    /** Fight order in the tournament */
+    order: number;
 }
 
 /**

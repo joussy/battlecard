@@ -2,6 +2,7 @@ import {
     ApiBoxerCreate,
     ApiBoxerGet,
     ApiFight,
+    ApiFightCreate,
     ApiOpponentGet,
     ApiTournament,
     ApiTournament_Boxer,
@@ -36,7 +37,7 @@ export class ApiManager {
     getFights(tournamentId: string): Promise<ApiFight[]> {
         return get<ApiFight[]>("/api/fights", { tournamentId }, "Failed to fetch fights")
     }
-    addFight(fight: ApiFight): Promise<ApiFight> {
+    addFight(fight: ApiFightCreate): Promise<ApiFight> {
         return mutate<ApiFight>("/api/fights", "POST", fight, "Failed to add fight")
     }
     async deleteFights(ids: string[]): Promise<void> {

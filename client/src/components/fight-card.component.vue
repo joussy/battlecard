@@ -155,7 +155,7 @@
                             </div>
                             <div>
                                 <i class="bi bi-stopwatch me-1 d-none d-md-inline"></i>
-                                <span>{{ getFightDuration(fight) }}</span>
+                                <span>{{ getFightDurationAsString(fight.rounds, fight.roundDurationSeconds) }}</span>
                             </div>
                         </td>
                         <td
@@ -218,6 +218,7 @@ export default {
     data() {
         return {
             getBoxerDisplayName,
+            getFightDurationAsString,
             Gender: Gender,
             fightStore: useFightStore(),
             uiStore: useUiStore(),
@@ -300,15 +301,6 @@ export default {
             if (fileType === "pdf") {
                 await ExternalService.downloadFightCardPdf(this.tournamentStore.currentTournamentId)
             }
-        },
-        getFightDuration(fight: Fight) {
-            //TODO: Use fightStore to get fight duration
-            // const fightDuration = this.fightStore.modality.getFightDuration(
-            //     fight.boxer1.attributes,
-            //     fight.boxer2.attributes
-            // )
-            // return getFightDurationAsString(fightDuration.rounds, fightDuration.roundDurationAsSeconds)
-            return getFightDurationAsString(0, 0)
         },
         getNbFights() {
             return this.fightCard.length

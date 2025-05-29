@@ -1,6 +1,6 @@
 import { defineStore } from "pinia"
 import type { Fight, Boxer } from "@/types/boxing.d"
-import type { ApiFight } from "@/shared/types/api"
+import type { ApiFight, ApiFightCreate } from "@/shared/types/api"
 import ApiAdapter from "@/adapters/api.adapter"
 import dbManager from "@/managers/api.manager"
 import { useTournamentStore } from "./tournament.store"
@@ -37,12 +37,11 @@ export const useFightStore = defineStore("fight", {
             }
             this.loading = true
 
-            const apiFight: ApiFight = {
+            const apiFight: ApiFightCreate = {
                 boxer1Id: boxer1.id,
                 boxer2Id: boxer2.id,
                 // modalityErrors: [],
                 order: this.fights.length + 1,
-                id: "",
                 tournamentId: tournamentStore.currentTournamentId,
             }
             try {
@@ -129,7 +128,7 @@ export const useFightStore = defineStore("fight", {
                 const boxer2Id = fight.boxer2Id
                 fight.boxer1Id = boxer2Id
                 fight.boxer2Id = boxer1Id
-                const updated = await dbManager.updateFight(ApiAdapter.toApiFight(fight))
+                const updated = await dbManager.updateFight(ApiAdapter.toApiFight(fight, 0, 0))
                 // Update the local store entity with the response
                 const updatedFight = ApiAdapter.toFight(updated)
                 const idx = this.fights.findIndex((f) => f.id === fightId)

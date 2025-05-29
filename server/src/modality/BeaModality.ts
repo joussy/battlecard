@@ -39,7 +39,7 @@ export class BeaModality extends BaseModality {
     };
   }
 
-  getModalityProblems(boxer1: Boxer, boxer2: Boxer): ModalityError[] {
+  getModalityErrors(boxer1: Boxer, boxer2: Boxer): ModalityError[] {
     const errors: ModalityError[] = [];
     if (
       Math.abs(differenceInDays(boxer1.birthDate, boxer2.birthDate)) >

@@ -5,6 +5,7 @@ import {
 } from '@/shared/types/api';
 import { Boxer } from '../entities/boxer.entity';
 import { IModality } from '@/modality/IModality';
+import { ModalityError } from '@/shared/types/modality.type';
 
 export function toBoxer(apiBoxer: ApiBoxerCreate, userId: string): Boxer {
   const boxer = new Boxer();
@@ -23,6 +24,7 @@ export function toApiBoxerGet(
   boxer: Boxer,
   modality: IModality,
   selectedFights?: number,
+  eligibleFights?: number,
 ): ApiBoxerGet {
   return {
     id: boxer.id,
@@ -40,6 +42,7 @@ export function toApiBoxerGet(
     category: modality.getCategoryName(boxer, false),
     categoryShort: modality.getCategoryName(boxer, true),
     selectedFights: selectedFights,
+    eligibleFights: eligibleFights,
   };
 }
 
@@ -47,6 +50,7 @@ export function toApiOpponentGet(
   boxer: Boxer,
   modality: IModality,
   selectedFights: number,
+  modalityErrors: ModalityError[],
   fightId?: string,
 ): ApiOpponentGet {
   return {
@@ -56,5 +60,6 @@ export function toApiOpponentGet(
     isEligible: true, // Placeholder value, adjust as needed
     fightId: fightId,
     selectedFights: selectedFights,
+    modalityErrors: modalityErrors,
   };
 }

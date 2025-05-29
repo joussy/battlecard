@@ -19,11 +19,10 @@ export default class ApiAdapter {
     static toOpponent(opponent: ApiOpponentGet): Opponent {
         return {
             ...ApiAdapter.toBoxer(opponent),
-            // modalityErrors: opponent.modalityErrors,
-            modalityErrors: [],
             weightDifference: opponent.weightDifference,
             isEligible: opponent.isEligible,
             fightId: opponent.fightId,
+            modalityErrors: opponent.modalityErrors,
         }
     }
 
@@ -73,16 +72,20 @@ export default class ApiAdapter {
             order: fight.order,
             modalityErrors: [],
             tournamentId: fight.tournamentId,
+            roundDurationSeconds: fight.roundDurationAsSeconds,
+            rounds: fight.rounds,
         }
     }
 
-    static toApiFight(fight: Fight): ApiFight {
+    static toApiFight(fight: Fight, roundDurationSeconds: number, rounds: number): ApiFight {
         return {
             id: fight.id,
             boxer1Id: fight.boxer1Id,
             boxer2Id: fight.boxer2Id,
             tournamentId: fight.tournamentId,
             order: fight.order,
+            roundDurationAsSeconds: roundDurationSeconds,
+            rounds,
         }
     }
 }

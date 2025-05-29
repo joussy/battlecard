@@ -31,8 +31,8 @@ export default defineComponent({
             type: Object as PropType<Boxer>,
             required: true,
         },
-        modalityError: {
-            type: Object as PropType<ModalityError>,
+        modalityErrors: {
+            type: Object as PropType<ModalityError[]>,
             required: false,
             default: null,
         },
