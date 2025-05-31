@@ -12,8 +12,6 @@ import MenuTopComponent from "@/components/menu/menu-top.component.vue"
 import MenuBottomComponent from "@/components/menu/menu-bottom.component.vue"
 import { useUiStore } from "@/stores/ui.store"
 import { useTournamentStore } from "@/stores/tournament.store"
-import { useBoxerStore } from "@/stores/boxer.store"
-import { useFightStore } from "@/stores/fight.store"
 
 export default defineComponent({
     components: {
@@ -29,18 +27,12 @@ export default defineComponent({
         const uiStore = useUiStore()
         uiStore.loadUiStore()
         const tournamentStore = useTournamentStore()
-        const boxerStore = useBoxerStore()
-        const fightStore = useFightStore()
         await tournamentStore.fetchTournaments()
         watch(
             () => [tournamentStore.currentTournamentId],
-            async () => {
+            () => {
                 if (uiStore.account && tournamentStore.currentTournamentId == null) {
                     this.$router.push("tournaments")
-                }
-                if (tournamentStore.currentTournamentId != null) {
-                    // await boxerStore.fetchBoxers()
-                    // await fightStore.fetchFights()
                 }
                 uiStore.saveUiStore()
             },
