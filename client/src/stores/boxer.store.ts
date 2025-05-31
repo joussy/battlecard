@@ -10,6 +10,7 @@ export const useBoxerStore = defineStore("boxer", {
         boxers: [] as Boxer[],
         loading: false,
         error: null as string | null,
+        isReady: false,
     }),
     actions: {
         async fetchBoxers() {
@@ -29,6 +30,7 @@ export const useBoxerStore = defineStore("boxer", {
             } finally {
                 this.loading = false
             }
+            this.isReady = true
         },
         async fetchBoxerById(boxerId: string): Promise<Boxer> {
             this.loading = true

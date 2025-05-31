@@ -232,6 +232,9 @@ export default {
             })[],
         }
     },
+    created() {
+        this.fightStore.fetchFights()
+    },
     mounted() {
         watch(
             () => this.fightStore.fights,
@@ -308,6 +311,7 @@ export default {
         },
         removeFromFightCard(fightId: string) {
             this.fightStore.removeFromFightCard([fightId])
+            this.fightStore.fetchFights()
         },
     },
 }

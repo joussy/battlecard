@@ -57,7 +57,8 @@ export const useFightStore = defineStore("fight", {
 
         async removeFromFightCard(fightIds: string[]): Promise<void> {
             await dbManager.deleteFights(fightIds)
-            await this.fetchFights()
+            // Remove the fights from the local store
+            this.fights = this.fights.filter((fight) => !fightIds.includes(fight.id))
         },
         async updateFightOrder(fightId: string, newIndex: number) {
             //TODO: there is useless logic here, since the backend does it all

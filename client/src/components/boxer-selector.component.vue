@@ -110,6 +110,9 @@ export default defineComponent({
             boxersStore: useBoxerStore(),
         }
     },
+    created() {
+        this.boxersStore.fetchBoxers()
+    },
     mounted() {
         watchEffect(() => {
             this.selectedTournamentId = this.tournamentStore.currentTournamentId ?? null

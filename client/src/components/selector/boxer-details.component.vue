@@ -102,21 +102,23 @@ export default defineComponent({
             boxer: undefined as Boxer | undefined,
         }
     },
-    async mounted() {
+    created() {
         const boxerId = this.$route.params.id as string
-        if (!this.tournamentStore.currentTournamentId || !boxerId) {
-            return
-        }
-        this.boxer = await this.boxerStore.fetchBoxerById(boxerId)
-        //TODO: this watch does not kill when component is unmounted
+        watch(
+            () => this.boxerStore.isReady,
+            (isReady) => {
+                if (isReady) {
+                    this.boxer = this.boxerStore.getBoxerById(boxerId)
+                    console.log("Boxer details created", this.boxer)
+                }
+            },
+            { immediate: true }
+        )
         watch(
             () => this.fightStore.fights,
             async () => {
                 if (this.boxer && this.tournamentStore.currentTournamentId) {
-                    this.opponents = await this.tournamentBoxerStore.fetchBoxerOpponents(
-                        this.boxer.id,
-                        this.tournamentStore.currentTournamentId
-                    )
+                    this.opponents = await this.tournamentBoxerStore.fetchBoxerOpponents(this.boxer.id)
                 }
             },
             { immediate: true, deep: true }

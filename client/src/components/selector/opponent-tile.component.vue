@@ -67,6 +67,7 @@ import AgeBadgeComponent from "@/components/badges/age-badge.component.vue"
 import { useFightStore } from "@/stores/fight.store"
 import { useBoxerStore } from "@/stores/boxer.store"
 import { getBoxerDisplayName } from "@/utils/labels.utils"
+import { useTournamentBoxerStore } from "@/stores/tournamentBoxer.store"
 
 export default defineComponent({
     components: {
@@ -91,6 +92,7 @@ export default defineComponent({
             ModalityErrorType: ModalityErrorType,
             fightStore: useFightStore(),
             boxerStore: useBoxerStore(),
+            boxerTournamentStore: useTournamentBoxerStore(),
         }
 
         return ret
@@ -105,7 +107,7 @@ export default defineComponent({
                 return
             }
             this.fightStore.removeFromFightCard([opponent.fightId])
-            //emit event to update opponent list in parent component
+            this.boxerTournamentStore.fetchBoxerOpponents(this.boxer.id)
         },
     },
 })
