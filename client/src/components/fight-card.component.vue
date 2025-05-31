@@ -232,8 +232,9 @@ export default {
             })[],
         }
     },
-    created() {
-        this.fightStore.fetchFights()
+    async created() {
+        await this.boxerStore.fetchBoxers()
+        await this.fightStore.fetchFights()
     },
     mounted() {
         watch(

@@ -126,7 +126,7 @@ export default defineComponent({
                     this.opponents = await this.tournamentBoxerStore.fetchBoxerOpponents(this.boxer.id)
                 }
             },
-            { immediate: true }
+            { immediate: true, deep: true }
         )
     },
     methods: {

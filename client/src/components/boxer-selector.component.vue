@@ -110,8 +110,8 @@ export default defineComponent({
             boxersStore: useBoxerStore(),
         }
     },
-    created() {
-        this.boxersStore.fetchBoxers()
+    async created() {
+        await this.boxersStore.fetchBoxers()
     },
     mounted() {
         watchEffect(() => {
