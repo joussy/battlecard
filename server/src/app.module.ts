@@ -23,6 +23,7 @@ import { JwtAuthGuard } from './auth/jwt-auth.guard';
 import { ModalityService } from './modality/modality.service';
 import { FightService } from './services/fight.service';
 import { TournamentService } from './services/tournament.service';
+import { BoxerService } from './services/boxer.service';
 
 @Module({
   imports: [
@@ -61,6 +62,7 @@ import { TournamentService } from './services/tournament.service';
     GoogleStrategy,
     FightService,
     TournamentService,
+    BoxerService,
     AuthService,
     JwtStrategy,
     {
