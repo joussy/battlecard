@@ -1,51 +1,24 @@
-import {
-  Controller,
-  Get,
-  Body,
-  Post,
-  Param,
-  Delete,
-  Inject,
-} from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { Tournament } from '../entities/tournament.entity';
-import { toTournament, toApiTournament } from '../adapters/tournament.adapter';
+import { Controller, Get, Body, Post, Param, Delete } from '@nestjs/common';
+import { ModalityService } from '../modality/modality.service';
+import { User } from '@/decorators/user.decorator';
+import { AuthenticatedUser } from '@/interfaces/auth.interface';
+import { TournamentService } from '../services/tournament.service';
 import {
   ApiOpponentGet,
   ApiTournament,
   ApiTournamentCreate,
 } from '@/shared/types/api';
-import { TournamentBoxer } from '../entities/tournament_boxer.entity';
-import { Boxer } from '../entities/boxer.entity';
-import { toApiBoxerGet, toApiOpponentGet } from '../adapters/boxer.adapter';
-import { ApiBoxerGet } from '@/shared/types/api';
-import { Fight } from '../entities/fight.entity';
-import { ModalityService } from '../modality/modality.service';
-import { User } from '@/decorators/user.decorator';
-import { AuthenticatedUser } from '@/interfaces/auth.interface';
 
 @Controller('tournaments')
 export class TournamentController {
   constructor(
-    @InjectRepository(Tournament)
-    private readonly tournamentRepository: Repository<Tournament>,
-    @InjectRepository(TournamentBoxer)
-    private readonly tournamentBoxerRepository: Repository<TournamentBoxer>,
-    @InjectRepository(Boxer)
-    private readonly boxerRepository: Repository<Boxer>,
-    @InjectRepository(Fight)
-    private readonly fightRepository: Repository<Fight>,
-    @Inject(ModalityService)
+    private readonly tournamentService: TournamentService,
     private readonly modalityService: ModalityService,
   ) {}
 
   @Get()
   async findAll(@User() user: AuthenticatedUser): Promise<ApiTournament[]> {
-    const dbTournaments = await this.tournamentRepository.find({
-      where: { userId: user.id },
-    });
-    return dbTournaments.map(toApiTournament);
+    return this.tournamentService.findAll(user);
   }
 
   @Post()
@@ -53,10 +26,7 @@ export class TournamentController {
     @Body() tournament: ApiTournamentCreate,
     @User() user: AuthenticatedUser,
   ): Promise<ApiTournament> {
-    const dbTournament = await this.tournamentRepository.save(
-      toTournament(tournament, user.id),
-    );
-    return toApiTournament(dbTournament);
+    return this.tournamentService.create(tournament, user);
   }
 
   @Delete(':id')
@@ -64,38 +34,14 @@ export class TournamentController {
     @Param('id') id: string,
     @User() user: AuthenticatedUser,
   ): Promise<void> {
-    await this.tournamentRepository.findOneOrFail({
-      where: { id, userId: user.id },
-    });
-    await this.tournamentRepository.delete(id);
+    return this.tournamentService.delete(id, user);
   }
 
   @Get(':tournamentId/boxers')
   async getBoxersForTournament(
     @Param('tournamentId') tournamentId: string,
-  ): Promise<ApiBoxerGet[]> {
-    await this.tournamentRepository.findOneOrFail({
-      where: { id: tournamentId },
-    });
-    const tournamentBoxers = await this.tournamentBoxerRepository.find({
-      where: { tournamentId },
-    });
-    const fights = await this.fightRepository.find({
-      where: [{ tournamentId }],
-    });
-    const boxerIds = tournamentBoxers.map((tb) => tb.boxerId);
-    if (boxerIds.length === 0) return [];
-    const boxers = await this.boxerRepository.findByIds(boxerIds);
-    return boxers.map((b) => {
-      const selectedFights = fights.filter(
-        (f) => f.boxer1Id === b.id || f.boxer2Id === b.id,
-      ).length;
-      return toApiBoxerGet(
-        b,
-        this.modalityService.getModality(),
-        selectedFights,
-      );
-    });
+  ): Promise<import('@/shared/types/api').ApiBoxerGet[]> {
+    return this.tournamentService.getBoxersForTournament(tournamentId);
   }
 
   @Get(':tournamentId/opponents/:boxerId')
@@ -104,62 +50,10 @@ export class TournamentController {
     @Param('tournamentId') tournamentId: string,
     @User() user: AuthenticatedUser,
   ): Promise<ApiOpponentGet[]> {
-    if (!boxerId || !tournamentId) {
-      return [];
-    }
-
-    await this.tournamentRepository.findOneOrFail({
-      where: { id: tournamentId, userId: user.id },
-    });
-
-    // Get the gender of the main boxer
-    const mainBoxer = await this.boxerRepository.findOne({
-      where: { id: boxerId, userId: user.id },
-    });
-    if (!mainBoxer) {
-      return [];
-    }
-
-    const tournamentBoxers = await this.tournamentBoxerRepository.find({
-      where: { tournamentId },
-    });
-
-    // Only keep boxers of the same gender
-    const boxerIds = tournamentBoxers
-      .map((tb) => tb.boxerId)
-      .filter((id) => id !== boxerId);
-    let boxers = await this.boxerRepository.findByIds(boxerIds);
-    boxers = boxers.filter((b) => b.gender === mainBoxer.gender);
-
-    if (boxers.length === 0) {
-      return [];
-    }
-
-    // Find all fights in this tournament involving the main boxer and any opponent
-    const fights = await this.fightRepository.find({
-      where: [{ tournamentId }],
-    });
-
-    const opponents = boxers.map((o) => {
-      const fightId = fights.find(
-        (f) =>
-          (f.boxer1Id === boxerId && f.boxer2Id === o.id) ||
-          (f.boxer2Id === boxerId && f.boxer1Id === o.id),
-      )?.id;
-      const selectedFights = fights.filter(
-        (f) => f.boxer1Id === o.id || f.boxer2Id === o.id,
-      )?.length;
-      const modality = this.modalityService.getModality();
-      const modalityErrors = modality.getModalityErrors(mainBoxer, o);
-      return toApiOpponentGet(
-        o,
-        modality,
-        selectedFights,
-        modalityErrors,
-        fightId,
-      );
-    });
-
-    return opponents;
+    return this.tournamentService.getPossibleOpponents(
+      boxerId,
+      tournamentId,
+      user,
+    );
   }
 }

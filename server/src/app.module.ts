@@ -22,6 +22,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
 import { ModalityService } from './modality/modality.service';
 import { FightService } from './services/fight.service';
+import { TournamentService } from './services/tournament.service';
 
 @Module({
   imports: [
@@ -59,6 +60,7 @@ import { FightService } from './services/fight.service';
   providers: [
     GoogleStrategy,
     FightService,
+    TournamentService,
     AuthService,
     JwtStrategy,
     {
