@@ -23,8 +23,8 @@
                 <div class="col-md-6 d-flex align-items-end justify-content-end flex-wrap">
                     <LinkedFightsBadgeComponent :boxer="boxer" />
                     <PossibleBadgeComponent
-                        v-if="boxer.selectedFights"
-                        :selected="boxer.selectedFights"
+                        v-if="boxer.eligibleFights"
+                        :selected="boxer.eligibleFights"
                         :available="nbOpponents"
                     />
                     <AgeBadgeComponent :boxer="boxer" />
