@@ -38,8 +38,8 @@ export class ApiManager {
     async deleteFights(ids: string[]): Promise<void> {
         await mutate("/api/fights", "DELETE", { ids }, "Failed to delete fights", true)
     }
-    reorderFights(fightIds: string[], tournamentId: string): Promise<void> {
-        return mutate("/api/fights/reorder", "POST", { fightIds, tournamentId }, "Failed to reorder fights", true)
+    reorderFight(fightId: string, newIndex: number): Promise<void> {
+        return mutate("/api/fights/reorder", "POST", { fightId, newIndex }, "Failed to reorder fights", true)
     }
     updateFight(fight: ApiFightGet): Promise<ApiFightGet> {
         return mutate<ApiFightGet>(

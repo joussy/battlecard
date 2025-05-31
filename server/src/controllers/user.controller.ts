@@ -1,4 +1,4 @@
-import { Controller, Get, Param, NotFoundException, Req } from '@nestjs/common';
+import { Controller, Get, NotFoundException, Req } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '../entities/user.entity';

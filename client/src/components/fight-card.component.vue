@@ -240,6 +240,7 @@ export default {
         watch(
             () => this.fightStore.fights,
             () => {
+                console.log("Fight card updated")
                 this.fightCard = this.fightStore.fights.map((fight: Fight) => {
                     return {
                         ...fight,
@@ -283,6 +284,7 @@ export default {
                 onEnd: async (evt: { oldIndex?: number; newIndex?: number }) => {
                     if (evt?.oldIndex !== undefined && evt?.newIndex !== undefined) {
                         await this.fightStore.updateFightOrder(this.fightCard[evt.oldIndex].id, evt.newIndex)
+                        await this.fightStore.fetchFights()
                     }
                 },
                 handle: ".handle",
@@ -310,9 +312,9 @@ export default {
         getNbFights() {
             return this.fightCard.length
         },
-        removeFromFightCard(fightId: string) {
-            this.fightStore.removeFromFightCard([fightId])
-            this.fightStore.fetchFights()
+        async removeFromFightCard(fightId: string) {
+            await this.fightStore.removeFromFightCard([fightId])
+            await this.fightStore.fetchFights()
         },
     },
 }

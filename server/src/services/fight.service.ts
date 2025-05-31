@@ -33,6 +33,15 @@ export class FightService {
       return toApiFight(fight, fightDuration);
     });
   }
+  async findById(id: string, user: AuthenticatedUser): Promise<ApiFightGet> {
+    const fight = await this.fightRepository.findOneOrFail({
+      where: { id, tournament: { userId: user.id } },
+      relations: ['boxer1', 'boxer2'],
+    });
+    const modality = this.modalityService.getModality();
+    const fightDuration = modality.getFightDuration(fight.boxer1, fight.boxer2);
+    return toApiFight(fight, fightDuration);
+  }
 
   async create(fight: ApiFightCreate, user: AuthenticatedUser): Promise<Fight> {
     await this.boxerRepository.findOneOrFail({
@@ -73,24 +82,53 @@ export class FightService {
   }
 
   async reorderFights(
-    fightIds: string[],
     tournamentId: string,
     user: AuthenticatedUser,
   ): Promise<void> {
-    if (!Array.isArray(fightIds) || !tournamentId) return;
     const allFights = await this.fightRepository.find({
-      where: { id: In(fightIds), tournament: { userId: user.id } },
+      where: { tournamentId, tournament: { userId: user.id } },
       relations: ['tournament'],
     });
-    const fightMap = new Map(allFights.map((f) => [f.id, f]));
-    const orderedFights = [
-      ...fightIds.map((id) => fightMap.get(id)).filter(Boolean),
-      ...allFights.filter((f) => !fightIds.includes(f.id)),
-    ];
+    const orderedFights = allFights.sort((a, b) => a.order - b.order);
     for (let i = 0; i < orderedFights.length; i++) {
       const fight = orderedFights[i];
       if (fight && fight.order !== i + 1) {
         await this.fightRepository.update(fight.id, { order: i + 1 });
+      }
+    }
+  }
+  async reorderFight(
+    fightId: string,
+    newOrder: number,
+    user: AuthenticatedUser,
+  ): Promise<void> {
+    const fight = await this.fightRepository.findOneOrFail({
+      where: { id: fightId, tournament: { userId: user.id } },
+      relations: ['tournament'],
+    });
+    const allFights = await this.fightRepository.find({
+      where: {
+        tournamentId: fight.tournamentId,
+        tournament: { userId: user.id },
+      },
+      relations: ['boxer1', 'boxer2'],
+      order: { order: 'ASC' },
+    });
+    const orderedFights = allFights.sort((a, b) => a.order - b.order);
+    const currentIdx = orderedFights.findIndex((f) => f.id === fightId);
+    if (currentIdx === -1) throw new Error('Fight not found in tournament');
+    if (newOrder < 0 || newOrder >= orderedFights.length) {
+      throw new Error('Invalid index for reordering');
+    }
+    // Remove the fight from its current position
+    const [movedFight] = orderedFights.splice(currentIdx, 1);
+    // Insert the fight at the new order
+    orderedFights.splice(newOrder, 0, movedFight);
+    // Update the order of all fights
+    for (let i = 0; i < orderedFights.length; i++) {
+      const f = orderedFights[i];
+      if (f.order !== i + 1) {
+        await this.fightRepository.update(f.id, { order: i + 1 });
       }
     }
   }

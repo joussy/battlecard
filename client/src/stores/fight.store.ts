@@ -61,7 +61,6 @@ export const useFightStore = defineStore("fight", {
             this.fights = this.fights.filter((fight) => !fightIds.includes(fight.id))
         },
         async updateFightOrder(fightId: string, newIndex: number) {
-            //TODO: there is useless logic here, since the backend does it all
             if (newIndex < 0) {
                 return
             }
@@ -87,26 +86,7 @@ export const useFightStore = defineStore("fight", {
 
             // Insert the fight at the new position based on the order
             fights.splice(newIndex, 0, fightToMove)
-
-            await this.updateFightsOrder()
-        },
-        async updateFightsOrder() {
-            const tournamentStore = useTournamentStore()
-            if (tournamentStore.currentTournamentId == null) {
-                return
-            }
-            const fights = this.fights
-            if (fights.length == 0) {
-                return
-            }
-            fights.forEach((fight, index) => {
-                fight.order = index + 1 // +1 because we want an order starting 1, not 0
-            })
-            await dbManager.reorderFights(
-                fights.map((f) => f.id),
-                tournamentStore.currentTournamentId
-            )
-            await this.fetchFights()
+            await dbManager.reorderFight(fightId, newIndex)
         },
         async switchFight(fightId: string) {
             const fight = this.getFightById(fightId)

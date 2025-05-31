@@ -63,20 +63,19 @@ export class FightController {
   @Delete()
   async deleteMany(
     @Body('ids') fightIds: string[],
-    @Body('ids') tournamentId: string,
     @User() user: AuthenticatedUser,
   ): Promise<void> {
+    const fight = await this.fightService.findById(fightIds[0], user);
     await this.fightService.deleteMany(fightIds, user);
-    await this.fightService.reorderFights(fightIds, tournamentId, user);
+    await this.fightService.reorderFights(fight.tournamentId, user);
   }
 
   @Post('reorder')
-  async reorderFights(
-    @Body() body: { fightIds: string[]; tournamentId: string },
+  async reorderFight(
+    @Body() body: { fightId: string; newIndex: number },
     @User() user: AuthenticatedUser,
   ): Promise<void> {
-    const { fightIds, tournamentId } = body;
-    return this.fightService.reorderFights(fightIds, tournamentId, user);
+    return this.fightService.reorderFight(body.fightId, body.newIndex, user);
   }
 
   @Put(':id')
