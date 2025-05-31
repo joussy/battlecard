@@ -1,6 +1,17 @@
 <template>
     <div
-        v-if="boxer != null"
+        v-if="loading"
+        class="d-flex justify-content-center align-items-center vh-100"
+    >
+        <div
+            class="spinner-border"
+            role="status"
+        >
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+    <div
+        v-else-if="boxer != null"
         class="max-width-md"
     >
         <div class="bg-body sticky-md-none sticky-top d-flex justify-content-center align-items-center pb-1">
@@ -101,11 +112,13 @@ export default defineComponent({
             tournamentBoxerStore: useTournamentBoxerStore(),
             boxer: undefined as Boxer | undefined,
             boxerId: this.$route.params.id as string,
+            loading: false,
         }
     },
     watch: {
         "$route.params.id": {
             handler(newId) {
+                this.opponents = []
                 this.boxerId = newId as string
             },
         },
@@ -115,6 +128,7 @@ export default defineComponent({
             () => [this.boxerId, this.fightStore.fights],
             async () => {
                 if (this.boxerId) {
+                    this.loading = true
                     console.log("Boxer details for ID:", this.boxerId)
                     await this.boxerStore.fetchBoxers()
                     this.boxer = this.boxerStore.getBoxerById(this.boxerId)
@@ -124,6 +138,7 @@ export default defineComponent({
                         return
                     }
                     this.opponents = await this.tournamentBoxerStore.fetchBoxerOpponents(this.boxer.id)
+                    this.loading = false
                 }
             },
             { immediate: true, deep: true }
