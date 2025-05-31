@@ -34,7 +34,13 @@
                         <i class="bi bi-person-dash-fill" />
                     </button>
 
-                    {{ getBoxerDisplayName(opponent) }}
+                    <span class="ms-2">
+                        {{ getBoxerDisplayName(opponent) }}
+                        <i
+                            class="bi bi-box-arrow-up-right"
+                            @click="goToOpponentTile(opponent)"
+                        ></i>
+                    </span>
                 </div>
                 <div
                     class="font-italic text-right"
@@ -68,7 +74,7 @@
 </template>
 
 <script lang="ts">
-import { PropType, defineComponent, watch } from "vue"
+import { PropType, defineComponent } from "vue"
 import { ModalityErrorType } from "@/shared/types/modality.type"
 import { Boxer, Opponent } from "@/types/boxing.d"
 import RecordBadgeComponent from "@/components/badges/record-badge.component.vue"
@@ -127,6 +133,10 @@ export default defineComponent({
             }
             this.loading = true
             this.fightStore.removeFromFightCard([opponent.fightId])
+        },
+        goToOpponentTile(opponent: Opponent) {
+            // this.$router.push({ name: "selector" })
+            this.$router.push({ name: "selector-tile", params: { id: opponent.id } })
         },
     },
 })

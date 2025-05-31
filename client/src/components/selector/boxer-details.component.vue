@@ -100,32 +100,33 @@ export default defineComponent({
             tournamentStore: useTournamentStore(),
             tournamentBoxerStore: useTournamentBoxerStore(),
             boxer: undefined as Boxer | undefined,
+            boxerId: this.$route.params.id as string,
         }
     },
+    watch: {
+        "$route.params.id": {
+            handler(newId) {
+                this.boxerId = newId as string
+            },
+        },
+    },
     created() {
-        const boxerId = this.$route.params.id as string
         watch(
-            () => this.boxerStore.isReady,
-            (isReady) => {
-                if (isReady) {
-                    this.boxer = this.boxerStore.getBoxerById(boxerId)
+            () => [this.boxerId, this.fightStore.fights],
+            async () => {
+                if (this.boxerId) {
+                    console.log("Boxer details for ID:", this.boxerId)
+                    await this.boxerStore.fetchBoxers()
+                    this.boxer = this.boxerStore.getBoxerById(this.boxerId)
+                    console.log("Boxer:", this.boxer)
                     if (!this.boxer) {
                         this.$router.push({ name: "selector" })
                         return
                     }
-                }
-            },
-            { immediate: true }
-        )
-        watch(
-            () => this.fightStore.fights,
-            async () => {
-                // Fetch opponents when fights are updated
-                if (this.boxer && this.tournamentStore.currentTournamentId) {
                     this.opponents = await this.tournamentBoxerStore.fetchBoxerOpponents(this.boxer.id)
                 }
             },
-            { immediate: true, deep: true }
+            { immediate: true }
         )
     },
     methods: {

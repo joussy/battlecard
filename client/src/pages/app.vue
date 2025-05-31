@@ -39,8 +39,8 @@ export default defineComponent({
                     this.$router.push("tournaments")
                 }
                 if (tournamentStore.currentTournamentId != null) {
-                    await boxerStore.fetchBoxers()
-                    await fightStore.fetchFights()
+                    // await boxerStore.fetchBoxers()
+                    // await fightStore.fetchFights()
                 }
                 uiStore.saveUiStore()
             },
