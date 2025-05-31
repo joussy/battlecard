@@ -1,8 +1,17 @@
 {
   "$schema": "https://json.schemastore.org/nest-cli",
   "collection": "@nestjs/schematics",
-  "sourceRoot": "server/src",
+  "sourceRoot": "./src",
+  "entryFile": "/server/src/main",
+  "monorepo": true,
   "compilerOptions": {
-    "deleteOutDir": true
+    "deleteOutDir": true,
+    "assets": [
+      {
+        "include": "views/*.html",
+        "outDir": "dist/server/src",
+        "watchAssets": true
+      }
+    ]
   }
 }

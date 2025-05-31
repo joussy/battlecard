@@ -24,6 +24,7 @@ import { ModalityService } from './modality/modality.service';
 import { FightService } from './services/fight.service';
 import { TournamentService } from './services/tournament.service';
 import { BoxerService } from './services/boxer.service';
+// import { TemplateService } from './services/template.service';
 
 @Module({
   imports: [
@@ -60,6 +61,7 @@ import { BoxerService } from './services/boxer.service';
   ],
   providers: [
     GoogleStrategy,
+    // TemplateService,
     FightService,
     TournamentService,
     BoxerService,
