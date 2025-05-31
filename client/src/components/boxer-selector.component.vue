@@ -1,30 +1,13 @@
 <template>
     <div class="max-width-md">
         <div class="d-flex">
-            <div class="flex-grow-1">
-                <div class="input-group">
-                    <span
-                        id="basic-addon1"
-                        class="input-group-text"
-                    >
-                        <Icon name="tournament"></Icon>
-                    </span>
-                    <select
-                        v-model="selectedTournamentId"
-                        class="form-select"
-                        aria-label="Choose an event"
-                        @change="setTournament"
-                    >
-                        <option
-                            v-for="tournament in getTournaments()"
-                            :value="tournament.id"
-                            :selected="tournament.id == selectedTournamentId"
-                        >
-                            {{ tournament.name }}
-                        </option>
-                    </select>
+            <div class="d-none d-xs-none d-sm-block">
+                <div>
+                    <i class="bi bi-calendar ms-2"></i>
+                    {{ tournamentName }} - <i>{{ tournamentDate }}</i>
                 </div>
             </div>
+            <div class="flex-grow-1"></div>
             <button
                 class="btn btn-outline-danger mb-3 ms-2"
                 @click="clear()"
@@ -91,6 +74,7 @@ import { useTournamentStore } from "@/stores/tournament.store"
 import { useTournamentBoxerStore } from "@/stores/tournamentBoxer.store"
 import { useUiStore } from "@/stores/ui.store"
 import { useBoxerStore } from "@/stores/boxer.store"
+import { format } from "date-fns"
 
 export default defineComponent({
     components: {
@@ -110,6 +94,17 @@ export default defineComponent({
             boxersStore: useBoxerStore(),
         }
     },
+    computed: {
+        tournamentName() {
+            return this.tournamentStore.getCurrentTournament()?.name
+        },
+        tournamentDate() {
+            const dateAsStr = this.tournamentStore.getCurrentTournament()?.date
+            if (!dateAsStr) return null
+            const date = new Date(dateAsStr)
+            return date instanceof Date && !isNaN(date.getTime()) ? date.toLocaleDateString() : null
+        },
+    },
     async created() {
         await this.boxersStore.fetchBoxers()
     },
@@ -125,12 +120,6 @@ export default defineComponent({
         },
         getBoxersToDisplay() {
             return this.boxersStore.boxers
-        },
-        setTournament() {
-            this.tournamentStore.setCurrentTournament(this.selectedTournamentId)
-        },
-        getTournaments() {
-            return this.tournamentStore.tournaments
         },
     },
 })
