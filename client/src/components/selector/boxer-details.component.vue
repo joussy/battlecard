@@ -125,10 +125,15 @@ export default defineComponent({
     },
     created() {
         watch(
+            () => this.boxerId,
+            (newId) => {
+                this.loading = true
+            }
+        )
+        watch(
             () => [this.boxerId, this.fightStore.fights],
             async () => {
                 if (this.boxerId) {
-                    this.loading = true
                     console.log("Boxer details for ID:", this.boxerId)
                     await this.boxerStore.fetchBoxers()
                     this.boxer = this.boxerStore.getBoxerById(this.boxerId)
