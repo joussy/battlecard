@@ -9,14 +9,25 @@
             <div class="d-flex justify-content-between">
                 <div>
                     <button
-                        v-if="!opponent.fightId"
+                        v-if="loading"
+                        class="btn btn-outline-secondary btn-sm"
+                        disabled
+                    >
+                        <span
+                            class="spinner-border spinner-border-sm"
+                            role="status"
+                            aria-hidden="true"
+                        ></span>
+                    </button>
+                    <button
+                        v-else-if="!opponent.fightId"
                         class="btn btn-outline-success btn-sm"
                         @click="addToFightCard(opponent)"
                     >
                         <i class="bi bi-person-plus-fill" />
                     </button>
                     <button
-                        v-if="opponent.fightId"
+                        v-else-if="opponent.fightId"
                         class="btn btn-outline-danger btn-sm"
                         @click="removeFromFightCard(opponent)"
                     >
@@ -57,7 +68,7 @@
 </template>
 
 <script lang="ts">
-import { PropType, defineComponent } from "vue"
+import { PropType, defineComponent, watch } from "vue"
 import { ModalityErrorType } from "@/shared/types/modality.type"
 import { Boxer, Opponent } from "@/types/boxing.d"
 import RecordBadgeComponent from "@/components/badges/record-badge.component.vue"
@@ -93,21 +104,29 @@ export default defineComponent({
             fightStore: useFightStore(),
             boxerStore: useBoxerStore(),
             boxerTournamentStore: useTournamentBoxerStore(),
+            loading: false,
         }
 
         return ret
     },
-    mounted() {},
+    watch: {
+        opponent: {
+            handler() {
+                this.loading = false
+            },
+        },
+    },
     methods: {
         addToFightCard(opponent: Opponent) {
+            this.loading = true
             this.fightStore.addToFightCard(this.boxer, opponent)
         },
         removeFromFightCard(opponent: Opponent) {
             if (!opponent.fightId) {
                 return
             }
+            this.loading = true
             this.fightStore.removeFromFightCard([opponent.fightId])
-            this.boxerTournamentStore.fetchBoxerOpponents(this.boxer.id)
         },
     },
 })

@@ -109,7 +109,10 @@ export default defineComponent({
             (isReady) => {
                 if (isReady) {
                     this.boxer = this.boxerStore.getBoxerById(boxerId)
-                    console.log("Boxer details created", this.boxer)
+                    if (!this.boxer) {
+                        this.$router.push({ name: "selector" })
+                        return
+                    }
                 }
             },
             { immediate: true }
@@ -117,6 +120,7 @@ export default defineComponent({
         watch(
             () => this.fightStore.fights,
             async () => {
+                // Fetch opponents when fights are updated
                 if (this.boxer && this.tournamentStore.currentTournamentId) {
                     this.opponents = await this.tournamentBoxerStore.fetchBoxerOpponents(this.boxer.id)
                 }

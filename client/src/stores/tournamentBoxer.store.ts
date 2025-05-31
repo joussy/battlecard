@@ -31,6 +31,7 @@ export const useTournamentBoxerStore = defineStore("tournamentBoxer", {
             }
         },
         async addBoxerToTournament(boxerId: string, tournamentId: string) {
+            this.loading = true
             try {
                 await dbManager.addBoxerToTournament(boxerId, tournamentId)
                 // Optionally, refetch or update state
@@ -38,6 +39,8 @@ export const useTournamentBoxerStore = defineStore("tournamentBoxer", {
             } catch (e: unknown) {
                 this.error = e instanceof Error ? e.message : "Unknown error"
                 throw e
+            } finally {
+                this.loading = false
             }
         },
         async removeBoxersFromTournament(boxerIds: string[], tournamentId: string) {
@@ -63,6 +66,7 @@ export const useTournamentBoxerStore = defineStore("tournamentBoxer", {
         },
         async fetchBoxerOpponents(boxerId: string): Promise<Opponent[]> {
             try {
+                this.loading = true
                 const tournamentStore = useTournamentStore()
                 const tournamentId = tournamentStore.currentTournamentId
                 if (!tournamentId) {
@@ -73,6 +77,8 @@ export const useTournamentBoxerStore = defineStore("tournamentBoxer", {
             } catch (e: unknown) {
                 this.error = e instanceof Error ? e.message : "Unknown error"
                 throw e
+            } finally {
+                this.loading = false
             }
         },
     },
