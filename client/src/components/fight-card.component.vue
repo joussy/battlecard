@@ -12,7 +12,7 @@
                 <i class="bi bi-pencil" />
             </button>
             <div
-                v-if="userStore.account != null"
+                v-if="uiStore.account != null"
                 class="btn-group"
                 role="group"
             >
@@ -131,22 +131,22 @@
                             :ref="`fights-tr-red-${fight.id}`"
                             class="cell-red word-break-all"
                         >
-                            {{ fightService.getBoxerDisplayName(fight.boxer1.attributes) }}
+                            {{ getBoxerDisplayName(fight.boxer1) }}
                         </td>
                         <td
                             :ref="`fights-tr-blue-${fight.id}`"
                             class="cell-blue word-break-all"
                         >
-                            {{ fightService.getBoxerDisplayName(fight.boxer2.attributes) }}
+                            {{ getBoxerDisplayName(fight.boxer2) }}
                         </td>
                         <td class="fight-extra-infos">
                             <div class="me-1">
                                 <i
-                                    v-if="fight.boxer1.attributes.gender == Gender.FEMALE"
+                                    v-if="fight.boxer1.gender == Gender.FEMALE"
                                     class="bi bi-gender-female"
                                 ></i>
                                 <i
-                                    v-if="fight.boxer1.attributes.gender == Gender.MALE"
+                                    v-if="fight.boxer1.gender == Gender.MALE"
                                     class="bi bi-gender-male"
                                 ></i>
                                 <span v-if="fight.modalityErrors.length > 0"
@@ -155,7 +155,7 @@
                             </div>
                             <div>
                                 <i class="bi bi-stopwatch me-1 d-none d-md-inline"></i>
-                                <span>{{ getFightDuration(fight) }}</span>
+                                <span>{{ getFightDurationAsString(fight.rounds, fight.roundDurationSeconds) }}</span>
                             </div>
                         </td>
                         <td
@@ -170,7 +170,7 @@
                             </button>
                             <button
                                 class="btn btn-outline-danger btn-sm m-1"
-                                @click="fightService.removeFromFightCard(fight.boxer1, fight.boxer2)"
+                                @click="removeFromFightCard(fight.id)"
                             >
                                 <i class="bi bi-person-dash-fill" />
                             </button>
@@ -198,14 +198,19 @@
 </template>
 
 <script lang="ts">
-import { Fight, Gender } from "@/types/boxing.d"
-import fightService from "@/services/fight.service"
-import { ApiService } from "@/services/api.service"
-import { userStore } from "@/composables/user.composable"
+import { Boxer, Fight } from "@/types/boxing.d"
+import { ExternalService } from "@/services/external.service"
 import { FileType } from "@/types/api"
 import { getFightDurationAsString } from "@/utils/string.utils"
 import Sortable from "sortablejs"
 import IconComponent from "./core/icon.component.vue"
+import { useFightStore } from "@/stores/fight.store"
+import { useUiStore } from "@/stores/ui.store"
+import { useBoxerStore } from "@/stores/boxer.store"
+import { useTournamentStore } from "@/stores/tournament.store"
+import { watch } from "vue"
+import { getBoxerDisplayName } from "@/utils/labels.utils"
+import { Gender } from "@/shared/types/modality.type"
 
 export default {
     components: {
@@ -213,29 +218,49 @@ export default {
     },
     data() {
         return {
+            getBoxerDisplayName,
+            getFightDurationAsString,
             Gender: Gender,
-            fightStore: fightService.store(),
-            fightService: fightService,
-            userStore: userStore,
+            fightStore: useFightStore(),
+            uiStore: useUiStore(),
+            boxerStore: useBoxerStore(),
+            tournamentStore: useTournamentStore(),
             editionMode: false,
+            fightCard: [] as (Fight & {
+                boxer1: Boxer
+                boxer2: Boxer
+            })[],
         }
     },
-    computed: {
-        fightCard: {
-            get() {
-                return fightService.store().fightCard
-            },
-            set() {
-                /* Avoid error on readonly collection */
-            },
-        },
+    async created() {
+        await this.boxerStore.fetchBoxers()
+        await this.fightStore.fetchFights()
     },
     mounted() {
-        this.initSortable()
+        watch(
+            () => this.fightStore.fights,
+            () => {
+                console.log("Fight card updated")
+                this.fightCard = this.fightStore.fights.map((fight: Fight) => {
+                    return {
+                        ...fight,
+                        boxer1: this.boxerStore.getBoxerById(fight.boxer1Id) as Boxer,
+                        boxer2: this.boxerStore.getBoxerById(fight.boxer2Id) as Boxer,
+                    }
+                })
+            },
+            { immediate: true, deep: true }
+        )
+        watch(
+            () => this.editionMode,
+            () => {
+                this.initSortable()
+            }
+        )
     },
     methods: {
         switchFight(fightId: string) {
-            this.fightService.switchFight(fightId)
+            this.fightStore.switchFight(fightId)
             const divRed = (this.$refs[`fights-tr-red-${fightId}`] as HTMLElement[])[0]
             const divBlue = (this.$refs[`fights-tr-blue-${fightId}`] as HTMLElement[])[0]
 
@@ -258,7 +283,8 @@ export default {
                 animation: 150,
                 onEnd: async (evt: { oldIndex?: number; newIndex?: number }) => {
                     if (evt?.oldIndex !== undefined && evt?.newIndex !== undefined) {
-                        await fightService.moveFight(this.fightCard[evt.oldIndex].id, evt.newIndex)
+                        await this.fightStore.updateFightOrder(this.fightCard[evt.oldIndex].id, evt.newIndex)
+                        await this.fightStore.fetchFights()
                     }
                 },
                 handle: ".handle",
@@ -267,22 +293,28 @@ export default {
             })
         },
         async downloadFile(fileType: FileType) {
-            await ApiService.downloadFightCard(
-                fileType,
-                this.fightStore.fightCard,
-                this.fightStore.modality,
-                this.fightStore.currentTournament!.id
-            )
-        },
-        getFightDuration(fight: Fight) {
-            const fightDuration = this.fightStore.modality.getFightDuration(
-                fight.boxer1.attributes,
-                fight.boxer2.attributes
-            )
-            return getFightDurationAsString(fightDuration.rounds, fightDuration.roundDurationAsSeconds)
+            if (!this.tournamentStore.currentTournamentId) {
+                return
+            }
+            if (fileType === "xlsx") {
+                await ExternalService.downloadFightCardXlsx(this.tournamentStore.currentTournamentId)
+            }
+            if (fileType === "csv") {
+                await ExternalService.downloadFightCardCsv(this.tournamentStore.currentTournamentId)
+            }
+            if (fileType === "png") {
+                await ExternalService.downloadFightCardPng(this.tournamentStore.currentTournamentId)
+            }
+            if (fileType === "pdf") {
+                await ExternalService.downloadFightCardPdf(this.tournamentStore.currentTournamentId)
+            }
         },
         getNbFights() {
             return this.fightCard.length
+        },
+        async removeFromFightCard(fightId: string) {
+            await this.fightStore.removeFromFightCard([fightId])
+            await this.fightStore.fetchFights()
         },
     },
 }
@@ -315,7 +347,7 @@ export default {
         box-shadow: 0 0 0 rgba(0, 123, 255, 0);
     }
     50% {
-        box-shadow: 0 0 20px 10px rgba(92, 94, 95, 0.7);
+        box-shadow: 0 0 20px 10px rgba(92, 94, 95, 0.3);
     }
     100% {
         box-shadow: 0 0 0 rgba(0, 123, 255, 0);
@@ -328,7 +360,7 @@ export default {
         box-shadow: 0 0 0 rgba(255, 193, 7, 0);
     }
     50% {
-        box-shadow: 0 0 20px 10px rgba(158, 158, 158, 0.7);
+        box-shadow: 0 0 20px 10px rgba(158, 158, 158, 0.3);
     }
     100% {
         box-shadow: 0 0 0 rgb(255, 255, 255);

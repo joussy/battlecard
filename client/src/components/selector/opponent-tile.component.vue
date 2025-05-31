@@ -2,57 +2,70 @@
     <div
         class="card mb-2"
         :class="{
-            'border-success': fightService.isCompeting(boxer, opponent),
+            'border-success': opponent.fightId,
         }"
     >
         <div class="card-body">
             <div class="d-flex justify-content-between">
                 <div>
                     <button
-                        v-if="fightService.canCompete(boxer, opponent)"
+                        v-if="loading"
+                        class="btn btn-outline-secondary btn-sm"
+                        disabled
+                    >
+                        <span
+                            class="spinner-border spinner-border-sm"
+                            role="status"
+                            aria-hidden="true"
+                        ></span>
+                    </button>
+                    <button
+                        v-else-if="!opponent.fightId"
                         class="btn btn-outline-success btn-sm"
-                        @click="fightService.addToFightCard(boxer, opponent)"
+                        @click="addToFightCard(opponent)"
                     >
                         <i class="bi bi-person-plus-fill" />
                     </button>
                     <button
-                        v-if="fightService.isCompeting(boxer, opponent)"
+                        v-else-if="opponent.fightId"
                         class="btn btn-outline-danger btn-sm"
-                        @click="fightService.removeFromFightCard(boxer, opponent)"
+                        @click="removeFromFightCard(opponent)"
                     >
                         <i class="bi bi-person-dash-fill" />
                     </button>
 
-                    {{ fightService.getBoxerDisplayName(opponent.attributes) }}
+                    <span class="ms-2">
+                        {{ getBoxerDisplayName(opponent) }}
+                        <i
+                            class="bi bi-box-arrow-up-right"
+                            @click="goToOpponentTile(opponent)"
+                        ></i>
+                    </span>
                 </div>
                 <div
                     class="font-italic text-right"
                     style="font-size: 14px"
                 >
-                    {{ opponent.attributes.categoryShortText }}
+                    {{ opponent.categoryShortText }}
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-6 pb-1">
-                    <i>{{ opponent.attributes.club }}</i>
+                    <i>{{ opponent.club }}</i>
                 </div>
-                <div class="col-md-6 d-flex justify-content-end flex-wrap">
+                <div class="col-md-6 d-flex align-items-end justify-content-end flex-wrap">
                     <LinkedFightsBadgeComponent :boxer="opponent" />
                     <AgeBadgeComponent
                         :boxer="opponent"
-                        :modality-error="fightService.getOpponentModalityError(boxer, opponent, ModalityErrorType.AGE)"
+                        :modality-errors="opponent.modalityErrors"
                     />
                     <RecordBadgeComponent
                         :boxer="opponent"
-                        :modality-error="
-                            fightService.getOpponentModalityError(boxer, opponent, ModalityErrorType.PRIZE_LIST)
-                        "
+                        :modality-errors="opponent.modalityErrors"
                     />
                     <WeightBadgeComponent
                         :boxer="opponent"
-                        :modality-error="
-                            fightService.getOpponentModalityError(boxer, opponent, ModalityErrorType.WEIGHT)
-                        "
+                        :modality-errors="opponent.modalityErrors"
                     />
                 </div>
             </div>
@@ -62,14 +75,16 @@
 
 <script lang="ts">
 import { PropType, defineComponent } from "vue"
-import { ModalityErrorType } from "@/types/modality.d"
-import { Boxer } from "@/types/boxing.d"
+import { ModalityErrorType } from "@/shared/types/modality.type"
+import { Boxer, Opponent } from "@/types/boxing.d"
 import RecordBadgeComponent from "@/components/badges/record-badge.component.vue"
 import LinkedFightsBadgeComponent from "@/components/badges/linked-fights-badge.component.vue"
 import WeightBadgeComponent from "@/components/badges/weight-badge.component.vue"
 import AgeBadgeComponent from "@/components/badges/age-badge.component.vue"
-import FightService from "@/services/fight.service"
-import fightService from "@/services/fight.service"
+import { useFightStore } from "@/stores/fight.store"
+import { useBoxerStore } from "@/stores/boxer.store"
+import { getBoxerDisplayName } from "@/utils/labels.utils"
+import { useTournamentBoxerStore } from "@/stores/tournamentBoxer.store"
 
 export default defineComponent({
     components: {
@@ -84,18 +99,45 @@ export default defineComponent({
             required: true,
         },
         opponent: {
-            type: Object as PropType<Boxer>,
+            type: Object as PropType<Opponent>,
             required: true,
         },
     },
     data() {
         let ret = {
-            store: fightService.store(),
-            fightService: FightService,
+            getBoxerDisplayName,
             ModalityErrorType: ModalityErrorType,
+            fightStore: useFightStore(),
+            boxerStore: useBoxerStore(),
+            boxerTournamentStore: useTournamentBoxerStore(),
+            loading: false,
         }
 
         return ret
+    },
+    watch: {
+        opponent: {
+            handler() {
+                this.loading = false
+            },
+        },
+    },
+    methods: {
+        addToFightCard(opponent: Opponent) {
+            this.loading = true
+            this.fightStore.addToFightCard(this.boxer, opponent)
+        },
+        removeFromFightCard(opponent: Opponent) {
+            if (!opponent.fightId) {
+                return
+            }
+            this.loading = true
+            this.fightStore.removeFromFightCard([opponent.fightId])
+        },
+        goToOpponentTile(opponent: Opponent) {
+            // this.$router.push({ name: "selector" })
+            this.$router.push({ name: "selector-tile", params: { id: opponent.id } })
+        },
     },
 })
 </script>

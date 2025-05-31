@@ -16,7 +16,7 @@
             </router-link>
         </div>
         <div
-            v-if="userStore.account != null"
+            v-if="uiStore.account != null"
             class="nav-item"
         >
             <router-link
@@ -28,7 +28,7 @@
             </router-link>
         </div>
         <div
-            v-if="userStore.account != null && fightStore.currentTournament != null"
+            v-if="uiStore.account != null && isTournamentSelected"
             class="nav-item"
         >
             <router-link
@@ -40,7 +40,7 @@
             </router-link>
         </div>
         <div
-            v-if="userStore.account != null && fightStore.currentTournament != null"
+            v-if="uiStore.account != null && isTournamentSelected"
             class="nav-item"
         >
             <router-link
@@ -49,13 +49,10 @@
                 active-class="active"
             >
                 Card
-                <span class="badge rounded-pill bg-primary">{{ getNbFights() }}</span>
+                <span class="badge rounded-pill bg-primary">{{ nbFights }}</span>
             </router-link>
         </div>
-        <div
-            v-if="userStore.authenticationAvailable"
-            class="nav-item dropdown ms-auto me-3"
-        >
+        <div class="nav-item dropdown ms-auto me-3">
             <div
                 class="border-0 d-flex align-items-center icon-img-2"
                 type="button"
@@ -63,17 +60,17 @@
                 aria-expanded="false"
             >
                 <i
-                    v-if="!userStore.account?.avatar"
+                    v-if="!uiStore.account?.picture"
                     class="bi bi-person-circle fs-2"
                 ></i>
                 <img
                     v-else
-                    :src="userStore.account.avatar"
+                    :src="uiStore.account.picture"
                     class="rounded-circle icon-img-2 align-text-bottom"
                 />
             </div>
             <ul class="dropdown-menu dropdown-menu-end">
-                <li v-if="userStore.account">
+                <li v-if="uiStore.account">
                     <a
                         class="dropdown-item"
                         @click="logout()"
@@ -83,7 +80,7 @@
                 <li v-else>
                     <a
                         class="dropdown-item"
-                        @click="userStore.authenticate()"
+                        @click="uiStore.authenticate()"
                         >Login</a
                     >
                 </li>
@@ -93,8 +90,9 @@
 </template>
 <script lang="ts">
 import Icon from "@/components/core/icon.component.vue"
-import { userStore } from "@/composables/user.composable"
-import fightService from "@/services/fight.service"
+import { useFightStore } from "@/stores/fight.store"
+import { useTournamentStore } from "@/stores/tournament.store"
+import { useUiStore } from "@/stores/ui.store"
 
 export default {
     components: {
@@ -102,16 +100,22 @@ export default {
     },
     data() {
         return {
-            userStore,
-            fightStore: fightService.store(),
+            uiStore: useUiStore(),
+            tournamentStore: useTournamentStore(),
+            fightStore: useFightStore(),
         }
     },
-    methods: {
-        getNbFights() {
-            return fightService.store().fightCard.length
+    computed: {
+        nbFights() {
+            return this.fightStore.fights.length
         },
+        isTournamentSelected(): boolean {
+            return this.tournamentStore.currentTournamentId != null
+        },
+    },
+    methods: {
         logout() {
-            userStore.logout()
+            this.uiStore.logout()
             this.$router.push("settings")
         },
     },

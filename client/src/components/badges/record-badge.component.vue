@@ -7,13 +7,13 @@
         }"
     >
         <Icon name="medal" />
-        {{ boxer.attributes.nbFights }}
+        {{ boxer.nbFights }}
     </span>
 </template>
 
 <script lang="ts">
 import { Boxer } from "@/types/boxing"
-import { ModalityError } from "@/types/modality"
+import { ModalityError, ModalityErrorType } from "@/shared/types/modality.type"
 import { PropType, defineComponent } from "vue"
 import IconComponent from "@/components/core/icon.component.vue"
 
@@ -26,10 +26,15 @@ export default defineComponent({
             type: Object as PropType<Boxer>,
             required: true,
         },
-        modalityError: {
-            type: Object as PropType<ModalityError>,
+        modalityErrors: {
+            type: Object as PropType<ModalityError[]>,
             required: false,
-            default: null,
+            default: [] as ModalityError[],
+        },
+    },
+    computed: {
+        modalityError(): boolean {
+            return this.modalityErrors.some((error) => error.type === ModalityErrorType.PRIZE_LIST)
         },
     },
 })

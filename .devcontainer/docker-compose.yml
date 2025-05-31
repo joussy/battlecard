@@ -1,0 +1,23 @@
+services:
+  battlecard:
+    image: mcr.microsoft.com/vscode/devcontainers/typescript-node:22
+    volumes:
+      - ../battlecard:/workspace/battlecard
+    depends_on:
+      - postgres
+    command: bash -c "while sleep 1000; do :; done"
+
+  postgres:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: battlecard
+    ports:
+      - "5432:5432"
+  gotenberg:
+    image: gotenberg/gotenberg:8
+    restart: unless-stopped
+    ports:
+      - "3001:3000"

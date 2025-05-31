@@ -13,7 +13,7 @@
 
 <script lang="ts">
 import { Boxer } from "@/types/boxing"
-import { ModalityError } from "@/types/modality"
+import { ModalityError, ModalityErrorType } from "@/shared/types/modality.type"
 import { PropType, defineComponent } from "vue"
 import IconComponent from "@/components/core/icon.component.vue"
 
@@ -26,15 +26,20 @@ export default defineComponent({
             type: Object as PropType<Boxer>,
             required: true,
         },
-        modalityError: {
-            type: Object as PropType<ModalityError>,
+        modalityErrors: {
+            type: Object as PropType<ModalityError[] | null>,
             required: false,
             default: null,
         },
     },
+    computed: {
+        modalityError() {
+            return this.modalityErrors?.some((error) => error.type == ModalityErrorType.WEIGHT)
+        },
+    },
     methods: {
         displayWeight() {
-            const weight = this.boxer.attributes.weight
+            const weight = this.boxer.weight
             return weight % 1 === 0 ? weight.toFixed(0) : weight.toFixed(1)
         },
     },

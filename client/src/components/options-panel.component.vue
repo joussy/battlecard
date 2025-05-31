@@ -1,25 +1,22 @@
 <template>
     <div class="max-width-md">
-        <div
-            v-if="userStore.authenticationAvailable"
-            class="card mb-3"
-        >
+        <div class="card mb-3">
             <div class="card-header"><i class="bi bi-person me-2" />Account</div>
             <div class="card-body">
                 <button
-                    v-if="!userStore.account"
+                    v-if="!uiStore.account"
                     class="btn btn-warning ms-2"
-                    @click="signIn()"
+                    @click="signInWithGoogle()"
                 >
-                    Sign In
+                    <i class="bi bi-google me-2"></i>Sign In with Google
                 </button>
                 <div
                     v-else
                     class="d-flex flex-row align-items-center"
                 >
                     <img
-                        v-if="userStore.account.avatar"
-                        :src="userStore.account.avatar"
+                        v-if="uiStore.account.picture"
+                        :src="uiStore.account.picture"
                         class="rounded-circle me-2 avatar-icon"
                         alt="User Avatar"
                     />
@@ -29,12 +26,12 @@
                         :style="{ 'font-size': '2.5rem' }"
                     ></i>
                     <div class="flex-grow-1">
-                        <strong>{{ userStore.account?.name }}</strong>
+                        <strong>{{ uiStore.account?.name }}</strong>
                         <div
                             class="text-muted"
                             style="font-size: 0.85rem"
                         >
-                            {{ userStore.account?.email }}
+                            {{ uiStore.account?.email }}
                         </div>
                     </div>
                     <button
@@ -109,36 +106,42 @@
 </template>
 <script lang="ts">
 import { defineComponent } from "vue"
-import { Gender } from "@/types/boxing.d"
-import { userStore } from "@/composables/user.composable"
-import fightService from "@/services/fight.service"
-import { uiStore } from "@/composables/ui.composable"
 import { UiTheme } from "@/types/ui"
+import { useUiStore } from "@/stores/ui.store"
+import { Gender } from "@/shared/types/modality.type"
 
 export default defineComponent({
     data() {
         return {
-            store: fightService.store(),
-            userStore,
-            uiStore,
+            uiStore: useUiStore(),
             Gender: Gender,
         }
     },
     async mounted() {
-        const response = await fetch("/api/hello", {
-            method: "GET",
+        // Listen for token from popup
+        window.addEventListener("message", async (event) => {
+            if (event.data && event.data.token) {
+                this.uiStore.jwtToken = event.data.token
+                await this.uiStore.setTokenAndFetchUser()
+            }
         })
-        console.log("hello")
+        // (Optional: handle token in URL for fallback)
+        const urlParams = new URLSearchParams(window.location.search)
+        const token = urlParams.get("token")
+        if (token) {
+            await this.uiStore.setTokenAndFetchUser()
+            window.history.replaceState({}, document.title, window.location.pathname)
+        }
     },
     methods: {
         setTheme(mode: UiTheme) {
-            uiStore.theme = mode
+            this.uiStore.setTheme(mode)
         },
-        async signIn() {
-            await userStore.authenticate()
+        signInWithGoogle() {
+            this.uiStore.authenticate()
         },
         logout() {
-            userStore.logout()
+            this.uiStore.logout()
         },
     },
 })
