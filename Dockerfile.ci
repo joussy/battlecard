@@ -11,6 +11,8 @@ RUN npm run build
 
 RUN find . -path ./node_modules -prune -o -print
 
+RUN mv ./public ./dist/server/public/
+
 # Run the application as a non-root user.
 USER node
 

@@ -1,0 +1,34 @@
+services:
+  battlecard:
+    build:
+        context: .
+    environment:
+        GOOGLE_CALLBACK_URL: "http://localhost:5174/api/auth/google/callback"
+        DB_HOST: "postgres"
+        DB_PORT: "5432"
+        DB_USER: "postgres"
+        DB_PASS: "postgres"
+        DB_NAME: "battlecard"
+        GOTENBERG_URL: "http://gotenberg:3000"
+        JWT_SECRET: "wefwef"
+        GOOGLE_CLIENT_ID: 'wefwef'
+        GOOGLE_CLIENT_SECRET: 'wefwef'
+    depends_on:
+      - postgres
+    ports:
+      - "3002:3000"
+#    command: bash -c "while sleep 1000; do :; done"
+  postgres:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: battlecard
+#    ports:
+#      - "5433:5432"
+  gotenberg:
+    image: gotenberg/gotenberg:8
+    restart: unless-stopped
+#    ports:
+#      - "3002:3000"
