@@ -29,7 +29,6 @@ jobs:
           npm ci
           echo "VITE_SERVER_URL=${{ vars.VITE_SERVER_URL }}" >> .env          
           npm run build
-      - run: cd server
       # - uses: actions/cache@v4
         # with:
           # path: ~/.npm
@@ -38,6 +37,7 @@ jobs:
             # ${{ runner.os }}-node-
       - name: Build backend
         run: |
+          cd server
           npm ci
       - name: Upload frontend artifact
         uses: actions/upload-artifact@v4
