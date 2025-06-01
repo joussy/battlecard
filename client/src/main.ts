@@ -5,6 +5,7 @@ import App from "@/pages/app.vue"
 import FightCardComponent from "@/components/fight-card.component.vue"
 import UploadComponent from "@/components/options-panel.component.vue"
 import BoxerSelectorComponent from "@/components/boxer-selector.component.vue"
+import ImportPage from "@/components/import.component.vue"
 
 import "./style.scss"
 import "bootstrap-icons/font/bootstrap-icons.css"
@@ -19,6 +20,7 @@ const routes = [
     { path: "/selector/tile/:id", name: "selector-tile", component: BoxerTileDetailsComponent },
     { path: "/settings", name: "settings", component: UploadComponent },
     { path: "/card", name: "card", component: FightCardComponent },
+    { path: "/import", name: "import", component: ImportPage },
 ]
 
 const router = createRouter({
