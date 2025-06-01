@@ -12,7 +12,8 @@ RUN npm run build
 
 RUN find . -path ./node_modules -prune -o -print
 
-RUN mv ./public ./dist/server/public/
+COPY --from=client-builder . ./dist/server/public/
+RUN find ./dist -path ./node_modules -prune -o -print
 
 # Run the application as a non-root user.
 USER node
