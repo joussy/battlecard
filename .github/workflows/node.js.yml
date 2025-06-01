@@ -30,12 +30,12 @@ jobs:
           echo "VITE_SERVER_URL=${{ vars.VITE_SERVER_URL }}" >> .env          
           npm run build
       - run: cd server
-      - uses: actions/cache@v4
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
+      # - uses: actions/cache@v4
+        # with:
+          # path: ~/.npm
+          # key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          # restore-keys: |
+            # ${{ runner.os }}-node-
       - name: Build backend
         run: |
           npm ci
