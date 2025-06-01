@@ -2,11 +2,6 @@ import { IModality } from "../fightModality/IModality"
 import { ModalityError } from "./modality"
 
 export interface Boxer {
-    attributes: BoxerAttributes
-    opponents: Readonly<Opponent[]>
-}
-
-export interface BoxerAttributes {
     id: string
     firstName: string
     lastName: string
@@ -19,26 +14,28 @@ export interface BoxerAttributes {
     gender: Gender
     license: string
     userId: string
+    category: string
+    categoryShort: string
+    eligibleFights?: number
+    selectedFights?: number
 }
 
-export interface Opponent {
-    boxer: Boxer
+export interface Opponent extends Boxer {
     modalityErrors: Readonly<ModalityError[]>
     weightDifference: number
     isEligible: boolean
+    fightId?: string
 }
 
-export enum Gender {
-    FEMALE,
-    MALE,
-}
 export interface Fight {
-    boxer1: Boxer
-    boxer2: Boxer
+    boxer1Id: string
+    boxer2Id: string
     modalityErrors: Readonly<ModalityError[]>
     id: string
     order: number
     tournamentId: string
+    roundDurationSeconds: number
+    rounds: number
 }
 
 export interface BoxingData {
@@ -74,4 +71,5 @@ export interface Tournament {
     id: string
     name: string
     userId: string
+    date: string
 }

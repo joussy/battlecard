@@ -1,13 +1,20 @@
 {
-    "name": "Devcontainer",
-    "image": "mcr.microsoft.com/vscode/devcontainers/typescript-node:22",
-    "customizations": {
-        "vscode": {
-            "extensions": ["Vue.volar", "ms-edgedevtools.vscode-edge-devtools"]
-        }
-    },
+    "name": "Battlecard + PostgreSQL",
+    "dockerComposeFile": "docker-compose.yml",
+    "service": "battlecard",
+    "workspaceFolder": "/workspace/battlecard",
+    "extensions": ["Vue.volar", "ms-edgedevtools.vscode-edge-devtools"],
     "postCreateCommand": {
         "server": "cd server && npm install",
         "client": "cd client && npm install"
+    },
+    "remoteEnv": {
+      "GOOGLE_CALLBACK_URL": "http://localhost:5173/api/auth/google/callback",
+      "DB_HOST": "postgres",
+      "DB_PORT": "5432",
+      "DB_USER": "postgres",
+      "DB_PASS": "postgres",
+      "DB_NAME": "battlecard",
+      "GOTENBERG_URL": "http://gotenberg:3000",
     }
 }

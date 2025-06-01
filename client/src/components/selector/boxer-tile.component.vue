@@ -6,25 +6,26 @@
         >
             <div class="d-flex justify-content-between">
                 <div>
-                    <IconComponent :name="boxer.attributes.gender == Gender.MALE ? 'male' : 'female'"></IconComponent>
-                    {{ fightService.getBoxerDisplayName(boxer.attributes) }}
+                    <IconComponent :name="boxer.gender == Gender.MALE ? 'male' : 'female'"></IconComponent>
+                    {{ getBoxerDisplayName(boxer) }}
                 </div>
                 <div
                     class="font-italic text-right"
                     style="font-size: 14px"
                 >
-                    {{ boxer.attributes.categoryShortText }}
+                    {{ boxer.categoryShortText }}
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-6 pb-1">
-                    <i>{{ boxer.attributes.club }}</i>
+                    <i>{{ boxer.club }}</i>
                 </div>
-                <div class="col-md-6 d-flex justify-content-end flex-wrap">
+                <div class="col-md-6 d-flex align-items-end justify-content-end flex-wrap">
                     <LinkedFightsBadgeComponent :boxer="boxer" />
                     <PossibleBadgeComponent
-                        :selected="boxer.opponents.filter((o) => o.isEligible).length"
-                        :available="boxer.opponents.length"
+                        v-if="boxer.eligibleFights"
+                        :selected="boxer.eligibleFights"
+                        :available="nbOpponents"
                     />
                     <AgeBadgeComponent :boxer="boxer" />
                     <RecordBadgeComponent :boxer="boxer" />
@@ -37,17 +38,20 @@
 
 <script lang="ts">
 import { PropType, defineComponent } from "vue"
-import { Gender, Boxer, Opponent } from "@/types/boxing.d"
-import { ModalityErrorType } from "@/types/modality.d"
+import { Boxer } from "@/types/boxing.d"
+import { Gender, ModalityErrorType } from "@/shared/types/modality.type"
 import RecordBadgeComponent from "@/components/badges/record-badge.component.vue"
 import AgeBadgeComponent from "@/components/badges/age-badge.component.vue"
 import WeightBadgeComponent from "@/components/badges/weight-badge.component.vue"
-import PossibleBadgeComponent from "@/components/badges/possible-badge.component.vue"
 import LinkedFightsBadgeComponent from "@/components/badges/linked-fights-badge.component.vue"
+import PossibleBadgeComponent from "@/components/badges/possible-badge.component.vue"
 
-import fightService from "@/services/fight.service"
-import { uiStore } from "@/composables/ui.composable"
 import IconComponent from "../core/icon.component.vue"
+import { useUiStore } from "@/stores/ui.store"
+import { useBoxerStore } from "@/stores/boxer.store"
+import { useTournamentBoxerStore } from "@/stores/tournamentBoxer.store"
+import { useTournamentStore } from "@/stores/tournament.store"
+import { getBoxerDisplayName } from "@/utils/labels.utils"
 
 export default defineComponent({
     components: {
@@ -63,25 +67,26 @@ export default defineComponent({
             type: Object as PropType<Boxer>,
             required: true,
         },
+        nbOpponents: {
+            type: Object as PropType<number | undefined>,
+            default: undefined,
+        },
     },
     emits: ["boxer-edit"],
     data() {
         return {
-            store: fightService.store(),
+            getBoxerDisplayName,
             Gender: Gender,
             ModalityErrorType: ModalityErrorType,
-            fightService: fightService,
+            uiStore: useUiStore(),
+            boxerStore: useBoxerStore(),
+            tournamentBoxerStore: useTournamentBoxerStore(),
+            tournamentStore: useTournamentStore(),
         }
     },
     methods: {
         boxerEdit(): void {
             this.$emit("boxer-edit")
-        },
-        getOpponentsToDisplay(): Readonly<Opponent[]> {
-            return this.boxer.opponents.filter((o) => {
-                if (uiStore.hideNonMatchableOpponents && !o.isEligible) return false
-                return true
-            })
         },
     },
 })

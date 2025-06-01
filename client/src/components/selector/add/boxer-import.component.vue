@@ -37,7 +37,7 @@
             class="btn-check"
             name="options-mode"
             value="api"
-            :disabled="!userStore.account?.apiEnabled"
+            :disabled="!uiStore.account?.apiEnabled"
         />
         <label
             for="api"
@@ -202,10 +202,9 @@
 </template>
 
 <script lang="ts">
-import fightService from "@/services/fight.service"
 import { defineComponent } from "vue"
-import { userStore } from "@/composables/user.composable"
 import IconComponent from "@/components/core/icon.component.vue"
+import { useUiStore } from "@/stores/ui.store"
 
 export default defineComponent({
     components: {
@@ -214,7 +213,7 @@ export default defineComponent({
     emits: ["boxer-add"],
     data() {
         let ret = {
-            userStore,
+            uiStore: useUiStore(),
             clipboard: `
 JOSHUA	Anthony	1	H	50.5	Club1	1/1/2010	A0001
 FURY	Tyson	2	H	51	Club2	2/1/2010	B0002
@@ -236,9 +235,10 @@ SERRANO	Amanda	8	F	57	Club1	8/4/2014	A0008
     },
     methods: {
         async processApiImport() {
-            await fightService.importFromApiByIds(this.apiClipboard)
+            //TODO: Implement API import
+            //await fightService.importFromApiByIds(this.apiClipboard)
         },
-        async processClipboard() {
+        processClipboard() {
             let delimiter = ""
             switch (this.csvDelimiter) {
                 case "comma":
@@ -253,7 +253,8 @@ SERRANO	Amanda	8	F	57	Club1	8/4/2014	A0008
                 default:
                     delimiter = `\t`
             }
-            await fightService.importFromCsv(this.clipboard, delimiter)
+            //TODO: Implement CSV import
+            //await fightService.importFromCsv(this.clipboard, delimiter)
             this.$emit("boxer-add")
         },
     },

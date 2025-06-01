@@ -4,7 +4,10 @@ FROM node:${NODE_VERSION}-alpine AS client-builder
 
 WORKDIR /usr/src/app
 
-COPY client/ ./
+COPY client/ client
+COPY shared/ shared
+
+WORKDIR /usr/src/app/client
 
 RUN npm ci
 
@@ -14,14 +17,17 @@ RUN npm run build
 
 FROM node:${NODE_VERSION}-alpine
 
+WORKDIR /usr/src
+
+COPY server/ /usr/src/server
+COPY shared/ /usr/src/shared
+
 WORKDIR /usr/src/server
-
-COPY server/ .
-
-COPY --from=client-builder /usr/src/app/dist public
 
 RUN npm ci
 RUN npm run build
+
+COPY --from=client-builder /usr/src/app/client/dist /usr/src/server/dist/server/public/
 
 ENV NODE_ENV production
 
@@ -32,4 +38,4 @@ USER node
 EXPOSE 3000
 
 # Run the application.
-CMD node dist/main
+CMD node /usr/src/server/dist/server/src/main

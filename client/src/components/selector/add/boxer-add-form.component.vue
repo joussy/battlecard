@@ -86,7 +86,7 @@
                     class="btn-check"
                     name="gender"
                     autocomplete="off"
-                    :value="Gender[Gender.FEMALE]"
+                    :value="Gender.FEMALE"
                 />
                 <label
                     class="btn btn-outline-danger"
@@ -101,7 +101,7 @@
                     class="btn-check"
                     name="gender"
                     autocomplete="off"
-                    :value="Gender[Gender.MALE]"
+                    :value="Gender.MALE"
                 />
                 <label
                     class="btn btn-outline-primary"
@@ -229,13 +229,14 @@
 import { defineComponent, PropType } from "vue"
 
 import { configure, defineRule, GenericObject, useForm } from "vee-validate"
-import { BoxerAttributes, Gender } from "@/types/boxing.d"
-import fightService from "@/services/fight.service"
-import { userStore } from "@/composables/user.composable"
+import { Boxer } from "@/types/boxing.d"
 import { isValid, format } from "date-fns"
 import IconComponent from "@/components/core/icon.component.vue"
 
 import { Toast } from "bootstrap"
+import { useBoxerStore } from "@/stores/boxer.store"
+import { useTournamentStore } from "@/stores/tournament.store"
+import { Gender } from "@/shared/types/modality.type"
 
 configure({
     validateOnInput: true,
@@ -277,7 +278,7 @@ export default defineComponent({
     components: { IconComponent },
     props: {
         boxer: {
-            type: Object as PropType<BoxerAttributes | null>,
+            type: Object as PropType<Boxer | null>,
             required: false,
             default: null,
         },
@@ -292,7 +293,7 @@ export default defineComponent({
             license: properties.boxer?.license ?? "",
             club: properties.boxer?.club ?? "",
             birthdate: isValid(properties.boxer?.birthDate) ? format(properties.boxer!.birthDate, "yyyy-MM-dd") : "",
-            gender: properties.boxer ? Gender[properties.boxer.gender] : Gender[Gender.FEMALE],
+            gender: properties.boxer ? properties.boxer.gender : Gender.FEMALE,
             id: properties.boxer?.id ?? "",
         }
 
@@ -318,24 +319,31 @@ export default defineComponent({
         const [gender] = defineField("gender")
         const [birthdate] = defineField("birthdate")
         const onSubmit = handleSubmit(async (form: GenericObject) => {
-            const boxerAttributes: BoxerAttributes = {
+            const boxerStore = useBoxerStore()
+            const tournamentStore = useTournamentStore()
+            let boxer: Boxer = {
                 birthDate: new Date(form.birthdate),
                 club: form.club,
                 firstName: form.firstname,
                 lastName: form.lastname,
-                gender: form.gender == Gender[Gender.FEMALE] ? Gender.FEMALE : Gender.MALE,
+                gender: form.gender == Gender.FEMALE ? Gender.FEMALE : Gender.MALE,
                 weight: parseInt(form.weight),
                 category: "",
                 categoryShortText: "",
                 license: form.license,
                 nbFights: 0,
                 id: form.id,
-                userId: userStore.getAccountOrThrow().id,
+                userId: "",
+                categoryShort: "",
             }
-            let boxer = await fightService.addBoxer(boxerAttributes)
+            if (form.id) {
+                boxer = await boxerStore.updateBoxer(boxer)
+            } else {
+                boxer = await boxerStore.createBoxer(boxer)
+            }
 
             if (boxer != null) {
-                emit("boxer-add", boxerAttributes)
+                emit("boxer-add", boxer)
             } else {
                 const toastEl = document.getElementById("errorToast") as HTMLElement
                 const toast = new Toast(toastEl)
@@ -357,7 +365,7 @@ export default defineComponent({
         }
     },
     mounted() {
-        this.clubsAutoCompleteList = fightService.getClubs()
+        this.clubsAutoCompleteList = []
     },
 })
 </script>

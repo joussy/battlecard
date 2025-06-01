@@ -8,22 +8,22 @@
             active-class="active"
         >
             <i
-                v-if="!userStore.account"
+                v-if="!uiStore.account"
                 class="bi bi-gear-fill fs-2"
             ></i>
             <i
-                v-else-if="!userStore.account.avatar"
+                v-else-if="!uiStore.account.picture"
                 class="bi bi-person-circle fs-2"
             ></i>
             <img
                 v-else
-                :src="userStore.account.avatar"
+                :src="uiStore.account.picture"
                 class="rounded-circle icon-img-2 align-text-bottom"
             />
             <div>Settings</div>
         </router-link>
         <router-link
-            v-if="userStore.account != null"
+            v-if="uiStore.account != null"
             :to="{ name: 'tournaments' }"
             class="nav-link text-center"
             :class="{ active: $route.path.startsWith('/tournaments') }"
@@ -35,7 +35,7 @@
             <div>Tournament</div>
         </router-link>
         <router-link
-            v-if="userStore.account && fightStore.currentTournament"
+            v-if="uiStore.account && tournamentStore.currentTournamentId"
             :to="{ name: 'selector' }"
             class="nav-link text-center"
             :class="{ active: $route.path.startsWith('/selector') }"
@@ -47,7 +47,7 @@
             <div>Selector</div>
         </router-link>
         <router-link
-            v-if="userStore.account && fightStore.currentTournament"
+            v-if="uiStore.account && tournamentStore.currentTournamentId"
             :to="{ name: 'card' }"
             class="nav-link text-center position-relative"
             active-class="active"
@@ -65,8 +65,10 @@
 </template>
 <script lang="ts">
 import Icon from "@/components/core/icon.component.vue"
-import { userStore } from "@/composables/user.composable"
-import fightService from "@/services/fight.service"
+import { useBoxerStore } from "@/stores/boxer.store"
+import { useFightStore } from "@/stores/fight.store"
+import { useTournamentStore } from "@/stores/tournament.store"
+import { useUiStore } from "@/stores/ui.store"
 
 export default {
     components: {
@@ -74,16 +76,18 @@ export default {
     },
     data() {
         return {
-            userStore,
-            fightStore: fightService.store(),
+            uiStore: useUiStore(),
+            boxerStore: useBoxerStore(),
+            fightStore: useFightStore(),
+            tournamentStore: useTournamentStore(),
         }
     },
     methods: {
         getNbFights() {
-            return this.fightStore.fightCard.length
+            return this.fightStore.fights.length
         },
         logout() {
-            userStore.logout()
+            this.uiStore.logout()
             this.$router.push("settings")
         },
     },

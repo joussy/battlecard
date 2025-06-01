@@ -1,15 +1,16 @@
 <template>
     <span
+        v-if="boxer.selectedFights"
         class="badge ms-1"
         :class="{
-            'text-bg-success': fightService.getNbFightsForBoxer(boxer) < 2,
-            'text-bg-warning': fightService.getNbFightsForBoxer(boxer) == 2,
-            'text-bg-danger': fightService.getNbFightsForBoxer(boxer) > 2,
-            invisible: fightService.getNbFightsForBoxer(boxer) < 1,
+            'text-bg-success': boxer.selectedFights < 2,
+            'text-bg-warning': boxer.selectedFights == 2,
+            'text-bg-danger': boxer.selectedFights > 2,
+            invisible: boxer.selectedFights < 1,
         }"
     >
         <Icon name="link" />
-        {{ fightService.getNbFightsForBoxer(boxer) }}
+        {{ boxer.selectedFights }}
     </span>
 </template>
 
@@ -17,9 +18,9 @@
 import { PropType, defineComponent } from "vue"
 
 import { Boxer } from "@/types/boxing"
-import { ModalityError } from "@/types/modality"
+import { ModalityError } from "@/shared/types/modality.type"
 import IconComponent from "@/components/core/icon.component.vue"
-import fightService from "@/services/fight.service"
+import { useBoxerStore } from "@/stores/boxer.store"
 
 export default defineComponent({
     components: {
@@ -30,16 +31,15 @@ export default defineComponent({
             type: Object as PropType<Boxer>,
             required: true,
         },
-        modalityError: {
-            type: Object as PropType<ModalityError>,
+        modalityErrors: {
+            type: Object as PropType<ModalityError[]>,
             required: false,
             default: null,
         },
     },
     data() {
         return {
-            store: fightService.store(),
-            fightService: fightService,
+            boxerStore: useBoxerStore(),
         }
     },
 })

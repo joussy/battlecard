@@ -29,6 +29,12 @@ jobs:
           npm ci
           echo "VITE_SERVER_URL=${{ vars.VITE_SERVER_URL }}" >> .env          
           npm run build
+      # - uses: actions/cache@v4
+        # with:
+          # path: ~/.npm
+          # key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          # restore-keys: |
+            # ${{ runner.os }}-node-
       - name: Build backend
         run: |
           cd server
@@ -91,7 +97,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: frontend-artifact
-          path: server/public
+          path: front-assets
 
       # Build and push Docker image with Buildx (don't push on PR)
       # https://github.com/docker/build-push-action
@@ -99,7 +105,8 @@ jobs:
         id: build-and-push
         uses: docker/build-push-action@0565240e2d4ab88bba5387d719585280857ece09 # v5.0.0
         with:
-          context: server
+          #context: .
+          build-contexts: front-assets=front-assets
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}

@@ -25,7 +25,7 @@
                 <ul class="nav nav-pills nav-fill mb-3">
                     <li class="nav-item">
                         <a
-                            class="nav-link"
+                            class="nav-link disabled"
                             aria-current="page"
                             href="#"
                             :class="{ active: displayMode == 'search' }"
@@ -44,7 +44,7 @@
                     </li>
                     <li class="nav-item">
                         <a
-                            class="nav-link"
+                            class="nav-link disabled"
                             aria-current="page"
                             href="#"
                             :class="{ active: displayMode == 'import' }"
@@ -81,11 +81,11 @@
 <script lang="ts">
 import { defineComponent } from "vue"
 
-import { uiStore } from "@/composables/ui.composable"
 import BoxerAddFormComponent from "./boxer-add-form.component.vue"
 import { closeModal } from "@/utils/ui.utils"
 import BoxerSearchComponent from "./boxer-search.component.vue"
 import BoxerImportComponent from "./boxer-import.component.vue"
+import { useUiStore } from "@/stores/ui.store"
 
 export default defineComponent({
     components: {
@@ -95,8 +95,8 @@ export default defineComponent({
     },
     data() {
         return {
-            uiStore,
-            displayMode: "search" as "search" | "create" | "import",
+            uiStore: useUiStore(),
+            displayMode: "create" as "search" | "create" | "import",
         }
     },
     mounted() {
@@ -108,11 +108,10 @@ export default defineComponent({
     },
     methods: {
         closeModal() {
-            console.log("ehho")
             closeModal("#boxerAddOffcanvasNavbar")
         },
         clear() {
-            this.displayMode = "search"
+            this.displayMode = "create"
         },
     },
 })

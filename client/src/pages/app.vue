@@ -10,9 +10,9 @@
 import { defineComponent, watch } from "vue"
 import MenuTopComponent from "@/components/menu/menu-top.component.vue"
 import MenuBottomComponent from "@/components/menu/menu-bottom.component.vue"
-import fightService from "@/services/fight.service"
-import { loadUserStore, userStore } from "@/composables/user.composable"
-import { loadUiStore, uiStore } from "@/composables/ui.composable"
+import { useUiStore } from "@/stores/ui.store"
+import { useTournamentStore } from "@/stores/tournament.store"
+import { useFightStore } from "@/stores/fight.store"
 
 export default defineComponent({
     components: {
@@ -24,30 +24,30 @@ export default defineComponent({
             currentPath: window.location.hash,
         }
     },
-    mounted() {
-        loadUiStore()
-        loadUserStore()
+    async mounted() {
+        const uiStore = useUiStore()
+        uiStore.loadUiStore()
+        const tournamentStore = useTournamentStore()
+        const fightStore = useFightStore()
+        await tournamentStore.fetchTournaments()
         watch(
-            () => [userStore.account],
+            () => [tournamentStore.currentTournamentId],
             async () => {
-                if (userStore.account == null) {
-                    uiStore.currentTournamentId = null
-                    this.$router.push("settings")
+                if (uiStore.account) {
+                    if (tournamentStore.currentTournamentId == null) {
+                        this.$router.push("tournaments")
+                    } else {
+                        await fightStore.fetchFights()
+                    }
                 }
-                await fightService.loadFightStore()
-                await fightService.setCurrentTournament(uiStore.currentTournamentId)
+                uiStore.saveUiStore()
             },
-            {
-                immediate: true,
-            }
+            { immediate: true }
         )
         watch(
-            () => [uiStore.currentTournamentId],
-            () => {
-                if (userStore.account && uiStore.currentTournamentId == null) {
-                    this.$router.push("tournaments")
-                }
-            }
+            () => [uiStore.theme, uiStore.hideNonMatchableOpponents, uiStore.hideFightersWithNoMatch, uiStore.jwtToken],
+            () => uiStore.saveUiStore(),
+            { deep: true }
         )
     },
 })

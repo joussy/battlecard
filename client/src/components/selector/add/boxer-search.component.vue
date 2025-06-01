@@ -49,8 +49,7 @@
 </template>
 
 <script lang="ts">
-import fightService from "@/services/fight.service"
-import { BoxerAttributes } from "@/types/boxing"
+import { Boxer } from "@/types/boxing"
 import { defineComponent } from "vue"
 
 export default defineComponent({
@@ -59,7 +58,7 @@ export default defineComponent({
         let ret = {
             license: null as string | null,
             timeout: null as ReturnType<typeof setTimeout> | null,
-            filteredResults: [] as BoxerAttributes[],
+            filteredResults: [] as Boxer[],
         }
         return ret
     },
@@ -71,22 +70,23 @@ export default defineComponent({
                 this.search()
             }, 400)
         },
-        async search() {
+        search() {
             const term = this.license?.toLowerCase().trim() || ""
             if (!term) {
                 this.filteredResults = []
                 return
             }
-            const boxers = await fightService.getAllBoxerAttributes()
-            this.filteredResults = boxers.filter(
-                (item) =>
-                    item.firstName.toLowerCase().includes(term) ||
-                    item.lastName.toLowerCase().includes(term) ||
-                    item.license.toLowerCase().includes(term)
-            )
+            //TODO: Implement the search logic to fetch boxers based on the term
+            // const boxers = await fightService.getAllBoxerAttributes()
+            // this.filteredResults = boxers.filter(
+            //     (item) =>
+            //         item.firstName.toLowerCase().includes(term) ||
+            //         item.lastName.toLowerCase().includes(term) ||
+            //         item.license.toLowerCase().includes(term)
+            // )
         },
-        async selectBoxer(boxer: BoxerAttributes) {
-            await fightService.addBoxerToTournament(boxer.id)
+        selectBoxer(boxer: Boxer) {
+            // await fightService.addBoxerToTournament(boxer.id)
             this.$emit("boxer-add", boxer)
         },
     },

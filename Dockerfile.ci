@@ -3,13 +3,17 @@ ARG NODE_VERSION=22
 FROM node:${NODE_VERSION}-alpine
 
 WORKDIR /usr/src/app
-COPY . .
-RUN ls -lR .
+COPY server /usr/src/app
+COPY shared /usr/src/shared
+RUN ls -lR /usr/src
 
 RUN npm install
 RUN npm run build
 
 RUN find . -path ./node_modules -prune -o -print
+
+COPY --from=front-assets . ./dist/app/public/
+RUN find ./dist -path ./node_modules -prune -o -print
 
 # Run the application as a non-root user.
 USER node
@@ -18,4 +22,4 @@ USER node
 EXPOSE 3000
 
 # Run the application.
-CMD node dist/main
+CMD node dist/app/src/main
