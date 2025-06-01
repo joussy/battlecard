@@ -10,13 +10,13 @@ services:
         DB_PASS: "postgres"
         DB_NAME: "battlecard"
         GOTENBERG_URL: "http://gotenberg:3000"
-        JWT_SECRET: "wefwef"
-        GOOGLE_CLIENT_ID: 'wefwef'
-        GOOGLE_CLIENT_SECRET: 'wefwef'
+        JWT_SECRET: <YOUR SELF-GENERATED JWT KEY HERE>
+        GOOGLE_CLIENT_ID: <GOOGLE CLIENT ID FROM GOOGLE CONSOLE>
+        GOOGLE_CLIENT_SECRET: <GOOGLE CLIENT ID FROM GOOGLE CONSOLE>
     depends_on:
       - postgres
     ports:
-      - "3002:3000"
+      - "3000:3000"
 #    command: bash -c "while sleep 1000; do :; done"
   postgres:
     image: postgres:16
@@ -25,10 +25,6 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: battlecard
-#    ports:
-#      - "5433:5432"
   gotenberg:
     image: gotenberg/gotenberg:8
     restart: unless-stopped
-#    ports:
-#      - "3002:3000"
