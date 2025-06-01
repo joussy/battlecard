@@ -9,25 +9,17 @@
             </div>
             <div class="flex-grow-1"></div>
             <button
-                class="btn btn-outline-danger mb-3 ms-2"
-                @click="clear()"
-            >
-                <i class="bi bi-trash" />
-            </button>
-            <button
                 class="btn btn-outline-success mb-3 ms-2"
                 data-bs-toggle="offcanvas"
                 data-bs-target="#boxerAddOffcanvasNavbar"
             >
                 <i class="bi bi-person-add" />
             </button>
-            <button class="btn btn-outline-secondary mb-3 ms-2">
-                <i class="bi bi-download" />
-            </button>
             <button
                 class="btn btn-outline-secondary mb-3 ms-2"
                 data-bs-toggle="offcanvas"
                 data-bs-target="#filtersOffcanvasNavbar"
+                disabled
             >
                 <span class="bi bi-funnel"></span>
             </button>
@@ -69,19 +61,16 @@ import BoxerTileComponent from "@/components/selector/boxer-tile.component.vue"
 import BoxerAddOffcanvasComponent from "@/components/selector/add/boxer-add-offcanvas.component.vue"
 
 import BoxerSelectorFiltersComponent from "@/components/selector/boxer-selector-filters.component.vue"
-import IconComponent from "./core/icon.component.vue"
 import { useTournamentStore } from "@/stores/tournament.store"
 import { useTournamentBoxerStore } from "@/stores/tournamentBoxer.store"
 import { useUiStore } from "@/stores/ui.store"
 import { useBoxerStore } from "@/stores/boxer.store"
-import { format } from "date-fns"
 
 export default defineComponent({
     components: {
         BoxerTileComponent: BoxerTileComponent,
         BoxerAddOffcanvasComponent: BoxerAddOffcanvasComponent,
         BoxerSelectorFiltersComponent: BoxerSelectorFiltersComponent,
-        Icon: IconComponent,
     },
     data() {
         return {
@@ -114,10 +103,6 @@ export default defineComponent({
         })
     },
     methods: {
-        async clear() {
-            if (this.selectedTournamentId == null) return
-            await this.tournamentBoxerStore.removeBoxersFromTournamentAll(this.selectedTournamentId)
-        },
         getBoxersToDisplay() {
             return this.boxersStore.boxers
         },

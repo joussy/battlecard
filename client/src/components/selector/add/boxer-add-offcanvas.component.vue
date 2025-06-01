@@ -25,7 +25,7 @@
                 <ul class="nav nav-pills nav-fill mb-3">
                     <li class="nav-item">
                         <a
-                            class="nav-link"
+                            class="nav-link disabled"
                             aria-current="page"
                             href="#"
                             :class="{ active: displayMode == 'search' }"
@@ -44,7 +44,7 @@
                     </li>
                     <li class="nav-item">
                         <a
-                            class="nav-link"
+                            class="nav-link disabled"
                             aria-current="page"
                             href="#"
                             :class="{ active: displayMode == 'import' }"
@@ -96,7 +96,7 @@ export default defineComponent({
     data() {
         return {
             uiStore: useUiStore(),
-            displayMode: "search" as "search" | "create" | "import",
+            displayMode: "create" as "search" | "create" | "import",
         }
     },
     mounted() {
@@ -111,7 +111,7 @@ export default defineComponent({
             closeModal("#boxerAddOffcanvasNavbar")
         },
         clear() {
-            this.displayMode = "search"
+            this.displayMode = "create"
         },
     },
 })
