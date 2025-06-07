@@ -1,202 +1,209 @@
 <template>
-    <fieldset class="mb-3">
-        <legend class="col-form-label pt-0">
-            <span class="badge rounded-pill bg-primary me-2">1</span>How do you want to import ?
-        </legend>
-        <input
-            id="csvfile"
-            v-model="importMode"
-            type="radio"
-            class="btn-check"
-            name="options-mode"
-            value="csv-file"
-        />
-        <label
-            for="csvfile"
-            class="btn btn-outline-secondary"
-            >CSV File</label
-        >
-        <input
-            id="csvclipboard"
-            v-model="importMode"
-            type="radio"
-            class="btn-check"
-            name="options-mode"
-            value="csv-clipboard"
-        />
-        <label
-            for="csvclipboard"
-            class="btn btn-outline-secondary"
-            >CSV from clipboard</label
-        >
-        <input
-            id="api"
-            v-model="importMode"
-            type="radio"
-            class="btn-check"
-            name="options-mode"
-            value="api"
-            :disabled="!uiStore.account?.apiEnabled"
-        />
-        <label
-            for="api"
-            class="btn btn-outline-secondary"
-            >API</label
-        >
-        <input
-            id="ffboxe"
-            v-model="importMode"
-            type="radio"
-            class="btn-check"
-            name="options-mode"
-            value="ffboxe"
-        />
-        <label
-            for="ffboxe"
-            class="btn btn-outline-secondary"
-            >FFBoxe</label
-        >
-    </fieldset>
-    <div
-        v-if="importMode == 'ffboxe'"
-        class="mb-3"
-    >
-        <div class="w-100 justify-content-center mb-3">
-            Connect to your
-            <button class="btn btn-sm btn-outline-primary">
-                <a
-                    target="_blank"
-                    href="https://extranet.ffboxe.com/extractions/licences"
-                >
-                    <IconComponent
-                        name="ffboxe-without-text"
-                        class="me-1"
-                    ></IconComponent
-                    >FFBoxe account</a
-                >
-            </button>
-            and extract your licences as CSV
-        </div>
-        <div class="mb-3">
-            <input
-                id="formFileDisabled"
-                class="form-control"
-                type="file"
-            />
-        </div>
-        <div class="mb-3">
-            <button class="btn btn-primary">Preview</button>
-        </div>
-    </div>
-
-    <div v-if="importMode == 'csv-file' || importMode == 'csv-clipboard'">
+    <div class="stepper">
         <fieldset class="mb-3">
             <legend class="col-form-label pt-0">
-                <span class="badge rounded-pill bg-primary me-2">2</span>Choose a field separator
+                <span class="badge rounded-pill bg-primary me-2"><span class="step-badge"></span></span>How do you want
+                to import ?
             </legend>
             <input
-                id="tab"
-                v-model="csvDelimiter"
+                id="csvfile"
+                v-model="importMode"
                 type="radio"
                 class="btn-check"
-                name="options-csv"
-                value="tab"
+                name="options-mode"
+                value="csv-file"
             />
             <label
-                for="tab"
+                for="csvfile"
                 class="btn btn-outline-secondary"
-                >Tab</label
+                >CSV File</label
             >
             <input
-                id="semi-column"
-                v-model="csvDelimiter"
+                id="csvclipboard"
+                v-model="importMode"
                 type="radio"
                 class="btn-check"
-                name="options-csv"
-                value="semi-column"
+                name="options-mode"
+                value="csv-clipboard"
             />
             <label
-                for="semi-column"
+                for="csvclipboard"
                 class="btn btn-outline-secondary"
-                >Semi-column</label
+                >CSV from clipboard</label
             >
             <input
-                id="comma"
-                v-model="csvDelimiter"
+                id="api"
+                v-model="importMode"
                 type="radio"
                 class="btn-check"
-                name="options-csv"
-                value="comma"
+                name="options-mode"
+                value="api"
+                :disabled="!uiStore.account?.apiEnabled"
             />
             <label
-                for="comma"
+                for="api"
                 class="btn btn-outline-secondary"
-                >Comma</label
+                >API</label
+            >
+            <input
+                id="ffboxe"
+                v-model="importMode"
+                type="radio"
+                class="btn-check"
+                name="options-mode"
+                value="ffboxe"
+            />
+            <label
+                for="ffboxe"
+                class="btn btn-outline-secondary"
+                >FFBoxe</label
             >
         </fieldset>
-        <div v-if="csvDelimiter">
-            <div v-if="importMode == 'csv-clipboard'">
-                <legend class="col-form-label pt-0">
-                    <span class="badge rounded-pill bg-primary me-2">3</span>Paste your clipboard
-                </legend>
-                <textarea
-                    v-model="clipboard"
-                    class="d-block w-100 mb-2"
+        <div
+            v-if="importMode == 'ffboxe'"
+            class="mb-3"
+        >
+            <div class="w-100 justify-content-center mb-3">
+                Connect to your
+                <button class="btn btn-sm btn-outline-primary">
+                    <a
+                        target="_blank"
+                        href="https://extranet.ffboxe.com/extractions/licences"
+                    >
+                        <IconComponent
+                            name="ffboxe-without-text"
+                            class="me-1"
+                        ></IconComponent
+                        >FFBoxe account</a
+                    >
+                </button>
+                and extract your licences as CSV
+            </div>
+            <div class="mb-3">
+                <input
+                    id="formFileDisabled"
+                    class="form-control"
+                    type="file"
                 />
             </div>
-            <div v-if="importMode == 'csv-file'">This feature is coming very soon !</div>
             <div class="mb-3">
-                <button
-                    class="btn btn-outline-light me-2"
-                    type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#requiredColumns"
-                    aria-expanded="false"
-                    aria-controls="requiredColumns"
-                >
-                    <i class="bi bi-book me-2"></i><i>Show Columns Mapping</i>
-                </button>
-                <button
-                    class="btn btn-primary"
-                    @click="previewCsvText()"
-                >
-                    Preview
-                </button>
-            </div>
-            <!-- List (always shown on md and up, collapsible on small screens) -->
-            <div
-                id="requiredColumns"
-                class="collapse"
-            >
-                <ul class="list-group">
-                    <li class="list-group-item">Last Name</li>
-                    <li class="list-group-item">First Name</li>
-                    <li class="list-group-item">Fights</li>
-                    <li class="list-group-item">Gender</li>
-                    <li class="list-group-item">Weight</li>
-                    <li class="list-group-item">Club</li>
-                    <li class="list-group-item">Birth Date</li>
-                    <li class="list-group-item">License</li>
-                </ul>
+                <button class="btn btn-primary">Preview</button>
             </div>
         </div>
-    </div>
-    <div v-if="importMode == 'api'">
-        <legend class="col-form-label pt-0">
-            <span class="badge rounded-pill bg-primary me-2">2</span>Query the API
-        </legend>
-        <textarea
-            v-model="apiClipboard"
-            class="d-block w-100 mb-2"
+
+        <div v-if="importMode == 'csv-file' || importMode == 'csv-clipboard'">
+            <fieldset class="mb-3">
+                <legend class="col-form-label pt-0">
+                    <span class="badge rounded-pill bg-primary me-2"><span class="step-badge"></span></span>Choose a
+                    field separator
+                </legend>
+                <input
+                    id="tab"
+                    v-model="csvDelimiter"
+                    type="radio"
+                    class="btn-check"
+                    name="options-csv"
+                    value="tab"
+                />
+                <label
+                    for="tab"
+                    class="btn btn-outline-secondary"
+                    >Tab</label
+                >
+                <input
+                    id="semi-column"
+                    v-model="csvDelimiter"
+                    type="radio"
+                    class="btn-check"
+                    name="options-csv"
+                    value="semi-column"
+                />
+                <label
+                    for="semi-column"
+                    class="btn btn-outline-secondary"
+                    >Semi-column</label
+                >
+                <input
+                    id="comma"
+                    v-model="csvDelimiter"
+                    type="radio"
+                    class="btn-check"
+                    name="options-csv"
+                    value="comma"
+                />
+                <label
+                    for="comma"
+                    class="btn btn-outline-secondary"
+                    >Comma</label
+                >
+            </fieldset>
+            <div v-if="csvDelimiter">
+                <div v-if="importMode == 'csv-clipboard'">
+                    <legend class="col-form-label pt-0">
+                        <span class="badge rounded-pill bg-primary me-2"><span class="step-badge"></span></span>Paste
+                        your clipboard
+                    </legend>
+                    <textarea
+                        v-model="clipboard"
+                        class="d-block w-100 mb-2"
+                    />
+                </div>
+                <div v-if="importMode == 'csv-file'">This feature is coming very soon !</div>
+                <div class="mb-3">
+                    <button
+                        class="btn btn-outline-light me-2"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#requiredColumns"
+                        aria-expanded="false"
+                        aria-controls="requiredColumns"
+                    >
+                        <i class="bi bi-book me-2"></i><i>Show Columns Mapping</i>
+                    </button>
+                    <button
+                        class="btn btn-primary"
+                        @click="previewCsvText()"
+                    >
+                        Preview
+                    </button>
+                </div>
+                <!-- List (always shown on md and up, collapsible on small screens) -->
+                <div
+                    id="requiredColumns"
+                    class="collapse"
+                >
+                    <ul class="list-group">
+                        <li class="list-group-item">Last Name</li>
+                        <li class="list-group-item">First Name</li>
+                        <li class="list-group-item">Fights</li>
+                        <li class="list-group-item">Gender</li>
+                        <li class="list-group-item">Weight</li>
+                        <li class="list-group-item">Club</li>
+                        <li class="list-group-item">Birth Date</li>
+                        <li class="list-group-item">License</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div v-if="importMode == 'api'">
+            <legend class="col-form-label pt-0">
+                <span class="badge rounded-pill bg-primary me-2"><span class="step-badge"></span></span>Query the API
+            </legend>
+            <textarea
+                v-model="apiClipboard"
+                class="d-block w-100 mb-2"
+            />
+            <div class="mb-3">
+                <button class="btn btn-primary">Preview</button>
+            </div>
+        </div>
+        <span class="badge rounded-pill bg-primary me-2 mb-3"><span class="step-badge"></span></span>Preview the data
+        and finalize import
+        <ImportTableComponent
+            :input-boxers="rows"
+            :add-row-allowed="false"
         />
-        <div class="mb-3">
-            <button class="btn btn-primary">Preview</button>
-        </div>
     </div>
-    <ImportTableComponent
-        :input-boxers="rows"
-        :add-row-allowed="false"
-    />
 </template>
 <script lang="ts">
 import ImportTableComponent from "@/components/import/import-table.component.vue"
@@ -218,6 +225,7 @@ export default defineComponent({
             uiStore: useUiStore(),
             importMode: "" as "" | "csv-file" | "csv-clipboard" | "api" | "ffboxe",
             csvDelimiter: "" as "" | CsvDelimiter,
+            stepperIndex: 0,
             clipboard: "",
             csvClipboardSample: `
 JOSHUA	Anthony	1	M	50.5	Club1	1/1/2010	A0001
@@ -303,6 +311,15 @@ SERRANO	Amanda	8	F	57	Club1	8/4/2014	A0008
 })
 </script>
 <style scoped>
+.stepper {
+    counter-reset: step;
+}
+.step-badge {
+    counter-increment: step;
+}
+.step-badge::before {
+    content: counter(step);
+}
 textarea {
     word-break: break-all;
     height: 300px;
