@@ -197,12 +197,14 @@
                 <button class="btn btn-primary">Preview</button>
             </div>
         </div>
-        <span class="badge rounded-pill bg-primary me-2 mb-3"><span class="step-badge"></span></span>Preview the data
-        and finalize import
-        <ImportTableComponent
-            :input-boxers="rows"
-            :add-row-allowed="false"
-        />
+        <div v-if="showImportTable">
+            <span class="badge rounded-pill bg-primary me-2 mb-3"><span class="step-badge"></span></span>Preview the
+            data and finalize import
+            <ImportTableComponent
+                :input-boxers="rows"
+                :add-row-allowed="false"
+            />
+        </div>
     </div>
 </template>
 <script lang="ts">
@@ -225,7 +227,7 @@ export default defineComponent({
             uiStore: useUiStore(),
             importMode: "" as "" | "csv-file" | "csv-clipboard" | "api" | "ffboxe",
             csvDelimiter: "" as "" | CsvDelimiter,
-            stepperIndex: 0,
+            showImportTable: false,
             clipboard: "",
             csvClipboardSample: `
 JOSHUA	Anthony	1	M	50.5	Club1	1/1/2010	A0001
@@ -242,51 +244,23 @@ SERRANO	Amanda	8	F	57	Club1	8/4/2014	A0008
 279689,52
 `,
             rows: [
-                {
-                    name: "Smith",
-                    firstname: "John",
-                    fights: 5,
-                    gender: Gender.MALE,
-                    weight: 75,
-                    club: "Red Dragons",
-                    birth_date: "2000-01-01",
-                    license: "A12345",
-                },
-                {
-                    name: "Doe",
-                    firstname: "Jane",
-                    gender: Gender.FEMALE,
-                    weight: 60,
-                    club: "Blue Tigers",
-                    birth_date: "2002-05-15",
-                    license: "B67890",
-                },
-                {
-                    name: "Brown",
-                    firstname: "Charlie",
-                    fights: 2,
-                    gender: Gender.MALE,
-                    weight: 60,
-                    club: "Green Bears",
-                    birth_date: "2001-09-10",
-                    license: "A12345", // duplicate license
-                },
-                {
-                    name: "White",
-                    firstname: "Emily",
-                    fights: 4,
-                    gender: Gender.FEMALE,
-                    weight: 60,
-                    club: "Yellow Foxes",
-                    birth_date: "2003-12-22",
-                    license: "C54321",
-                },
+                // {
+                //     name: "Smith",
+                //     firstname: "John",
+                //     fights: 5,
+                //     gender: Gender.MALE,
+                //     weight: 75,
+                //     club: "Red Dragons",
+                //     birth_date: "2000-01-01",
+                //     license: "A12345",
+                // },
             ] as ApiImportBoxer[],
         }
     },
     watch: {
         csvDelimiter(newValue) {
-            console.log("CSV delimiter changed to:", newValue)
+            this.showImportTable = false
+
             if (newValue === "semi-column") {
                 this.clipboard = this.csvClipboardSample.replace(/\t/g, ";")
             } else if (newValue === "comma") {
@@ -294,6 +268,9 @@ SERRANO	Amanda	8	F	57	Club1	8/4/2014	A0008
             } else {
                 this.clipboard = this.csvClipboardSample
             }
+        },
+        importMode(newValue) {
+            this.showImportTable = false
         },
     },
     methods: {
@@ -306,6 +283,7 @@ SERRANO	Amanda	8	F	57	Club1	8/4/2014	A0008
             console.log("Preview result:", res.boxers)
             this.rows = [...res.boxers]
             console.log("this.rows:", this.rows)
+            this.showImportTable = true
         },
     },
 })
