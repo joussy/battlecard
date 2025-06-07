@@ -3,6 +3,7 @@ import {
   ImportBoxersDto,
   ImportBoxersResponseDto,
   BoxerImportErrorDto,
+  ImportBoxerDto,
 } from '../dtos/import.dto';
 import { AuthenticatedUser } from '@/interfaces/auth.interface';
 import { BoxerService } from './boxer.service';
@@ -22,18 +23,18 @@ export class ImportService {
   ) {}
 
   async verifyBoxers(
-    dto: ImportBoxersDto,
+    boxers: ImportBoxerDto[],
     user: AuthenticatedUser,
   ): Promise<BoxerImportErrorDto[]> {
     const errors: BoxerImportErrorDto[] = [];
     // Check for duplicate licenses in the import payload
     const licenseCount: Record<string, number> = {};
-    dto.boxers.forEach((boxer) => {
+    boxers.forEach((boxer) => {
       if (boxer.license) {
         licenseCount[boxer.license] = (licenseCount[boxer.license] || 0) + 1;
       }
     });
-    dto.boxers.forEach((boxer, i) => {
+    boxers.forEach((boxer, i) => {
       if (boxer.license && licenseCount[boxer.license] > 1) {
         errors.push({
           message: 'Duplicate license in import',
@@ -43,7 +44,7 @@ export class ImportService {
       }
     });
 
-    const licenses = dto.boxers.map((b) => b.license);
+    const licenses = boxers.map((b) => b.license);
     if (licenses.length > 0) {
       const dbBoxers = await this.boxerRepository.find({
         where: {
@@ -53,7 +54,7 @@ export class ImportService {
 
       dbBoxers.forEach((dbBoxer) => {
         // Find all rows in the import with this license
-        dto.boxers.forEach((boxer, i) => {
+        boxers.forEach((boxer, i) => {
           if (boxer.license === dbBoxer.license) {
             errors.push({
               message: 'License already exists for this user',
@@ -64,24 +65,26 @@ export class ImportService {
         });
       });
     }
+
     return errors;
   }
 
   async importBoxers(
-    dto: ImportBoxersDto,
+    boxers: ImportBoxerDto[],
+    verify: boolean,
     user: AuthenticatedUser,
   ): Promise<ImportBoxersResponseDto> {
-    const errors = await this.verifyBoxers(dto, user);
-    if (errors.length > 0) {
+    const errors = await this.verifyBoxers(boxers, user);
+    if (verify || errors.length > 0) {
       return {
-        success: false,
-        message: `Import aborted: ${errors.length} duplicate license error(s) found.`,
+        success: errors.length === 0,
+        message: '',
         errors,
       };
     }
     let imported = 0;
-    for (let i = 0; i < dto.boxers.length; i++) {
-      const boxer = dto.boxers[i];
+    for (let i = 0; i < boxers.length; i++) {
+      const boxer = boxers[i];
       try {
         // Map DTO fields to ApiBoxerCreate
         const boxerCreate: ApiBoxerCreate = {

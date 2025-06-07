@@ -19,6 +19,6 @@ export class ImportController {
     @Body() dto: ImportBoxersDto,
     @User() user: AuthenticatedUser,
   ): Promise<ImportBoxersResponseDto> {
-    return this.importService.importBoxers(dto, user);
+    return this.importService.importBoxers(dto.boxers, dto.verify, user);
   }
 }

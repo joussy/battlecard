@@ -122,15 +122,26 @@
         <button
             class="btn btn-warning mt-3"
             type="button"
+            :disabled="canImport"
             @click="verify"
         >
+            <i class="bi bi-check2-circle"></i>
             Verify
         </button>
+        <button
+            class="btn btn-primary mt-3 ms-2"
+            type="button"
+            :disabled="!canImport"
+        >
+            <i class="bi bi-cloud-arrow-up"></i>
+            Import
+        </button>
+        <div>{{ importMessage }}</div>
     </div>
 </template>
 
 <script lang="ts">
-import { nextTick } from "vue"
+import { nextTick, watch } from "vue"
 import bootstrapInstance from "@/utils/bootstrap.singleton"
 import dbManager from "@/managers/api.manager"
 import { ApiImportBoxer } from "@/shared/types/api"
@@ -167,7 +178,7 @@ export default {
                     weight: 75,
                     club: "Red Dragons",
                     birthDate: "2000-01-01",
-                    license: "A12345",
+                    license: "A12344",
                     error: "",
                 },
                 {
@@ -218,10 +229,30 @@ export default {
                 birthDate: "",
                 license: "",
             } as Record<string, string | number>,
+            dirty: true,
+            importMessage: "",
         }
+    },
+    computed: {
+        canImport(): boolean {
+            // Check if there are any rows with errors
+            return (
+                this.rows.every((row: Record<string, string | number>) => !row.error) &&
+                this.rows.length > 0 &&
+                !this.dirty
+            )
+        },
     },
     mounted() {
         this.enableTooltips()
+        watch(
+            () => this.dirty,
+            (newValue) => {
+                if (newValue) {
+                    this.importMessage = ""
+                }
+            }
+        )
     },
     methods: {
         startEdit(idx: number) {
@@ -231,6 +262,7 @@ export default {
         saveEdit(idx: number) {
             this.rows[idx] = { ...this.rows[idx], ...this.editRow }
             this.editIdx = null
+            this.dirty = true
             nextTick(() => this.enableTooltips())
         },
         cancelEdit() {
@@ -253,6 +285,7 @@ export default {
             })
             this.editIdx = this.rows.length - 1
             this.editRow = { ...this.rows[this.rows.length - 1] }
+            this.dirty = true
             nextTick(() => this.enableTooltips())
         },
         enableTooltips() {
@@ -282,6 +315,13 @@ export default {
                 verify: true,
                 boxers: boxersToVerify,
             })
+            this.importMessage = ""
+            if (importResult.message) this.importMessage = importResult.message
+            else if (importResult.errors.length > 0) {
+                this.importMessage = `Found ${importResult.errors.length} errors. Fix them before importing.`
+            } else {
+                this.importMessage = "Verification successful, no errors found. You can import now."
+            }
             // Clear previous errors
             this.rows.forEach((row: Record<string, string | number>) => {
                 row.error = ""
@@ -293,6 +333,7 @@ export default {
                     row.error = error.message
                 }
             }
+            this.dirty = false
             nextTick(() => this.enableTooltips())
         },
     },
