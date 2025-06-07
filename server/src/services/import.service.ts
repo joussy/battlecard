@@ -7,10 +7,19 @@ import {
 import { AuthenticatedUser } from '@/interfaces/auth.interface';
 import { BoxerService } from './boxer.service';
 import { ApiBoxerCreate } from '@/shared/types/api';
+import { TournamentService } from './tournament.service';
+import { Repository } from 'typeorm';
+import { Boxer } from '@/entities/boxer.entity';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class ImportService {
-  constructor(private readonly boxerService: BoxerService) {}
+  constructor(
+    private readonly boxerService: BoxerService,
+    private readonly tournamentService: TournamentService,
+    @InjectRepository(Boxer)
+    private readonly boxerRepository: Repository<Boxer>,
+  ) {}
 
   async verifyBoxers(
     dto: ImportBoxersDto,
@@ -28,26 +37,27 @@ export class ImportService {
       if (boxer.license && licenseCount[boxer.license] > 1) {
         errors.push({
           message: 'Duplicate license in import',
-          row: i + 1,
+          row: i,
           field: 'license',
         });
       }
     });
-    // Check for existing boxers in DB with the same license for this user
+
     const licenses = dto.boxers.map((b) => b.license);
     if (licenses.length > 0) {
-      // Query the DB for all boxers with these licenses and userId
-      // Use the boxerService's repository directly for efficiency
-      const dbBoxers = await this.boxerService['boxerRepository'].find({
-        where: licenses.map((license) => ({ license, userId: user.id })),
+      const dbBoxers = await this.boxerRepository.find({
+        where: {
+          userId: user.id,
+        },
       });
+
       dbBoxers.forEach((dbBoxer) => {
         // Find all rows in the import with this license
         dto.boxers.forEach((boxer, i) => {
           if (boxer.license === dbBoxer.license) {
             errors.push({
               message: 'License already exists for this user',
-              row: i + 1,
+              row: i,
               field: 'license',
             });
           }
@@ -98,7 +108,7 @@ export class ImportService {
         }
         errors.push({
           message,
-          row: i + 1,
+          row: i,
           field: '',
         });
       }
