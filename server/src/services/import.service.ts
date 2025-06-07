@@ -1,17 +1,44 @@
 import { Injectable } from '@nestjs/common';
-import {
-  ImportBoxersResponseDto,
-  BoxerImportErrorDto,
-  ImportBoxerDto,
-} from '../dtos/import.dto';
 import { AuthenticatedUser } from '@/interfaces/auth.interface';
 import { BoxerService } from './boxer.service';
-import { ApiBoxerCreate } from '@/shared/types/api';
+import {
+  ApiBoxerCreate,
+  ApiBoxerImportError,
+  ApiImportBoxer,
+  ApiImportBoxersResponse,
+  ApiPreviewBoxersResponse,
+  CsvDelimiter,
+  getCsvDelimiterFromType,
+} from '@/shared/types/api';
 import { TournamentService } from './tournament.service';
 import { Repository } from 'typeorm';
 import { Boxer } from '@/entities/boxer.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Gender } from '@/shared/types/modality.type';
+import { parse } from 'csv-parse';
+
+function parseCsvAsync(csvString: string, options = {}): Promise<unknown[]> {
+  return new Promise((resolve, reject) => {
+    parse(
+      csvString,
+      { columns: true, trim: true, ...options },
+      (err, records: unknown[]) => {
+        if (err) reject(err);
+        else resolve(records);
+      },
+    );
+  });
+}
+
+// CSV column indexes
+const CSV_IDX_NAME = 0;
+const CSV_IDX_FIRSTNAME = 1;
+const CSV_IDX_FIGHTS = 2;
+const CSV_IDX_GENDER = 3;
+const CSV_IDX_WEIGHT = 4;
+const CSV_IDX_CLUB = 5;
+const CSV_IDX_BIRTH_DATE = 6;
+const CSV_IDX_LICENSE = 7;
 
 @Injectable()
 export class ImportService {
@@ -22,11 +49,60 @@ export class ImportService {
     private readonly boxerRepository: Repository<Boxer>,
   ) {}
 
-  async verifyBoxers(
-    boxers: ImportBoxerDto[],
+  async previewBoxersFromCsv(
+    payload: string,
+    csvDelimiter: CsvDelimiter,
     user: AuthenticatedUser,
-  ): Promise<BoxerImportErrorDto[]> {
-    const errors: BoxerImportErrorDto[] = [];
+  ): Promise<ApiPreviewBoxersResponse> {
+    // Parse the CSV payload using csv-parse
+    const res = await parseCsvAsync(payload, {
+      columns: false, // Parse as array of arrays
+      skip_empty_lines: true,
+      delimiter: getCsvDelimiterFromType(csvDelimiter),
+    });
+    if (!res || res.length === 0) {
+      return {
+        success: false,
+        message: 'No data found in CSV',
+        boxers: [],
+      };
+    }
+    // Map the parsed CSV data to ImportBoxerDto using array indices
+    const parsed: ApiImportBoxer[] = (res as string[][]).map(
+      (row: string[]) => {
+        const inputGender: string = row[CSV_IDX_GENDER]?.toUpperCase();
+        let gender: Gender | undefined = undefined;
+        if (inputGender === 'M') {
+          gender = Gender.MALE;
+        } else if (inputGender === 'F') {
+          gender = Gender.FEMALE;
+        }
+
+        const entry: ApiImportBoxer = {
+          name: row[CSV_IDX_NAME] || '',
+          firstname: row[CSV_IDX_FIRSTNAME] || '',
+          // fights: row[CSV_IDX_FIGHTS] ? parseInt(row[CSV_IDX_FIGHTS], 10) : undefined, // optional
+          gender,
+          weight: row[CSV_IDX_WEIGHT] ? parseFloat(row[CSV_IDX_WEIGHT]) : 0,
+          club: row[CSV_IDX_CLUB] || '',
+          birth_date: row[CSV_IDX_BIRTH_DATE] || '',
+          license: row[CSV_IDX_LICENSE] || '',
+        };
+        return entry;
+      },
+    );
+    return {
+      boxers: parsed,
+      success: true,
+      message: 'CSV preview successful',
+    };
+  }
+
+  async verifyBoxers(
+    boxers: ApiImportBoxer[],
+    user: AuthenticatedUser,
+  ): Promise<ApiBoxerImportError[]> {
+    const errors: ApiBoxerImportError[] = [];
     // Check for duplicate licenses in the import payload
     const licenseCount: Record<string, number> = {};
     boxers.forEach((boxer) => {
@@ -129,10 +205,10 @@ export class ImportService {
   }
 
   async importBoxers(
-    boxers: ImportBoxerDto[],
+    boxers: ApiImportBoxer[],
     verify: boolean,
     user: AuthenticatedUser,
-  ): Promise<ImportBoxersResponseDto> {
+  ): Promise<ApiImportBoxersResponse> {
     const errors = await this.verifyBoxers(boxers, user);
     if (verify || errors.length > 0) {
       return {
@@ -153,7 +229,7 @@ export class ImportService {
           nbFights: undefined,
           club: boxer.club,
           weight: boxer.weight,
-          gender: boxer.gender,
+          gender: boxer.gender as Gender,
           license: boxer.license,
         };
         await this.boxerService.create(boxerCreate, user);

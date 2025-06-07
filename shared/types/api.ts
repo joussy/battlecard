@@ -155,7 +155,7 @@ export interface ApiImportBoxer {
   license: string;
 }
 
-export interface ApiImportBoxersDto {
+export interface ApiImportBoxers {
   verify: boolean;
   boxers: ApiImportBoxer[];
 }
@@ -170,4 +170,32 @@ export interface ApiImportBoxersResponse {
   success: boolean;
   message: string;
   errors: ApiBoxerImportError[];
+}
+
+// PREVIEW
+
+export interface ApiPreviewBoxersCsv {
+  payload: string;
+  csvDelimiter: CsvDelimiter;
+}
+
+export interface ApiPreviewBoxersResponse {
+  success: boolean;
+  message: string;
+  boxers: ApiImportBoxer[];
+}
+
+export type CsvDelimiter = "tab" | "semi-column" | "comma";
+
+export function getCsvDelimiterFromType(delimiter: CsvDelimiter): string {
+    switch (delimiter) {
+        case "tab":
+            return "\t";
+        case "semi-column":
+            return ";";
+        case "comma":
+            return ",";
+        default:
+            throw new Error(`Unknown CSV delimiter type: ${delimiter}`);
+    }
 }

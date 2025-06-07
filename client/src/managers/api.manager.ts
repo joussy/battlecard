@@ -7,7 +7,9 @@ import {
     ApiTournament,
     ApiTournament_Boxer,
     ApiImportBoxersResponse,
-    ApiImportBoxersDto,
+    ApiImportBoxers,
+    ApiPreviewBoxersResponse,
+    ApiPreviewBoxersCsv,
 } from "@/shared/types/api"
 import { get, mutate } from "@/utils/manager.utils"
 
@@ -93,8 +95,17 @@ export class ApiManager {
         )
     }
     // Import
-    importBoxers(importBoxers: ApiImportBoxersDto): Promise<ApiImportBoxersResponse> {
+    importBoxers(importBoxers: ApiImportBoxers): Promise<ApiImportBoxersResponse> {
         return mutate<ApiImportBoxersResponse>("/api/import", "POST", importBoxers, "Failed to import boxers", false)
+    }
+    previewBoxersFromText(payload: string, csvDelimiter: string) {
+        return mutate<ApiPreviewBoxersResponse>(
+            "/api/import/previewFromCsvText",
+            "POST",
+            { payload, csvDelimiter } as ApiPreviewBoxersCsv,
+            "Failed to import CSV",
+            false
+        )
     }
 }
 

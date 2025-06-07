@@ -1,6 +1,7 @@
 <template>
     <div>
         <button
+            v-if="addRowAllowed"
             class="btn btn-success mb-2"
             type="button"
             @click="addRow"
@@ -51,7 +52,7 @@
                                     <option
                                         v-for="opt in col.options"
                                         :key="opt.value"
-                                        :value="opt.value"
+                                        :value="opt.label"
                                     >
                                         {{ opt.label }}
                                     </option>
@@ -155,6 +156,10 @@ export default {
             type: Array as PropType<ApiImportBoxer[]>,
             required: true,
         },
+        addRowAllowed: {
+            type: Boolean,
+            required: true,
+        },
     },
     data() {
         return {
@@ -176,7 +181,7 @@ export default {
                 { key: "birth_date", label: "Birth Date", type: "date" },
                 { key: "license", label: "License", type: "text" },
             ],
-            rows: [] as ApiImportBoxer[],
+            rows: this.inputBoxers as ApiImportBoxer[],
             editIdx: null as number | null,
             editRow: {
                 lastName: "",
@@ -205,7 +210,6 @@ export default {
     },
     mounted() {
         this.enableTooltips()
-        this.rows = [...this.inputBoxers]
         watch(
             () => this.dirty,
             (newValue) => {
@@ -213,6 +217,16 @@ export default {
                     this.importMessage = ""
                 }
             }
+        )
+        watch(
+            () => this.inputBoxers,
+            (newValue) => {
+                this.rows = [...newValue] as ApiImportBoxer[]
+                this.errors = []
+                this.dirty = true
+                nextTick(() => this.enableTooltips())
+            },
+            { immediate: true }
         )
     },
     methods: {
