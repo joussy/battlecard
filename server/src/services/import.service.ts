@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import {
-  ImportBoxersDto,
   ImportBoxersResponseDto,
   BoxerImportErrorDto,
   ImportBoxerDto,
@@ -12,6 +11,7 @@ import { TournamentService } from './tournament.service';
 import { Repository } from 'typeorm';
 import { Boxer } from '@/entities/boxer.entity';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Gender } from '@/shared/types/modality.type';
 
 @Injectable()
 export class ImportService {
@@ -34,6 +34,65 @@ export class ImportService {
         licenseCount[boxer.license] = (licenseCount[boxer.license] || 0) + 1;
       }
     });
+    // check if any field is empty
+    boxers.forEach((boxer, i) => {
+      if (!boxer.name) {
+        errors.push({
+          message: 'Name is required',
+          row: i,
+          field: 'name',
+        });
+      }
+      if (!boxer.firstname) {
+        errors.push({
+          message: 'First name is required',
+          row: i,
+          field: 'firstname',
+        });
+      }
+      if (!boxer.birth_date) {
+        errors.push({
+          message: 'Birth date is required',
+          row: i,
+          field: 'birth_date',
+        });
+      }
+      if (!boxer.license) {
+        errors.push({
+          message: 'License is required',
+          row: i,
+          field: 'license',
+        });
+      }
+      if (boxer.gender != Gender.FEMALE && boxer.gender != Gender.MALE) {
+        errors.push({
+          message: 'Gender is required',
+          row: i,
+          field: 'gender',
+        });
+      }
+
+      if (
+        boxer.weight === undefined ||
+        boxer.weight === null ||
+        typeof boxer.weight !== 'number' ||
+        boxer.weight < 1
+      ) {
+        errors.push({
+          message: 'Weight is required',
+          row: i,
+          field: 'weight',
+        });
+      }
+      if (!boxer.club) {
+        errors.push({
+          message: 'Club is required',
+          row: i,
+          field: 'club',
+        });
+      }
+    });
+
     boxers.forEach((boxer, i) => {
       if (boxer.license && licenseCount[boxer.license] > 1) {
         errors.push({

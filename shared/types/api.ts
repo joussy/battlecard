@@ -151,7 +151,7 @@ export interface ApiImportBoxer {
   birth_date: string; // ISO date string (YYYY-MM-DD)
   weight: number;
   club: string;
-  gender: Gender;
+  gender?: Gender;
   license: string;
 }
 
