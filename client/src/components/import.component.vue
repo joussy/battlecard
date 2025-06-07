@@ -31,15 +31,16 @@
                     >
                         <td
                             v-if="editIdx !== idx"
+                            :data-bs-toggle="col.error && row.error ? 'tooltip' : undefined"
+                            :data-bs-title="row.error"
                             :class="col.error ? { 'has-error': row.error } : ''"
+                            style="cursor: pointer"
                         >
+                            <!--Display a cell, view mode-->
                             <span
                                 class="ms-2"
-                                :class="{ 'text-danger': col.error && row.error && editIdx !== idx }"
+                                :class="{ 'text-danger': col.error && row.error }"
                                 tabindex="0"
-                                data-bs-toggle="tooltip"
-                                :title="row.error"
-                                style="cursor: pointer"
                             >
                                 {{ row[col.key] }}
                             </span>
@@ -48,6 +49,7 @@
                             v-else
                             :class="col.error ? { 'has-error': row.error } : ''"
                         >
+                            <!--Display a cell, edit mode-->
                             <template v-if="col.type === 'select'">
                                 <select
                                     v-model="editRow[col.key]"
@@ -128,125 +130,114 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onMounted, nextTick } from "vue"
-import { createPopper } from "@popperjs/core"
+import { nextTick } from "vue"
 import bootstrapInstance from "@/utils/bootstrap.singleton"
 
-export default defineComponent({
+export default {
     name: "ImportPage",
-    setup() {
-        // Define columns as an array of objects
-        const columns = [
-            { key: "lastName", label: "Last Name", type: "text" },
-            { key: "firstName", label: "First Name", type: "text" },
-            { key: "fights", label: "Fights", type: "number" },
-            {
-                key: "gender",
-                label: "Gender",
-                type: "select",
-                options: [
-                    { value: "M", label: "M" },
-                    { value: "F", label: "F" },
-                ],
-            },
-            { key: "weight", label: "Weight", type: "text" },
-            { key: "club", label: "Club", type: "text" },
-            { key: "birthDate", label: "Birth Date", type: "date" },
-            { key: "license", label: "License", type: "text", error: true },
-        ]
-        type RowType = {
-            id?: number
-            lastName: string
-            firstName: string
-            fights: number
-            gender: string
-            weight: string
-            club: string
-            birthDate: string
-            license: string
-            error?: string
-            [key: string]: string | number | undefined
-        }
-
-        const rows = ref<RowType[]>([
-            {
-                id: 1,
-                lastName: "Smith",
-                firstName: "John",
-                fights: 5,
+    data() {
+        return {
+            columns: [
+                { key: "lastName", label: "Last Name", type: "text" },
+                { key: "firstName", label: "First Name", type: "text" },
+                { key: "fights", label: "Fights", type: "number" },
+                {
+                    key: "gender",
+                    label: "Gender",
+                    type: "select",
+                    options: [
+                        { value: "M", label: "M" },
+                        { value: "F", label: "F" },
+                    ],
+                },
+                { key: "weight", label: "Weight", type: "text" },
+                { key: "club", label: "Club", type: "text" },
+                { key: "birthDate", label: "Birth Date", type: "date" },
+                { key: "license", label: "License", type: "text", error: true },
+            ],
+            rows: [
+                {
+                    id: 1,
+                    lastName: "Smith",
+                    firstName: "John",
+                    fights: 5,
+                    gender: "M",
+                    weight: "75kg",
+                    club: "Red Dragons",
+                    birthDate: "2000-01-01",
+                    license: "A12345",
+                    error: "",
+                },
+                {
+                    id: 2,
+                    lastName: "Doe",
+                    firstName: "Jane",
+                    fights: 3,
+                    gender: "F",
+                    weight: "60kg",
+                    club: "Blue Tigers",
+                    birthDate: "2002-05-15",
+                    license: "B67890",
+                    error: "",
+                },
+                {
+                    id: 3,
+                    lastName: "Brown",
+                    firstName: "Charlie",
+                    fights: 2,
+                    gender: "M",
+                    weight: "68kg",
+                    club: "Green Bears",
+                    birthDate: "2001-09-10",
+                    license: "A12345", // duplicate license
+                    error: "",
+                },
+                {
+                    id: 4,
+                    lastName: "White",
+                    firstName: "Emily",
+                    fights: 4,
+                    gender: "F",
+                    weight: "55kg",
+                    club: "Yellow Foxes",
+                    birthDate: "2003-12-22",
+                    license: "C54321",
+                    error: "",
+                },
+            ] as Array<Record<string, string | number>>, // index signature for dynamic access
+            editIdx: null as number | null,
+            editRow: {
+                lastName: "",
+                firstName: "",
+                fights: 0,
                 gender: "M",
-                weight: "75kg",
-                club: "Red Dragons",
-                birthDate: "2000-01-01",
-                license: "A12345",
-                error: "",
-            },
-            {
-                id: 2,
-                lastName: "Doe",
-                firstName: "Jane",
-                fights: 3,
-                gender: "F",
-                weight: "60kg",
-                club: "Blue Tigers",
-                birthDate: "2002-05-15",
-                license: "B67890",
-                error: "",
-            },
-            {
-                id: 3,
-                lastName: "Brown",
-                firstName: "Charlie",
-                fights: 2,
-                gender: "M",
-                weight: "68kg",
-                club: "Green Bears",
-                birthDate: "2001-09-10",
-                license: "A12345", // duplicate license
-                error: "",
-            },
-            {
-                id: 4,
-                lastName: "White",
-                firstName: "Emily",
-                fights: 4,
-                gender: "F",
-                weight: "55kg",
-                club: "Yellow Foxes",
-                birthDate: "2003-12-22",
-                license: "C54321",
-                error: "",
-            },
-        ])
-        const editIdx = ref<number | null>(null)
-        const editRow = ref<RowType>({
-            lastName: "",
-            firstName: "",
-            fights: 0,
-            gender: "M",
-            weight: "",
-            club: "",
-            birthDate: "",
-            license: "",
-        })
-
-        function startEdit(idx: number) {
-            editIdx.value = idx
-            editRow.value = { ...rows.value[idx] }
+                weight: "",
+                club: "",
+                birthDate: "",
+                license: "",
+            } as Record<string, string | number>,
         }
-        function saveEdit(idx: number) {
-            rows.value[idx] = { ...rows.value[idx], ...editRow.value }
-            editIdx.value = null
-            nextTick(() => enableTooltips()) // Re-enable tooltips after editing
-        }
-        function cancelEdit() {
-            editIdx.value = null
-        }
-        // Fix newId calculation to handle undefined id
-        function addRow() {
-            const ids = rows.value.map((r) => r.id ?? 0)
+    },
+    mounted() {
+        this.enableTooltips()
+    },
+    methods: {
+        startEdit(idx: number) {
+            this.editIdx = idx
+            this.editRow = { ...this.rows[idx] }
+        },
+        saveEdit(idx: number) {
+            this.rows[idx] = { ...this.rows[idx], ...this.editRow }
+            this.editIdx = null
+            nextTick(() => this.enableTooltips())
+        },
+        cancelEdit() {
+            this.editIdx = null
+        },
+        addRow() {
+            const ids = this.rows.map((r: { id?: number }) => r.id ?? 0)
             const newId = ids.length > 0 ? Math.max(...ids) + 1 : 1
-            rows.value.push({
+            this.rows.push({
                 id: newId,
                 lastName: "",
                 firstName: "",
@@ -258,48 +249,40 @@ export default defineComponent({
                 license: "",
                 error: "",
             })
-            editIdx.value = rows.value.length - 1
-            editRow.value = { ...rows.value[rows.value.length - 1] }
-            nextTick(() => enableTooltips())
-        }
-
-        function enableTooltips() {
+            this.editIdx = this.rows.length - 1
+            this.editRow = { ...this.rows[this.rows.length - 1] }
+            nextTick(() => this.enableTooltips())
+        },
+        enableTooltips() {
             const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-            tooltipTriggerList.forEach((el) => {
+            tooltipTriggerList.forEach((el: Element) => {
                 if (bootstrapInstance?.bootstrap?.Tooltip) {
                     new bootstrapInstance.bootstrap.Tooltip(el)
                 }
             })
-        }
-
-        function verify() {
+        },
+        verify() {
             // Clear previous errors
-            rows.value.forEach((row) => {
+            this.rows.forEach((row: Record<string, string | number>) => {
                 row.error = ""
             })
             // Count licenses
             const licenseCount: Record<string, number> = {}
-            rows.value.forEach((row) => {
+            this.rows.forEach((row: Record<string, string | number>) => {
                 if (row.license) {
-                    licenseCount[row.license] = (licenseCount[row.license] || 0) + 1
+                    licenseCount[row.license as string] = (licenseCount[row.license as string] || 0) + 1
                 }
             })
             // Mark duplicates
-            rows.value.forEach((row) => {
-                if (row.license && licenseCount[row.license] > 1) {
-                    row.error = "Duplicate license"
+            this.rows.forEach((row: Record<string, string | number>) => {
+                if (row.license && licenseCount[row.license as string] > 1) {
+                    row.error = "❌ Duplicate license"
                 }
             })
-            nextTick(() => enableTooltips())
-        }
-
-        onMounted(() => {
-            enableTooltips()
-        })
-
-        return { rows, editIdx, editRow, startEdit, saveEdit, cancelEdit, verify, addRow, columns }
+            nextTick(() => this.enableTooltips())
+        },
     },
-})
+}
 </script>
 
 <style scoped>

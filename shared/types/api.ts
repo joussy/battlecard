@@ -144,3 +144,30 @@ export interface ApiTournament_Boxer {
     /** Boxer ID */
     boxerId: string;
 }
+
+export interface ApiImportBoxer {
+  name: string;
+  firstname: string;
+  birth_date: Date; // ISO date string (YYYY-MM-DD)
+  weight: number;
+  club: string;
+  gender: Gender;
+  license: string;
+}
+
+export interface ApiImportBoxersDto {
+  verify: boolean;
+  boxers: ApiImportBoxer[];
+}
+
+export interface ApiBoxerImportError {
+  message: string;
+  row: number;
+  field: string;
+}
+
+export interface ApiImportBoxersResponse {
+  success: boolean;
+  message: string;
+  errors?: ApiBoxerImportError[];
+}

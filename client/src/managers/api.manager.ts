@@ -6,6 +6,8 @@ import {
     ApiOpponentGet,
     ApiTournament,
     ApiTournament_Boxer,
+    ApiImportBoxersResponse,
+    ApiImportBoxersDto,
 } from "@/shared/types/api"
 import { get, mutate } from "@/utils/manager.utils"
 
@@ -89,6 +91,10 @@ export class ApiManager {
             { boxerIds, tournamentId },
             "Failed to delete boxers from tournament"
         )
+    }
+    // Import
+    importBoxers(importBoxers: ApiImportBoxersDto): Promise<ApiImportBoxersResponse> {
+        return mutate<ApiImportBoxersResponse>("/api/import", "POST", importBoxers, "Failed to import boxers", false)
     }
 }
 
