@@ -6,6 +6,7 @@ import {
 } from '../dtos/import.dto';
 import { AuthenticatedUser } from '@/interfaces/auth.interface';
 import { BoxerService } from './boxer.service';
+import { ApiBoxerCreate } from '@/shared/types/api';
 
 @Injectable()
 export class ImportService {
@@ -73,14 +74,11 @@ export class ImportService {
       const boxer = dto.boxers[i];
       try {
         // Map DTO fields to ApiBoxerCreate
-        const boxerCreate = {
+        const boxerCreate: ApiBoxerCreate = {
           lastName: boxer.name,
           firstName: boxer.firstname,
-          birthDate:
-            boxer.birth_date instanceof Date
-              ? boxer.birth_date.toISOString().slice(0, 10)
-              : boxer.birth_date,
-          nbFights: undefined, // Not present in import
+          birthDate: boxer.birth_date,
+          nbFights: undefined,
           club: boxer.club,
           weight: boxer.weight,
           gender: boxer.gender,
@@ -111,7 +109,7 @@ export class ImportService {
         errors.length === 0
           ? `Successfully imported ${imported} boxers.`
           : `Imported ${imported} boxers with ${errors.length} errors`,
-      errors: errors.length > 0 ? errors : undefined,
+      errors: errors,
     };
   }
 }

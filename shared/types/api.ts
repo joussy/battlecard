@@ -148,7 +148,7 @@ export interface ApiTournament_Boxer {
 export interface ApiImportBoxer {
   name: string;
   firstname: string;
-  birth_date: Date; // ISO date string (YYYY-MM-DD)
+  birth_date: string; // ISO date string (YYYY-MM-DD)
   weight: number;
   club: string;
   gender: Gender;
@@ -169,5 +169,5 @@ export interface ApiBoxerImportError {
 export interface ApiImportBoxersResponse {
   success: boolean;
   message: string;
-  errors?: ApiBoxerImportError[];
+  errors: ApiBoxerImportError[];
 }

@@ -132,9 +132,11 @@
 <script lang="ts">
 import { nextTick } from "vue"
 import bootstrapInstance from "@/utils/bootstrap.singleton"
+import dbManager from "@/managers/api.manager"
+import { ApiImportBoxer } from "@/shared/types/api"
+import { Gender } from "@/shared/types/modality.type"
 
 export default {
-    name: "ImportPage",
     data() {
         return {
             columns: [
@@ -146,11 +148,11 @@ export default {
                     label: "Gender",
                     type: "select",
                     options: [
-                        { value: "M", label: "M" },
-                        { value: "F", label: "F" },
+                        { value: Gender.MALE, label: "M" },
+                        { value: Gender.FEMALE, label: "F" },
                     ],
                 },
-                { key: "weight", label: "Weight", type: "text" },
+                { key: "weight", label: "Weight (kg)", type: "number" },
                 { key: "club", label: "Club", type: "text" },
                 { key: "birthDate", label: "Birth Date", type: "date" },
                 { key: "license", label: "License", type: "text", error: true },
@@ -161,8 +163,8 @@ export default {
                     lastName: "Smith",
                     firstName: "John",
                     fights: 5,
-                    gender: "M",
-                    weight: "75kg",
+                    gender: Gender.MALE,
+                    weight: 75,
                     club: "Red Dragons",
                     birthDate: "2000-01-01",
                     license: "A12345",
@@ -173,8 +175,8 @@ export default {
                     lastName: "Doe",
                     firstName: "Jane",
                     fights: 3,
-                    gender: "F",
-                    weight: "60kg",
+                    gender: Gender.FEMALE,
+                    weight: 60,
                     club: "Blue Tigers",
                     birthDate: "2002-05-15",
                     license: "B67890",
@@ -185,8 +187,8 @@ export default {
                     lastName: "Brown",
                     firstName: "Charlie",
                     fights: 2,
-                    gender: "M",
-                    weight: "68kg",
+                    gender: Gender.MALE,
+                    weight: 60,
                     club: "Green Bears",
                     birthDate: "2001-09-10",
                     license: "A12345", // duplicate license
@@ -197,8 +199,8 @@ export default {
                     lastName: "White",
                     firstName: "Emily",
                     fights: 4,
-                    gender: "F",
-                    weight: "55kg",
+                    gender: Gender.FEMALE,
+                    weight: 60,
                     club: "Yellow Foxes",
                     birthDate: "2003-12-22",
                     license: "C54321",
@@ -210,7 +212,7 @@ export default {
                 lastName: "",
                 firstName: "",
                 fights: 0,
-                gender: "M",
+                gender: Gender.MALE,
                 weight: "",
                 club: "",
                 birthDate: "",
@@ -242,7 +244,7 @@ export default {
                 lastName: "",
                 firstName: "",
                 fights: 0,
-                gender: "M",
+                gender: Gender.FEMALE,
                 weight: "",
                 club: "",
                 birthDate: "",
@@ -261,24 +263,36 @@ export default {
                 }
             })
         },
-        verify() {
+        async verify() {
+            const boxersToVerify: ApiImportBoxer[] = this.rows.map((row: Record<string, string | number>) => {
+                return {
+                    name: row.lastName as string,
+                    firstname: row.firstName as string,
+                    birth_date: row.birthDate as string,
+                    club: row.club as string,
+                    gender: row.gender as Gender,
+                    weight: row.weight as number,
+                    license: row.license as string,
+                } as ApiImportBoxer
+            })
+
+            console.log("Boxers to verify:", boxersToVerify)
+
+            const importResult = await dbManager.importBoxers({
+                verify: true,
+                boxers: boxersToVerify,
+            })
             // Clear previous errors
             this.rows.forEach((row: Record<string, string | number>) => {
                 row.error = ""
             })
-            // Count licenses
-            const licenseCount: Record<string, number> = {}
-            this.rows.forEach((row: Record<string, string | number>) => {
-                if (row.license) {
-                    licenseCount[row.license as string] = (licenseCount[row.license as string] || 0) + 1
+            for (const error of importResult.errors) {
+                const row = this.rows[error.row]
+                if (!row) continue // Skip if row not found
+                if (row) {
+                    row.error = error.message
                 }
-            })
-            // Mark duplicates
-            this.rows.forEach((row: Record<string, string | number>) => {
-                if (row.license && licenseCount[row.license as string] > 1) {
-                    row.error = "❌ Duplicate license"
-                }
-            })
+            }
             nextTick(() => this.enableTooltips())
         },
     },

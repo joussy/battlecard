@@ -17,7 +17,7 @@ export class ImportBoxerDto implements ApiImportBoxer {
 
   @IsDate()
   @Type(() => Date)
-  birth_date: Date;
+  birth_date: string;
 
   @IsNumber()
   weight: number;
@@ -47,5 +47,5 @@ export class BoxerImportErrorDto implements ApiBoxerImportError {
 export class ImportBoxersResponseDto implements ApiImportBoxersResponse {
   success: boolean;
   message: string;
-  errors?: BoxerImportErrorDto[];
+  errors: BoxerImportErrorDto[];
 }
