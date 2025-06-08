@@ -98,11 +98,11 @@ export class ApiManager {
     importBoxers(importBoxers: ApiImportBoxers): Promise<ApiImportBoxersResponse> {
         return mutate<ApiImportBoxersResponse>("/api/import", "POST", importBoxers, "Failed to import boxers", false)
     }
-    previewBoxersFromText(payload: string, csvDelimiter: string) {
+    previewBoxersFromText(payload: string) {
         return mutate<ApiPreviewBoxersResponse>(
             "/api/import/previewFromCsvText",
             "POST",
-            { payload, csvDelimiter } as ApiPreviewBoxersCsv,
+            { payload } as ApiPreviewBoxersCsv,
             "Failed to import CSV",
             false
         )
@@ -114,6 +114,10 @@ export class ApiManager {
             "Failed to import FFBoxe file"
         )
     }
+
+    // exportBoxersAsCsv(currentTournamentId: string) {
+    //     throw new Error("Method not implemented.")
+    // }
 }
 
 const instance = new ApiManager()

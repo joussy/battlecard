@@ -176,7 +176,6 @@ export interface ApiImportBoxersResponse {
 
 export interface ApiPreviewBoxersCsv {
   payload: string;
-  csvDelimiter: CsvDelimiter;
 }
 
 export interface ApiPreviewBoxersResponse {

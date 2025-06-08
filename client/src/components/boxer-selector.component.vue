@@ -9,6 +9,18 @@
             </div>
             <div class="flex-grow-1"></div>
             <button
+                class="btn btn-outline-primary mb-3"
+                @click="$router.push({ name: 'import' })"
+            >
+                <i class="bi bi-upload" />
+            </button>
+            <button
+                class="btn btn-outline-primary mb-3 ms-2"
+                @click="exportBoxers"
+            >
+                <i class="bi bi-download" />
+            </button>
+            <button
                 class="btn btn-outline-success mb-3 ms-2"
                 data-bs-toggle="offcanvas"
                 data-bs-target="#boxerAddOffcanvasNavbar"
@@ -65,6 +77,8 @@ import { useTournamentStore } from "@/stores/tournament.store"
 import { useTournamentBoxerStore } from "@/stores/tournamentBoxer.store"
 import { useUiStore } from "@/stores/ui.store"
 import { useBoxerStore } from "@/stores/boxer.store"
+import dbManager from "@/managers/api.manager"
+import { postAndDownload } from "@/utils/manager.utils"
 
 export default defineComponent({
     components: {
@@ -105,6 +119,15 @@ export default defineComponent({
     methods: {
         getBoxersToDisplay() {
             return this.boxersStore.boxers
+        },
+        exportBoxers() {
+            const tournamentId = this.tournamentStore.currentTournamentId
+            if (!tournamentId) {
+                console.log("No tournament selected for export")
+                return
+            }
+            postAndDownload(`/api/tournaments/${tournamentId}/boxers/export`, {}, "boxers.csv")
+            // dbManager.exportBoxersAsCsv(this.tournamentStore.currentTournamentId)
         },
     },
 })

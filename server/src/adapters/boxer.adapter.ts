@@ -6,6 +6,7 @@ import {
 import { Boxer } from '../entities/boxer.entity';
 import { IModality } from '@/modality/IModality';
 import { ModalityError } from '@/shared/types/modality.type';
+import { CsvBoxer } from '@/interfaces/csv.interface';
 
 export function toBoxer(apiBoxer: ApiBoxerCreate, userId: string): Boxer {
   const boxer = new Boxer();
@@ -61,5 +62,18 @@ export function toApiOpponentGet(
     fightId: fightId,
     selectedFights: selectedFights,
     modalityErrors: modalityErrors,
+  };
+}
+
+export function toCsvBoxer(boxer: Boxer): CsvBoxer {
+  return {
+    lastName: boxer.lastName,
+    firstName: boxer.firstName,
+    birthDate: boxer.birthDate,
+    club: boxer.club,
+    weight: boxer.weight ?? 0,
+    gender: boxer.gender,
+    license: boxer.license,
+    fightRecord: boxer.nbFights,
   };
 }

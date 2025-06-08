@@ -41,13 +41,8 @@ export class ImportController {
   @Post('previewfromcsvText')
   async previewBoxersFromCsvText(
     @Body() dto: ApiPreviewBoxersCsv,
-    @User() user: AuthenticatedUser,
   ): Promise<ApiPreviewBoxersResponse> {
-    return await this.importService.previewBoxersFromCsv(
-      dto.payload,
-      dto.csvDelimiter,
-      user,
-    );
+    return await this.importService.previewBoxersFromCsv(dto.payload);
   }
   @Post('previewfromffboxeFile')
   @UseInterceptors(FileInterceptor('file'))
@@ -64,7 +59,6 @@ export class ImportController {
       }),
     )
     file: Express.Multer.File,
-    @User() user: AuthenticatedUser,
   ): Promise<ApiPreviewBoxersResponse> {
     //convert file buffer to string
     if (!file) {
@@ -72,6 +66,6 @@ export class ImportController {
     }
     const payload: string = file.buffer?.toString('utf-8');
     console.log('File buffer converted to string:', payload);
-    return await this.importService.previewBoxersFromFFboxe(payload, user);
+    return await this.importService.previewBoxersFromFFboxe(payload);
   }
 }

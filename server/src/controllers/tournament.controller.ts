@@ -1,13 +1,23 @@
-import { Controller, Get, Body, Post, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Body,
+  Post,
+  Param,
+  Delete,
+  Res,
+} from '@nestjs/common';
 import { ModalityService } from '../modality/modality.service';
 import { User } from '@/decorators/user.decorator';
 import { AuthenticatedUser } from '@/interfaces/auth.interface';
 import { TournamentService } from '../services/tournament.service';
 import {
+  ApiBoxerGet,
   ApiOpponentGet,
   ApiTournament,
   ApiTournamentCreate,
 } from '@/shared/types/api';
+import { Response } from 'express';
 
 @Controller('tournaments')
 export class TournamentController {
@@ -40,8 +50,27 @@ export class TournamentController {
   @Get(':tournamentId/boxers')
   async getBoxersForTournament(
     @Param('tournamentId') tournamentId: string,
-  ): Promise<import('@/shared/types/api').ApiBoxerGet[]> {
-    return this.tournamentService.getBoxersForTournament(tournamentId);
+    @User() user: AuthenticatedUser,
+  ): Promise<ApiBoxerGet[]> {
+    return this.tournamentService.getBoxersForTournament(tournamentId, user);
+  }
+
+  @Post(':tournamentId/boxers/export')
+  async exportBoxersFromTournament(
+    @Param('tournamentId') tournamentId: string,
+    @User() user: AuthenticatedUser,
+    @Res() res: Response,
+  ) {
+    const csvToDownload =
+      await this.tournamentService.exportBoxersFromTournament(
+        tournamentId,
+        user,
+      );
+    res.set({
+      'Content-Type': 'text/csv',
+      'Content-Disposition': `attachment; filename="boxers-${tournamentId}.csv"`,
+    });
+    res.send(csvToDownload);
   }
 
   @Get(':tournamentId/opponents/:boxerId')
