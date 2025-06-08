@@ -87,7 +87,12 @@
                 />
             </div>
             <div class="mb-3">
-                <button class="btn btn-primary">Preview</button>
+                <button
+                    class="btn btn-primary"
+                    @click="previewFfboxeFile"
+                >
+                    Preview
+                </button>
             </div>
         </div>
 
@@ -238,7 +243,7 @@ MONTANA	Tony	5	M	90	Club5	5/3/2012	E0005
 NICOLSON	Skye	6	F	55	Club6	6/3/2012	F0006
 TAYLOR	Katie	7	F	56	Club7	7/4/2013	G0007
 SERRANO	Amanda	8	F	57	Club1	8/4/2014	A0008
-      `.trim(),
+                  `.trim(),
             apiClipboard: `279687,50
 279688,53
 279689,52
@@ -281,6 +286,23 @@ SERRANO	Amanda	8	F	57	Club1	8/4/2014	A0008
                 return
             }
             console.log("Preview result:", res.boxers)
+            this.rows = [...res.boxers]
+            console.log("this.rows:", this.rows)
+            this.showImportTable = true
+        },
+        async previewFfboxeFile() {
+            const fileInput = document.getElementById("formFileDisabled") as HTMLInputElement
+            if (!fileInput.files || fileInput.files.length === 0) {
+                console.error("No file selected")
+                return
+            }
+            const file = fileInput.files[0]
+            const res = await dbManager.previewBoxersFromFfboxeFile(file)
+            if (!res.success) {
+                console.error("Error previewing FFBoxe file:", res.message)
+                return
+            }
+            console.log("FFBoxe preview result:", res.boxers)
             this.rows = [...res.boxers]
             console.log("this.rows:", this.rows)
             this.showImportTable = true

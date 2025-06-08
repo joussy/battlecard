@@ -15,13 +15,16 @@ import { Repository } from 'typeorm';
 import { Boxer } from '@/entities/boxer.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Gender } from '@/shared/types/modality.type';
-import { parse } from 'csv-parse';
+import { parse, Options } from 'csv-parse';
 
-function parseCsvAsync(csvString: string, options = {}): Promise<unknown[]> {
+function parseCsvAsync(
+  csvString: string,
+  options: Options,
+): Promise<unknown[]> {
   return new Promise((resolve, reject) => {
     parse(
       csvString,
-      { columns: true, trim: true, ...options },
+      { columns: true, trim: true, bom: true, ...options },
       (err, records: unknown[]) => {
         if (err) reject(err);
         else resolve(records);
@@ -93,6 +96,68 @@ export class ImportService {
     );
     return {
       boxers: parsed,
+      success: true,
+      message: 'CSV preview successful',
+    };
+  }
+
+  async previewBoxersFromFFboxe(
+    payload: string,
+    user: AuthenticatedUser,
+  ): Promise<ApiPreviewBoxersResponse> {
+    // Parse the CSV payload using csv-parse
+    const res = (await parseCsvAsync(payload, {
+      columns: true,
+      skip_empty_lines: true,
+      delimiter: ';',
+    })) as {
+      Civilité: string;
+      Nom: string;
+      Prénom: string;
+      DDN: string;
+      'Nom structure': string;
+      'Code adhérent': string;
+      Poids: string;
+    }[];
+    if (!res || res.length === 0) {
+      return {
+        success: false,
+        message: 'No data found in CSV',
+        boxers: [],
+      };
+    }
+    // Map the parsed CSV data to ImportBoxerDto using array indices
+    const parsed: ApiImportBoxer[] = res.map((row) => {
+      let gender: Gender | undefined = undefined;
+      if (row['Civilité'] === 'M') {
+        gender = Gender.MALE;
+      } else if (row['Civilité'] === 'Mme') {
+        gender = Gender.FEMALE;
+      }
+
+      const entry: ApiImportBoxer = {
+        name: row['Nom'] || '',
+        firstname: row['Prénom'] || '',
+        // fights: row[CSV_IDX_FIGHTS] ? parseInt(row[CSV_IDX_FIGHTS], 10) : undefined, // optional
+        gender,
+        weight: row['Poids'] ? parseFloat(row['Poids']) : 0,
+        club: row['Nom structure'] || '',
+        birth_date: row['DDN'] || '',
+        license: row['Code adhérent'] || '',
+      };
+      return entry;
+    });
+    // Deduplicate boxers by license (ffboxe does contains duplicates)
+    const uniqueLicenses = new Set<string>();
+    const deduplicated = parsed.filter((boxer) => {
+      if (boxer.license && uniqueLicenses.has(boxer.license)) {
+        return false; // Skip duplicates
+      }
+      uniqueLicenses.add(boxer.license);
+      return true; // Keep unique boxer
+    });
+    return {
+      boxers: deduplicated,
       success: true,
       message: 'CSV preview successful',
     };

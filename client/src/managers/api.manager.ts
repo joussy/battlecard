@@ -11,7 +11,7 @@ import {
     ApiPreviewBoxersResponse,
     ApiPreviewBoxersCsv,
 } from "@/shared/types/api"
-import { get, mutate } from "@/utils/manager.utils"
+import { get, mutate, upload } from "@/utils/manager.utils"
 
 export class ApiManager {
     getPossibleOpponents(boxerId: string, tournamentId: string): PromiseLike<ApiOpponentGet[]> {
@@ -105,6 +105,13 @@ export class ApiManager {
             { payload, csvDelimiter } as ApiPreviewBoxersCsv,
             "Failed to import CSV",
             false
+        )
+    }
+    previewBoxersFromFfboxeFile(file: File): Promise<ApiPreviewBoxersResponse> {
+        return upload<ApiPreviewBoxersResponse>(
+            "/api/import/previewFromFfboxeFile",
+            file,
+            "Failed to import FFBoxe file"
         )
     }
 }
