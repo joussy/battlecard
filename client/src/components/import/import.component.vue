@@ -107,10 +107,18 @@
                     class="d-block w-100 mb-2"
                 />
             </div>
-            <div v-if="importMode == 'csv-file'">This feature is coming very soon !</div>
+            <div v-if="importMode == 'csv-file'">
+                <div class="mb-3">
+                    <input
+                        id="formFileCsv"
+                        class="form-control"
+                        type="file"
+                    />
+                </div>
+            </div>
             <div class="mb-3">
                 <button
-                    class="btn btn-outline-light me-2"
+                    class="btn btn-outline-secondary me-2"
                     type="button"
                     data-bs-toggle="collapse"
                     data-bs-target="#requiredColumns"
@@ -121,7 +129,7 @@
                 </button>
                 <button
                     class="btn btn-primary"
-                    @click="previewCsvText()"
+                    @click="importMode == 'csv-file' ? previewCsvFile() : previewCsvText()"
                 >
                     Preview
                 </button>
@@ -129,7 +137,7 @@
             <!-- List (always shown on md and up, collapsible on small screens) -->
             <div
                 id="requiredColumns"
-                class="collapse"
+                class="collapse mb-3"
             >
                 <ul class="list-group">
                     <li class="list-group-item">Last Name</li>
@@ -172,6 +180,7 @@ import IconComponent from "@/components/core/icon.component.vue"
 import { defineComponent } from "vue"
 import { useUiStore } from "@/stores/ui.store"
 import dbManager from "@/managers/api.manager"
+import { useTournamentStore } from "@/stores/tournament.store"
 
 export default defineComponent({
     name: "ImportComponent",
@@ -181,6 +190,7 @@ export default defineComponent({
     },
     data() {
         return {
+            tournamentStore: useTournamentStore(),
             uiStore: useUiStore(),
             importMode: "" as "" | "csv-file" | "csv-clipboard" | "api" | "ffboxe",
             showImportTable: false,
@@ -219,6 +229,27 @@ Tyson;Mike;2011-06-30;Catskill Boxing Club;100;male;TYS002;58
             console.log("this.rows:", this.rows)
             this.showImportTable = true
         },
+        async previewCsvFile() {
+            const tournamentId = this.tournamentStore.currentTournamentId
+            if (!tournamentId) {
+                console.error("No tournament selected for import")
+                return
+            }
+            const fileInput = document.getElementById("formFileCsv") as HTMLInputElement
+            if (!fileInput.files || fileInput.files.length === 0) {
+                console.error("No file selected")
+                return
+            }
+            const file = fileInput.files[0]
+            const res = await dbManager.previewBoxersFromCsvFile(file, tournamentId)
+            if (!res.success) {
+                console.error("Error previewing FFBoxe file:", res.message)
+                return
+            }
+            this.rows = [...res.boxers]
+            this.showImportTable = true
+        },
+
         async previewFfboxeFile() {
             const fileInput = document.getElementById("formFileDisabled") as HTMLInputElement
             if (!fileInput.files || fileInput.files.length === 0) {

@@ -44,6 +44,32 @@ export class ImportController {
   ): Promise<ApiPreviewBoxersResponse> {
     return await this.importService.previewBoxersFromCsv(dto.payload);
   }
+
+  @Post('previewFromCsvFile')
+  @UseInterceptors(FileInterceptor('file'))
+  async previewBoxersFromCsvFile(
+    @UploadedFile(
+      new ParseFilePipe({
+        validators: [
+          new MaxFileSizeValidator({ maxSize: 500000 }),
+          new FileTypeValidator({
+            fileType: 'text/csv',
+            skipMagicNumbersValidation: true,
+          }),
+        ],
+      }),
+    )
+    file: Express.Multer.File,
+  ): Promise<ApiPreviewBoxersResponse> {
+    //convert file buffer to string
+    if (!file) {
+      throw new Error('File buffer is missing');
+    }
+    const payload: string = file.buffer?.toString('utf-8');
+    console.log('File buffer converted to string:', payload);
+    return await this.importService.previewBoxersFromCsv(payload);
+  }
+
   @Post('previewfromffboxeFile')
   @UseInterceptors(FileInterceptor('file'))
   async previewBoxersFromFfboxeFile(

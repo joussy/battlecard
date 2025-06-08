@@ -114,10 +114,9 @@ export class ApiManager {
             "Failed to import FFBoxe file"
         )
     }
-
-    // exportBoxersAsCsv(currentTournamentId: string) {
-    //     throw new Error("Method not implemented.")
-    // }
+    previewBoxersFromCsvFile(file: File, tournamentId: string): Promise<ApiPreviewBoxersResponse> {
+        return upload<ApiPreviewBoxersResponse>("/api/import/previewFromCsvFile", file, "Failed to import FFBoxe file")
+    }
 }
 
 const instance = new ApiManager()

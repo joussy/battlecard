@@ -101,7 +101,7 @@ export default defineComponent({
     },
     mounted() {
         const offcanvasRef = this.$refs.offcanvas as HTMLElement
-        offcanvasRef.addEventListener("hidden.bs.offcanvas", (event) => {
+        offcanvasRef.addEventListener("hidden.bs.offcanvas", () => {
             this.clear()
         })
         this.clear()

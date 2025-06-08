@@ -77,7 +77,6 @@ import { useTournamentStore } from "@/stores/tournament.store"
 import { useTournamentBoxerStore } from "@/stores/tournamentBoxer.store"
 import { useUiStore } from "@/stores/ui.store"
 import { useBoxerStore } from "@/stores/boxer.store"
-import dbManager from "@/managers/api.manager"
 import { postAndDownload } from "@/utils/manager.utils"
 
 export default defineComponent({
