@@ -16,6 +16,7 @@ import { ImportService } from '@/services/import.service';
 import {
   ApiImportBoxers,
   ApiImportBoxersResponse,
+  ApiPreviewBoxersApi,
   ApiPreviewBoxersCsv,
   ApiPreviewBoxersResponse,
 } from '@/shared/types/api';
@@ -93,5 +94,22 @@ export class ImportController {
     const payload: string = file.buffer?.toString('utf-8');
     console.log('File buffer converted to string:', payload);
     return await this.importService.previewBoxersFromFFboxe(payload);
+  }
+
+  @Post('previewFromApi')
+  async previewFromApi(
+    @Body() dto: ApiPreviewBoxersApi,
+    @User() user: AuthenticatedUser,
+  ): Promise<ApiPreviewBoxersResponse> {
+    if (!user.apiEnabled) {
+      console.error('API access is not enabled for user:', user.id);
+      return {
+        success: false,
+        message: 'API access is not enabled for this user.',
+        boxers: [],
+      };
+    }
+    const ids = dto.payload.split('\n');
+    return await this.importService.previewBoxersFromApi(ids);
   }
 }

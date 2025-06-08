@@ -183,6 +183,10 @@ export interface ApiImportBoxersResponse {
 
 // PREVIEW
 
+export interface ApiPreviewBoxersApi {
+  payload: string;
+}
+
 export interface ApiPreviewBoxersCsv {
   payload: string;
 }

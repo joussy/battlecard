@@ -160,7 +160,12 @@
                 class="d-block w-100 mb-2"
             />
             <div class="mb-3">
-                <button class="btn btn-primary">Preview</button>
+                <button
+                    class="btn btn-primary"
+                    @click="previewApiText()"
+                >
+                    Preview
+                </button>
             </div>
         </div>
         <div v-if="showImportTable">
@@ -202,9 +207,9 @@ Taylor;Katie;2006-07-02;Bray Boxing Club;60;female;TAY007;23
 Ali;Muhammad;2012-01-17;Louisville Boxing Club;107;male;ALI001;61
 Tyson;Mike;2011-06-30;Catskill Boxing Club;100;male;TYS002;58
                   `.trim(),
-            apiClipboard: `279687,50
-279688,53
-279689,52
+            apiClipboard: `279687
+279688
+279689
 `,
             rows: [] as ApiImportBoxer[],
         }
@@ -218,6 +223,17 @@ Tyson;Mike;2011-06-30;Catskill Boxing Club;100;male;TYS002;58
         this.clipboard = this.csvClipboardSample
     },
     methods: {
+        async previewApiText() {
+            const res = await dbManager.previewBoxersFromApi(this.apiClipboard)
+            if (!res.success) {
+                console.error("Error previewing boxers:", res.message)
+                return
+            }
+            console.log("Preview result:", res.boxers)
+            this.rows = [...res.boxers]
+            console.log("this.rows:", this.rows)
+            this.showImportTable = true
+        },
         async previewCsvText() {
             const res = await dbManager.previewBoxersFromText(this.clipboard)
             if (!res.success) {

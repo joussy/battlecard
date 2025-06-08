@@ -1,11 +1,12 @@
 import {
   ApiBoxerCreate,
   ApiBoxerGet,
+  ApiImportBoxer,
   ApiOpponentGet,
 } from '@/shared/types/api';
 import { Boxer } from '../entities/boxer.entity';
 import { IModality } from '@/modality/IModality';
-import { ModalityError } from '@/shared/types/modality.type';
+import { Gender, ModalityError } from '@/shared/types/modality.type';
 import { CsvBoxer } from '@/interfaces/csv.interface';
 
 export function toBoxer(apiBoxer: ApiBoxerCreate, userId: string): Boxer {
@@ -76,4 +77,20 @@ export function toCsvBoxer(boxer: Boxer): CsvBoxer {
     license: boxer.license,
     fightRecord: boxer.nbFights,
   };
+}
+
+export function toApiImportBoxer(csvBoxer: CsvBoxer): ApiImportBoxer {
+  const entry: ApiImportBoxer = {
+    lastName: csvBoxer.lastName,
+    firstName: csvBoxer.firstName,
+    gender:
+      csvBoxer.gender === Gender.MALE.toString() ? Gender.MALE : Gender.FEMALE,
+    weight: parseFloat(csvBoxer.weight) || 0,
+    club: csvBoxer.club || '',
+    birthDate: csvBoxer.birthDate || '',
+    license: csvBoxer.license || '',
+    fightRecord: csvBoxer.fightRecord,
+  };
+
+  return entry;
 }

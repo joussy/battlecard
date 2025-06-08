@@ -98,6 +98,15 @@ export class ApiManager {
     importBoxers(importBoxers: ApiImportBoxers): Promise<ApiImportBoxersResponse> {
         return mutate<ApiImportBoxersResponse>("/api/import", "POST", importBoxers, "Failed to import boxers", false)
     }
+    previewBoxersFromApi(payload: string) {
+        return mutate<ApiPreviewBoxersResponse>(
+            "/api/import/previewFromApi",
+            "POST",
+            { payload } as ApiPreviewBoxersCsv,
+            "Failed to import CSV",
+            false
+        )
+    }
     previewBoxersFromText(payload: string) {
         return mutate<ApiPreviewBoxersResponse>(
             "/api/import/previewFromCsvText",

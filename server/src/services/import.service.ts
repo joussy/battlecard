@@ -15,6 +15,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Gender } from '@/shared/types/modality.type';
 import { parseCsvAsync } from '@/utils/csv.utils';
 import { CsvBoxer, csvDelimiter } from '@/interfaces/csv.interface';
+import { toApiImportBoxer } from '@/adapters/boxer.adapter';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class ImportService {
@@ -23,6 +25,7 @@ export class ImportService {
     private readonly tournamentService: TournamentService,
     @InjectRepository(Boxer)
     private readonly boxerRepository: Repository<Boxer>,
+    private readonly configService: ConfigService,
   ) {}
 
   async previewBoxersFromCsv(
@@ -43,20 +46,7 @@ export class ImportService {
       };
     }
     // Map the parsed CSV data to ImportBoxerDto using array indices
-    const parsed: ApiImportBoxer[] = res.map((row) => {
-      const entry: ApiImportBoxer = {
-        lastName: row.lastName,
-        firstName: row.firstName,
-        gender:
-          row.gender === Gender.MALE.toString() ? Gender.MALE : Gender.FEMALE,
-        weight: parseFloat(row.weight) || 0,
-        club: row.club || '',
-        birthDate: row.birthDate || '',
-        license: row.license || '',
-        fightRecord: row.fightRecord,
-      };
-      return entry;
-    });
+    const parsed: ApiImportBoxer[] = res.map((row) => toApiImportBoxer(row));
     return {
       boxers: parsed,
       success: true,
@@ -286,6 +276,58 @@ export class ImportService {
           ? `Successfully imported ${imported} boxers.`
           : `Imported ${imported} boxers with ${errors.length} errors`,
       errors: errors,
+    };
+  }
+  async previewBoxersFromApi(ids: string[]): Promise<ApiPreviewBoxersResponse> {
+    let response: Response;
+    const csvBoxers: ApiImportBoxer[] = [];
+    for (const id of ids) {
+      try {
+        console.log('Calling Node-RED to import boxer by ID:', id);
+        response = await fetch(
+          `${this.configService.get<string>('NODERED_HOST')}/battlecard/getById?id=${id}`,
+          {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' },
+          },
+        );
+      } catch (err: any) {
+        console.error('Error calling Node-RED:', err);
+        continue;
+      }
+      if (!response) {
+        console.error('Node-RED response error:', response);
+        continue;
+      }
+      const responseText = await response.text();
+      if (!responseText || responseText.length === 0) {
+        console.error('No data found in Node-RED response for ID:', id);
+        continue;
+      }
+      console.log('Node-RED response received for ID:', id);
+      let parsed: unknown;
+      try {
+        parsed = JSON.parse(responseText);
+      } catch (e) {
+        console.error(
+          'Failed to parse JSON from Node-RED response for ID:',
+          id,
+          e,
+        );
+        continue;
+      }
+      if (!parsed || typeof parsed !== 'object') {
+        console.error('No boxers found in Node-RED response for ID:', id);
+        continue;
+      }
+      // Optionally, add more property checks here to validate CsvBoxer shape
+      console.log('Parsed boxers from Node-RED response:', parsed);
+      csvBoxers.push(toApiImportBoxer(parsed as CsvBoxer));
+    }
+    return {
+      boxers: csvBoxers,
+      success: true,
+      message: 'API import preview successful',
     };
   }
 }

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Query, Res } from '@nestjs/common';
+import { Body, Controller, Post, Res } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Tournament } from '../entities/tournament.entity';
@@ -23,44 +23,6 @@ export class ExternalServicesController {
     private readonly configService: ConfigService,
     private readonly modalityService: ModalityService,
   ) {}
-
-  @Get('importBoxerById')
-  async importBoxerById(
-    @Query('id') id: string,
-    @User() user: AuthenticatedUser,
-    @Res() res: ExpressResponse,
-  ): Promise<void> {
-    let response: Response;
-    try {
-      if (!user.apiEnabled) {
-        console.error('API access is not enabled for user:', user.id);
-        res.status(403).json({ error: 'API access is not enabled' });
-        return;
-      }
-      console.log('Calling Node-RED to import boxer by ID:', id);
-      response = await fetch(
-        `${this.configService.get<string>('NODERED_HOST')}/battlecard/getById?id=${id}`,
-        {
-          method: 'GET',
-          headers: { 'Content-Type': 'application/json' },
-        },
-      );
-    } catch (err: any) {
-      console.error('Error calling Node-RED:', err);
-      res.status(502).json({ error: 'Failed to reach Node-RED' });
-      return;
-    }
-    if (!response) {
-      console.error('Node-RED response error:', response);
-      res.status(502).json({ error: 'Node-RED error.' });
-      return;
-    }
-    const contentType =
-      response.headers.get('content-type') || 'application/octet-stream';
-    const arrBuf = await response.arrayBuffer();
-    res.setHeader('Content-Type', contentType);
-    res.send(Buffer.from(arrBuf));
-  }
 
   @Post('generatePdf')
   async getFightCardPdf(
