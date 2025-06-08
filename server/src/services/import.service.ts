@@ -283,45 +283,53 @@ export class ImportService {
     const csvBoxers: ApiImportBoxer[] = [];
     for (const id of ids) {
       try {
-        console.log('Calling Node-RED to import boxer by ID:', id);
-        response = await fetch(
-          `${this.configService.get<string>('NODERED_HOST')}/battlecard/getById?id=${id}`,
-          {
-            method: 'GET',
-            headers: { 'Content-Type': 'application/json' },
-          },
+        console.log('Calling Import API to import boxer by ID:', id);
+        const url =
+          `${this.configService.get<string>('IMPORT_API_URL')}`.replace(
+            '{id}',
+            encodeURIComponent(id),
+          );
+        const apiKey = this.configService.get<string>(
+          'IMPORT_API_HEADER_X_API_KEY',
         );
+        response = await fetch(url, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-API-KEY': apiKey ?? '',
+          },
+        });
       } catch (err: any) {
-        console.error('Error calling Node-RED:', err);
+        console.error('Error calling Calling Import API:', err);
         continue;
       }
       if (!response) {
-        console.error('Node-RED response error:', response);
+        console.error('Import API response error:', response);
         continue;
       }
       const responseText = await response.text();
       if (!responseText || responseText.length === 0) {
-        console.error('No data found in Node-RED response for ID:', id);
+        console.error('No data found in Import API response for ID:', id);
         continue;
       }
-      console.log('Node-RED response received for ID:', id);
+      console.log('Import API response received for ID:', id);
       let parsed: unknown;
       try {
         parsed = JSON.parse(responseText);
       } catch (e) {
         console.error(
-          'Failed to parse JSON from Node-RED response for ID:',
+          'Failed to parse JSON from Import API response for ID:',
           id,
           e,
         );
         continue;
       }
       if (!parsed || typeof parsed !== 'object') {
-        console.error('No boxers found in Node-RED response for ID:', id);
+        console.error('No boxers found in Import API response for ID:', id);
         continue;
       }
       // Optionally, add more property checks here to validate CsvBoxer shape
-      console.log('Parsed boxers from Node-RED response:', parsed);
+      console.log('Parsed boxers from Import API response:', parsed);
       csvBoxers.push(toApiImportBoxer(parsed as CsvBoxer));
     }
     return {

@@ -109,7 +109,7 @@ export class ImportController {
         boxers: [],
       };
     }
-    const ids = dto.payload.split('\n');
+    const ids = dto.payload.split('\n').filter((id) => id.trim() !== '');
     return await this.importService.previewBoxersFromApi(ids);
   }
 }
