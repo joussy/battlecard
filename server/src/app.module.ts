@@ -24,6 +24,8 @@ import { ModalityService } from './modality/modality.service';
 import { FightService } from './services/fight.service';
 import { TournamentService } from './services/tournament.service';
 import { BoxerService } from './services/boxer.service';
+import { ImportController } from './controllers/import.controller';
+import { ImportService } from './services/import.service';
 // import { TemplateService } from './services/template.service';
 
 @Module({
@@ -58,6 +60,7 @@ import { BoxerService } from './services/boxer.service';
     BoxerController,
     FightController,
     ExternalServicesController,
+    ImportController,
   ],
   providers: [
     GoogleStrategy,
@@ -66,6 +69,7 @@ import { BoxerService } from './services/boxer.service';
     TournamentService,
     BoxerService,
     AuthService,
+    ImportService,
     JwtStrategy,
     {
       provide: APP_GUARD,

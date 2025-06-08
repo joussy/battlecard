@@ -144,3 +144,70 @@ export interface ApiTournament_Boxer {
     /** Boxer ID */
     boxerId: string;
 }
+
+export interface ApiImportBoxer {
+  /** Boxer name */
+  lastName: string;
+  /** Boxer first name */
+  firstName: string;
+  /** Boxer birth date (YYYY-MM-DD) */
+  birthDate: string;
+  /** Boxer club */
+  club: string;
+  /** Boxer weight */
+  weight: number;
+  /** Boxer gender */
+  gender?: Gender;
+  /** Boxer license */
+  license: string;
+  /** Boxer fight record */
+  fightRecord: number;
+}
+
+export interface ApiImportBoxers {
+  verify: boolean;
+  boxers: ApiImportBoxer[];
+}
+
+export interface ApiBoxerImportError {
+  message: string;
+  row: number;
+  field: string;
+}
+
+export interface ApiImportBoxersResponse {
+  success: boolean;
+  message: string;
+  errors: ApiBoxerImportError[];
+}
+
+// PREVIEW
+
+export interface ApiPreviewBoxersApi {
+  payload: string;
+}
+
+export interface ApiPreviewBoxersCsv {
+  payload: string;
+}
+
+export interface ApiPreviewBoxersResponse {
+  success: boolean;
+  message: string;
+  boxers: ApiImportBoxer[];
+}
+
+export type CsvDelimiter = "tab" | "semi-column" | "comma";
+
+export function getCsvDelimiterFromType(delimiter: CsvDelimiter): string {
+    switch (delimiter) {
+        case "tab":
+            return "\t";
+        case "semi-column":
+            return ";";
+        case "comma":
+            return ",";
+        default:
+            throw new Error(`Unknown CSV delimiter type: ${delimiter}`);
+    }
+}

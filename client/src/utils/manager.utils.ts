@@ -60,6 +60,21 @@ export async function mutate<T = Response>(
     return await res.json()
 }
 
+export async function upload<T = Response>(url: string, file: File, errorMsg = "File upload failed"): Promise<T> {
+    const formData = new FormData()
+    formData.append("file", file)
+
+    const res = await fetch(url, {
+        method: "POST",
+        headers: mergeHeaders(),
+        body: formData,
+    })
+
+    if (!res.ok) throw new Error(errorMsg)
+    if (res.status === 204) return undefined as unknown as T
+    return await res.json()
+}
+
 export async function postAndDownload(url: string, payload: object | [], filename: string): Promise<void> {
     try {
         const response = await fetch(url, {

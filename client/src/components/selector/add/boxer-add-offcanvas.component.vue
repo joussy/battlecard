@@ -44,7 +44,7 @@
                     </li>
                     <li class="nav-item">
                         <a
-                            class="nav-link disabled"
+                            class="nav-link"
                             aria-current="page"
                             href="#"
                             :class="{ active: displayMode == 'import' }"
@@ -101,7 +101,7 @@ export default defineComponent({
     },
     mounted() {
         const offcanvasRef = this.$refs.offcanvas as HTMLElement
-        offcanvasRef.addEventListener("hidden.bs.offcanvas", (event) => {
+        offcanvasRef.addEventListener("hidden.bs.offcanvas", () => {
             this.clear()
         })
         this.clear()

@@ -58,6 +58,14 @@ export class BoxerService {
     return toApiBoxerGet(dbBoxer, modality, selectedFights);
   }
 
+  async getBoxersForUser(user: AuthenticatedUser): Promise<ApiBoxerGet[]> {
+    const dbBoxers = await this.boxerRepository.find({
+      where: { userId: user.id },
+    });
+    const modality = this.modalityService.getModality();
+    return dbBoxers.map((boxer) => toApiBoxerGet(boxer, modality));
+  }
+
   async update(
     boxerId: string,
     boxer: ApiBoxerCreate,

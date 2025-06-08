@@ -6,8 +6,12 @@ import {
     ApiOpponentGet,
     ApiTournament,
     ApiTournament_Boxer,
+    ApiImportBoxersResponse,
+    ApiImportBoxers,
+    ApiPreviewBoxersResponse,
+    ApiPreviewBoxersCsv,
 } from "@/shared/types/api"
-import { get, mutate } from "@/utils/manager.utils"
+import { get, mutate, upload } from "@/utils/manager.utils"
 
 export class ApiManager {
     getPossibleOpponents(boxerId: string, tournamentId: string): PromiseLike<ApiOpponentGet[]> {
@@ -89,6 +93,38 @@ export class ApiManager {
             { boxerIds, tournamentId },
             "Failed to delete boxers from tournament"
         )
+    }
+    // Import
+    importBoxers(importBoxers: ApiImportBoxers): Promise<ApiImportBoxersResponse> {
+        return mutate<ApiImportBoxersResponse>("/api/import", "POST", importBoxers, "Failed to import boxers", false)
+    }
+    previewBoxersFromApi(payload: string) {
+        return mutate<ApiPreviewBoxersResponse>(
+            "/api/import/previewFromApi",
+            "POST",
+            { payload } as ApiPreviewBoxersCsv,
+            "Failed to import CSV",
+            false
+        )
+    }
+    previewBoxersFromText(payload: string) {
+        return mutate<ApiPreviewBoxersResponse>(
+            "/api/import/previewFromCsvText",
+            "POST",
+            { payload } as ApiPreviewBoxersCsv,
+            "Failed to import CSV",
+            false
+        )
+    }
+    previewBoxersFromFfboxeFile(file: File): Promise<ApiPreviewBoxersResponse> {
+        return upload<ApiPreviewBoxersResponse>(
+            "/api/import/previewFromFfboxeFile",
+            file,
+            "Failed to import FFBoxe file"
+        )
+    }
+    previewBoxersFromCsvFile(file: File, tournamentId: string): Promise<ApiPreviewBoxersResponse> {
+        return upload<ApiPreviewBoxersResponse>("/api/import/previewFromCsvFile", file, "Failed to import FFBoxe file")
     }
 }
 
