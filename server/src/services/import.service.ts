@@ -14,7 +14,7 @@ import { Boxer } from '@/entities/boxer.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Gender } from '@/shared/types/modality.type';
 import { parseCsvAsync } from '@/utils/csv.utils';
-import { CsvBoxer, csvDelimiter, csvHeader } from '@/interfaces/csv.interface';
+import { CsvBoxer, csvDelimiter } from '@/interfaces/csv.interface';
 
 @Injectable()
 export class ImportService {
@@ -45,14 +45,15 @@ export class ImportService {
     // Map the parsed CSV data to ImportBoxerDto using array indices
     const parsed: ApiImportBoxer[] = res.map((row) => {
       const entry: ApiImportBoxer = {
-        name: row.lastName,
-        firstname: row.firstName,
+        lastName: row.lastName,
+        firstName: row.firstName,
         gender:
           row.gender === Gender.MALE.toString() ? Gender.MALE : Gender.FEMALE,
-        weight: row.weight,
+        weight: parseFloat(row.weight) || 0,
         club: row.club || '',
-        birth_date: row.birthDate || '',
+        birthDate: row.birthDate || '',
         license: row.license || '',
+        fightRecord: row.fightRecord,
       };
       return entry;
     });
@@ -97,14 +98,15 @@ export class ImportService {
       }
 
       const entry: ApiImportBoxer = {
-        name: row['Nom'] || '',
-        firstname: row['Prénom'] || '',
+        lastName: row['Nom'] || '',
+        firstName: row['Prénom'] || '',
         // fights: row[CSV_IDX_FIGHTS] ? parseInt(row[CSV_IDX_FIGHTS], 10) : undefined, // optional
         gender,
         weight: row['Poids'] ? parseFloat(row['Poids']) : 0,
         club: row['Nom structure'] || '',
-        birth_date: row['DDN'] || '',
+        birthDate: row['DDN'] || '',
         license: row['Code adhérent'] || '',
+        fightRecord: 0, // FFboxe does not provide fight record
       };
       return entry;
     });
@@ -138,25 +140,25 @@ export class ImportService {
     });
     // check if any field is empty
     boxers.forEach((boxer, i) => {
-      if (!boxer.name) {
+      if (!boxer.lastName) {
         errors.push({
           message: 'Name is required',
           row: i,
-          field: 'name',
+          field: 'lastName',
         });
       }
-      if (!boxer.firstname) {
+      if (!boxer.firstName) {
         errors.push({
           message: 'First name is required',
           row: i,
-          field: 'firstname',
+          field: 'firstName',
         });
       }
-      if (!boxer.birth_date) {
+      if (!boxer.birthDate) {
         errors.push({
           message: 'Birth date is required',
           row: i,
-          field: 'birth_date',
+          field: 'birthDate',
         });
       }
       if (!boxer.license) {
@@ -249,9 +251,9 @@ export class ImportService {
       try {
         // Map DTO fields to ApiBoxerCreate
         const boxerCreate: ApiBoxerCreate = {
-          lastName: boxer.name,
-          firstName: boxer.firstname,
-          birthDate: boxer.birth_date,
+          lastName: boxer.lastName,
+          firstName: boxer.firstName,
+          birthDate: boxer.birthDate,
           nbFights: undefined,
           club: boxer.club,
           weight: boxer.weight,

@@ -134,12 +134,12 @@
                 <ul class="list-group">
                     <li class="list-group-item">Last Name</li>
                     <li class="list-group-item">First Name</li>
-                    <li class="list-group-item">Fights</li>
-                    <li class="list-group-item">Gender</li>
-                    <li class="list-group-item">Weight</li>
+                    <li class="list-group-item">Birth Date (YYYY-MM-dd)</li>
                     <li class="list-group-item">Club</li>
-                    <li class="list-group-item">Birth Date</li>
+                    <li class="list-group-item">Weight</li>
+                    <li class="list-group-item">Gender (male or female)</li>
                     <li class="list-group-item">License</li>
+                    <li class="list-group-item">Fight Record</li>
                 </ul>
             </div>
         </div>

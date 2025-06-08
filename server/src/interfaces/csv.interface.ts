@@ -8,7 +8,7 @@ export interface CsvBoxer {
   /** Boxer club */
   club: string;
   /** Boxer weight */
-  weight: number;
+  weight: string;
   /** Boxer gender */
   gender: string;
   /** Boxer license */

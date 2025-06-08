@@ -44,7 +44,7 @@
                     </li>
                     <li class="nav-item">
                         <a
-                            class="nav-link disabled"
+                            class="nav-link"
                             aria-current="page"
                             href="#"
                             :class="{ active: displayMode == 'import' }"

@@ -52,16 +52,6 @@
                 <span class="badge rounded-pill bg-primary">{{ nbFights }}</span>
             </router-link>
         </div>
-        <!-- Import menu item -->
-        <div class="nav-item">
-            <router-link
-                :to="{ name: 'import' }"
-                class="nav-link link-secondary"
-                active-class="active"
-            >
-                Import
-            </router-link>
-        </div>
         <div class="nav-item dropdown ms-auto me-3">
             <div
                 class="border-0 d-flex align-items-center icon-img-2"

@@ -146,13 +146,22 @@ export interface ApiTournament_Boxer {
 }
 
 export interface ApiImportBoxer {
-  name: string;
-  firstname: string;
-  birth_date: string; // ISO date string (YYYY-MM-DD)
-  weight: number;
+  /** Boxer name */
+  lastName: string;
+  /** Boxer first name */
+  firstName: string;
+  /** Boxer birth date (YYYY-MM-DD) */
+  birthDate: string;
+  /** Boxer club */
   club: string;
+  /** Boxer weight */
+  weight: number;
+  /** Boxer gender */
   gender?: Gender;
+  /** Boxer license */
   license: string;
+  /** Boxer fight record */
+  fightRecord: number;
 }
 
 export interface ApiImportBoxers {

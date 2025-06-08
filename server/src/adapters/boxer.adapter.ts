@@ -71,7 +71,7 @@ export function toCsvBoxer(boxer: Boxer): CsvBoxer {
     firstName: boxer.firstName,
     birthDate: boxer.birthDate,
     club: boxer.club,
-    weight: boxer.weight ?? 0,
+    weight: (boxer.weight ?? 0).toString(),
     gender: boxer.gender,
     license: boxer.license,
     fightRecord: boxer.nbFights,

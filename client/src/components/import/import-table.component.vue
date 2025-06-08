@@ -164,9 +164,9 @@ export default {
     data() {
         return {
             columns: [
-                { key: "name", label: "Last Name", type: "text" },
-                { key: "firstname", label: "First Name", type: "text" },
-                { key: "fights", label: "Fights", type: "number" },
+                { key: "lastName", label: "Last Name", type: "text" },
+                { key: "firstName", label: "First Name", type: "text" },
+                { key: "fightRecord", label: "Fights", type: "number" },
                 {
                     key: "gender",
                     label: "Gender",
@@ -178,7 +178,7 @@ export default {
                 },
                 { key: "weight", label: "Weight (kg)", type: "number" },
                 { key: "club", label: "Club", type: "text" },
-                { key: "birth_date", label: "Birth Date", type: "date" },
+                { key: "birthDate", label: "Birth Date", type: "date" },
                 { key: "license", label: "License", type: "text" },
             ],
             rows: this.inputBoxers as ApiImportBoxer[],
@@ -245,12 +245,13 @@ export default {
         },
         addRow() {
             this.rows.push({
-                name: "",
-                firstname: "",
+                lastName: "",
+                firstName: "",
                 weight: 0,
                 club: "",
-                birth_date: "",
+                birthDate: "",
                 license: "",
+                fightRecord: 0,
             })
             this.editIdx = this.rows.length - 1
             this.editRow = { ...this.rows[this.rows.length - 1] }
@@ -276,9 +277,9 @@ export default {
             }
             const boxers: ApiImportBoxer[] = this.rows.map((row: Record<string, string | number>) => {
                 return {
-                    name: row.name as string,
-                    firstname: row.name as string,
-                    birth_date: row.birth_date as string,
+                    lastName: row.lastName as string,
+                    firstName: row.firstName as string,
+                    birthDate: row.birthDate as string,
                     club: row.club as string,
                     gender: row.gender as Gender,
                     weight: row.weight as number,
