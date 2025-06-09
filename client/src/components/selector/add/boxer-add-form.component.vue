@@ -220,7 +220,8 @@
             type="submit"
             class="btn btn-primary"
         >
-            Submit
+            <i class="bi bi-save me-2"></i>
+            Save Boxer
         </button>
     </form>
 </template>
@@ -235,7 +236,6 @@ import IconComponent from "@/components/core/icon.component.vue"
 
 import { Toast } from "bootstrap"
 import { useBoxerStore } from "@/stores/boxer.store"
-import { useTournamentStore } from "@/stores/tournament.store"
 import { Gender } from "@/shared/types/modality.type"
 
 configure({
@@ -257,14 +257,6 @@ defineRule("weightRequired", (value: string) => {
     if (!validFormat.test(value)) {
         return "Please enter a valid number (digits only, with optional comma or dot)"
     }
-
-    // Normalize and parse
-    // const normalized = value.replace(",", ".")
-    // const parsed = parseFloat(normalized)
-
-    // if (isNaN(parsed) || parsed < 1) {
-    //     return "The number must be greater than or equal to 1"
-    // }
 
     return true
 })
@@ -293,7 +285,7 @@ export default defineComponent({
             license: properties.boxer?.license ?? "",
             club: properties.boxer?.club ?? "",
             birthdate: isValid(properties.boxer?.birthDate) ? format(properties.boxer!.birthDate, "yyyy-MM-dd") : "",
-            gender: properties.boxer ? properties.boxer.gender : Gender.FEMALE,
+            gender: properties.boxer ? properties.boxer.gender : "",
             id: properties.boxer?.id ?? "",
         }
 
@@ -320,7 +312,6 @@ export default defineComponent({
         const [birthdate] = defineField("birthdate")
         const onSubmit = handleSubmit(async (form: GenericObject) => {
             const boxerStore = useBoxerStore()
-            const tournamentStore = useTournamentStore()
             let boxer: Boxer = {
                 birthDate: new Date(form.birthdate),
                 club: form.club,

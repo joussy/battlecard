@@ -9,24 +9,40 @@
             </div>
             <div class="flex-grow-1"></div>
             <button
-                class="btn btn-outline-primary mb-3"
-                @click="$router.push({ name: 'import' })"
-            >
-                <i class="bi bi-upload" />
-            </button>
-            <button
-                class="btn btn-outline-primary mb-3 ms-2"
-                @click="exportBoxers"
-            >
-                <i class="bi bi-download" />
-            </button>
-            <button
                 class="btn btn-outline-success mb-3 ms-2"
                 data-bs-toggle="offcanvas"
                 data-bs-target="#boxerAddOffcanvasNavbar"
             >
                 <i class="bi bi-person-add" />
             </button>
+            <button
+                type="button"
+                class="btn btn-outline-secondary mb-3 ms-2 dropdown-toggle"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+            >
+                <i class="bi bi-download" />
+            </button>
+            <ul class="dropdown-menu">
+                <li>
+                    <a
+                        class="dropdown-item"
+                        @click="exportBoxers"
+                    >
+                        <i class="bi bi-download" />
+                        Export boxers as CSV
+                    </a>
+                </li>
+                <li>
+                    <a
+                        class="dropdown-item"
+                        @click="$router.push({ name: 'import' })"
+                    >
+                        <i class="bi bi-upload" />
+                        Import boxers
+                    </a>
+                </li>
+            </ul>
             <button
                 class="btn btn-outline-secondary mb-3 ms-2"
                 data-bs-toggle="offcanvas"

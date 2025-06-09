@@ -1,9 +1,10 @@
 <template>
+    <h3>Import boxers</h3>
     <div class="stepper">
         <fieldset class="mb-3">
             <legend class="col-form-label pt-0">
                 <span class="badge rounded-pill bg-primary me-2"><span class="step-badge"></span></span>How do you want
-                to import ?
+                to import the boxers ?
             </legend>
             <input
                 id="csvfile"
