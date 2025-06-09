@@ -13,16 +13,19 @@ import { AuthenticatedUser } from '@/interfaces/auth.interface';
 import { TournamentService } from '../services/tournament.service';
 import {
   ApiBoxerGet,
+  ApiFightGet,
   ApiOpponentGet,
   ApiTournament,
   ApiTournamentCreate,
 } from '@/shared/types/api';
 import { Response } from 'express';
+import { FightService } from '@/services/fight.service';
 
 @Controller('tournaments')
 export class TournamentController {
   constructor(
     private readonly tournamentService: TournamentService,
+    private readonly fightService: FightService,
     private readonly modalityService: ModalityService,
   ) {}
 
@@ -84,5 +87,13 @@ export class TournamentController {
       tournamentId,
       user,
     );
+  }
+
+  @Get(':tournamentId/fights')
+  async getFightsByTournamentId(
+    @Param('tournamentId') tournamentId: string,
+    @User() user: AuthenticatedUser,
+  ): Promise<ApiFightGet[]> {
+    return await this.fightService.findByTournamentId(tournamentId, user);
   }
 }

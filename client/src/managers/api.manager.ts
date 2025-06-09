@@ -34,7 +34,11 @@ export class ApiManager {
 
     // FIGHT
     getFights(tournamentId: string): Promise<ApiFightGet[]> {
-        return get<ApiFightGet[]>("/api/fights", { tournamentId }, "Failed to fetch fights")
+        return get<ApiFightGet[]>(
+            `/api/tournaments/${encodeURIComponent(tournamentId)}/fights`,
+            { tournamentId },
+            "Failed to fetch fights"
+        )
     }
     addFight(fight: ApiFightCreate): Promise<ApiFightGet> {
         return mutate<ApiFightGet>("/api/fights", "POST", fight, "Failed to add fight")

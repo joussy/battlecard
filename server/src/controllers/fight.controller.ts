@@ -26,11 +26,6 @@ export class FightController {
     private readonly modalityService: ModalityService,
   ) {}
 
-  @Get()
-  async findAll(@User() user: AuthenticatedUser): Promise<ApiFightGet[]> {
-    return this.fightService.findAll(user);
-  }
-
   @Post()
   async create(
     @Body() fight: ApiFightCreate,

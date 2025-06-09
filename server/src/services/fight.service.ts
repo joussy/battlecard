@@ -18,9 +18,12 @@ export class FightService {
     private readonly modalityService: ModalityService,
   ) {}
 
-  async findAll(user: AuthenticatedUser): Promise<ApiFightGet[]> {
+  async findByTournamentId(
+    tournamentId: string,
+    user: AuthenticatedUser,
+  ): Promise<ApiFightGet[]> {
     const dbFights = await this.fightRepository.find({
-      where: { tournament: { userId: user.id } },
+      where: { tournament: { userId: user.id }, tournamentId },
       order: { order: 'ASC' },
       relations: ['boxer1', 'boxer2', 'tournament'],
     });
