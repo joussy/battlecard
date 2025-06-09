@@ -148,15 +148,16 @@
                 id="requiredColumns"
                 class="collapse mb-3"
             >
-                <ul class="list-group">
-                    <li class="list-group-item">Last Name</li>
-                    <li class="list-group-item">First Name</li>
-                    <li class="list-group-item">Birth Date (YYYY-MM-dd)</li>
-                    <li class="list-group-item">Club</li>
-                    <li class="list-group-item">Weight</li>
-                    <li class="list-group-item">Gender (male or female)</li>
-                    <li class="list-group-item">License</li>
-                    <li class="list-group-item">Fight Record</li>
+                CSV fields separated by semicolon (;)
+                <ul class="">
+                    <li class="">Last Name</li>
+                    <li class="">First Name</li>
+                    <li class="">Birth Date (YYYY-MM-dd)</li>
+                    <li class="">Club</li>
+                    <li class="">Weight</li>
+                    <li class="">Gender (male or female)</li>
+                    <li class="">License</li>
+                    <li class="">Fight Record</li>
                 </ul>
             </div>
         </div>
