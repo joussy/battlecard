@@ -64,7 +64,7 @@
             class="mb-3"
         >
             <div class="w-100 justify-content-center mb-3">
-                Connect to your
+                <span class="badge rounded-pill bg-primary me-2"><span class="step-badge"></span></span>Connect to your
                 <button class="btn btn-sm btn-outline-primary">
                     <a
                         target="_blank"
@@ -77,8 +77,13 @@
                         >FFBoxe account</a
                     >
                 </button>
-                and extract your licences as CSV
             </div>
+            <div>
+                <span class="badge rounded-pill bg-primary me-2 mb-3"><span class="step-badge"></span></span>Extract
+                your licences as CSV
+            </div>
+            <span class="badge rounded-pill bg-primary me-2 mb-3"><span class="step-badge"></span></span>Import the CSV
+            file
             <div class="mb-3">
                 <input
                     id="formFileDisabled"
@@ -99,8 +104,8 @@
         <div v-if="importMode == 'csv-file' || importMode == 'csv-clipboard'">
             <div v-if="importMode == 'csv-clipboard'">
                 <legend class="col-form-label pt-0">
-                    <span class="badge rounded-pill bg-primary me-2"><span class="step-badge"></span></span>Paste your
-                    clipboard
+                    <span class="badge rounded-pill bg-primary me-2"><span class="step-badge"></span></span>Insert CSV
+                    text from clipboard
                 </legend>
                 <textarea
                     v-model="clipboard"
@@ -108,6 +113,10 @@
                 />
             </div>
             <div v-if="importMode == 'csv-file'">
+                <legend class="col-form-label pt-0">
+                    <span class="badge rounded-pill bg-primary me-2"><span class="step-badge"></span></span>Import a CSV
+                    file
+                </legend>
                 <div class="mb-3">
                     <input
                         id="formFileCsv"
@@ -154,6 +163,7 @@
         <div v-if="importMode == 'api'">
             <legend class="col-form-label pt-0">
                 <span class="badge rounded-pill bg-primary me-2"><span class="step-badge"></span></span>Query the API
+                (one id per line)
             </legend>
             <textarea
                 v-model="apiClipboard"
