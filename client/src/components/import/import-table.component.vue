@@ -141,7 +141,16 @@
             <i class="bi bi-cloud-arrow-up"></i>
             Import
         </button>
-        <div>{{ importMessage }}</div>
+        <div
+            v-if="importMessage?.length > 0"
+            class="mt-2"
+        >
+            <i
+                class="bi bi-exclamation-circle-fill"
+                style="color: red"
+            ></i>
+            {{ importMessage }}
+        </div>
     </div>
 </template>
 
