@@ -5,7 +5,7 @@
         <div>
             <button
                 class="btn btn-outline-success"
-                @click="$router.push({ name: 'import' })"
+                @click="redirectToImport"
             >
                 <i class="bi bi-person-add me-2"></i>Import boxers
             </button>
@@ -14,10 +14,19 @@
 </template>
 
 <script lang="ts">
+import { closeModal } from "@/utils/ui.utils"
 import { defineComponent } from "vue"
 
 export default defineComponent({
     components: {},
-    methods: {},
+    methods: {
+        closeModal() {
+            closeModal("#boxerAddOffcanvasNavbar")
+        },
+        redirectToImport() {
+            this.closeModal()
+            this.$router.push({ name: "import" })
+        },
+    },
 })
 </script>
