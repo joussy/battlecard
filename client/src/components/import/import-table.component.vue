@@ -8,119 +8,121 @@
         >
             <i class="bi bi-plus-lg"></i> Add Row
         </button>
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th
-                        v-for="col in columns"
-                        :key="col.key"
-                    >
-                        {{ col.label }}
-                    </th>
-                    <th style="width: 120px"></th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for="(row, idx) in rows">
-                    <template v-for="col in columns">
-                        <td
-                            v-if="editIdx !== idx"
-                            :data-bs-toggle="getErrorMessage(idx, col.key) ? 'tooltip' : undefined"
-                            :data-bs-title="getErrorMessage(idx, col.key)"
-                            :class="{ 'has-error': getErrorMessage(idx, col.key) }"
-                            style="cursor: pointer"
+        <div class="overflow-auto">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th
+                            v-for="col in columns"
+                            :key="col.key"
                         >
-                            <!--Display a cell, view mode-->
-                            <span
-                                class="ms-2"
-                                :class="{ 'text-danger': getErrorMessage(idx, col.key) }"
-                                tabindex="0"
+                            {{ col.label }}
+                        </th>
+                        <th style="width: 120px"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="(row, idx) in rows">
+                        <template v-for="col in columns">
+                            <td
+                                v-if="editIdx !== idx"
+                                :data-bs-toggle="getErrorMessage(idx, col.key) ? 'tooltip' : undefined"
+                                :data-bs-title="getErrorMessage(idx, col.key)"
+                                :class="{ 'has-error': getErrorMessage(idx, col.key) }"
+                                style="cursor: pointer"
                             >
-                                {{ (row as any)[col.key] }}
-                            </span>
-                        </td>
-                        <td
-                            v-else
-                            :class="{ 'has-error': getErrorMessage(idx, col.key) }"
-                        >
-                            <!--Display a cell, edit mode-->
-                            <template v-if="col.type === 'select'">
-                                <select
-                                    v-model="editRow[col.key]"
-                                    class="form-control"
+                                <!--Display a cell, view mode-->
+                                <span
+                                    class="ms-2"
+                                    :class="{ 'text-danger': getErrorMessage(idx, col.key) }"
+                                    tabindex="0"
                                 >
-                                    <option
-                                        v-for="opt in col.options"
-                                        :key="opt.value"
-                                        :value="opt.label"
+                                    {{ (row as any)[col.key] }}
+                                </span>
+                            </td>
+                            <td
+                                v-else
+                                :class="{ 'has-error': getErrorMessage(idx, col.key) }"
+                            >
+                                <!--Display a cell, edit mode-->
+                                <template v-if="col.type === 'select'">
+                                    <select
+                                        v-model="editRow[col.key]"
+                                        class="form-control"
                                     >
-                                        {{ opt.label }}
-                                    </option>
-                                </select>
-                            </template>
-                            <template v-else-if="col.type === 'date'">
-                                <input
-                                    v-model="editRow[col.key]"
-                                    class="form-control"
-                                    type="date"
-                                />
-                            </template>
-                            <template v-else-if="col.type === 'number'">
-                                <input
-                                    v-model="editRow[col.key]"
-                                    class="form-control"
-                                    type="number"
-                                    min="0"
-                                />
-                            </template>
-                            <template v-else>
-                                <input
-                                    v-model="editRow[col.key]"
-                                    class="form-control"
-                                />
-                            </template>
-                            <!-- <i class="bi bi-exclamation-circle"></i> -->
+                                        <option
+                                            v-for="opt in col.options"
+                                            :key="opt.value"
+                                            :value="opt.label"
+                                        >
+                                            {{ opt.label }}
+                                        </option>
+                                    </select>
+                                </template>
+                                <template v-else-if="col.type === 'date'">
+                                    <input
+                                        v-model="editRow[col.key]"
+                                        class="form-control"
+                                        type="date"
+                                    />
+                                </template>
+                                <template v-else-if="col.type === 'number'">
+                                    <input
+                                        v-model="editRow[col.key]"
+                                        class="form-control"
+                                        type="number"
+                                        min="0"
+                                    />
+                                </template>
+                                <template v-else>
+                                    <input
+                                        v-model="editRow[col.key]"
+                                        class="form-control"
+                                    />
+                                </template>
+                                <!-- <i class="bi bi-exclamation-circle"></i> -->
+                            </td>
+                        </template>
+                        <td>
+                            <div class="d-flex gap-1 justify-content-center">
+                                <button
+                                    v-if="editIdx !== idx"
+                                    class="btn btn-sm btn-primary"
+                                    title="Edit"
+                                    @click="startEdit(idx)"
+                                >
+                                    <i class="bi bi-pencil"></i>
+                                </button>
+                                <button
+                                    v-if="editIdx !== idx"
+                                    class="btn btn-sm btn-danger"
+                                    title="Edit"
+                                    @click="deleteRow(idx)"
+                                >
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                                <template v-else>
+                                    <button
+                                        class="btn btn-sm btn-success"
+                                        title="Save"
+                                        @click="saveEdit(idx)"
+                                    >
+                                        <i class="bi bi-check-lg"></i>
+                                    </button>
+                                    <button
+                                        class="btn btn-sm btn-secondary"
+                                        title="Cancel"
+                                        @click="cancelEdit"
+                                    >
+                                        <i class="bi bi-x-lg"></i>
+                                    </button>
+                                </template>
+                            </div>
                         </td>
-                    </template>
-                    <td>
-                        <div class="d-flex gap-1 justify-content-center">
-                            <button
-                                v-if="editIdx !== idx"
-                                class="btn btn-sm btn-primary"
-                                title="Edit"
-                                @click="startEdit(idx)"
-                            >
-                                <i class="bi bi-pencil"></i>
-                            </button>
-                            <button
-                                v-if="editIdx !== idx"
-                                class="btn btn-sm btn-danger"
-                                title="Edit"
-                                @click="deleteRow(idx)"
-                            >
-                                <i class="bi bi-trash"></i>
-                            </button>
-                            <template v-else>
-                                <button
-                                    class="btn btn-sm btn-success"
-                                    title="Save"
-                                    @click="saveEdit(idx)"
-                                >
-                                    <i class="bi bi-check-lg"></i>
-                                </button>
-                                <button
-                                    class="btn btn-sm btn-secondary"
-                                    title="Cancel"
-                                    @click="cancelEdit"
-                                >
-                                    <i class="bi bi-x-lg"></i>
-                                </button>
-                            </template>
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
         <button
             class="btn btn-warning mt-3"
             type="button"
