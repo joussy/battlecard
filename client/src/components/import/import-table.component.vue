@@ -145,10 +145,6 @@
             v-if="importMessage?.length > 0"
             class="mt-2"
         >
-            <i
-                class="bi bi-exclamation-circle-fill"
-                style="color: red"
-            ></i>
             {{ importMessage }}
         </div>
     </div>
@@ -160,6 +156,7 @@ import bootstrapInstance from "@/utils/bootstrap.singleton"
 import dbManager from "@/managers/api.manager"
 import { ApiImportBoxer } from "@/shared/types/api"
 import { Gender } from "@/shared/types/modality.type"
+import { useTournamentStore } from "@/stores/tournament.store"
 
 export default {
     props: {
@@ -207,6 +204,7 @@ export default {
             dirty: true,
             importMessage: "",
             errors: [] as Array<{ row: number; field: string; message: string }>,
+            tournamentStore: useTournamentStore(),
         }
     },
     computed: {
@@ -283,6 +281,10 @@ export default {
             })
         },
         async importBoxers(verifyOnly: boolean) {
+            if (this.tournamentStore.currentTournamentId === null) {
+                this.importMessage = "Please select a tournament first."
+                return
+            }
             if (this.editIdx !== null) {
                 this.saveEdit(this.editIdx)
             }
@@ -299,8 +301,9 @@ export default {
             })
 
             const importResult = await dbManager.importBoxers({
-                verify: verifyOnly,
-                boxers: boxers,
+                boxers,
+                tournamentId: this.tournamentStore.currentTournamentId,
+                dry: verifyOnly,
             })
             this.importMessage = ""
             if (importResult.message) this.importMessage = importResult.message

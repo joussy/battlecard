@@ -123,7 +123,7 @@ export class ApiManager {
             "Failed to import FFBoxe file"
         )
     }
-    previewBoxersFromCsvFile(file: File, tournamentId: string): Promise<ApiPreviewBoxersResponse> {
+    previewBoxersFromCsvFile(file: File): Promise<ApiPreviewBoxersResponse> {
         return upload<ApiPreviewBoxersResponse>("/api/import/previewFromCsvFile", file, "Failed to import FFBoxe file")
     }
 }

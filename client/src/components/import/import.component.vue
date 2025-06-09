@@ -263,18 +263,13 @@ Tyson;Mike;2011-06-30;Catskill Boxing Club;100;male;TYS002;58
             this.showImportTable = true
         },
         async previewCsvFile() {
-            const tournamentId = this.tournamentStore.currentTournamentId
-            if (!tournamentId) {
-                console.error("No tournament selected for import")
-                return
-            }
             const fileInput = document.getElementById("formFileCsv") as HTMLInputElement
             if (!fileInput.files || fileInput.files.length === 0) {
                 console.error("No file selected")
                 return
             }
             const file = fileInput.files[0]
-            const res = await dbManager.previewBoxersFromCsvFile(file, tournamentId)
+            const res = await dbManager.previewBoxersFromCsvFile(file)
             if (!res.success) {
                 console.error("Error previewing FFBoxe file:", res.message)
                 return

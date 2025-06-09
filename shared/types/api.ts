@@ -165,8 +165,9 @@ export interface ApiImportBoxer {
 }
 
 export interface ApiImportBoxers {
-  verify: boolean;
+  dry: boolean;
   boxers: ApiImportBoxer[];
+  tournamentId: string;
 }
 
 export interface ApiBoxerImportError {

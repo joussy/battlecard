@@ -131,7 +131,7 @@ export default defineComponent({
     created() {
         watch(
             () => this.boxerId,
-            (newId) => {
+            () => {
                 this.loading = true
             }
         )

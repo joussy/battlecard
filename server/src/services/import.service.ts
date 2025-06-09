@@ -224,11 +224,12 @@ export class ImportService {
 
   async importBoxers(
     boxers: ApiImportBoxer[],
-    verify: boolean,
+    dry: boolean,
+    tournamentId: string,
     user: AuthenticatedUser,
   ): Promise<ApiImportBoxersResponse> {
     const errors = await this.verifyBoxers(boxers, user);
-    if (verify || errors.length > 0) {
+    if (dry || errors.length > 0) {
       return {
         success: errors.length === 0,
         message: '',
@@ -249,6 +250,7 @@ export class ImportService {
           weight: boxer.weight,
           gender: boxer.gender as Gender,
           license: boxer.license,
+          tournamentId: tournamentId,
         };
         await this.boxerService.create(boxerCreate, user);
         imported++;

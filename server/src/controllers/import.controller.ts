@@ -36,7 +36,12 @@ export class ImportController {
     @Body() dto: ApiImportBoxers,
     @User() user: AuthenticatedUser,
   ): Promise<ApiImportBoxersResponse> {
-    return this.importService.importBoxers(dto.boxers, dto.verify, user);
+    return this.importService.importBoxers(
+      dto.boxers,
+      dto.dry,
+      dto.tournamentId,
+      user,
+    );
   }
 
   @Post('previewfromcsvText')
