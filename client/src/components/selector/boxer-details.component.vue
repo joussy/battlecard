@@ -53,9 +53,14 @@
                                 class="me-1"
                             ></Icon
                             >{{ boxer.weight }} kg
+                            <Icon
+                                name="medal"
+                                class="me-1"
+                            ></Icon
+                            >{{ boxer.nbFights }}
                         </p>
                         <p class="col-md-6 mb-1">
-                            <i class="bi bi-link me-1"></i>{{ boxer.selectedFights }} selected fights
+                            <i class="bi bi-link me-1"></i>Scheduled for {{ boxer.selectedFights }} fights
                         </p>
                     </div>
                 </div>

@@ -338,7 +338,7 @@ export default {
 }
 
 .word-break-all {
-    word-break: break-all;
+    word-break: break-word;
 }
 
 /* Light mode halo */
