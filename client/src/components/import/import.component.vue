@@ -81,6 +81,11 @@
             <div>
                 <span class="badge rounded-pill bg-primary me-2 mb-3"><span class="step-badge"></span></span>Extract
                 your licences as CSV
+                <img
+                    src="@/assets/images/ffboxe-screenshot.png"
+                    alt="FFBoxe export"
+                    class="mb-3 img-fluid d-block"
+                />
             </div>
             <span class="badge rounded-pill bg-primary me-2 mb-3"><span class="step-badge"></span></span>Import the CSV
             file
