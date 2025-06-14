@@ -17,6 +17,7 @@ import { parseCsvAsync } from '@/utils/csv.utils';
 import { CsvBoxer, csvDelimiter } from '@/interfaces/csv.interface';
 import { toApiImportBoxer } from '@/adapters/boxer.adapter';
 import { ConfigService } from '@nestjs/config';
+import { parse, format } from 'date-fns';
 
 @Injectable()
 export class ImportService {
@@ -87,6 +88,17 @@ export class ImportService {
         gender = Gender.FEMALE;
       }
 
+      // Convert date from dd/MM/yyyy to yyyy-MM-dd using date-fns
+      let birthDate = row['DDN'] || '';
+      if (birthDate) {
+        try {
+          const parsedDate = parse(birthDate, 'dd/MM/yyyy', new Date());
+          birthDate = format(parsedDate, 'yyyy-MM-dd');
+        } catch {
+          birthDate = ''; // If parsing fails, set date to empty string
+        }
+      }
+
       const entry: ApiImportBoxer = {
         lastName: row['Nom'] || '',
         firstName: row['Prénom'] || '',
@@ -94,7 +106,7 @@ export class ImportService {
         gender,
         weight: row['Poids'] ? parseFloat(row['Poids']) : 0,
         club: row['Nom structure'] || '',
-        birthDate: row['DDN'] || '',
+        birthDate: birthDate,
         license: row['Code adhérent'] || '',
         fightRecord: 0, // FFboxe does not provide fight record
       };
