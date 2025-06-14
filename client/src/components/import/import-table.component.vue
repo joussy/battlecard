@@ -53,7 +53,7 @@
                                         <option
                                             v-for="opt in col.options"
                                             :key="opt.value"
-                                            :value="opt.label"
+                                            :value="opt.value"
                                         >
                                             {{ opt.label }}
                                         </option>
