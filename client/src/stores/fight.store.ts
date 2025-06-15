@@ -10,6 +10,7 @@ export const useFightStore = defineStore("fight", {
         fights: [] as Fight[],
         loading: false,
         error: null as string | null,
+        restored: false,
     }),
     actions: {
         async fetchFights() {
@@ -24,6 +25,7 @@ export const useFightStore = defineStore("fight", {
             try {
                 const apiFights: ApiFightGet[] = await dbManager.getFights(tournamentId)
                 this.fights = apiFights.map((apiFight) => ApiAdapter.toFight(apiFight))
+                this.restored = true
             } catch (e: unknown) {
                 this.error = e instanceof Error ? e.message : "Unknown error"
             } finally {

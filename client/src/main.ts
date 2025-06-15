@@ -6,6 +6,7 @@ import FightCardComponent from "@/components/fight-card.component.vue"
 import UploadComponent from "@/components/options-panel.component.vue"
 import BoxerSelectorComponent from "@/components/boxer-selector.component.vue"
 import ImportPage from "@/components/import/import.component.vue"
+import setupAuthRedirect from "@/router/auth-redirect"
 
 import "./style.scss"
 import "bootstrap-icons/font/bootstrap-icons.css"
@@ -14,7 +15,7 @@ import TournamentsComponent from "@/components/tournaments.component.vue"
 import { createPinia } from "pinia"
 
 const routes = [
-    { path: "/", redirect: { name: "selector" } },
+    { path: "/", redirect: { name: "settings" } },
     { path: "/tournaments", name: "tournaments", component: TournamentsComponent },
     { path: "/selector", name: "selector", component: BoxerSelectorComponent },
     { path: "/selector/tile/:id", name: "selector-tile", component: BoxerTileDetailsComponent },
@@ -33,3 +34,4 @@ const app = createApp(App)
 app.use(pinia)
 app.use(router)
 app.mount("#app")
+setupAuthRedirect(router)

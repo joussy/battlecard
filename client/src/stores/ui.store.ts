@@ -54,19 +54,20 @@ export const useUiStore = defineStore("ui", {
             this.jwtToken = null
             this.account = null
         },
-        loadUiStore() {
+        async loadUiStore() {
+            let localStorageData: UiStorage | undefined
             console.debug("loading ui ... ")
             const localStorageDataString = localStorage.getItem("uiStore")
-            const tournamentStore = useTournamentStore()
             if (localStorageDataString) {
-                const localStorageData: UiStorage = JSON.parse(localStorageDataString)
+                localStorageData = JSON.parse(localStorageDataString)
+            }
+            if (localStorageData) {
                 this.theme = localStorageData.theme
                 this.hideNonMatchableOpponents = localStorageData.hideNonMatchableOpponents
                 this.hideFightersWithNoMatch = localStorageData.hideFightersWithNoMatch
-                tournamentStore.setCurrentTournament(localStorageData.currentTournamentId)
                 this.jwtToken = localStorageData.jwtToken
                 if (this.jwtToken) {
-                    this.setTokenAndFetchUser()
+                    await this.setTokenAndFetchUser()
                 }
                 console.debug("store loaded")
             } else {
@@ -75,6 +76,7 @@ export const useUiStore = defineStore("ui", {
             this.listenWindowThemeChanges()
             this.setTheme(this.theme)
             this.restored = true
+            return localStorageData
         },
         listenWindowThemeChanges() {
             window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", (e: MediaQueryListEvent) => {

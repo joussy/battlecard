@@ -26,10 +26,18 @@ export default defineComponent({
     },
     async mounted() {
         const uiStore = useUiStore()
-        uiStore.loadUiStore()
         const tournamentStore = useTournamentStore()
         const fightStore = useFightStore()
-        await tournamentStore.fetchTournaments()
+        watch(
+            () => [uiStore.restored],
+            async () => {
+                console.log("UI store restored:", uiStore.restored)
+                // If the user is logged in, fetch the tournaments
+                if (uiStore.account) {
+                    await tournamentStore.fetchTournaments()
+                }
+            }
+        )
         watch(
             () => [tournamentStore.currentTournamentId],
             async () => {
@@ -37,6 +45,7 @@ export default defineComponent({
                     if (tournamentStore.currentTournamentId == null) {
                         this.$router.push("tournaments")
                     } else {
+                        //Just for the fight counter, but it's overkill
                         await fightStore.fetchFights()
                     }
                 }
@@ -49,6 +58,10 @@ export default defineComponent({
             () => uiStore.saveUiStore(),
             { deep: true }
         )
+        const localStorageData = await uiStore.loadUiStore()
+        if (localStorageData?.currentTournamentId) {
+            tournamentStore.setCurrentTournament(localStorageData.currentTournamentId)
+        }
     },
 })
 </script>

@@ -232,15 +232,19 @@ export default {
             })[],
         }
     },
-    async created() {
-        await this.boxerStore.fetchBoxers()
-        await this.fightStore.fetchFights()
-    },
     mounted() {
+        watch(
+            () => [this.tournamentStore.currentTournamentId],
+            async () => {
+                await this.boxerStore.fetchBoxers()
+                await this.fightStore.fetchFights()
+            },
+            { immediate: true }
+        )
         watch(
             () => this.fightStore.fights,
             () => {
-                console.log("Fight card updated")
+                if (!this.fightStore.restored || !this.boxerStore.restored) return
                 this.fightCard = this.fightStore.fights.map((fight: Fight) => {
                     return {
                         ...fight,

@@ -123,12 +123,10 @@ export default defineComponent({
             return date instanceof Date && !isNaN(date.getTime()) ? date.toLocaleDateString() : null
         },
     },
-    async created() {
-        await this.boxersStore.fetchBoxers()
-    },
     mounted() {
         watchEffect(() => {
             this.selectedTournamentId = this.tournamentStore.currentTournamentId ?? null
+            this.boxersStore.fetchBoxers()
         })
     },
     methods: {

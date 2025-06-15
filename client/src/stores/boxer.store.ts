@@ -10,7 +10,7 @@ export const useBoxerStore = defineStore("boxer", {
         boxers: [] as Boxer[],
         loading: false,
         error: null as string | null,
-        isReady: false,
+        restored: false,
     }),
     actions: {
         async fetchBoxers() {
@@ -25,12 +25,12 @@ export const useBoxerStore = defineStore("boxer", {
                     tournamentStore.currentTournamentId
                 )
                 this.boxers = apiBoxers.map(ApiAdapter.toBoxer)
+                this.restored = true
             } catch (e: unknown) {
                 this.error = e instanceof Error ? e.message : "Unknown error"
             } finally {
                 this.loading = false
             }
-            this.isReady = true
         },
         async fetchBoxerById(boxerId: string): Promise<Boxer> {
             this.loading = true
