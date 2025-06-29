@@ -24,33 +24,33 @@
             <div class="bg-body-tertiary rounded">
                 <ul class="nav nav-pills nav-fill mb-3">
                     <li class="nav-item">
-                        <a
+                        <button
                             class="nav-link disabled"
                             aria-current="page"
-                            href="#"
                             :class="{ active: displayMode == 'search' }"
                             @click="displayMode = 'search'"
-                            >Search</a
                         >
+                            Search
+                        </button>
                     </li>
                     <li class="nav-item">
-                        <a
+                        <button
                             class="nav-link"
-                            href="#"
                             :class="{ active: displayMode == 'create' }"
                             @click="displayMode = 'create'"
-                            >Create</a
                         >
+                            Create
+                        </button>
                     </li>
                     <li class="nav-item">
-                        <a
+                        <button
                             class="nav-link"
                             aria-current="page"
-                            href="#"
                             :class="{ active: displayMode == 'import' }"
                             @click="displayMode = 'import'"
-                            >Import</a
                         >
+                            Import
+                        </button>
                     </li>
                 </ul>
             </div>
@@ -70,6 +70,7 @@
                 v-if="displayMode == 'import'"
                 @boxer-add="closeModal()"
             ></BoxerImportComponent>
+
             <BoxerAddFormComponent
                 v-if="displayMode == 'create'"
                 @boxer-add="closeModal()"
@@ -82,9 +83,9 @@
 import { defineComponent } from "vue"
 
 import BoxerAddFormComponent from "./boxer-add-form.component.vue"
+import BoxerImportComponent from "./boxer-import.component.vue"
 import { closeModal } from "@/utils/ui.utils"
 import BoxerSearchComponent from "./boxer-search.component.vue"
-import BoxerImportComponent from "./boxer-import.component.vue"
 import { useUiStore } from "@/stores/ui.store"
 
 export default defineComponent({
