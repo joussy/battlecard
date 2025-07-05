@@ -26,7 +26,8 @@ import { TournamentService } from './services/tournament.service';
 import { BoxerService } from './services/boxer.service';
 import { ImportController } from './controllers/import.controller';
 import { ImportService } from './services/import.service';
-// import { TemplateService } from './services/template.service';
+import { SyncModule } from './sync.module';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
@@ -46,12 +47,16 @@ import { ImportService } from './services/import.service';
       database: process.env.DB_NAME || 'battlecard',
       autoLoadEntities: true,
       synchronize: true, // set to false in production!
+      migrations: ['migrations/*.ts'],
+      migrationsRun: true,
     }),
     TypeOrmModule.forFeature([User, Tournament, Boxer, Fight, TournamentBoxer]),
     JwtModule.register({
       secret: process.env.JWT_SECRET,
       signOptions: { expiresIn: '1d' },
     }),
+    ScheduleModule.forRoot(),
+    SyncModule,
   ],
   controllers: [
     UserController,
@@ -64,7 +69,6 @@ import { ImportService } from './services/import.service';
   ],
   providers: [
     GoogleStrategy,
-    // TemplateService,
     FightService,
     TournamentService,
     BoxerService,
