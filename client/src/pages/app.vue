@@ -54,7 +54,13 @@ export default defineComponent({
             { immediate: true }
         )
         watch(
-            () => [uiStore.theme, uiStore.hideNonMatchableOpponents, uiStore.hideFightersWithNoMatch, uiStore.jwtToken],
+            () => [
+                uiStore.facets,
+                uiStore.theme,
+                uiStore.hideNonMatchableOpponents,
+                uiStore.hideFightersWithNoMatch,
+                uiStore.jwtToken,
+            ],
             () => uiStore.saveUiStore(),
             { deep: true }
         )

@@ -1,5 +1,5 @@
 import { defineStore } from "pinia"
-import type { UiTheme, UiStorage } from "@/types/ui"
+import type { UiTheme, UiStorage, Facets } from "@/types/ui"
 import type { UserAccount } from "@/types/user"
 import { useTournamentStore } from "./tournament.store"
 
@@ -11,6 +11,7 @@ export const useUiStore = defineStore("ui", {
         hideNonMatchableOpponents: false,
         hideFightersWithNoMatch: false,
         jwtToken: null as string | null,
+        facets: null as Facets | null,
     }),
     actions: {
         authenticate() {
@@ -54,6 +55,38 @@ export const useUiStore = defineStore("ui", {
             this.jwtToken = null
             this.account = null
         },
+        clearFacets() {
+            this.facets = {
+                filters: {
+                    weight: { min: null, max: null },
+                    age: { min: null, max: null },
+                    nbFights: { min: null, max: null },
+                    gender: null,
+                },
+                sort: { by: "name", direction: "asc" },
+            }
+        },
+        clearFacet(facet: string) {
+            if (!this.facets) {
+                console.warn("No facets to clear")
+                return
+            }
+            if (facet === "weight") {
+                this.facets.filters.weight.min = null
+                this.facets.filters.weight.max = null
+            } else if (facet === "age") {
+                this.facets.filters.age.min = null
+                this.facets.filters.age.max = null
+            } else if (facet === "nbFights") {
+                this.facets.filters.nbFights.min = null
+                this.facets.filters.nbFights.max = null
+            } else if (facet === "gender") {
+                this.facets.filters.gender = ""
+            } else if (facet === "sort") {
+                this.facets.sort.by = "name"
+                this.facets.sort.direction = "asc"
+            }
+        },
         async loadUiStore() {
             let localStorageData: UiStorage | undefined
             console.debug("loading ui ... ")
@@ -66,6 +99,10 @@ export const useUiStore = defineStore("ui", {
                 this.hideNonMatchableOpponents = localStorageData.hideNonMatchableOpponents
                 this.hideFightersWithNoMatch = localStorageData.hideFightersWithNoMatch
                 this.jwtToken = localStorageData.jwtToken
+                this.clearFacets()
+                if (localStorageData.facets) {
+                    this.facets = localStorageData.facets
+                }
                 if (this.jwtToken) {
                     await this.setTokenAndFetchUser()
                 }
@@ -95,6 +132,7 @@ export const useUiStore = defineStore("ui", {
                 hideFightersWithNoMatch: this.hideFightersWithNoMatch,
                 currentTournamentId: tournamentStore.currentTournamentId || null,
                 jwtToken: this.jwtToken,
+                facets: this.facets,
             }
             localStorage.setItem("uiStore", JSON.stringify(localStorageData))
         },

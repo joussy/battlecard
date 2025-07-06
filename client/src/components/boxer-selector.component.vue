@@ -1,6 +1,6 @@
 <template>
     <div class="max-width-md">
-        <div class="d-flex">
+        <div class="d-flex align-items-center mb-3">
             <div class="d-none d-xs-none d-sm-block">
                 <div>
                     <i class="bi bi-calendar ms-2"></i>
@@ -9,19 +9,21 @@
             </div>
             <div class="flex-grow-1"></div>
             <button
-                class="btn btn-outline-success mb-3 ms-2"
+                class="btn btn-outline-success ms-2"
                 data-bs-toggle="offcanvas"
                 data-bs-target="#boxerAddOffcanvasNavbar"
             >
                 <i class="bi bi-person-add" />
+                <span class="d-none d-md-inline ms-2">Add Boxer</span>
             </button>
             <button
                 type="button"
-                class="btn btn-outline-secondary mb-3 ms-2 dropdown-toggle"
+                class="btn btn-outline-secondary ms-2 dropdown-toggle"
                 data-bs-toggle="dropdown"
                 aria-expanded="false"
             >
                 <i class="bi bi-download" />
+                <span class="d-none d-md-inline ms-2">Export</span>
             </button>
             <ul class="dropdown-menu">
                 <li>
@@ -44,15 +46,36 @@
                 </li>
             </ul>
             <button
-                class="btn btn-outline-secondary mb-3 ms-2"
+                class="btn btn-outline-secondary ms-2"
                 data-bs-toggle="offcanvas"
                 data-bs-target="#filtersOffcanvasNavbar"
-                disabled
             >
                 <span class="bi bi-funnel"></span>
+                Filters
             </button>
             <BoxerSelectorFiltersComponent />
             <BoxerAddOffcanvasComponent />
+        </div>
+        <div class="mb-2 row">
+            <!-- Search bar -->
+            <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-search"></i></span>
+                <input
+                    v-model="searchQuery"
+                    type="text"
+                    class="form-control"
+                    placeholder="Type the name of a boxer ..."
+                />
+                <span
+                    v-if="searchQuery"
+                    class="input-group-text"
+                    @click="clearSearch"
+                    ><i class="bi bi-x-lg"></i
+                ></span>
+            </div>
+        </div>
+        <div class="mb-2">
+            <SearchFacetsComponent />
         </div>
         <div
             v-for="boxer in getBoxersToDisplay()"
@@ -94,12 +117,17 @@ import { useTournamentBoxerStore } from "@/stores/tournamentBoxer.store"
 import { useUiStore } from "@/stores/ui.store"
 import { useBoxerStore } from "@/stores/boxer.store"
 import { postAndDownload } from "@/utils/manager.utils"
+import SearchFacetsComponent from "@/components/selector/search-facets.component.vue"
+import Fuse from "fuse.js"
+import { Boxer } from "@/types/boxing"
+import { differenceInYears } from "date-fns"
 
 export default defineComponent({
     components: {
         BoxerTileComponent: BoxerTileComponent,
         BoxerAddOffcanvasComponent: BoxerAddOffcanvasComponent,
         BoxerSelectorFiltersComponent: BoxerSelectorFiltersComponent,
+        SearchFacetsComponent: SearchFacetsComponent,
     },
     data() {
         return {
@@ -110,6 +138,8 @@ export default defineComponent({
             tournamentBoxerStore: useTournamentBoxerStore(),
             uiStore: useUiStore(),
             boxersStore: useBoxerStore(),
+            facets: useUiStore().facets,
+            searchQuery: "", // Added for search bar binding
         }
     },
     computed: {
@@ -130,8 +160,72 @@ export default defineComponent({
         })
     },
     methods: {
+        filterWithFacets(boxers: Boxer[]) {
+            let filteredBoxers = boxers
+            const facets = this.uiStore.facets
+            filteredBoxers = boxers.filter((boxer) => {
+                const filters = facets?.filters
+                if (!filters) return true // If no filters, return all boxers
+
+                if (filters.weight.min !== null && boxer.weight < filters.weight.min) return false
+                if (filters.weight.max !== null && boxer.weight > filters.weight.max) return false
+                const age = differenceInYears(new Date(), boxer.birthDate)
+                if (filters.age.min !== null && age < filters.age.min) return false
+                if (filters.age.max !== null && age > filters.age.max) return false
+                if (filters.nbFights.min !== null && age < filters.nbFights.min) return false
+                if (filters.nbFights.max !== null && age > filters.nbFights.max) return false
+                if (filters.gender && boxer.gender !== filters.gender) return false
+
+                // If all filters pass, return true
+                return true
+            })
+            if (facets?.sort) {
+                const { by } = facets.sort
+                if (by === "name") {
+                    filteredBoxers.sort((a, b) => {
+                        const nameA = `${a.firstName} ${a.lastName}`.toLowerCase()
+                        const nameB = `${b.firstName} ${b.lastName}`.toLowerCase()
+                        return nameA.localeCompare(nameB)
+                    })
+                } else if (by === "weight") {
+                    filteredBoxers.sort((a, b) => a.weight - b.weight)
+                } else if (by === "age") {
+                    filteredBoxers.sort((a, b) => {
+                        return b.birthDate.getTime() - a.birthDate.getTime()
+                    })
+                } else if (by === "nbFights") {
+                    filteredBoxers.sort((a, b) => a.nbFights - b.nbFights)
+                }
+                if (facets.sort.direction === "desc") {
+                    filteredBoxers.reverse()
+                }
+
+                return filteredBoxers
+            }
+
+            return filteredBoxers
+        },
         getBoxersToDisplay() {
-            return this.boxersStore.boxers
+            // 1. Filter by facets first
+            let filteredBoxers = this.filterWithFacets(this.boxersStore.boxers)
+            if (!this.searchQuery) return filteredBoxers
+
+            // 2. Then filter by search query using Fuse.js
+            const boxersWithFullName = filteredBoxers.map((boxer) => ({
+                ...boxer,
+                fullName: `${boxer.firstName} ${boxer.lastName}`,
+            }))
+            const fuse = new Fuse(boxersWithFullName, {
+                keys: [
+                    { name: "firstName", weight: 0.4 },
+                    { name: "lastName", weight: 0.4 },
+                    { name: "fullName", weight: 1.0 },
+                ],
+                threshold: 0.3,
+                ignoreLocation: true,
+                distance: 100,
+            })
+            return fuse.search(this.searchQuery).map((result) => result.item)
         },
         exportBoxers() {
             const tournamentId = this.tournamentStore.currentTournamentId
@@ -141,6 +235,9 @@ export default defineComponent({
             }
             postAndDownload(`/api/tournaments/${tournamentId}/boxers/export`, {}, "boxers.csv")
             // dbManager.exportBoxersAsCsv(this.tournamentStore.currentTournamentId)
+        },
+        clearSearch() {
+            this.searchQuery = ""
         },
     },
 })
