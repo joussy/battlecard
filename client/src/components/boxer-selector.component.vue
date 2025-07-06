@@ -47,12 +47,14 @@
                 class="btn btn-outline-secondary mb-3 ms-2"
                 data-bs-toggle="offcanvas"
                 data-bs-target="#filtersOffcanvasNavbar"
-                disabled
             >
                 <span class="bi bi-funnel"></span>
             </button>
             <BoxerSelectorFiltersComponent />
             <BoxerAddOffcanvasComponent />
+        </div>
+        <div>
+            <SearchFacetsComponent />
         </div>
         <div
             v-for="boxer in getBoxersToDisplay()"
@@ -94,12 +96,14 @@ import { useTournamentBoxerStore } from "@/stores/tournamentBoxer.store"
 import { useUiStore } from "@/stores/ui.store"
 import { useBoxerStore } from "@/stores/boxer.store"
 import { postAndDownload } from "@/utils/manager.utils"
+import SearchFacetsComponent from "@/components/selector/search-facets.component.vue"
 
 export default defineComponent({
     components: {
         BoxerTileComponent: BoxerTileComponent,
         BoxerAddOffcanvasComponent: BoxerAddOffcanvasComponent,
         BoxerSelectorFiltersComponent: BoxerSelectorFiltersComponent,
+        SearchFacetsComponent: SearchFacetsComponent,
     },
     data() {
         return {
@@ -110,6 +114,7 @@ export default defineComponent({
             tournamentBoxerStore: useTournamentBoxerStore(),
             uiStore: useUiStore(),
             boxersStore: useBoxerStore(),
+            facets: useUiStore().facets,
         }
     },
     computed: {
