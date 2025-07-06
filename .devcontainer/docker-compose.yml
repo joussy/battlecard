@@ -21,3 +21,11 @@ services:
     restart: unless-stopped
     ports:
       - "3001:3000"
+  meilisearch:
+    image: getmeili/meilisearch:v1.15
+    restart: unless-stopped
+    environment:
+      MEILI_MASTER_KEY: masterKey
+      MEILI_ENV: development
+    ports:
+      - "7700:7700"
