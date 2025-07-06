@@ -11,7 +11,7 @@ export const useUiStore = defineStore("ui", {
         hideNonMatchableOpponents: false,
         hideFightersWithNoMatch: false,
         jwtToken: null as string | null,
-        facets: {} as Facets,
+        facets: null as Facets | null,
     }),
     actions: {
         authenticate() {
@@ -60,22 +60,26 @@ export const useUiStore = defineStore("ui", {
                 filters: {
                     weight: { min: null, max: null },
                     age: { min: null, max: null },
-                    record: { min: null, max: null },
+                    nbFights: { min: null, max: null },
                     gender: null,
                 },
                 sort: { by: "name", direction: "asc" },
             }
         },
         clearFacet(facet: string) {
+            if (!this.facets) {
+                console.warn("No facets to clear")
+                return
+            }
             if (facet === "weight") {
                 this.facets.filters.weight.min = null
                 this.facets.filters.weight.max = null
             } else if (facet === "age") {
                 this.facets.filters.age.min = null
                 this.facets.filters.age.max = null
-            } else if (facet === "record") {
-                this.facets.filters.record.min = null
-                this.facets.filters.record.max = null
+            } else if (facet === "nbFights") {
+                this.facets.filters.nbFights.min = null
+                this.facets.filters.nbFights.max = null
             } else if (facet === "gender") {
                 this.facets.filters.gender = ""
             } else if (facet === "sort") {

@@ -1,5 +1,6 @@
 <template>
     <div
+        v-if="facets?.filters"
         id="filtersOffcanvasNavbar"
         class="offcanvas offcanvas-end"
         tabindex="-1"
@@ -73,18 +74,18 @@
                         name="medal"
                         class="me-2"
                     />
-                    Victories (Record) Range
+                    Number of Fights Range
                 </label>
                 <div class="d-flex align-items-center">
                     <input
-                        v-model.number="facets.filters.record.min"
+                        v-model.number="facets.filters.nbFights.min"
                         type="number"
                         class="form-control me-2"
                         placeholder="Min"
                     />
                     <span class="mx-1">-</span>
                     <input
-                        v-model.number="facets.filters.record.max"
+                        v-model.number="facets.filters.nbFights.max"
                         type="number"
                         class="form-control ms-2"
                         placeholder="Max"
@@ -201,17 +202,17 @@
                     </div>
                     <div class="form-check">
                         <input
-                            id="sortRecord"
+                            id="sortNbFights"
                             v-model="facets.sort.by"
                             class="form-check-input"
                             type="radio"
                             name="sortBy"
-                            value="record"
+                            value="nbFights"
                         />
                         <label
                             class="form-check-label"
-                            for="sortRecord"
-                            >Record</label
+                            for="sortNbFights"
+                            >Number of fights</label
                         >
                     </div>
                     <!-- Direction toggle -->
@@ -277,6 +278,7 @@ export default defineComponent({
         sortRadio: {
             immediate: true,
             handler(val) {
+                if (!val || !this.facets) return
                 // Map radio value to facets.sort.by and direction
                 this.facets.sort.by = val
                 // Keep direction as selected
@@ -285,7 +287,7 @@ export default defineComponent({
         facets: {
             deep: true,
             handler() {
-                console.log("facets:", JSON.stringify(toRaw(this.facets), null, 2))
+                // console.debug("facets:", JSON.stringify(toRaw(this.facets), null, 2))
             },
         },
     },
