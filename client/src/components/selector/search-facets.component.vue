@@ -1,32 +1,30 @@
 <template>
     <!-- Dynamic filter chips for active facets -->
-    <div class="mb-3">
-        <template
-            v-for="btn in facetButtons"
-            :key="btn.facetKey"
+    <template
+        v-for="btn in facetButtons"
+        :key="btn.facetKey"
+    >
+        <button
+            v-if="btn.active"
+            type="button"
+            class="btn btn-outline-secondary btn-sm me-2 mb-1"
         >
-            <button
-                v-if="btn.active"
-                type="button"
-                class="btn btn-outline-secondary btn-sm me-2 mb-1"
+            <a
+                data-bs-toggle="offcanvas"
+                data-bs-target="#filtersOffcanvasNavbar"
             >
-                <a
-                    data-bs-toggle="offcanvas"
-                    data-bs-target="#filtersOffcanvasNavbar"
-                >
-                    {{ btn.label }}:
-                    <template v-if="btn.displayValue !== undefined">
-                        {{ btn.displayValue }}
-                    </template>
-                </a>
-                <i
-                    class="bi bi-x ms-1"
-                    aria-label="Remove"
-                    @click="clearFacet(btn.facetKey)"
-                ></i>
-            </button>
-        </template>
-    </div>
+                {{ btn.label }}:
+                <template v-if="btn.displayValue !== undefined">
+                    {{ btn.displayValue }}
+                </template>
+            </a>
+            <i
+                class="bi bi-x ms-1"
+                aria-label="Remove"
+                @click="clearFacet(btn.facetKey)"
+            ></i>
+        </button>
+    </template>
 </template>
 
 <script lang="ts">
@@ -48,10 +46,14 @@ export default defineComponent({
         }
     },
     computed: {
-        facets(): Facets {
+        facets(): Facets | null {
             return this.uiStore.facets
         },
         facetButtons() {
+            if (!this.facets) {
+                return []
+            }
+
             return [
                 {
                     facetKey: "weight",
@@ -72,10 +74,10 @@ export default defineComponent({
                 {
                     facetKey: "record",
                     label: "Victories",
-                    displayValue: displayRange(this.facets.filters.record.min, this.facets.filters.record.max),
+                    displayValue: displayRange(this.facets.filters.nbFights.min, this.facets.filters.nbFights.max),
                     active:
-                        (this.facets.filters.record.min !== null && this.facets.filters.record.min !== undefined) ||
-                        (this.facets.filters.record.max !== null && this.facets.filters.record.max !== undefined),
+                        (this.facets.filters.nbFights.min !== null && this.facets.filters.nbFights.min !== undefined) ||
+                        (this.facets.filters.nbFights.max !== null && this.facets.filters.nbFights.max !== undefined),
                 },
                 {
                     facetKey: "gender",
