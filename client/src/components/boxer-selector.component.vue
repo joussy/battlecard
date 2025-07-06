@@ -14,6 +14,7 @@
                 data-bs-target="#boxerAddOffcanvasNavbar"
             >
                 <i class="bi bi-person-add" />
+                <span class="d-none d-md-inline">Add Boxer</span>
             </button>
             <button
                 type="button"
@@ -22,6 +23,7 @@
                 aria-expanded="false"
             >
                 <i class="bi bi-download" />
+                <span class="d-none d-md-inline">Export</span>
             </button>
             <ul class="dropdown-menu">
                 <li>
@@ -49,9 +51,28 @@
                 data-bs-target="#filtersOffcanvasNavbar"
             >
                 <span class="bi bi-funnel"></span>
+                Filters
             </button>
             <BoxerSelectorFiltersComponent />
             <BoxerAddOffcanvasComponent />
+        </div>
+        <div class="mb-2 row">
+            <!-- Search bar -->
+            <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-search"></i></span>
+                <input
+                    v-model="searchQuery"
+                    type="text"
+                    class="form-control"
+                    placeholder="Type the name of a boxer ..."
+                />
+                <span
+                    v-if="searchQuery"
+                    class="input-group-text"
+                    @click="clearSearch"
+                    ><i class="bi bi-x-lg"></i
+                ></span>
+            </div>
         </div>
         <div>
             <SearchFacetsComponent />
@@ -115,6 +136,7 @@ export default defineComponent({
             uiStore: useUiStore(),
             boxersStore: useBoxerStore(),
             facets: useUiStore().facets,
+            searchQuery: "", // Added for search bar binding
         }
     },
     computed: {
@@ -136,7 +158,12 @@ export default defineComponent({
     },
     methods: {
         getBoxersToDisplay() {
-            return this.boxersStore.boxers
+            // Optionally filter boxers by searchQuery
+            if (!this.searchQuery) return this.boxersStore.boxers
+            return this.boxersStore.boxers.filter((boxer) => {
+                const fullName = `${boxer.firstName} ${boxer.lastName}`.toLowerCase()
+                return fullName.includes(this.searchQuery.toLowerCase())
+            })
         },
         exportBoxers() {
             const tournamentId = this.tournamentStore.currentTournamentId
@@ -146,6 +173,9 @@ export default defineComponent({
             }
             postAndDownload(`/api/tournaments/${tournamentId}/boxers/export`, {}, "boxers.csv")
             // dbManager.exportBoxersAsCsv(this.tournamentStore.currentTournamentId)
+        },
+        clearSearch() {
+            this.searchQuery = ""
         },
     },
 })
