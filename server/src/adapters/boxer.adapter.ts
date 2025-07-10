@@ -8,6 +8,9 @@ import { Boxer } from '../entities/boxer.entity';
 import { IModality } from '@/modality/IModality';
 import { Gender, ModalityError } from '@/shared/types/modality.type';
 import { CsvBoxer } from '@/interfaces/csv.interface';
+import { Tournament } from '@/entities/tournament.entity';
+import { SelectorTemplate } from '@/interfaces/template.interface';
+import { format } from 'date-fns/format';
 
 export function toBoxer(apiBoxer: ApiBoxerCreate, userId: string): Boxer {
   const boxer = new Boxer();
@@ -66,19 +69,6 @@ export function toApiOpponentGet(
   };
 }
 
-export function toCsvBoxer(boxer: Boxer): CsvBoxer {
-  return {
-    lastName: boxer.lastName,
-    firstName: boxer.firstName,
-    birthDate: boxer.birthDate,
-    club: boxer.club,
-    weight: (boxer.weight ?? 0).toString(),
-    gender: boxer.gender,
-    license: boxer.license,
-    fightRecord: boxer.nbFights,
-  };
-}
-
 export function toApiImportBoxer(csvBoxer: CsvBoxer): ApiImportBoxer {
   const entry: ApiImportBoxer = {
     lastName: csvBoxer.lastName,
@@ -93,4 +83,42 @@ export function toApiImportBoxer(csvBoxer: CsvBoxer): ApiImportBoxer {
   };
 
   return entry;
+}
+
+export function toSelectorTemplate(
+  boxers: Boxer[],
+  tournament: Tournament,
+  modality: IModality,
+): SelectorTemplate {
+  const template: SelectorTemplate = {
+    subtitle: format(tournament.date, 'dd/MM/yyyy'),
+    title: tournament.name,
+    boxers: boxers.map((boxer) => {
+      return {
+        license: boxer.license,
+        lastName: boxer.lastName,
+        firstName: boxer.firstName,
+        weight: boxer.weight,
+        category: modality.getCategoryName(boxer, false),
+        birthDate: format(boxer.birthDate, 'dd/MM/yyyy'),
+        numberOfFights: boxer.nbFights,
+        club: boxer.club,
+        gender: boxer.gender === Gender.MALE ? '♂️' : '♀️',
+      };
+    }),
+  };
+  return template;
+}
+
+export function toSelectorExportData(boxers: Boxer[], modality: IModality) {
+  return boxers.map((boxer) => ({
+    License: boxer.license,
+    LastName: boxer.lastName,
+    FirstName: boxer.firstName,
+    Weight: boxer.weight,
+    Category: modality.getCategoryName(boxer, false),
+    BirthDate: boxer.birthDate,
+    NumberOfFights: boxer.nbFights,
+    Club: boxer.club,
+  }));
 }

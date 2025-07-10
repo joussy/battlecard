@@ -17,7 +17,7 @@ import { BoxerController } from './controllers/boxer.controller';
 import { Fight } from './entities/fight.entity';
 import { TournamentBoxer } from './entities/tournament_boxer.entity';
 import { FightController } from './controllers/fight.controller';
-import { ExternalServicesController } from './controllers/external-services.controller';
+import { ExternalServicesController } from './controllers/export.controller';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
 import { ModalityService } from './modality/modality.service';

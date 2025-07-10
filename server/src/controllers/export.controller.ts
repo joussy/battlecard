@@ -3,11 +3,13 @@ import { Response as ExpressResponse } from 'express';
 import { User } from '@/decorators/user.decorator';
 import { AuthenticatedUser } from '@/interfaces/auth.interface';
 import { TournamentExportService } from '@/services/tournament-export.service';
+import { TournamentService } from '@/services/tournament.service';
 
 @Controller('external')
 export class ExternalServicesController {
   constructor(
     private readonly externalServicesService: TournamentExportService,
+    private readonly tournamentService: TournamentService,
   ) {}
 
   @Post('generatePdf')
@@ -17,7 +19,7 @@ export class ExternalServicesController {
     @Res() res: ExpressResponse,
   ): Promise<void> {
     try {
-      await this.externalServicesService.validateTournamentAccess(
+      await this.tournamentService.validateTournamentAccess(
         body.tournamentId,
         user.id,
       );
@@ -43,7 +45,7 @@ export class ExternalServicesController {
     @Res() res: ExpressResponse,
   ): Promise<void> {
     try {
-      await this.externalServicesService.validateTournamentAccess(
+      await this.tournamentService.validateTournamentAccess(
         body.tournamentId,
         user.id,
       );
@@ -69,7 +71,7 @@ export class ExternalServicesController {
     @Res() res: ExpressResponse,
   ): Promise<void> {
     try {
-      await this.externalServicesService.validateTournamentAccess(
+      await this.tournamentService.validateTournamentAccess(
         body.tournamentId,
         user.id,
       );
@@ -95,7 +97,7 @@ export class ExternalServicesController {
     @Res() res: ExpressResponse,
   ): Promise<void> {
     try {
-      await this.externalServicesService.validateTournamentAccess(
+      await this.tournamentService.validateTournamentAccess(
         body.tournamentId,
         user.id,
       );

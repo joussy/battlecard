@@ -58,24 +58,6 @@ export class TournamentController {
     return this.tournamentService.getBoxersForTournament(tournamentId, user);
   }
 
-  @Post(':tournamentId/boxers/export')
-  async exportBoxersFromTournament(
-    @Param('tournamentId') tournamentId: string,
-    @User() user: AuthenticatedUser,
-    @Res() res: Response,
-  ) {
-    const csvToDownload =
-      await this.tournamentService.exportBoxersFromTournament(
-        tournamentId,
-        user,
-      );
-    res.set({
-      'Content-Type': 'text/csv',
-      'Content-Disposition': `attachment; filename="boxers-${tournamentId}.csv"`,
-    });
-    res.send(csvToDownload);
-  }
-
   @Get(':tournamentId/opponents/:boxerId')
   async getPossibleOpponents(
     @Param('boxerId') boxerId: string,

@@ -6,11 +6,7 @@ import { TournamentBoxer } from '../entities/tournament_boxer.entity';
 import { Boxer } from '../entities/boxer.entity';
 import { Fight } from '../entities/fight.entity';
 import { toTournament, toApiTournament } from '../adapters/tournament.adapter';
-import {
-  toApiBoxerGet,
-  toCsvBoxer,
-  toApiOpponentGet,
-} from '../adapters/boxer.adapter';
+import { toApiBoxerGet, toApiOpponentGet } from '../adapters/boxer.adapter';
 import {
   ApiTournament,
   ApiTournamentCreate,
@@ -19,8 +15,6 @@ import {
 } from '@/shared/types/api';
 import { ModalityService } from '../modality/modality.service';
 import { AuthenticatedUser } from '@/interfaces/auth.interface';
-import { stringifyCsvAsync } from '@/utils/csv.utils';
-import { csvDelimiter, csvHeader } from '@/interfaces/csv.interface';
 
 @Injectable()
 export class TournamentService {
@@ -141,26 +135,12 @@ export class TournamentService {
     return opponents;
   }
 
-  async exportBoxersFromTournament(
+  async validateTournamentAccess(
     tournamentId: string,
-    user: AuthenticatedUser,
-  ): Promise<string> {
+    userId: string,
+  ): Promise<void> {
     await this.tournamentRepository.findOneOrFail({
-      where: { id: tournamentId, userId: user.id },
+      where: { id: tournamentId, userId },
     });
-    const tournamentBoxers = await this.tournamentBoxerRepository.find({
-      where: { tournamentId },
-    });
-    const boxerIds = tournamentBoxers.map((tb) => tb.boxerId);
-    const boxers = await this.boxerRepository.findByIds(boxerIds);
-
-    const toExport = boxers.map((b) => toCsvBoxer(b));
-    const csv = stringifyCsvAsync(toExport, {
-      header: true,
-      delimiter: csvDelimiter,
-      columns: csvHeader,
-    });
-
-    return csv;
   }
 }
