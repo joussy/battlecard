@@ -1,27 +1,13 @@
 import { Body, Controller, Post, Res } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { Tournament } from '../entities/tournament.entity';
-import { Fight } from '../entities/fight.entity';
-import { ConfigService } from '@nestjs/config';
 import { Response as ExpressResponse } from 'express';
-import { generateFightCardHtml } from '../templates/fight-card-html.template';
-import * as XLSX from 'xlsx';
-import { stringify } from 'csv-stringify/sync';
-import { ModalityService } from '../modality/modality.service';
-import { toFightCardTemplate } from '../adapters/fight.adapter';
 import { User } from '@/decorators/user.decorator';
 import { AuthenticatedUser } from '@/interfaces/auth.interface';
+import { TournamentExportService } from '@/services/tournament-export.service';
 
 @Controller('external')
 export class ExternalServicesController {
   constructor(
-    @InjectRepository(Tournament)
-    private readonly tournamentRepository: Repository<Tournament>,
-    @InjectRepository(Fight)
-    private readonly fightRepository: Repository<Fight>,
-    private readonly configService: ConfigService,
-    private readonly modalityService: ModalityService,
+    private readonly externalServicesService: TournamentExportService,
   ) {}
 
   @Post('generatePdf')
@@ -30,47 +16,23 @@ export class ExternalServicesController {
     @User() user: AuthenticatedUser,
     @Res() res: ExpressResponse,
   ): Promise<void> {
-    await this.tournamentRepository.findOneOrFail({
-      where: { id: body.tournamentId, userId: user.id },
-    });
-    const html = await this.getHtml(body.tournamentId);
-    const formData = new FormData();
-    // Use Blob for browser and Node.js compatibility
-    const htmlBlob = new Blob([html], { type: 'text/html' });
-    formData.append('files', htmlBlob, 'index.html');
-    formData.append('index.html', 'index.html');
-    formData.append('landscape', 'true');
     try {
-      // Send HTML to Gotenberg for PDF conversion
-      const gotenbergUrl = this.configService.get<string>('GOTENBERG_URL');
-      if (!gotenbergUrl) {
-        throw new Error('Pdf generation service not available');
-      }
-
-      const gotenbergRes = await fetch(
-        `${gotenbergUrl}/forms/chromium/convert/html`,
-        {
-          method: 'POST',
-          body: formData,
-        },
+      await this.externalServicesService.validateTournamentAccess(
+        body.tournamentId,
+        user.id,
       );
-      if (!gotenbergRes.ok) {
-        console.error('Gotenberg response error:', gotenbergRes.statusText);
-        res
-          .status(502)
-          .json({ error: 'Failed to generate PDF with Gotenberg.' });
-        return;
-      }
+      const pdfBuffer = await this.externalServicesService.generatePdf(
+        body.tournamentId,
+      );
       res.setHeader('Content-Type', 'application/pdf');
       res.setHeader(
         'Content-Disposition',
         'attachment; filename="fight-card.pdf"',
       );
-      const pdfBuffer = Buffer.from(await gotenbergRes.arrayBuffer());
       res.send(pdfBuffer);
     } catch (err) {
-      console.error('Error connecting to Gotenberg:', err);
-      res.status(502).json({ error: 'Error connecting to Gotenberg.' });
+      console.error('Error generating PDF:', err);
+      res.status(502).json({ error: 'Error generating PDF.' });
     }
   }
 
@@ -80,49 +42,23 @@ export class ExternalServicesController {
     @User() user: AuthenticatedUser,
     @Res() res: ExpressResponse,
   ): Promise<void> {
-    await this.tournamentRepository.findOneOrFail({
-      where: { id: body.tournamentId, userId: user.id },
-    });
-    const html = await this.getHtml(body.tournamentId);
-    const formData = new FormData();
-    // Use Blob for browser and Node.js compatibility
-    const htmlBlob = new Blob([html], { type: 'text/html' });
-    formData.append('files', htmlBlob, 'index.html');
-    formData.append('index.html', 'index.html');
-    formData.append('clip', 'false');
-    formData.append('skipNetworkIdleEvent', 'false');
     try {
-      // Send HTML to Gotenberg for PNG conversion
-      const gotenbergUrl = this.configService.get<string>('GOTENBERG_URL');
-      console.log('Gotenberg URL:', gotenbergUrl);
-      if (!gotenbergUrl) {
-        throw new Error('Image generation service not available');
-      }
-
-      const gotenbergRes = await fetch(
-        `${gotenbergUrl}/forms/chromium/screenshot/html`,
-        {
-          method: 'POST',
-          body: formData,
-        },
+      await this.externalServicesService.validateTournamentAccess(
+        body.tournamentId,
+        user.id,
       );
-      if (!gotenbergRes.ok) {
-        console.error('Gotenberg response error:', gotenbergRes.statusText);
-        res
-          .status(502)
-          .json({ error: 'Failed to generate PNG with Gotenberg.' });
-        return;
-      }
+      const pngBuffer = await this.externalServicesService.generatePng(
+        body.tournamentId,
+      );
       res.setHeader('Content-Type', 'image/png');
       res.setHeader(
         'Content-Disposition',
         'attachment; filename="fight-card.png"',
       );
-      const pngBuffer = Buffer.from(await gotenbergRes.arrayBuffer());
       res.send(pngBuffer);
     } catch (err) {
-      console.error('Error connecting to Gotenberg:', err);
-      res.status(502).json({ error: 'Error connecting to Gotenberg.' });
+      console.error('Error generating PNG:', err);
+      res.status(502).json({ error: 'Error generating PNG.' });
     }
   }
 
@@ -132,22 +68,24 @@ export class ExternalServicesController {
     @User() user: AuthenticatedUser,
     @Res() res: ExpressResponse,
   ): Promise<void> {
-    await this.tournamentRepository.findOneOrFail({
-      where: { id: body.tournamentId, userId: user.id },
-    });
-
-    const data = await this.getFightCardData(body.tournamentId);
-    if (!data) {
-      res.status(404).json({ error: 'No fights found for this tournament' });
-      return;
+    try {
+      await this.externalServicesService.validateTournamentAccess(
+        body.tournamentId,
+        user.id,
+      );
+      const csvContent = await this.externalServicesService.generateCsv(
+        body.tournamentId,
+      );
+      res.setHeader('Content-Type', 'text/csv');
+      res.setHeader(
+        'Content-Disposition',
+        'attachment; filename="fight-card.csv"',
+      );
+      res.send(csvContent);
+    } catch (err) {
+      console.error('Error generating CSV:', err);
+      res.status(502).json({ error: 'Error generating CSV.' });
     }
-    const csvContent = stringify(data);
-    res.setHeader('Content-Type', 'text/csv');
-    res.setHeader(
-      'Content-Disposition',
-      'attachment; filename="fight-card.csv"',
-    );
-    res.send(csvContent);
   }
 
   @Post('generateXlsx')
@@ -156,79 +94,26 @@ export class ExternalServicesController {
     @User() user: AuthenticatedUser,
     @Res() res: ExpressResponse,
   ): Promise<void> {
-    await this.tournamentRepository.findOneOrFail({
-      where: { id: body.tournamentId, userId: user.id },
-    });
-    const data = await this.getFightCardData(body.tournamentId);
-    if (!data) {
-      res.status(404).json({ error: 'No fights found for this tournament' });
-      return;
+    try {
+      await this.externalServicesService.validateTournamentAccess(
+        body.tournamentId,
+        user.id,
+      );
+      const xlsxBuffer = await this.externalServicesService.generateXlsx(
+        body.tournamentId,
+      );
+      res.setHeader(
+        'Content-Type',
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      );
+      res.setHeader(
+        'Content-Disposition',
+        'attachment; filename="fight-card.xlsx"',
+      );
+      res.send(xlsxBuffer);
+    } catch (err) {
+      console.error('Error generating XLSX:', err);
+      res.status(502).json({ error: 'Error generating XLSX.' });
     }
-    const worksheet = XLSX.utils.json_to_sheet(data);
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, 'Fight Card');
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const xlsxBuffer = XLSX.write(workbook, {
-      type: 'buffer',
-      bookType: 'xlsx',
-    });
-    res.setHeader(
-      'Content-Type',
-      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-    );
-    res.setHeader(
-      'Content-Disposition',
-      'attachment; filename="fight-card.xlsx"',
-    );
-    res.send(xlsxBuffer);
-  }
-
-  private async getHtml(tournamentId: string): Promise<string> {
-    const tournament = await this.tournamentRepository.findOne({
-      where: { id: tournamentId },
-    });
-    if (!tournament) {
-      throw new Error('Tournament not found');
-    }
-    // Fetch fights for the tournament, including boxer names
-    const fights = await this.fightRepository.find({
-      where: { tournamentId },
-      relations: ['boxer1', 'boxer2'],
-      order: { order: 'ASC' },
-    });
-    if (!fights.length) {
-      throw new Error('No fights found for this tournament');
-    }
-
-    // Prepare HTML template
-    const template = toFightCardTemplate(
-      fights,
-      tournament,
-      this.modalityService.getModality(),
-    );
-    const html = generateFightCardHtml(template);
-    return html;
-  }
-
-  private async getFightCardData(tournamentId: string) {
-    const fights = await this.fightRepository.find({
-      where: { tournamentId },
-      relations: ['boxer1', 'boxer2'],
-      order: { order: 'ASC' },
-    });
-    if (!fights || !fights.length) {
-      return null;
-    }
-    return fights.map((fight) => ({
-      Order: fight.order,
-      'Red Licence': `${fight.boxer1?.license}`,
-      'Red Boxer':
-        `${fight.boxer1?.firstName || ''} ${fight.boxer1?.lastName || ''}`.trim(),
-      'Red Club': fight.boxer1?.club || '',
-      'Blue Licence': `${fight.boxer2?.license}`,
-      'Blue Boxer':
-        `${fight.boxer2?.firstName || ''} ${fight.boxer2?.lastName || ''}`.trim(),
-      'Blue Club': fight.boxer2?.club || '',
-    }));
   }
 }
