@@ -201,7 +201,7 @@
 
 <script lang="ts">
 import { Boxer, Fight } from "@/types/boxing.d"
-import { ExternalService } from "@/services/external.service"
+import { ExportService } from "@/services/export.service"
 import { FileType } from "@/types/api"
 import { getFightDurationAsString } from "@/utils/string.utils"
 import Sortable from "sortablejs"
@@ -303,16 +303,16 @@ export default {
                 return
             }
             if (fileType === "xlsx") {
-                await ExternalService.downloadFightCardXlsx(this.tournamentStore.currentTournamentId)
+                await ExportService.downloadFightCardXlsx(this.tournamentStore.currentTournamentId)
             }
             if (fileType === "csv") {
-                await ExternalService.downloadFightCardCsv(this.tournamentStore.currentTournamentId)
+                await ExportService.downloadFightCardCsv(this.tournamentStore.currentTournamentId)
             }
             if (fileType === "png") {
-                await ExternalService.downloadFightCardPng(this.tournamentStore.currentTournamentId)
+                await ExportService.downloadFightCardPng(this.tournamentStore.currentTournamentId)
             }
             if (fileType === "pdf") {
-                await ExternalService.downloadFightCardPdf(this.tournamentStore.currentTournamentId)
+                await ExportService.downloadFightCardPdf(this.tournamentStore.currentTournamentId)
             }
         },
         getNbFights() {

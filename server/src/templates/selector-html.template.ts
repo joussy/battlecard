@@ -17,6 +17,9 @@ export function generateSelectorHtml(
             border-collapse: collapse;
             padding: 5px;
           }
+          tbody tr:nth-child(even) {
+            background-color: #f2f2f2;
+          }
           .title {
             text-align: center;
             padding-bottom: 15px;
@@ -51,19 +54,21 @@ export function generateSelectorHtml(
                 <th>Gender</th>
               </tr>
             </thead>
-            {{#boxer}}
-              <tr>
-                <td>{{license}}</td>
-                <td>{{lastName}}</td>
-                <td>{{firstName}}</td>
-                <td>{{weight}}</td>
-                <td>{{category}}</td>
-                <td>{{birthDate}} {{age}}</td>
-                <td>{{nbFights}}</td>
-                <td>{{club}}</td>
-                <td>{{gender}}</td>
-              </tr>
-            {{/boxer}}
+            <tbody>
+              {{#boxers}}
+                <tr>
+                  <td>{{license}}</td>
+                  <td>{{lastName}}</td>
+                  <td>{{firstName}}</td>
+                  <td>{{weight}}</td>
+                  <td>{{category}}</td>
+                  <td>{{birthDate}} {{age}}</td>
+                  <td>{{nbFights}}</td>
+                  <td>{{club}}</td>
+                  <td>{{gender}}</td>
+                </tr>
+              {{/boxers}}
+            </tbody>
           </table>
         </div>
       </body>

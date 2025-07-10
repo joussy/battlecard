@@ -14,7 +14,7 @@ import {
 import { GotenbergService } from './gotenberg.service';
 
 @Injectable()
-export class TournamentExportService {
+export class FightExportService {
   constructor(
     @InjectRepository(Tournament)
     private readonly tournamentRepository: Repository<Tournament>,

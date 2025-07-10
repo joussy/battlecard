@@ -26,8 +26,9 @@ import { TournamentService } from './services/tournament.service';
 import { BoxerService } from './services/boxer.service';
 import { ImportController } from './controllers/import.controller';
 import { ImportService } from './services/import.service';
-import { TournamentExportService } from './services/tournament-export.service';
+import { FightExportService } from './services/fight-export.service';
 import { GotenbergService } from './services/gotenberg.service';
+import { SelectorExportService } from './services/selector-export.service';
 // import { TemplateService } from './services/template.service';
 
 @Module({
@@ -72,8 +73,9 @@ import { GotenbergService } from './services/gotenberg.service';
     BoxerService,
     AuthService,
     ImportService,
-    TournamentExportService,
+    FightExportService,
     GotenbergService,
+    SelectorExportService,
     JwtStrategy,
     {
       provide: APP_GUARD,

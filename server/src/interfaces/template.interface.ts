@@ -26,7 +26,7 @@ export interface SelectorTemplate {
     weight?: number;
     category: string;
     birthDate: string; // e.g., "01/01/2000"
-    numberOfFights: number;
+    nbFights: string;
     club: string;
     gender: string;
   }[];

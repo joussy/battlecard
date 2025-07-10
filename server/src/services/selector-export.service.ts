@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
 import { Tournament } from '../entities/tournament.entity';
-import { Fight } from '../entities/fight.entity';
 import * as XLSX from 'xlsx';
 import { stringify } from 'csv-stringify/sync';
 import { ModalityService } from '../modality/modality.service';
@@ -19,7 +18,7 @@ export class SelectorExportService {
   constructor(
     @InjectRepository(Tournament)
     private readonly tournamentRepository: Repository<Tournament>,
-    @InjectRepository(Fight)
+    @InjectRepository(TournamentBoxer)
     private readonly tournamentBoxerRepository: Repository<TournamentBoxer>,
     private readonly modalityService: ModalityService,
     private readonly gotenbergService: GotenbergService,
@@ -119,7 +118,7 @@ export class SelectorExportService {
     });
 
     const boxers = tournamentBoxers.map((tb) => tb.boxer);
-
+    console.log(boxers);
     return {
       boxers,
       tournament,

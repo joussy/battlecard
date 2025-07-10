@@ -29,10 +29,31 @@
                 <li>
                     <a
                         class="dropdown-item"
-                        @click="exportBoxers"
+                        @click="downloadFile('csv')"
                     >
                         <i class="bi bi-download" />
                         Export boxers as CSV
+                    </a>
+                    <a
+                        class="dropdown-item"
+                        @click="downloadFile('xlsx')"
+                    >
+                        <i class="bi bi-file-earmark-spreadsheet" />
+                        Export boxers as XLSX
+                    </a>
+                    <a
+                        class="dropdown-item"
+                        @click="downloadFile('png')"
+                    >
+                        <i class="bi bi-file-image" />
+                        Export boxers as PNG
+                    </a>
+                    <a
+                        class="dropdown-item"
+                        @click="downloadFile('pdf')"
+                    >
+                        <i class="bi bi-file-earmark-pdf" />
+                        Export boxers as PDF
                     </a>
                 </li>
                 <li>
@@ -121,6 +142,8 @@ import SearchFacetsComponent from "@/components/selector/search-facets.component
 import Fuse from "fuse.js"
 import { Boxer } from "@/types/boxing"
 import { differenceInYears } from "date-fns"
+import { FileType } from "@/types/api"
+import { ExportService } from "@/services/export.service"
 
 export default defineComponent({
     components: {
@@ -227,17 +250,28 @@ export default defineComponent({
             })
             return fuse.search(this.searchQuery).map((result) => result.item)
         },
-        exportBoxers() {
-            const tournamentId = this.tournamentStore.currentTournamentId
-            if (!tournamentId) {
-                console.log("No tournament selected for export")
-                return
-            }
-            postAndDownload(`/api/tournaments/${tournamentId}/boxers/export`, {}, "boxers.csv")
-            // dbManager.exportBoxersAsCsv(this.tournamentStore.currentTournamentId)
-        },
         clearSearch() {
             this.searchQuery = ""
+        },
+        async downloadFile(fileType: FileType) {
+            if (!this.tournamentStore.currentTournamentId) {
+                return
+            }
+
+            const boxerIds = this.getBoxersToDisplay().map((boxer) => boxer.id)
+
+            if (fileType === "xlsx") {
+                await ExportService.downloadSelectorXlsx(this.tournamentStore.currentTournamentId, boxerIds)
+            }
+            if (fileType === "csv") {
+                await ExportService.downloadSelectorCsv(this.tournamentStore.currentTournamentId, boxerIds)
+            }
+            if (fileType === "png") {
+                await ExportService.downloadSelectorPng(this.tournamentStore.currentTournamentId, boxerIds)
+            }
+            if (fileType === "pdf") {
+                await ExportService.downloadSelectorPdf(this.tournamentStore.currentTournamentId, boxerIds)
+            }
         },
     },
 })

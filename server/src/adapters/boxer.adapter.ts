@@ -101,7 +101,7 @@ export function toSelectorTemplate(
         weight: boxer.weight,
         category: modality.getCategoryName(boxer, false),
         birthDate: format(boxer.birthDate, 'dd/MM/yyyy'),
-        numberOfFights: boxer.nbFights,
+        nbFights: `${boxer.nbFights}`,
         club: boxer.club,
         gender: boxer.gender === Gender.MALE ? '♂️' : '♀️',
       };
