@@ -1,15 +1,16 @@
 <template>
     <div :class="{ 'edition-mode': editionMode }">
-        <div class="d-flex menu-card-tools">
+        <div class="d-flex align-items-center menu-card-tools mb-3">
             <div class="flex-grow-1"></div>
             <button
                 type="button"
-                class="btn btn-outline-success mb-3 ms-2"
+                class="btn btn-outline-success ms-2"
                 :class="{ active: editionMode }"
                 :disabled="getNbFights() == 0 && !editionMode"
                 @click="editionMode = !editionMode"
             >
                 <i class="bi bi-pencil" />
+                Edit
             </button>
             <div
                 v-if="uiStore.account != null"
@@ -18,11 +19,12 @@
             >
                 <button
                     type="button"
-                    class="btn btn-outline-secondary mb-3 ms-2 dropdown-toggle"
+                    class="btn btn-outline-secondary ms-2 dropdown-toggle"
                     data-bs-toggle="dropdown"
                     aria-expanded="false"
                 >
                     <i class="bi bi-download" />
+                    Export
                 </button>
                 <ul class="dropdown-menu">
                     <li>
