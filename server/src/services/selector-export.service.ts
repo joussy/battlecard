@@ -136,7 +136,6 @@ export class SelectorExportService {
     });
 
     const boxers = tournamentBoxers.map((tb) => tb.boxer);
-    console.log(boxers);
     return {
       boxers,
       tournament,
