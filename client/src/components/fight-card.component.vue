@@ -59,7 +59,7 @@
                             class="dropdown-item"
                             @click="downloadFile('png')"
                         >
-                            <i class="bi bi-file-earmark-image-fill"></i>
+                            <i class="bi bi-file-image"></i>
                             PNG</a
                         >
                     </li>

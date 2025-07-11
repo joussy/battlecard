@@ -1,1 +1,1 @@
-export type FileType = "pdf" | "xlsx" | "csv" | "png"
+export type FileType = "pdf" | "xlsx" | "csv" | "png" | "battlecard"

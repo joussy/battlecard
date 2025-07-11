@@ -8,6 +8,7 @@ import { ModalityService } from '../modality/modality.service';
 import { GotenbergService } from './gotenberg.service';
 import { TournamentBoxer } from '@/entities/tournament_boxer.entity';
 import {
+  toBattlecard,
   toSelectorExportData,
   toSelectorTemplate,
 } from '@/adapters/boxer.adapter';
@@ -52,6 +53,21 @@ export class SelectorExportService {
     return this.gotenbergService.generatePng(html);
   }
 
+  async generateBattlecard(
+    tournamentId: string,
+    boxerIds: string[],
+  ): Promise<string> {
+    const { boxers } = await this.getSelectorData(tournamentId, boxerIds);
+    if (!boxers || boxers.length === 0) {
+      throw new Error('No boxers found for this tournament');
+    }
+    const csvData = toBattlecard(boxers);
+    return stringify(csvData, {
+      delimiter: ';',
+      header: true,
+    });
+  }
+
   async generateCsv(tournamentId: string, boxerIds: string[]): Promise<string> {
     const { boxers } = await this.getSelectorData(tournamentId, boxerIds);
     if (!boxers || boxers.length === 0) {
@@ -61,7 +77,9 @@ export class SelectorExportService {
       boxers,
       this.modalityService.getModality(),
     );
-    return stringify(csvData);
+    return stringify(csvData, {
+      header: true,
+    });
   }
 
   async generateXlsx(

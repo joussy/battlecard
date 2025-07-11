@@ -24,6 +24,9 @@ export class ExportService {
     static async downloadSelectorXlsx(tournamentId: string, boxerIds: string[]) {
         await postAndDownload(`/api/export/selector/xlsx`, { tournamentId, boxerIds }, `selector.xlsx`)
     }
+    static async downloadSelectorBattlecard(tournamentId: string, boxerIds: string[]) {
+        await postAndDownload(`/api/export/selector/battlecard`, { tournamentId, boxerIds }, `battlecard.csv`)
+    }
     static async downloadSelectorCsv(tournamentId: string, boxerIds: string[]) {
         await postAndDownload(`/api/export/selector/csv`, { tournamentId, boxerIds }, `selector.csv`)
     }

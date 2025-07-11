@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Res } from '@nestjs/common';
+import { Body, Controller, Param, Post, Res } from '@nestjs/common';
 import { Response as ExpressResponse } from 'express';
 import { User } from '@/decorators/user.decorator';
 import { AuthenticatedUser } from '@/interfaces/auth.interface';
@@ -63,6 +63,33 @@ export class ExternalServicesController {
     } catch (err) {
       console.error('Error generating PNG:', err);
       res.status(502).json({ error: 'Error generating PNG.' });
+    }
+  }
+
+  @Post('selector/battlecard')
+  async getBattlecard(
+    @Body() body: { tournamentId: string; boxerIds: string[] },
+    @User() user: AuthenticatedUser,
+    @Res() res: ExpressResponse,
+  ) {
+    try {
+      await this.tournamentService.validateTournamentAccess(
+        body.tournamentId,
+        user.id,
+      );
+      const csvContent = await this.selectorExportService.generateBattlecard(
+        body.tournamentId,
+        body.boxerIds,
+      );
+      res.setHeader('Content-Type', 'text/csv');
+      res.setHeader(
+        'Content-Disposition',
+        `attachment; filename=battlecard-${body.tournamentId}.csv`,
+      );
+      res.send(csvContent);
+    } catch (err) {
+      console.error('Error generating CSV:', err);
+      res.status(502).json({ error: 'Error generating CSV.' });
     }
   }
 

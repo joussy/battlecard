@@ -85,6 +85,19 @@ export function toApiImportBoxer(csvBoxer: CsvBoxer): ApiImportBoxer {
   return entry;
 }
 
+export function toBattlecard(boxers: Boxer[]): CsvBoxer[] {
+  return boxers.map((boxer) => ({
+    lastName: boxer.lastName,
+    firstName: boxer.firstName,
+    birthDate: boxer.birthDate,
+    club: boxer.club,
+    weight: (boxer.weight ?? 0).toString(),
+    gender: boxer.gender,
+    license: boxer.license,
+    fightRecord: boxer.nbFights,
+  }));
+}
+
 export function toSelectorTemplate(
   boxers: Boxer[],
   tournament: Tournament,

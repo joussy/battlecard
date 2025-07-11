@@ -29,31 +29,31 @@
                 <li>
                     <a
                         class="dropdown-item"
-                        @click="downloadFile('csv')"
+                        @click="downloadFile('battlecard')"
                     >
-                        <i class="bi bi-download" />
-                        Export boxers as CSV
+                        <i class="bi bi-file-earmark-spreadsheet" />
+                        CSV
                     </a>
                     <a
                         class="dropdown-item"
                         @click="downloadFile('xlsx')"
                     >
                         <i class="bi bi-file-earmark-spreadsheet" />
-                        Export boxers as XLSX
+                        XLSX
                     </a>
                     <a
                         class="dropdown-item"
                         @click="downloadFile('png')"
                     >
                         <i class="bi bi-file-image" />
-                        Export boxers as PNG
+                        PNG
                     </a>
                     <a
                         class="dropdown-item"
                         @click="downloadFile('pdf')"
                     >
                         <i class="bi bi-file-earmark-pdf" />
-                        Export boxers as PDF
+                        PDF
                     </a>
                 </li>
                 <li>
@@ -137,13 +137,13 @@ import { useTournamentStore } from "@/stores/tournament.store"
 import { useTournamentBoxerStore } from "@/stores/tournamentBoxer.store"
 import { useUiStore } from "@/stores/ui.store"
 import { useBoxerStore } from "@/stores/boxer.store"
-import { postAndDownload } from "@/utils/manager.utils"
 import SearchFacetsComponent from "@/components/selector/search-facets.component.vue"
 import Fuse from "fuse.js"
 import { Boxer } from "@/types/boxing"
 import { differenceInYears } from "date-fns"
 import { FileType } from "@/types/api"
 import { ExportService } from "@/services/export.service"
+import IconComponent from "./core/icon.component.vue"
 
 export default defineComponent({
     components: {
@@ -151,6 +151,7 @@ export default defineComponent({
         BoxerAddOffcanvasComponent: BoxerAddOffcanvasComponent,
         BoxerSelectorFiltersComponent: BoxerSelectorFiltersComponent,
         SearchFacetsComponent: SearchFacetsComponent,
+        Icon: IconComponent,
     },
     data() {
         return {
@@ -262,6 +263,9 @@ export default defineComponent({
 
             if (fileType === "xlsx") {
                 await ExportService.downloadSelectorXlsx(this.tournamentStore.currentTournamentId, boxerIds)
+            }
+            if (fileType === "battlecard") {
+                await ExportService.downloadSelectorBattlecard(this.tournamentStore.currentTournamentId, boxerIds)
             }
             if (fileType === "csv") {
                 await ExportService.downloadSelectorCsv(this.tournamentStore.currentTournamentId, boxerIds)
