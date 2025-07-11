@@ -58,3 +58,17 @@ export function toFightCardTemplate(
   };
   return template;
 }
+
+export function toFightCardExportData(fights: Fight[]) {
+  return fights.map((fight) => ({
+    Order: fight.order,
+    'Red Licence': `${fight.boxer1?.license}`,
+    'Red Boxer':
+      `${fight.boxer1?.firstName || ''} ${fight.boxer1?.lastName || ''}`.trim(),
+    'Red Club': fight.boxer1?.club || '',
+    'Blue Licence': `${fight.boxer2?.license}`,
+    'Blue Boxer':
+      `${fight.boxer2?.firstName || ''} ${fight.boxer2?.lastName || ''}`.trim(),
+    'Blue Club': fight.boxer2?.club || '',
+  }));
+}

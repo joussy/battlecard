@@ -1,15 +1,16 @@
 <template>
     <div :class="{ 'edition-mode': editionMode }">
-        <div class="d-flex menu-card-tools">
+        <div class="d-flex align-items-center menu-card-tools mb-3">
             <div class="flex-grow-1"></div>
             <button
                 type="button"
-                class="btn btn-outline-success mb-3 ms-2"
+                class="btn btn-outline-success ms-2"
                 :class="{ active: editionMode }"
                 :disabled="getNbFights() == 0 && !editionMode"
                 @click="editionMode = !editionMode"
             >
                 <i class="bi bi-pencil" />
+                Edit
             </button>
             <div
                 v-if="uiStore.account != null"
@@ -18,11 +19,12 @@
             >
                 <button
                     type="button"
-                    class="btn btn-outline-secondary mb-3 ms-2 dropdown-toggle"
+                    class="btn btn-outline-secondary ms-2 dropdown-toggle"
                     data-bs-toggle="dropdown"
                     aria-expanded="false"
                 >
                     <i class="bi bi-download" />
+                    Export
                 </button>
                 <ul class="dropdown-menu">
                     <li>
@@ -57,7 +59,7 @@
                             class="dropdown-item"
                             @click="downloadFile('png')"
                         >
-                            <i class="bi bi-file-earmark-image-fill"></i>
+                            <i class="bi bi-file-image"></i>
                             PNG</a
                         >
                     </li>
@@ -199,7 +201,7 @@
 
 <script lang="ts">
 import { Boxer, Fight } from "@/types/boxing.d"
-import { ExternalService } from "@/services/external.service"
+import { ExportService } from "@/services/export.service"
 import { FileType } from "@/types/api"
 import { getFightDurationAsString } from "@/utils/string.utils"
 import Sortable from "sortablejs"
@@ -301,16 +303,16 @@ export default {
                 return
             }
             if (fileType === "xlsx") {
-                await ExternalService.downloadFightCardXlsx(this.tournamentStore.currentTournamentId)
+                await ExportService.downloadFightCardXlsx(this.tournamentStore.currentTournamentId)
             }
             if (fileType === "csv") {
-                await ExternalService.downloadFightCardCsv(this.tournamentStore.currentTournamentId)
+                await ExportService.downloadFightCardCsv(this.tournamentStore.currentTournamentId)
             }
             if (fileType === "png") {
-                await ExternalService.downloadFightCardPng(this.tournamentStore.currentTournamentId)
+                await ExportService.downloadFightCardPng(this.tournamentStore.currentTournamentId)
             }
             if (fileType === "pdf") {
-                await ExternalService.downloadFightCardPdf(this.tournamentStore.currentTournamentId)
+                await ExportService.downloadFightCardPdf(this.tournamentStore.currentTournamentId)
             }
         },
         getNbFights() {

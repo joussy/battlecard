@@ -17,7 +17,7 @@ import { BoxerController } from './controllers/boxer.controller';
 import { Fight } from './entities/fight.entity';
 import { TournamentBoxer } from './entities/tournament_boxer.entity';
 import { FightController } from './controllers/fight.controller';
-import { ExternalServicesController } from './controllers/external-services.controller';
+import { ExternalServicesController } from './controllers/export.controller';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
 import { ModalityService } from './modality/modality.service';
@@ -26,6 +26,9 @@ import { TournamentService } from './services/tournament.service';
 import { BoxerService } from './services/boxer.service';
 import { ImportController } from './controllers/import.controller';
 import { ImportService } from './services/import.service';
+import { FightExportService } from './services/fight-export.service';
+import { GotenbergService } from './services/gotenberg.service';
+import { SelectorExportService } from './services/selector-export.service';
 // import { TemplateService } from './services/template.service';
 
 @Module({
@@ -70,6 +73,9 @@ import { ImportService } from './services/import.service';
     BoxerService,
     AuthService,
     ImportService,
+    FightExportService,
+    GotenbergService,
+    SelectorExportService,
     JwtStrategy,
     {
       provide: APP_GUARD,

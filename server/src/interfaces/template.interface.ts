@@ -15,3 +15,19 @@ export interface FightCardTemplate {
     gender: string;
   }[];
 }
+
+export interface SelectorTemplate {
+  title: string;
+  subtitle: string;
+  boxers: {
+    license: string;
+    lastName: string;
+    firstName: string;
+    weight?: number;
+    category: string;
+    birthDate: string; // e.g., "01/01/2000"
+    nbFights: string;
+    club: string;
+    gender: string;
+  }[];
+}
