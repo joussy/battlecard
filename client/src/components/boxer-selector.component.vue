@@ -10,6 +10,7 @@
             <div class="flex-grow-1"></div>
             <button
                 class="btn btn-outline-success ms-2"
+                type="button"
                 data-bs-toggle="offcanvas"
                 data-bs-target="#boxerAddOffcanvasNavbar"
             >

@@ -65,12 +65,4 @@ export class GotenbergService {
 
     return Buffer.from(await gotenbergRes.arrayBuffer());
   }
-
-  private getGotenbergUrl(): string {
-    const gotenbergUrl = this.configService.get<string>('GOTENBERG_URL');
-    if (!gotenbergUrl) {
-      throw new Error('Gotenberg service not configured');
-    }
-    return gotenbergUrl;
-  }
 }
