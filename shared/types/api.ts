@@ -212,3 +212,8 @@ export function getCsvDelimiterFromType(delimiter: CsvDelimiter): string {
             throw new Error(`Unknown CSV delimiter type: ${delimiter}`);
     }
 }
+
+export interface ApiSharedFightCardGet {
+  tournamentName: string;
+  fights: ApiFightGet[];
+}

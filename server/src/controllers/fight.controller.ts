@@ -1,12 +1,4 @@
-import {
-  Controller,
-  Post,
-  Delete,
-  Body,
-  Param,
-  Res,
-  Inject,
-} from '@nestjs/common';
+import { Controller, Post, Delete, Body, Res, Inject } from '@nestjs/common';
 import { Response } from 'express';
 import { ModalityService } from '../modality/modality.service';
 import { AuthenticatedUser } from '@/interfaces/auth.interface';
