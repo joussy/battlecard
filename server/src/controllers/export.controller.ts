@@ -1,4 +1,4 @@
-import { Body, Controller, Param, Post, Res } from '@nestjs/common';
+import { Body, Controller, Post, Res } from '@nestjs/common';
 import { Response as ExpressResponse } from 'express';
 import { User } from '@/decorators/user.decorator';
 import { AuthenticatedUser } from '@/interfaces/auth.interface';

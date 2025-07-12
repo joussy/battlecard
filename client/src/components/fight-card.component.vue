@@ -124,7 +124,6 @@ export default {
         return {
             fightStore: useFightStore(),
             uiStore: useUiStore(),
-            boxerStore: useBoxerStore(),
             tournamentStore: useTournamentStore(),
             editionMode: false,
             fightCard: [] as (Fight & {
@@ -137,7 +136,6 @@ export default {
         watch(
             () => [this.tournamentStore.currentTournamentId],
             async () => {
-                await this.boxerStore.fetchBoxers()
                 await this.fightStore.fetchFights()
             },
             { immediate: true }
@@ -145,12 +143,10 @@ export default {
         watch(
             () => this.fightStore.fights,
             () => {
-                if (!this.fightStore.restored || !this.boxerStore.restored) return
+                if (!this.fightStore.restored) return
                 this.fightCard = this.fightStore.fights.map((fight: Fight) => {
                     return {
                         ...fight,
-                        boxer1: this.boxerStore.getBoxerById(fight.boxer1Id) as Boxer,
-                        boxer2: this.boxerStore.getBoxerById(fight.boxer2Id) as Boxer,
                     }
                 })
             },

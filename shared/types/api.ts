@@ -90,9 +90,9 @@ export interface ApiFightGet {
     /** Unique fight ID */
     id: string;
     /** Red corner boxer ID */
-    boxer1Id: string;
+    boxer1: ApiBoxerGet;
     /** Blue corner boxer ID */
-    boxer2Id: string;
+    boxer2: ApiBoxerGet;
     /** Tournament ID */
     tournamentId: string;
     /** Fight duration in seconds */

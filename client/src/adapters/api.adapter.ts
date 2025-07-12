@@ -67,26 +67,14 @@ export default class ApiAdapter {
 
     static toFight(fight: ApiFightGet): Fight {
         return {
-            boxer1Id: fight.boxer1Id,
-            boxer2Id: fight.boxer2Id,
+            boxer1: this.toBoxer(fight.boxer1),
+            boxer2: this.toBoxer(fight.boxer2),
             id: fight.id,
             order: fight.order,
             modalityErrors: [],
             tournamentId: fight.tournamentId,
             roundDurationSeconds: fight.roundDurationAsSeconds,
             rounds: fight.rounds,
-        }
-    }
-
-    static toApiFight(fight: Fight, roundDurationSeconds: number, rounds: number): ApiFightGet {
-        return {
-            id: fight.id,
-            boxer1Id: fight.boxer1Id,
-            boxer2Id: fight.boxer2Id,
-            tournamentId: fight.tournamentId,
-            order: fight.order,
-            roundDurationAsSeconds: roundDurationSeconds,
-            rounds,
         }
     }
 }

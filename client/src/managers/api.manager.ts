@@ -49,13 +49,9 @@ export class ApiManager {
     reorderFight(fightId: string, newIndex: number): Promise<void> {
         return mutate("/api/fights/reorder", "POST", { fightId, newIndex }, "Failed to reorder fights", true)
     }
-    updateFight(fight: ApiFightGet): Promise<ApiFightGet> {
-        return mutate<ApiFightGet>(
-            `/api/fights/${encodeURIComponent(fight.id)}`,
-            "PUT",
-            fight,
-            "Failed to update fight"
-        )
+
+    async switchFights(fightId: string): Promise<ApiFightGet> {
+        return await mutate<ApiFightGet>("/api/fights/switch", "POST", { fightId }, "Failed to switch fights", false)
     }
 
     // TOURNAMENT

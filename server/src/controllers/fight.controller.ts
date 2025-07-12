@@ -1,11 +1,9 @@
 import {
   Controller,
-  Get,
   Post,
   Delete,
   Body,
   Param,
-  Put,
   Res,
   Inject,
 } from '@nestjs/common';
@@ -43,10 +41,8 @@ export class FightController {
       if (!dbFight) {
         return res.status(404).json({ error: 'Fight not found' });
       }
-      const fightDuration = this.modalityService
-        .getModality()
-        .getFightDuration(dbFight.boxer1, dbFight.boxer2);
-      return res.json(toApiFight(dbFight, fightDuration));
+      const modality = this.modalityService.getModality();
+      return res.json(toApiFight(dbFight, modality));
     } catch (err) {
       if (err instanceof Error && err.message.includes('already exists')) {
         return res.status(409).json({ error: err.message });
@@ -73,16 +69,12 @@ export class FightController {
     return this.fightService.reorderFight(body.fightId, body.newIndex, user);
   }
 
-  @Put(':id')
-  async update(
-    @Param('id') id: string,
-    @Body() fight: ApiFightGet,
+  @Post('switch')
+  async switch(
+    @Body() body: { fightId: string },
     @User() user: AuthenticatedUser,
   ): Promise<ApiFightGet> {
-    const updated = await this.fightService.update(id, fight, user);
-    const fightDuration = this.modalityService
-      .getModality()
-      .getFightDuration(updated.boxer1, updated.boxer2);
-    return toApiFight(updated, fightDuration);
+    const updated = await this.fightService.switch(body.fightId, user);
+    return toApiFight(updated, this.modalityService.getModality());
   }
 }
