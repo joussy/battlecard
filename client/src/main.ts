@@ -13,6 +13,7 @@ import "bootstrap-icons/font/bootstrap-icons.css"
 import BoxerTileDetailsComponent from "@/components/selector/boxer-details.component.vue"
 import TournamentsComponent from "@/components/tournaments.component.vue"
 import { createPinia } from "pinia"
+import SharedFightCardComponent from "./components/shared=fight-card.component.vue"
 
 const routes = [
     { path: "/", redirect: { name: "settings" } },
@@ -21,6 +22,7 @@ const routes = [
     { path: "/selector/tile/:id", name: "selector-tile", component: BoxerTileDetailsComponent },
     { path: "/settings", name: "settings", component: UploadComponent },
     { path: "/card", name: "card", component: FightCardComponent },
+    { path: "/shared-card", name: "shared=card", component: SharedFightCardComponent },
     { path: "/import", name: "import", component: ImportPage },
 ]
 
