@@ -12,70 +12,28 @@
                 <i class="bi bi-pencil" />
                 Edit
             </button>
-            <div
-                class="btn-group"
-                role="group"
+            <button
+                type="button"
+                :disabled="getNbFights() == 0 && !editionMode"
+                class="btn btn-outline-secondary ms-2"
+                data-bs-toggle="modal"
+                data-bs-target="#shareModal"
             >
-                <button
-                    :disabled="getNbFights() == 0 && !editionMode"
-                    type="button"
-                    class="btn btn-outline-secondary ms-2 dropdown-toggle"
-                    data-bs-toggle="dropdown"
-                    aria-expanded="false"
-                >
-                    <i class="bi bi-download" />
-                    Export
-                </button>
-                <ul class="dropdown-menu">
-                    <li>
-                        <a
-                            class="dropdown-item"
-                            @click="downloadFile('pdf')"
-                        >
-                            <i class="bi bi-file-earmark-pdf"></i>
-                            PDF
-                        </a>
-                    </li>
-                    <li>
-                        <a
-                            class="dropdown-item"
-                            @click="downloadFile('xlsx')"
-                        >
-                            <i class="bi bi-file-earmark-spreadsheet"></i>
-                            XLSX</a
-                        >
-                    </li>
-                    <li>
-                        <a
-                            class="dropdown-item"
-                            @click="downloadFile('csv')"
-                        >
-                            <i class="bi bi-file-earmark-spreadsheet"></i>
-                            CSV</a
-                        >
-                    </li>
-                    <li>
-                        <a
-                            class="dropdown-item"
-                            @click="downloadFile('png')"
-                        >
-                            <i class="bi bi-file-image"></i>
-                            PNG</a
-                        >
-                    </li>
-                </ul>
+                <i class="bi bi-link-45deg" />
+                Share
+            </button>
+
+            <div
+                v-if="editionMode"
+                id="editModeToast"
+                class="d-md-none toast show bg-success text-white position-fixed top-0 start-50 translate-middle-x mt-3"
+                role="alert"
+            >
                 <div
-                    v-if="editionMode"
-                    id="editModeToast"
-                    class="d-md-none toast show bg-success text-white position-fixed top-0 start-50 translate-middle-x mt-3"
-                    role="alert"
+                    class="toast-body text-center"
+                    @click="editionMode = false"
                 >
-                    <div
-                        class="toast-body text-center"
-                        @click="editionMode = false"
-                    >
-                        I'm Done editing
-                    </div>
+                    I'm Done editing
                 </div>
             </div>
         </div>
@@ -103,22 +61,22 @@
             </div>
         </div>
     </div>
+    <ShareComponent />
 </template>
 
 <script lang="ts">
 import { Boxer, Fight } from "@/types/boxing.d"
-import { ExportService } from "@/services/export.service"
-import { FileType } from "@/types/api"
 import FightCardGridComponent from "./fight-card/fight-card-grid.component.vue"
 import { useFightStore } from "@/stores/fight.store"
 import { useUiStore } from "@/stores/ui.store"
-import { useBoxerStore } from "@/stores/boxer.store"
 import { useTournamentStore } from "@/stores/tournament.store"
 import { watch } from "vue"
+import ShareComponent from "./core/share.component.vue"
 
 export default {
     components: {
         FightCardGridComponent,
+        ShareComponent,
     },
     data() {
         return {
@@ -166,23 +124,6 @@ export default {
         async handleRemoveFromFightCard(fightId: string) {
             await this.fightStore.removeFromFightCard([fightId])
             await this.fightStore.fetchFights()
-        },
-        async downloadFile(fileType: FileType) {
-            if (!this.tournamentStore.currentTournamentId) {
-                return
-            }
-            if (fileType === "xlsx") {
-                await ExportService.downloadFightCardXlsx(this.tournamentStore.currentTournamentId)
-            }
-            if (fileType === "csv") {
-                await ExportService.downloadFightCardCsv(this.tournamentStore.currentTournamentId)
-            }
-            if (fileType === "png") {
-                await ExportService.downloadFightCardPng(this.tournamentStore.currentTournamentId)
-            }
-            if (fileType === "pdf") {
-                await ExportService.downloadFightCardPdf(this.tournamentStore.currentTournamentId)
-            }
         },
         getNbFights() {
             return this.fightCard.length
