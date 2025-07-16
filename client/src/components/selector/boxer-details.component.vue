@@ -30,6 +30,7 @@
                 data-bs-target="#boxerEditOffcanvasNavbar"
             >
                 <i class="bi bi-pencil"></i>
+                Edit boxer
             </div>
             <BoxerEditOffcanvasComponent :boxer="boxer" />
         </div>

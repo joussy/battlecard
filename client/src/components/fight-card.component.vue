@@ -13,11 +13,11 @@
                 Edit
             </button>
             <div
-                v-if="uiStore.account != null"
                 class="btn-group"
                 role="group"
             >
                 <button
+                    :disabled="getNbFights() == 0 && !editionMode"
                     type="button"
                     class="btn btn-outline-secondary ms-2 dropdown-toggle"
                     data-bs-toggle="dropdown"

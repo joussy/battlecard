@@ -18,6 +18,7 @@
                 <span class="d-none d-md-inline ms-2">Add Boxer</span>
             </button>
             <button
+                :disabled="getBoxersToDisplay().length == 0"
                 type="button"
                 class="btn btn-outline-secondary ms-2 dropdown-toggle"
                 data-bs-toggle="dropdown"
@@ -144,7 +145,6 @@ import { Boxer } from "@/types/boxing"
 import { differenceInYears } from "date-fns"
 import { FileType } from "@/types/api"
 import { ExportService } from "@/services/export.service"
-import IconComponent from "./core/icon.component.vue"
 
 export default defineComponent({
     components: {
@@ -152,7 +152,6 @@ export default defineComponent({
         BoxerAddOffcanvasComponent: BoxerAddOffcanvasComponent,
         BoxerSelectorFiltersComponent: BoxerSelectorFiltersComponent,
         SearchFacetsComponent: SearchFacetsComponent,
-        Icon: IconComponent,
     },
     data() {
         return {
@@ -176,6 +175,9 @@ export default defineComponent({
             if (!dateAsStr) return null
             const date = new Date(dateAsStr)
             return date instanceof Date && !isNaN(date.getTime()) ? date.toLocaleDateString() : null
+        },
+        nbBoxers() {
+            return this.getBoxersToDisplay().length
         },
     },
     mounted() {
