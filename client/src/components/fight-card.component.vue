@@ -9,7 +9,7 @@
                 :disabled="getNbFights() == 0 && !editionMode"
                 @click="editionMode = !editionMode"
             >
-                <i class="bi bi-pencil" />
+                <i class="me-1 bi bi-pencil" />
                 Edit
             </button>
             <button
@@ -19,7 +19,7 @@
                 data-bs-toggle="modal"
                 data-bs-target="#shareModal"
             >
-                <i class="bi bi-link-45deg" />
+                <i class="me-1 bi bi-share" />
                 Share
             </button>
 
