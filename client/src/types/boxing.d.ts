@@ -28,8 +28,8 @@ export interface Opponent extends Boxer {
 }
 
 export interface Fight {
-    boxer1Id: string
-    boxer2Id: string
+    boxer1: Boxer
+    boxer2: Boxer
     modalityErrors: Readonly<ModalityError[]>
     id: string
     order: number
@@ -72,4 +72,10 @@ export interface Tournament {
     name: string
     userId: string
     date: string
+}
+
+export interface SharedFightCard {
+    tournamentName: string
+    fights: Fight[]
+    tournamentDate?: string
 }

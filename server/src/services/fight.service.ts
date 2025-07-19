@@ -4,7 +4,7 @@ import { In, Repository } from 'typeorm';
 import { Fight } from '../entities/fight.entity';
 import { Boxer } from '../entities/boxer.entity';
 import { ApiFightGet, ApiFightCreate } from '@/shared/types/api';
-import { toFight, toApiFight } from '../adapters/fight.adapter';
+import { toApiFight, toFightFromCreate } from '../adapters/fight.adapter';
 import { ModalityService } from '../modality/modality.service';
 import { AuthenticatedUser } from '@/interfaces/auth.interface';
 
@@ -28,13 +28,7 @@ export class FightService {
       relations: ['boxer1', 'boxer2', 'tournament'],
     });
     const modality = this.modalityService.getModality();
-    return dbFights.map((fight) => {
-      const fightDuration = modality.getFightDuration(
-        fight.boxer1,
-        fight.boxer2,
-      );
-      return toApiFight(fight, fightDuration);
-    });
+    return dbFights.map((fight) => toApiFight(fight, modality));
   }
   async findById(id: string, user: AuthenticatedUser): Promise<ApiFightGet> {
     const fight = await this.fightRepository.findOneOrFail({
@@ -42,8 +36,7 @@ export class FightService {
       relations: ['boxer1', 'boxer2'],
     });
     const modality = this.modalityService.getModality();
-    const fightDuration = modality.getFightDuration(fight.boxer1, fight.boxer2);
-    return toApiFight(fight, fightDuration);
+    return toApiFight(fight, modality);
   }
 
   async create(fight: ApiFightCreate, user: AuthenticatedUser): Promise<Fight> {
@@ -72,7 +65,7 @@ export class FightService {
         'A fight between these two boxers already exists in this tournament.',
       );
     }
-    return this.fightRepository.save(toFight(fight as ApiFightGet));
+    return this.fightRepository.save(toFightFromCreate(fight));
   }
 
   async deleteMany(fightIds: string[], user: AuthenticatedUser): Promise<void> {
@@ -136,31 +129,20 @@ export class FightService {
     }
   }
 
-  async update(
-    id: string,
-    fight: ApiFightGet,
-    user: AuthenticatedUser,
-  ): Promise<Fight> {
+  async switch(fightId: string, user: AuthenticatedUser): Promise<Fight> {
+    console.log('Switching fight:', fightId);
     const existingFight = await this.fightRepository.findOneOrFail({
-      where: { id, tournament: { userId: user.id } },
+      where: { id: fightId, tournament: { userId: user.id } },
       relations: ['tournament'],
     });
-    if (
-      fight.boxer1Id !== existingFight.boxer1Id &&
-      fight.boxer1Id !== existingFight.boxer2Id
-    ) {
-      throw new Error('Boxers not found in this fight');
-    }
-    if (
-      fight.boxer2Id !== existingFight.boxer1Id &&
-      fight.boxer2Id !== existingFight.boxer2Id
-    ) {
-      throw new Error('Boxers not found in this fight');
-    }
-    fight.tournamentId = existingFight.tournamentId;
-    await this.fightRepository.update(id, toFight(fight));
+    // Swap boxer1 and boxer2
+    const tempBoxerId = existingFight.boxer1Id;
+    existingFight.boxer1Id = existingFight.boxer2Id;
+    existingFight.boxer2Id = tempBoxerId;
+
+    await this.fightRepository.update(fightId, existingFight);
     return this.fightRepository.findOneOrFail({
-      where: { id },
+      where: { id: fightId },
       relations: ['boxer1', 'boxer2'],
     });
   }

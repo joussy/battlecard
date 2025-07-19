@@ -29,7 +29,8 @@ import { ImportService } from './services/import.service';
 import { FightExportService } from './services/fight-export.service';
 import { GotenbergService } from './services/gotenberg.service';
 import { SelectorExportService } from './services/selector-export.service';
-// import { TemplateService } from './services/template.service';
+import { ShareController } from './controllers/share.controller';
+import { ShareService } from './services/share.service';
 
 @Module({
   imports: [
@@ -64,10 +65,10 @@ import { SelectorExportService } from './services/selector-export.service';
     FightController,
     ExternalServicesController,
     ImportController,
+    ShareController,
   ],
   providers: [
     GoogleStrategy,
-    // TemplateService,
     FightService,
     TournamentService,
     BoxerService,
@@ -76,6 +77,7 @@ import { SelectorExportService } from './services/selector-export.service';
     FightExportService,
     GotenbergService,
     SelectorExportService,
+    ShareService,
     JwtStrategy,
     {
       provide: APP_GUARD,

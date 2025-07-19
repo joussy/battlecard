@@ -1,4 +1,4 @@
-import { Body, Controller, Param, Post, Res } from '@nestjs/common';
+import { Body, Controller, Post, Res } from '@nestjs/common';
 import { Response as ExpressResponse } from 'express';
 import { User } from '@/decorators/user.decorator';
 import { AuthenticatedUser } from '@/interfaces/auth.interface';
@@ -9,7 +9,7 @@ import { SelectorExportService } from '@/services/selector-export.service';
 @Controller('export')
 export class ExternalServicesController {
   constructor(
-    private readonly externalServicesService: FightExportService,
+    private readonly fightExportService: FightExportService,
     private readonly tournamentService: TournamentService,
     private readonly selectorExportService: SelectorExportService,
   ) {}
@@ -25,7 +25,7 @@ export class ExternalServicesController {
         body.tournamentId,
         user.id,
       );
-      const pdfBuffer = await this.externalServicesService.generatePdf(
+      const pdfBuffer = await this.fightExportService.generatePdf(
         body.tournamentId,
       );
       res.setHeader('Content-Type', 'application/pdf');
@@ -51,7 +51,7 @@ export class ExternalServicesController {
         body.tournamentId,
         user.id,
       );
-      const pngBuffer = await this.externalServicesService.generatePng(
+      const pngBuffer = await this.fightExportService.generatePng(
         body.tournamentId,
       );
       res.setHeader('Content-Type', 'image/png');
@@ -104,7 +104,7 @@ export class ExternalServicesController {
         body.tournamentId,
         user.id,
       );
-      const csvContent = await this.externalServicesService.generateCsv(
+      const csvContent = await this.fightExportService.generateCsv(
         body.tournamentId,
       );
       res.setHeader('Content-Type', 'text/csv');
@@ -130,7 +130,7 @@ export class ExternalServicesController {
         body.tournamentId,
         user.id,
       );
-      const xlsxBuffer = await this.externalServicesService.generateXlsx(
+      const xlsxBuffer = await this.fightExportService.generateXlsx(
         body.tournamentId,
       );
       res.setHeader(

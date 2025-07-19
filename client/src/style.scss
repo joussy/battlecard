@@ -1,6 +1,7 @@
 @import "bootstrap/scss/mixins";
 @import "bootstrap/scss/bootstrap";
 
+// Define custom container max-widths
 .max-width-md {
     width: 100%;
     margin-left: auto;
@@ -9,6 +10,14 @@
     max-width: map-get($container-max-widths, md);
 }
 
+// Disable link styles globally
 a:link {
     text-decoration: none;
   }
+
+// Disable hover styles for specific elements
+.no-hover-style:hover {
+  background-color: transparent !important;
+  color: inherit !important;
+  border-color: inherit !important;
+}

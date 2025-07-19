@@ -1,14 +1,24 @@
-import { ApiFightGet } from '@/shared/types/api';
+import { ApiFightCreate, ApiFightGet } from '@/shared/types/api';
 import { Fight } from '../entities/fight.entity';
-import { FightDuration, Gender } from '@/shared/types/modality.type';
+import { Gender } from '@/shared/types/modality.type';
 import { FightCardTemplate } from '@/interfaces/template.interface';
 import { IModality } from '@/modality/IModality';
 import { Tournament } from '@/entities/tournament.entity';
 import { format } from 'date-fns';
+import { toApiBoxerGet } from './boxer.adapter';
 
 export function toFight(apiFight: ApiFightGet): Fight {
   const fight = new Fight();
   fight.id = apiFight.id;
+  fight.order = apiFight.order;
+  fight.boxer1Id = apiFight.boxer1.id;
+  fight.boxer2Id = apiFight.boxer2.id;
+  fight.tournamentId = apiFight.tournamentId;
+  return fight;
+}
+
+export function toFightFromCreate(apiFight: ApiFightCreate): Fight {
+  const fight = new Fight();
   fight.order = apiFight.order;
   fight.boxer1Id = apiFight.boxer1Id;
   fight.boxer2Id = apiFight.boxer2Id;
@@ -16,15 +26,13 @@ export function toFight(apiFight: ApiFightGet): Fight {
   return fight;
 }
 
-export function toApiFight(
-  fight: Fight,
-  fightDuration: FightDuration,
-): ApiFightGet {
+export function toApiFight(fight: Fight, modality: IModality): ApiFightGet {
+  const fightDuration = modality.getFightDuration(fight.boxer1, fight.boxer2);
   return {
     id: fight.id,
     order: fight.order,
-    boxer1Id: fight.boxer1Id,
-    boxer2Id: fight.boxer2Id,
+    boxer1: toApiBoxerGet(fight.boxer1, modality),
+    boxer2: toApiBoxerGet(fight.boxer2, modality),
     tournamentId: fight.tournamentId,
     roundDurationAsSeconds: fightDuration.roundDurationAsSeconds,
     rounds: fightDuration.rounds,
