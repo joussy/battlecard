@@ -11,17 +11,14 @@
                     <h5
                         id="shareModalLabel"
                         class="modal-title"
-                    >
-                        <i class="bi bi-share-fill me-2"></i>
-                        Share & Export Fight Card
-                    </h5>
+                    ></h5>
                     <button
                         type="button"
                         class="btn-close"
                         data-bs-dismiss="modal"
                     ></button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body p-3">
                     <!-- Export Section -->
                     <h6 class="fw-bold mb-3">
                         <i class="bi bi-download me-2"></i>
@@ -43,7 +40,7 @@
                                 >
                                     <span
                                         v-if="loadingFormat === format.type"
-                                        class="spinner-border spinner-border-sm"
+                                        class="spinner-border spinner-border-sm mb-1"
                                         role="status"
                                     ></span>
                                     <i
@@ -63,7 +60,7 @@
                     <div>
                         <h6 class="fw-bold mb-3">
                             <i class="bi bi-link-45deg me-2"></i>
-                            Generate Shareable Link
+                            Shareable Link
                         </h6>
                         <p class="text-muted small mb-3">
                             Create a read-only link that others can use to view this fight card without needing an
@@ -138,7 +135,7 @@
 </template>
 
 <script lang="ts">
-import { ExportService } from "@/services/export.service"
+import exportManager from "@/managers/export.manager"
 import { useTournamentStore } from "@/stores/tournament.store"
 
 export default {
@@ -158,22 +155,28 @@ export default {
             ],
         }
     },
+    computed: {
+        tournamentId() {
+            if (!this.tournamentStore.currentTournamentId) {
+                throw new Error("No tournament selected")
+            }
+            return this.tournamentStore.currentTournamentId
+        },
+    },
     methods: {
         exportFile(fileType: string) {
             console.log(`Exporting as ${fileType}`)
             this.loadingFormat = fileType
-            if (!this.tournamentStore.currentTournamentId) {
-                return
-            }
+
             let promise: Promise<void>
             if (fileType === "xlsx") {
-                promise = ExportService.downloadFightCardXlsx(this.tournamentStore.currentTournamentId)
+                promise = exportManager.downloadFightCardXlsx(this.tournamentId)
             } else if (fileType === "csv") {
-                promise = ExportService.downloadFightCardCsv(this.tournamentStore.currentTournamentId)
+                promise = exportManager.downloadFightCardCsv(this.tournamentId)
             } else if (fileType === "png") {
-                promise = ExportService.downloadFightCardPng(this.tournamentStore.currentTournamentId)
+                promise = exportManager.downloadFightCardPng(this.tournamentId)
             } else if (fileType === "pdf") {
-                promise = ExportService.downloadFightCardPdf(this.tournamentStore.currentTournamentId)
+                promise = exportManager.downloadFightCardPdf(this.tournamentId)
             } else {
                 console.error(`Unsupported file type: ${fileType}`)
                 this.loadingFormat = null
@@ -190,18 +193,11 @@ export default {
                     this.loadingFormat = null
                 })
         },
-        generateShareLink() {
-            console.log("Generating share link")
+        async generateShareLink() {
             this.isGeneratingLink = true
-
-            // Simulate API call delay
-            setTimeout(() => {
-                // Generate a fake share link
-                const fakeToken =
-                    Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
-                this.shareLink = `${window.location.origin}/share/${fakeToken}`
-                this.isGeneratingLink = false
-            }, 1000)
+            const roToken = await exportManager.generateFightCardRoToken(this.tournamentId)
+            this.shareLink = `${window.location.origin}/#/shared-card/${roToken}`
+            this.isGeneratingLink = false
         },
         async copyShareLink() {
             console.log("Copying share link")
@@ -218,30 +214,10 @@ export default {
 </script>
 
 <style scoped>
-.modal-body {
-    padding: 1.5rem;
-}
-
-.btn {
-    transition: all 0.2s ease-in-out;
-}
-
-div > .btn {
-    transform: translateY(-1px);
-}
-
 .export-btn-circle {
     width: 50px;
     height: 50px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     font-size: 1.5rem;
-}
-
-.export-btn-circle:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 .input-group .form-control {
@@ -249,8 +225,8 @@ div > .btn {
     font-size: 0.875rem;
 }
 
-.spinner-border-sm {
+/* .spinner-border-sm {
     width: 1rem;
     height: 1rem;
-}
+} */
 </style>

@@ -22,7 +22,7 @@ const routes = [
     { path: "/selector/tile/:id", name: "selector-tile", component: BoxerTileDetailsComponent },
     { path: "/settings", name: "settings", component: UploadComponent },
     { path: "/card", name: "card", component: FightCardComponent },
-    { path: "/shared-card", name: "shared-card", component: SharedFightCardComponent },
+    { path: "/shared-card/:roToken", name: "shared-card", component: SharedFightCardComponent },
     { path: "/import", name: "import", component: ImportPage },
 ]
 

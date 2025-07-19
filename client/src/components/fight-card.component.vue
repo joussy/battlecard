@@ -84,10 +84,7 @@ export default {
             uiStore: useUiStore(),
             tournamentStore: useTournamentStore(),
             editionMode: false,
-            fightCard: [] as (Fight & {
-                boxer1: Boxer
-                boxer2: Boxer
-            })[],
+            fightCard: [] as Fight[],
         }
     },
     mounted() {

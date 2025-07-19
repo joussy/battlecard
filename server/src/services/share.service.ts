@@ -4,7 +4,7 @@ import { Repository } from 'typeorm';
 import { Tournament } from '../entities/tournament.entity';
 import { Fight } from '../entities/fight.entity';
 import { ApiSharedFightCardGet } from '@/shared/types/api';
-import { decryptToken } from '@/utils/crypto.utils';
+import { decryptToken, encryptToken } from '@/utils/crypto.utils';
 import { toApiSharedFightCardGet } from '@/adapters/share.adapter';
 import { ModalityService } from '@/modality/modality.service';
 
@@ -29,6 +29,7 @@ export class ShareService {
     const fights = await this.fightRepository.find({
       where: { tournamentId },
       relations: ['boxer1', 'boxer2'],
+      order: { order: 'ASC' }, // Ensure fights are ordered by their fight order
     });
     const modality = this.modalityService.getModality();
     const sharedFightCard = toApiSharedFightCardGet(
@@ -38,5 +39,16 @@ export class ShareService {
     );
 
     return sharedFightCard;
+  }
+
+  async generateFightCardToken(
+    tournamentId: string,
+    userId: string,
+  ): Promise<string> {
+    await this.tournamentRepository.findOneOrFail({
+      where: { id: tournamentId, userId },
+    });
+    const token = encryptToken(this.SECRET_KEY, tournamentId);
+    return token;
   }
 }

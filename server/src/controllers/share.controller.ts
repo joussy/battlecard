@@ -1,6 +1,8 @@
-import { Controller, Param, Inject, Get } from '@nestjs/common';
+import { Controller, Param, Inject, Get, Post, Body } from '@nestjs/common';
 import { ShareService } from '../services/share.service';
-import { ApiSharedFightCardGet } from '@/shared/types/api';
+import { ApiGeneratedToken, ApiSharedFightCardGet } from '@/shared/types/api';
+import { User } from '@/decorators/user.decorator';
+import { AuthenticatedUser } from '@/interfaces/auth.interface';
 
 @Controller('share')
 export class ShareController {
@@ -9,11 +11,24 @@ export class ShareController {
     private readonly shareService: ShareService,
   ) {}
 
-  @Get(':fightCardToken')
+  @Get('fightcard/:fightCardToken')
   async getFightsByFightCardToken(
     @Param('fightCardToken') fightCardToken: string,
   ): Promise<ApiSharedFightCardGet> {
+    console.log('Received fight card token:', fightCardToken);
     const res = await this.shareService.getByFightCardToken(fightCardToken);
     return res;
+  }
+
+  @Post('fightcard/generateRoToken')
+  async generateFightCardToken(
+    @Body() body: { tournamentId: string },
+    @User() user: AuthenticatedUser,
+  ): Promise<ApiGeneratedToken> {
+    const token = await this.shareService.generateFightCardToken(
+      body.tournamentId,
+      user.id,
+    );
+    return { token };
   }
 }

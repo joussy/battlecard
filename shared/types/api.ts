@@ -217,3 +217,7 @@ export interface ApiSharedFightCardGet {
   tournamentName: string;
   fights: ApiFightGet[];
 }
+
+export interface ApiGeneratedToken{
+  token: string;
+}

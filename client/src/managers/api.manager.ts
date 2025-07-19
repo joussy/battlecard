@@ -10,6 +10,7 @@ import {
     ApiImportBoxers,
     ApiPreviewBoxersResponse,
     ApiPreviewBoxersCsv,
+    ApiSharedFightCardGet,
 } from "@/shared/types/api"
 import { get, mutate, upload } from "@/utils/manager.utils"
 
@@ -125,6 +126,15 @@ export class ApiManager {
     }
     previewBoxersFromCsvFile(file: File): Promise<ApiPreviewBoxersResponse> {
         return upload<ApiPreviewBoxersResponse>("/api/import/previewFromCsvFile", file, "Failed to import FFBoxe file")
+    }
+
+    // Share
+    getFightsByFightCardToken(fightCardToken: string): Promise<ApiSharedFightCardGet> {
+        return get<ApiSharedFightCardGet>(
+            `/api/share/fightcard/${encodeURIComponent(fightCardToken)}`,
+            undefined,
+            "Failed to fetch fights by fight card token"
+        )
     }
 }
 
