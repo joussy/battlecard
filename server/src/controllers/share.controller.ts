@@ -1,4 +1,12 @@
-import { Controller, Param, Inject, Get, Post, Body } from '@nestjs/common';
+import {
+  Controller,
+  Param,
+  Inject,
+  Get,
+  Post,
+  Body,
+  SetMetadata,
+} from '@nestjs/common';
 import { ShareService } from '../services/share.service';
 import { ApiGeneratedToken, ApiSharedFightCardGet } from '@/shared/types/api';
 import { User } from '@/decorators/user.decorator';
@@ -11,11 +19,11 @@ export class ShareController {
     private readonly shareService: ShareService,
   ) {}
 
+  @SetMetadata('isPublic', true)
   @Get('fightcard/:fightCardToken')
   async getFightsByFightCardToken(
     @Param('fightCardToken') fightCardToken: string,
   ): Promise<ApiSharedFightCardGet> {
-    console.log('Received fight card token:', fightCardToken);
     const res = await this.shareService.getByFightCardToken(fightCardToken);
     return res;
   }
