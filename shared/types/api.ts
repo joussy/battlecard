@@ -216,6 +216,7 @@ export function getCsvDelimiterFromType(delimiter: CsvDelimiter): string {
 export interface ApiSharedFightCardGet {
   tournamentName: string;
   fights: ApiFightGet[];
+  tournamentDate?: string;
 }
 
 export interface ApiGeneratedToken{

@@ -19,7 +19,13 @@ export class ShareService {
   ) {}
   private readonly SECRET_KEY = 'battlecard-secret-2025'; // Simple secret key
 
-  async getByFightCardToken(
+  getTournamentIdByFightCardToken(fightCardToken: string): string {
+    const tournamentId = decryptToken(this.SECRET_KEY, fightCardToken);
+
+    return tournamentId;
+  }
+
+  async getTournamentByFightCardToken(
     fightCardToken: string,
   ): Promise<ApiSharedFightCardGet> {
     const tournamentId = decryptToken(this.SECRET_KEY, fightCardToken);

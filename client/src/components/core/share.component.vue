@@ -53,11 +53,11 @@
                         </div>
                     </div>
 
-                    <!-- Divider -->
-                    <hr class="my-4" />
-
                     <!-- Share Link Section -->
-                    <div>
+                    <div v-if="enableShareLink">
+                        <!-- Divider -->
+                        <hr class="my-4" />
+
                         <h6 class="fw-bold mb-3">
                             <i class="bi bi-link-45deg me-2"></i>
                             Shareable Link
@@ -137,9 +137,20 @@
 <script lang="ts">
 import exportManager from "@/managers/export.manager"
 import { useTournamentStore } from "@/stores/tournament.store"
+import { PropType } from "vue"
 
 export default {
     name: "ShareComponent",
+    props: {
+        downloadCallback: {
+            type: Function as PropType<(fileType: string) => Promise<void>>,
+            required: true,
+        },
+        enableShareLink: {
+            type: Boolean,
+            required: true,
+        },
+    },
     data() {
         return {
             loadingFormat: null as string | null,
@@ -168,20 +179,7 @@ export default {
             console.log(`Exporting as ${fileType}`)
             this.loadingFormat = fileType
 
-            let promise: Promise<void>
-            if (fileType === "xlsx") {
-                promise = exportManager.downloadFightCardXlsx(this.tournamentId)
-            } else if (fileType === "csv") {
-                promise = exportManager.downloadFightCardCsv(this.tournamentId)
-            } else if (fileType === "png") {
-                promise = exportManager.downloadFightCardPng(this.tournamentId)
-            } else if (fileType === "pdf") {
-                promise = exportManager.downloadFightCardPdf(this.tournamentId)
-            } else {
-                console.error(`Unsupported file type: ${fileType}`)
-                this.loadingFormat = null
-                return
-            }
+            const promise: Promise<void> = this.downloadCallback(fileType)
 
             promise
                 .then(() => {

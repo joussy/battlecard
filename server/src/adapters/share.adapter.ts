@@ -12,5 +12,6 @@ export function toApiSharedFightCardGet(
   return {
     fights: fights.map((fight) => toApiFight(fight, modality)),
     tournamentName: tournament.name,
+    tournamentDate: tournament.date,
   };
 }

@@ -73,3 +73,9 @@ export interface Tournament {
     userId: string
     date: string
 }
+
+export interface SharedFightCard {
+    tournamentName: string
+    fights: Fight[]
+    tournamentDate?: string
+}

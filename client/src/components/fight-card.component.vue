@@ -61,17 +61,21 @@
             </div>
         </div>
     </div>
-    <ShareComponent />
+    <ShareComponent
+        :enable-share-link="true"
+        :download-callback="downloadCallback"
+    />
 </template>
 
 <script lang="ts">
-import { Boxer, Fight } from "@/types/boxing.d"
+import { Fight } from "@/types/boxing.d"
 import FightCardGridComponent from "./fight-card/fight-card-grid.component.vue"
 import { useFightStore } from "@/stores/fight.store"
 import { useUiStore } from "@/stores/ui.store"
 import { useTournamentStore } from "@/stores/tournament.store"
 import { watch } from "vue"
-import ShareComponent from "./core/share.component.vue"
+import ShareComponent from "@/components/core/share.component.vue"
+import exportManager from "@/managers/export.manager"
 
 export default {
     components: {
@@ -86,6 +90,14 @@ export default {
             editionMode: false,
             fightCard: [] as Fight[],
         }
+    },
+    computed: {
+        tournamentId() {
+            if (!this.tournamentStore.currentTournamentId) {
+                throw new Error("No tournament selected")
+            }
+            return this.tournamentStore.currentTournamentId
+        },
     },
     mounted() {
         watch(
@@ -124,6 +136,18 @@ export default {
         },
         getNbFights() {
             return this.fightCard.length
+        },
+        downloadCallback(fileType: string): Promise<void> {
+            if (fileType === "xlsx") {
+                return exportManager.downloadFightCardXlsx(this.tournamentId)
+            } else if (fileType === "csv") {
+                return exportManager.downloadFightCardCsv(this.tournamentId)
+            } else if (fileType === "pdf") {
+                return exportManager.downloadFightCardPdf(this.tournamentId)
+            } else if (fileType === "png") {
+                return exportManager.downloadFightCardPng(this.tournamentId)
+            }
+            return Promise.reject(new Error("Unsupported file type"))
         },
     },
 }

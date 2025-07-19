@@ -36,6 +36,20 @@ export class ExportManager {
         const res = await mutate<ApiGeneratedToken>(`/api/share/fightcard/generateRoToken`, "POST", { tournamentId })
         return res.token
     }
+
+    // Shared fight card download
+    async downloadSharedFightCardPdf(fightCardToken: string) {
+        await postAndDownload(`/api/share/fightcard/pdf`, { fightCardToken }, "fight-card.pdf")
+    }
+    async downloadSharedFightCardPng(fightCardToken: string) {
+        await postAndDownload(`/api/share/fightcard/png`, { fightCardToken }, "fight-card.png")
+    }
+    async downloadSharedFightCardXlsx(fightCardToken: string) {
+        await postAndDownload(`/api/share/fightcard/xlsx`, { fightCardToken }, "fight-card.xlsx")
+    }
+    async downloadSharedFightCardCsv(fightCardToken: string) {
+        await postAndDownload(`/api/share/fightcard/csv`, { fightCardToken }, "fight-card.csv")
+    }
 }
 
 const instance = new ExportManager()
