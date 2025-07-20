@@ -5,6 +5,7 @@ import { AuthenticatedUser } from '@/interfaces/auth.interface';
 import { FightExportService } from '@/services/fight-export.service';
 import { TournamentService } from '@/services/tournament.service';
 import { SelectorExportService } from '@/services/selector-export.service';
+import { ShareService } from '@/services/share.service';
 
 @Controller('export')
 export class ExternalServicesController {
@@ -12,6 +13,7 @@ export class ExternalServicesController {
     private readonly fightExportService: FightExportService,
     private readonly tournamentService: TournamentService,
     private readonly selectorExportService: SelectorExportService,
+    private readonly shareService: ShareService,
   ) {}
 
   @Post('fightcard/pdf')
@@ -25,9 +27,18 @@ export class ExternalServicesController {
         body.tournamentId,
         user.id,
       );
+      let fightCardShareUrl: string | undefined = undefined;
+      if (body.displayQrCode) {
+        const token = await this.shareService.generateFightCardToken(
+          body.tournamentId,
+          user.id,
+        );
+        fightCardShareUrl = this.shareService.getFightCardShareUrl(token);
+      }
+
       const pdfBuffer = await this.fightExportService.generatePdf(
         body.tournamentId,
-        body.displayQrCode,
+        fightCardShareUrl,
       );
       res.setHeader('Content-Type', 'application/pdf');
       res.setHeader(
@@ -52,9 +63,17 @@ export class ExternalServicesController {
         body.tournamentId,
         user.id,
       );
+      let fightCardShareUrl: string | undefined = undefined;
+      if (body.displayQrCode) {
+        const token = await this.shareService.generateFightCardToken(
+          body.tournamentId,
+          user.id,
+        );
+        fightCardShareUrl = this.shareService.getFightCardShareUrl(token);
+      }
       const pngBuffer = await this.fightExportService.generatePng(
         body.tournamentId,
-        body.displayQrCode,
+        fightCardShareUrl,
       );
       res.setHeader('Content-Type', 'image/png');
       res.setHeader(
