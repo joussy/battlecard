@@ -144,7 +144,7 @@ import Fuse from "fuse.js"
 import { Boxer } from "@/types/boxing"
 import { differenceInYears } from "date-fns"
 import { FileType } from "@/types/api"
-import { ExportService } from "@/services/export.service"
+import exportManager from "@/managers/export.manager"
 
 export default defineComponent({
     components: {
@@ -265,19 +265,19 @@ export default defineComponent({
             const boxerIds = this.getBoxersToDisplay().map((boxer) => boxer.id)
 
             if (fileType === "xlsx") {
-                await ExportService.downloadSelectorXlsx(this.tournamentStore.currentTournamentId, boxerIds)
+                await exportManager.downloadSelectorXlsx(this.tournamentStore.currentTournamentId, boxerIds)
             }
             if (fileType === "battlecard") {
-                await ExportService.downloadSelectorBattlecard(this.tournamentStore.currentTournamentId, boxerIds)
+                await exportManager.downloadSelectorBattlecard(this.tournamentStore.currentTournamentId, boxerIds)
             }
             if (fileType === "csv") {
-                await ExportService.downloadSelectorCsv(this.tournamentStore.currentTournamentId, boxerIds)
+                await exportManager.downloadSelectorCsv(this.tournamentStore.currentTournamentId, boxerIds)
             }
             if (fileType === "png") {
-                await ExportService.downloadSelectorPng(this.tournamentStore.currentTournamentId, boxerIds)
+                await exportManager.downloadSelectorPng(this.tournamentStore.currentTournamentId, boxerIds)
             }
             if (fileType === "pdf") {
-                await ExportService.downloadSelectorPdf(this.tournamentStore.currentTournamentId, boxerIds)
+                await exportManager.downloadSelectorPdf(this.tournamentStore.currentTournamentId, boxerIds)
             }
         },
     },

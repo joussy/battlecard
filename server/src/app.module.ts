@@ -29,7 +29,10 @@ import { ImportService } from './services/import.service';
 import { FightExportService } from './services/fight-export.service';
 import { GotenbergService } from './services/gotenberg.service';
 import { SelectorExportService } from './services/selector-export.service';
-// import { TemplateService } from './services/template.service';
+import { ShareController } from './controllers/share.controller';
+import { ShareService } from './services/share.service';
+import { ConfigService } from './services/config.service';
+import { QrCodeService } from './services/qrcode.service';
 
 @Module({
   imports: [
@@ -64,10 +67,10 @@ import { SelectorExportService } from './services/selector-export.service';
     FightController,
     ExternalServicesController,
     ImportController,
+    ShareController,
   ],
   providers: [
     GoogleStrategy,
-    // TemplateService,
     FightService,
     TournamentService,
     BoxerService,
@@ -76,13 +79,16 @@ import { SelectorExportService } from './services/selector-export.service';
     FightExportService,
     GotenbergService,
     SelectorExportService,
+    ShareService,
+    QrCodeService,
     JwtStrategy,
     {
       provide: APP_GUARD,
       useClass: JwtAuthGuard,
     },
     ModalityService,
+    ConfigService,
   ],
-  exports: [ModalityService],
+  exports: [ModalityService, ConfigService],
 })
 export class AppModule {}

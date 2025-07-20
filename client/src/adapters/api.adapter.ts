@@ -1,6 +1,13 @@
-import { ApiBoxerCreate, ApiBoxerGet, ApiFightGet, ApiOpponentGet, ApiTournament } from "@/shared/types/api"
+import {
+    ApiBoxerCreate,
+    ApiBoxerGet,
+    ApiFightGet,
+    ApiOpponentGet,
+    ApiSharedFightCardGet,
+    ApiTournament,
+} from "@/shared/types/api"
 import { Gender } from "@/shared/types/modality.type"
-import { Boxer, Fight, Opponent, Tournament } from "@/types/boxing.d"
+import { Boxer, Fight, Opponent, SharedFightCard, Tournament } from "@/types/boxing.d"
 
 export default class ApiAdapter {
     static toApiBoxerCreate(boxer: Boxer, tournamentId: string | undefined): ApiBoxerCreate {
@@ -67,8 +74,8 @@ export default class ApiAdapter {
 
     static toFight(fight: ApiFightGet): Fight {
         return {
-            boxer1Id: fight.boxer1Id,
-            boxer2Id: fight.boxer2Id,
+            boxer1: ApiAdapter.toBoxer(fight.boxer1),
+            boxer2: ApiAdapter.toBoxer(fight.boxer2),
             id: fight.id,
             order: fight.order,
             modalityErrors: [],
@@ -78,15 +85,11 @@ export default class ApiAdapter {
         }
     }
 
-    static toApiFight(fight: Fight, roundDurationSeconds: number, rounds: number): ApiFightGet {
+    static toSharedFightCard(sharedFightCardApi: ApiSharedFightCardGet): SharedFightCard {
         return {
-            id: fight.id,
-            boxer1Id: fight.boxer1Id,
-            boxer2Id: fight.boxer2Id,
-            tournamentId: fight.tournamentId,
-            order: fight.order,
-            roundDurationAsSeconds: roundDurationSeconds,
-            rounds,
+            tournamentName: sharedFightCardApi.tournamentName,
+            fights: sharedFightCardApi.fights.map(ApiAdapter.toFight),
+            tournamentDate: sharedFightCardApi.tournamentDate,
         }
     }
 }

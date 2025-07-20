@@ -7,6 +7,7 @@ import {
   ParseFilePipe,
   MaxFileSizeValidator,
   FileTypeValidator,
+  Logger,
 } from '@nestjs/common';
 import { ModalityService } from '../modality/modality.service';
 import { User } from '@/decorators/user.decorator';
@@ -30,6 +31,7 @@ export class ImportController {
     private readonly modalityService: ModalityService,
     private readonly importService: ImportService,
   ) {}
+  private readonly logger = new Logger(ImportController.name);
 
   @Post()
   async importBoxers(
@@ -72,7 +74,7 @@ export class ImportController {
       throw new Error('File buffer is missing');
     }
     const payload: string = file.buffer?.toString('utf-8');
-    console.log('File buffer converted to string:', payload);
+    this.logger.debug('File buffer converted to string:', payload);
     return await this.importService.previewBoxersFromCsv(payload);
   }
 
@@ -97,7 +99,7 @@ export class ImportController {
       throw new Error('File buffer is missing');
     }
     const payload: string = file.buffer?.toString('utf-8');
-    console.log('File buffer converted to string:', payload);
+    this.logger.debug('File buffer converted to string:', payload);
     return await this.importService.previewBoxersFromFFboxe(payload);
   }
 
@@ -107,7 +109,7 @@ export class ImportController {
     @User() user: AuthenticatedUser,
   ): Promise<ApiPreviewBoxersResponse> {
     if (!user.apiEnabled) {
-      console.error('API access is not enabled for user:', user.id);
+      this.logger.error('API access is not enabled for user:', user.id);
       return {
         success: false,
         message: 'API access is not enabled for this user.',

@@ -5,7 +5,9 @@ export default function setupAuthRedirect(router: Router) {
     const uiStore = useUiStore()
     // Also check on each route
     router.beforeEach((to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext) => {
-        if (!uiStore.jwtToken && to.name !== "settings") {
+        const requiresAuth = to.meta?.requiresAuth !== false
+
+        if (!uiStore.jwtToken && requiresAuth) {
             next({ name: "settings" })
         } else {
             next()

@@ -46,7 +46,7 @@ export async function mutate<T = Response>(
     url: string,
     method: "POST" | "PUT" | "DELETE",
     body?: unknown,
-    errorMsg = "Request failed",
+    errorMsg: string | null = "Request failed",
     raw: boolean = false
 ): Promise<T> {
     const res = await fetch(url, {
@@ -54,7 +54,7 @@ export async function mutate<T = Response>(
         headers: mergeHeaders({ "Content-Type": "application/json" }),
         body: body !== undefined ? JSON.stringify(body) : undefined,
     })
-    if (!res.ok) throw new Error(errorMsg)
+    if (!res.ok) throw new Error(errorMsg ?? `HTTP error! status: ${res.status}`)
     if (raw) return res as unknown as T
     if (res.status === 204) return undefined as unknown as T
     return await res.json()

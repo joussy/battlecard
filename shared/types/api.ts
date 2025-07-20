@@ -90,9 +90,9 @@ export interface ApiFightGet {
     /** Unique fight ID */
     id: string;
     /** Red corner boxer ID */
-    boxer1Id: string;
+    boxer1: ApiBoxerGet;
     /** Blue corner boxer ID */
-    boxer2Id: string;
+    boxer2: ApiBoxerGet;
     /** Tournament ID */
     tournamentId: string;
     /** Fight duration in seconds */
@@ -211,4 +211,16 @@ export function getCsvDelimiterFromType(delimiter: CsvDelimiter): string {
         default:
             throw new Error(`Unknown CSV delimiter type: ${delimiter}`);
     }
+}
+
+export interface ApiSharedFightCardGet {
+  tournamentName: string;
+  fights: ApiFightGet[];
+  tournamentDate?: string;
+}
+
+export interface ApiGeneratedToken {
+  token: string;
+  qrcode: string;
+  url: string;
 }

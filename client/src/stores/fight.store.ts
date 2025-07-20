@@ -93,17 +93,13 @@ export const useFightStore = defineStore("fight", {
         async switchFight(fightId: string) {
             const fight = this.getFightById(fightId)
             if (fight) {
-                const boxer1Id = fight.boxer1Id
-                const boxer2Id = fight.boxer2Id
-                fight.boxer1Id = boxer2Id
-                fight.boxer2Id = boxer1Id
-                const updated = await dbManager.updateFight(ApiAdapter.toApiFight(fight, 0, 0))
-                // Update the local store entity with the response
-                const updatedFight = ApiAdapter.toFight(updated)
-                const idx = this.fights.findIndex((f) => f.id === fightId)
-                if (idx !== -1) {
-                    this.fights[idx] = updatedFight
+                const switchedFight = await dbManager.switchFights(fightId)
+                // Update the fight in the store
+                const index = this.fights.findIndex((f) => f.id === fightId)
+                if (index !== -1) {
+                    this.fights[index] = ApiAdapter.toFight(switchedFight)
                 }
+                return switchedFight
             }
         },
         getFightById(fightId: string): Fight | undefined {
