@@ -30,14 +30,12 @@ export class FightExportService {
 
   async generatePdf(
     tournamentId: string,
-    displayQrCode: boolean,
+    fightCardShareUrl?: string,
   ): Promise<Buffer> {
-    const { fights, tournament } = await this.getFightCardData(tournamentId);
-    let svgQrCode: string | undefined;
-    if (displayQrCode) {
-      const shareUrl = this.shareService.getFightCardShareUrl(tournamentId);
-      svgQrCode = await this.qrCodeService.generateSvgFromUrl(shareUrl);
-    }
+    const { fights, tournament, svgQrCode } = await this.getFightCardData(
+      tournamentId,
+      fightCardShareUrl,
+    );
     const template = toFightCardTemplate(
       fights,
       tournament,
@@ -62,14 +60,12 @@ export class FightExportService {
 
   async generatePng(
     tournamentId: string,
-    displayQrCode: boolean,
+    fightCardShareUrl?: string,
   ): Promise<Buffer> {
-    const { fights, tournament } = await this.getFightCardData(tournamentId);
-    let svgQrCode: string | undefined;
-    if (displayQrCode) {
-      const shareUrl = this.shareService.getFightCardShareUrl(tournamentId);
-      svgQrCode = await this.qrCodeService.generateSvgFromUrl(shareUrl);
-    }
+    const { fights, tournament, svgQrCode } = await this.getFightCardData(
+      tournamentId,
+      fightCardShareUrl,
+    );
     const template = toFightCardTemplate(
       fights,
       tournament,
@@ -105,7 +101,10 @@ export class FightExportService {
     }) as Buffer;
   }
 
-  private async getFightCardData(tournamentId: string) {
+  private async getFightCardData(
+    tournamentId: string,
+    fightCardShareUrl?: string,
+  ) {
     const tournament = await this.tournamentRepository.findOne({
       where: { id: tournamentId },
     });
@@ -122,9 +121,16 @@ export class FightExportService {
       throw new Error('No fights found for this tournament');
     }
 
+    let svgQrCode: string | undefined;
+    if (fightCardShareUrl) {
+      svgQrCode =
+        await this.qrCodeService.generateSvgFromUrl(fightCardShareUrl);
+    }
+
     return {
       fights,
       tournament,
+      svgQrCode,
     };
   }
 }
