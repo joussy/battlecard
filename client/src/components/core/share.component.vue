@@ -125,6 +125,31 @@
                                     ></i>
                                 </button>
                             </div>
+
+                            <!-- QR Code Display -->
+                            <div
+                                v-if="qrCodePng"
+                                class="mt-3 text-center"
+                            >
+                                <label class="form-label small text-muted"> QR Code: </label>
+                                <div class="d-flex justify-content-center">
+                                    <img
+                                        :src="qrCodePng"
+                                        alt="QR Code for share link"
+                                        class="qr-code-image"
+                                    />
+                                </div>
+                                <div class="mt-2">
+                                    <button
+                                        type="button"
+                                        class="btn btn-sm btn-outline-primary"
+                                        @click="downloadQrCode"
+                                    >
+                                        <i class="bi bi-download me-1"></i>
+                                        Download QR Code
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -156,6 +181,8 @@ export default {
             loadingFormat: null as string | null,
             isGeneratingLink: false,
             shareLink: "",
+            qrCodeSvg: "",
+            qrCodePng: "",
             linkCopied: false,
             tournamentStore: useTournamentStore(),
             exportFormats: [
@@ -204,8 +231,9 @@ export default {
         },
         async generateShareLink() {
             this.isGeneratingLink = true
-            const roToken = await exportManager.generateFightCardRoToken(this.tournamentId)
-            this.shareLink = `${window.location.origin}/#/shared-card/${roToken}`
+            const shared = await exportManager.generateFightCardRoToken(this.tournamentId)
+            this.shareLink = shared.url
+            this.qrCodePng = shared.qrcode
             this.isGeneratingLink = false
         },
         async copyShareLink() {
@@ -217,6 +245,17 @@ export default {
             setTimeout(() => {
                 this.linkCopied = false
             }, 2000)
+        },
+        downloadQrCode() {
+            if (!this.qrCodePng) return
+
+            // Create a temporary link element to trigger download
+            const link = document.createElement("a")
+            link.href = this.qrCodePng
+            link.download = `qr-code-${this.tournamentId}.png`
+            document.body.appendChild(link)
+            link.click()
+            document.body.removeChild(link)
         },
     },
 }
@@ -232,6 +271,15 @@ export default {
 .input-group .form-control {
     font-family: "Courier New", monospace;
     font-size: 0.875rem;
+}
+
+.qr-code-image {
+    max-width: 200px;
+    max-height: 200px;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 8px;
+    background-color: white;
 }
 
 /* .spinner-border-sm {

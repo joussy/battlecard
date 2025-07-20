@@ -32,6 +32,7 @@ import { SelectorExportService } from './services/selector-export.service';
 import { ShareController } from './controllers/share.controller';
 import { ShareService } from './services/share.service';
 import { ConfigService } from './services/config.service';
+import { QrCodeService } from './services/qrcode.service';
 
 @Module({
   imports: [
@@ -79,6 +80,7 @@ import { ConfigService } from './services/config.service';
     GotenbergService,
     SelectorExportService,
     ShareService,
+    QrCodeService,
     JwtStrategy,
     {
       provide: APP_GUARD,

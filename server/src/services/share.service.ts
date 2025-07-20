@@ -62,4 +62,7 @@ export class ShareService {
     const token = encryptToken(this.secretKey, tournamentId);
     return token;
   }
+  getFightCardShareUrl(token: string): string {
+    return `${process.env.WEBSITE_BASE_URL}/#/shared-card/${token}`;
+  }
 }

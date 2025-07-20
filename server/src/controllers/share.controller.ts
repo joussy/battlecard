@@ -9,16 +9,18 @@ import {
 } from '@nestjs/common';
 import { Response as ExpressResponse } from 'express';
 import { ShareService } from '@/services/share.service';
-import { ApiGeneratedToken, ApiSharedFightCardGet } from '@/shared/types/api';
+import { ApiGeneratedToken } from '@/shared/types/api';
 import { User } from '@/decorators/user.decorator';
 import { AuthenticatedUser } from '@/interfaces/auth.interface';
 import { FightExportService } from '@/services/fight-export.service';
+import { QrCodeService } from '@/services/qrcode.service';
 
 @Controller('share')
 export class ShareController {
   constructor(
     private readonly shareService: ShareService,
     private readonly fightExportService: FightExportService,
+    private readonly qrCodeService: QrCodeService,
   ) {}
 
   @SetMetadata('isPublic', true)
@@ -46,7 +48,9 @@ export class ShareController {
       body.tournamentId,
       user.id,
     );
-    return { token };
+    const url = this.shareService.getFightCardShareUrl(token);
+    const qrcode = await this.qrCodeService.generatePngFromUrl(url);
+    return { token, qrcode, url };
   }
 
   @SetMetadata('isPublic', true)

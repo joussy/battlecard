@@ -32,9 +32,9 @@ export class ExportManager {
         await postAndDownload(`/api/export/selector/csv`, { tournamentId, boxerIds }, `selector.csv`)
     }
 
-    async generateFightCardRoToken(tournamentId: string): Promise<string> {
+    async generateFightCardRoToken(tournamentId: string): Promise<ApiGeneratedToken> {
         const res = await mutate<ApiGeneratedToken>(`/api/share/fightcard/generateRoToken`, "POST", { tournamentId })
-        return res.token
+        return res
     }
 
     // Shared fight card download

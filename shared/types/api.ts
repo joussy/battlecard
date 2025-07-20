@@ -221,4 +221,6 @@ export interface ApiSharedFightCardGet {
 
 export interface ApiGeneratedToken{
   token: string;
+  qrcode: string;
+  url: string;
 }
