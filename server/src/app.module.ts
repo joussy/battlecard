@@ -31,6 +31,7 @@ import { GotenbergService } from './services/gotenberg.service';
 import { SelectorExportService } from './services/selector-export.service';
 import { ShareController } from './controllers/share.controller';
 import { ShareService } from './services/share.service';
+import { ConfigService } from './services/config.service';
 
 @Module({
   imports: [
@@ -84,7 +85,8 @@ import { ShareService } from './services/share.service';
       useClass: JwtAuthGuard,
     },
     ModalityService,
+    ConfigService,
   ],
-  exports: [ModalityService],
+  exports: [ModalityService, ConfigService],
 })
 export class AppModule {}

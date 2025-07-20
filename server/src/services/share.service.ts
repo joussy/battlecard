@@ -7,6 +7,7 @@ import { ApiSharedFightCardGet } from '@/shared/types/api';
 import { decryptToken, encryptToken } from '@/utils/crypto.utils';
 import { toApiSharedFightCardGet } from '@/adapters/share.adapter';
 import { ModalityService } from '@/modality/modality.service';
+import { ConfigService } from './config.service';
 
 @Injectable()
 export class ShareService {
@@ -16,11 +17,15 @@ export class ShareService {
     @InjectRepository(Fight)
     private readonly fightRepository: Repository<Fight>,
     private readonly modalityService: ModalityService,
+    private readonly configService: ConfigService,
   ) {}
-  private readonly SECRET_KEY = 'battlecard-secret-2025'; // Simple secret key
+
+  private get secretKey(): string {
+    return this.configService.getFightCardShareSecret();
+  }
 
   getTournamentIdByFightCardToken(fightCardToken: string): string {
-    const tournamentId = decryptToken(this.SECRET_KEY, fightCardToken);
+    const tournamentId = decryptToken(this.secretKey, fightCardToken);
 
     return tournamentId;
   }
@@ -28,7 +33,7 @@ export class ShareService {
   async getTournamentByFightCardToken(
     fightCardToken: string,
   ): Promise<ApiSharedFightCardGet> {
-    const tournamentId = decryptToken(this.SECRET_KEY, fightCardToken);
+    const tournamentId = decryptToken(this.secretKey, fightCardToken);
     const tournament = await this.tournamentRepository.findOneOrFail({
       where: { id: tournamentId },
     });
@@ -54,7 +59,7 @@ export class ShareService {
     await this.tournamentRepository.findOneOrFail({
       where: { id: tournamentId, userId },
     });
-    const token = encryptToken(this.SECRET_KEY, tournamentId);
+    const token = encryptToken(this.secretKey, tournamentId);
     return token;
   }
 }
