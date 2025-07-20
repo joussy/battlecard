@@ -12,6 +12,8 @@ import {
   toFightCardTemplate,
 } from '../adapters/fight.adapter';
 import { GotenbergService } from './gotenberg.service';
+import { QrCodeService } from './qrcode.service';
+import { ShareService } from './share.service';
 
 @Injectable()
 export class FightExportService {
@@ -22,9 +24,31 @@ export class FightExportService {
     private readonly fightRepository: Repository<Fight>,
     private readonly modalityService: ModalityService,
     private readonly gotenbergService: GotenbergService,
+    private readonly qrCodeService: QrCodeService,
+    private readonly shareService: ShareService,
   ) {}
 
-  async generatePdf(tournamentId: string): Promise<Buffer> {
+  async generatePdf(
+    tournamentId: string,
+    displayQrCode: boolean,
+  ): Promise<Buffer> {
+    const { fights, tournament } = await this.getFightCardData(tournamentId);
+    let svgQrCode: string | undefined;
+    if (displayQrCode) {
+      const shareUrl = this.shareService.getFightCardShareUrl(tournamentId);
+      svgQrCode = await this.qrCodeService.generateSvgFromUrl(shareUrl);
+    }
+    const template = toFightCardTemplate(
+      fights,
+      tournament,
+      this.modalityService.getModality(),
+      svgQrCode,
+    );
+    const html = generateFightCardHtml(template);
+
+    return this.gotenbergService.generatePdf(html);
+  }
+  async generateHtml(tournamentId: string): Promise<string> {
     const { fights, tournament } = await this.getFightCardData(tournamentId);
     const template = toFightCardTemplate(
       fights,
@@ -33,15 +57,24 @@ export class FightExportService {
     );
     const html = generateFightCardHtml(template);
 
-    return this.gotenbergService.generatePdf(html);
+    return html;
   }
 
-  async generatePng(tournamentId: string): Promise<Buffer> {
+  async generatePng(
+    tournamentId: string,
+    displayQrCode: boolean,
+  ): Promise<Buffer> {
     const { fights, tournament } = await this.getFightCardData(tournamentId);
+    let svgQrCode: string | undefined;
+    if (displayQrCode) {
+      const shareUrl = this.shareService.getFightCardShareUrl(tournamentId);
+      svgQrCode = await this.qrCodeService.generateSvgFromUrl(shareUrl);
+    }
     const template = toFightCardTemplate(
       fights,
       tournament,
       this.modalityService.getModality(),
+      svgQrCode,
     );
     const html = generateFightCardHtml(template);
 

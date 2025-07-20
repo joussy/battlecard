@@ -43,6 +43,7 @@ export function toFightCardTemplate(
   fights: Fight[],
   tournament: Tournament,
   modality: IModality,
+  qrCodeSvg?: string,
 ): FightCardTemplate {
   const template: FightCardTemplate = {
     subtitle: format(tournament.date, 'dd/MM/yyyy'),
@@ -63,6 +64,7 @@ export function toFightCardTemplate(
         gender: fight.boxer1.gender === Gender.MALE ? '♂️' : '♀️',
       };
     }),
+    qrCodeSvg: qrCodeSvg,
   };
   return template;
 }

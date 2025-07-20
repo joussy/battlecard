@@ -89,7 +89,10 @@ export class ShareController {
       const tournamentId = this.shareService.getTournamentIdByFightCardToken(
         body.fightCardToken,
       );
-      const pdfBuffer = await this.fightExportService.generatePdf(tournamentId);
+      const pdfBuffer = await this.fightExportService.generatePdf(
+        tournamentId,
+        false,
+      );
       res.setHeader('Content-Type', 'application/pdf');
       res.setHeader(
         'Content-Disposition',
@@ -111,7 +114,10 @@ export class ShareController {
       const tournamentId = this.shareService.getTournamentIdByFightCardToken(
         body.fightCardToken,
       );
-      const pngBuffer = await this.fightExportService.generatePng(tournamentId);
+      const pngBuffer = await this.fightExportService.generatePng(
+        tournamentId,
+        false,
+      );
       res.setHeader('Content-Type', 'image/png');
       res.setHeader(
         'Content-Disposition',

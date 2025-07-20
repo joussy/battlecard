@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Res } from '@nestjs/common';
+import { Body, Controller, Get, Post, Res, SetMetadata } from '@nestjs/common';
 import { Response as ExpressResponse } from 'express';
 import { User } from '@/decorators/user.decorator';
 import { AuthenticatedUser } from '@/interfaces/auth.interface';
@@ -16,7 +16,7 @@ export class ExternalServicesController {
 
   @Post('fightcard/pdf')
   async getFightCardPdf(
-    @Body() body: { tournamentId: string },
+    @Body() body: { tournamentId: string; displayQrCode: boolean },
     @User() user: AuthenticatedUser,
     @Res() res: ExpressResponse,
   ): Promise<void> {
@@ -27,6 +27,7 @@ export class ExternalServicesController {
       );
       const pdfBuffer = await this.fightExportService.generatePdf(
         body.tournamentId,
+        body.displayQrCode,
       );
       res.setHeader('Content-Type', 'application/pdf');
       res.setHeader(
@@ -42,7 +43,7 @@ export class ExternalServicesController {
 
   @Post('fightcard/png')
   async getFightCardPng(
-    @Body() body: { tournamentId: string },
+    @Body() body: { tournamentId: string; displayQrCode: boolean },
     @User() user: AuthenticatedUser,
     @Res() res: ExpressResponse,
   ): Promise<void> {
@@ -53,6 +54,7 @@ export class ExternalServicesController {
       );
       const pngBuffer = await this.fightExportService.generatePng(
         body.tournamentId,
+        body.displayQrCode,
       );
       res.setHeader('Content-Type', 'image/png');
       res.setHeader(

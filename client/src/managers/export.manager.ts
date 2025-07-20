@@ -2,11 +2,11 @@ import { ApiGeneratedToken } from "@/shared/types/api"
 import { mutate, postAndDownload } from "@/utils/manager.utils"
 
 export class ExportManager {
-    async downloadFightCardPdf(tournamentId: string) {
-        await postAndDownload(`/api/export/fightcard/pdf`, { tournamentId }, `fight-card.pdf`)
+    async downloadFightCardPdf(tournamentId: string, displayQrCode: boolean) {
+        await postAndDownload(`/api/export/fightcard/pdf`, { tournamentId, displayQrCode }, `fight-card.pdf`)
     }
-    async downloadFightCardPng(tournamentId: string) {
-        await postAndDownload(`/api/export/fightcard/png`, { tournamentId }, `fight-card.png`)
+    async downloadFightCardPng(tournamentId: string, displayQrCode: boolean) {
+        await postAndDownload(`/api/export/fightcard/png`, { tournamentId, displayQrCode }, `fight-card.png`)
     }
     async downloadFightCardXlsx(tournamentId: string) {
         await postAndDownload(`/api/export/fightcard/xlsx`, { tournamentId }, `fight-card.xlsx`)
@@ -33,7 +33,9 @@ export class ExportManager {
     }
 
     async generateFightCardRoToken(tournamentId: string): Promise<ApiGeneratedToken> {
-        const res = await mutate<ApiGeneratedToken>(`/api/share/fightcard/generateRoToken`, "POST", { tournamentId })
+        const res = await mutate<ApiGeneratedToken>(`/api/share/fightcard/generateRoToken`, "POST", {
+            tournamentId,
+        })
         return res
     }
 

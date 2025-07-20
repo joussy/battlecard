@@ -12,35 +12,61 @@ export function generateFightCardHtml(
       </head>
       <body>
         <style>
-          table, th, td {
-            border: 2px solid black;
-            border-collapse: collapse;
-            padding: 5px;
-          }
-          .title {
-            text-align: center;
-            padding-bottom: 15px;
-          }
-          .title h3 {
-            display: inline;
-          }
-          .table-container {
-            height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin: 0;
-          }
-          .cell-red {
-              background-color: #97161618 !important;
-          }
-          .cell-blue {
-              background-color: #1638972c !important;
-          }
+table, th, td {
+  border: 2px solid black;
+  border-collapse: collapse;
+  padding: 5px;
+}
+.title {
+  text-align: center;
+  padding-bottom: 15px;
+  width: 100%;
+}
+.title h3 {
+  display: inline;
+}
+.table-container {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+}
+.table-container > table {
+  width: 100%;
+}
+.cell-red {
+    background-color: #97161618 !important;
+}
+.cell-blue {
+    background-color: #1638972c !important;
+}
+.qr-code {
+  margin-top: 0px;
+  margin-bottom: 8px;
+  display: flex;
+}
+.qr-code svg {
+  width: 100px;
+  height: 100px;
+}
+.header {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  align-items: center;
+}
         </style>
-        <div class="title">
-          <h3>{{title}}</h3>
-          <br/><i>{{subtitle}}</i><br/>
+        <div class="header">
+          <div class="title">
+            <h3>{{title}}</h3>
+            <br/><i>{{subtitle}}</i><br/>
+          </div>
+          {{#qrCodeSvg}}
+            <div class="qr-code">
+              {{{qrCodeSvg}}}
+            </div>
+          {{/qrCodeSvg}}
         </div>
         <div class="table-container">
           <table>

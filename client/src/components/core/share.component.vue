@@ -24,6 +24,24 @@
                         <i class="bi bi-download me-2"></i>
                         Download Fight Card
                     </h6>
+                    <div
+                        v-if="enableShareLink"
+                        class="form-check form-switch m-4"
+                    >
+                        <input
+                            id="displayQrCode"
+                            v-model="displayQrCode"
+                            class="form-check-input"
+                            type="checkbox"
+                            switch
+                        />
+                        <label
+                            for="displayQrCode"
+                            class="form-check-label"
+                        >
+                            Display a shareable QR Code in the download
+                        </label>
+                    </div>
                     <div class="d-flex flex-wrap justify-content-around">
                         <div
                             v-for="format in exportFormats"
@@ -164,7 +182,7 @@ export default {
     name: "ShareComponent",
     props: {
         downloadCallback: {
-            type: Function as PropType<(fileType: string) => Promise<void>>,
+            type: Function as PropType<(fileType: string, displayQrCode: boolean) => Promise<void>>,
             required: true,
         },
         enableShareLink: {
@@ -175,6 +193,7 @@ export default {
     data() {
         return {
             loadingFormat: null as string | null,
+            displayQrCode: false,
             isGeneratingLink: false,
             shareLink: "",
             qrCodeSvg: "",
@@ -202,7 +221,7 @@ export default {
             console.log(`Exporting as ${fileType}`)
             this.loadingFormat = fileType
 
-            const promise: Promise<void> = this.downloadCallback(fileType)
+            const promise: Promise<void> = this.downloadCallback(fileType, this.displayQrCode)
 
             promise
                 .then(() => {
@@ -227,7 +246,7 @@ export default {
         },
         async generateShareLink() {
             this.isGeneratingLink = true
-            const shared = await exportManager.generateFightCardRoToken(this.tournamentId)
+            const shared = await exportManager.generateFightCardRoToken(this.tournamentId, this.displayQrCode)
             this.shareLink = shared.url
             this.qrCodePng = shared.qrcode
             this.isGeneratingLink = false

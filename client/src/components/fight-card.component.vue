@@ -137,15 +137,15 @@ export default {
         getNbFights() {
             return this.fightCard.length
         },
-        downloadCallback(fileType: string): Promise<void> {
+        downloadCallback(fileType: string, displayQrCode: boolean): Promise<void> {
             if (fileType === "xlsx") {
                 return exportManager.downloadFightCardXlsx(this.tournamentId)
             } else if (fileType === "csv") {
                 return exportManager.downloadFightCardCsv(this.tournamentId)
             } else if (fileType === "pdf") {
-                return exportManager.downloadFightCardPdf(this.tournamentId)
+                return exportManager.downloadFightCardPdf(this.tournamentId, displayQrCode)
             } else if (fileType === "png") {
-                return exportManager.downloadFightCardPng(this.tournamentId)
+                return exportManager.downloadFightCardPng(this.tournamentId, displayQrCode)
             }
             return Promise.reject(new Error("Unsupported file type"))
         },

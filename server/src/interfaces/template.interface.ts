@@ -14,6 +14,7 @@ export interface FightCardTemplate {
     fightDuration: string; // e.g., "3x2'"
     gender: string;
   }[];
+  qrCodeSvg?: string;
 }
 
 export interface SelectorTemplate {
