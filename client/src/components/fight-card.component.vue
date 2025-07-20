@@ -1,6 +1,6 @@
 <template>
     <div :class="{ 'edition-mode': editionMode }">
-        <div class="d-flex align-items-center menu-card-tools mb-3">
+        <div class="d-flex align-items-center mb-3">
             <div class="flex-grow-1"></div>
             <button
                 type="button"

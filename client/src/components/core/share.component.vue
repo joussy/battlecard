@@ -136,6 +136,7 @@
 <script lang="ts">
 import exportManager from "@/managers/export.manager"
 import { useTournamentStore } from "@/stores/tournament.store"
+import bootstrap from "@/utils/bootstrap.singleton"
 import { PropType } from "vue"
 
 export default {
@@ -184,6 +185,17 @@ export default {
                 .then(() => {
                     console.log(`Download completed for ${fileType}`)
                     this.loadingFormat = null
+                    //close the modal after download
+                    const modal = document.getElementById("shareModal")
+                    if (modal) {
+                        const bsModal = bootstrap.getInstance().Modal.getInstance(modal)
+                        if (bsModal) {
+                            //wait for 1 second before hiding
+                            setTimeout(() => {
+                                bsModal.hide()
+                            }, 700)
+                        }
+                    }
                 })
                 .catch((error) => {
                     console.error(`Error downloading ${fileType}:`, error)
