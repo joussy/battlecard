@@ -246,7 +246,7 @@ export default {
         },
         async generateShareLink() {
             this.isGeneratingLink = true
-            const shared = await exportManager.generateFightCardRoToken(this.tournamentId, this.displayQrCode)
+            const shared = await exportManager.generateFightCardRoToken(this.tournamentId)
             this.shareLink = shared.url
             this.qrCodePng = shared.qrcode
             this.isGeneratingLink = false

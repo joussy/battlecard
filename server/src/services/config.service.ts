@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { readFileSync, writeFileSync, existsSync } from 'fs';
 import { join } from 'path';
 import { randomBytes } from 'crypto';
@@ -11,7 +11,7 @@ import { AppConfig } from '../interfaces/config.interface';
 export class ConfigService {
   private config: AppConfig;
   private readonly configPath: string;
-
+  private readonly logger = new Logger(ConfigService.name);
   constructor() {
     this.configPath = join(process.cwd(), '.config.json');
     // Load the configuration from the file on startup
@@ -28,10 +28,17 @@ export class ConfigService {
         if (!parsedConfig.fightCardShareSecret) {
           return this.generateAndSaveConfig();
         }
-        console.log('Loaded config from', this.configPath);
+        this.logger.log(`Loaded config from ${this.configPath}`);
         return parsedConfig;
       } catch (error) {
-        console.warn('Failed to parse config file, generating new one:', error);
+        this.logger.warn(
+          'Failed to parse config file, generating new one:',
+          error,
+        );
+        this.logger.warn(
+          'Failed to parse config file, generating new one:',
+          error,
+        );
         return this.generateAndSaveConfig();
       }
     } else {
@@ -46,9 +53,9 @@ export class ConfigService {
 
     try {
       writeFileSync(this.configPath, JSON.stringify(newConfig, null, 2));
-      console.log('Generated new config file at:', this.configPath);
+      this.logger.log('Generated new config file at:', this.configPath);
     } catch (error) {
-      console.error('Failed to write config file:', error);
+      this.logger.error('Failed to write config file:', error);
     }
 
     return newConfig;

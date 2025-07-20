@@ -1,4 +1,11 @@
-import { Controller, Get, Req, SetMetadata, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Logger,
+  Req,
+  SetMetadata,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -12,6 +19,7 @@ export class AuthController {
     private readonly userRepository: Repository<User>,
     private readonly authService: AuthService,
   ) {}
+  private readonly logger = new Logger(AuthController.name);
 
   @Get('google')
   @UseGuards(AuthGuard('google'))
@@ -26,7 +34,7 @@ export class AuthController {
   async googleAuthRedirect(
     @Req() req: { user: { email: string; name: string; picture?: string } },
   ) {
-    console.log('Google Auth Redirect:', req.user);
+    this.logger.log('Google Auth Redirect:', req.user);
     // Handles the Google OAuth2 callback
     const { email, name, picture } = req.user;
     let user = await this.userRepository.findOneBy({ email });

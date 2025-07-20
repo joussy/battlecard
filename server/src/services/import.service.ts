@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { AuthenticatedUser } from '@/interfaces/auth.interface';
 import { BoxerService } from './boxer.service';
 import {
@@ -28,6 +28,7 @@ export class ImportService {
     private readonly boxerRepository: Repository<Boxer>,
     private readonly configService: ConfigService,
   ) {}
+  private readonly logger = new Logger(ImportService.name);
 
   async previewBoxersFromCsv(
     payload: string,
@@ -38,7 +39,7 @@ export class ImportService {
       skip_empty_lines: true,
       delimiter: csvDelimiter,
     })) as CsvBoxer[];
-    console.log('Parsed CSV:', res);
+
     if (!res || res.length === 0) {
       return {
         success: false,
@@ -297,7 +298,7 @@ export class ImportService {
     const csvBoxers: ApiImportBoxer[] = [];
     for (const id of ids) {
       try {
-        console.log('Calling Import API to import boxer by ID:', id);
+        this.logger.debug('Calling Import API to import boxer by ID:', id);
         const url =
           `${this.configService.get<string>('IMPORT_API_URL')}`.replace(
             '{id}',
@@ -314,7 +315,7 @@ export class ImportService {
           },
         });
       } catch (err: any) {
-        console.error('Error calling Calling Import API:', err);
+        this.logger.error('Error calling Calling Import API:', err);
         continue;
       }
       if (!response) {
@@ -326,7 +327,7 @@ export class ImportService {
         console.error('No data found in Import API response for ID:', id);
         continue;
       }
-      console.log('Import API response received for ID:', id);
+      this.logger.debug('Import API response received for ID:', id);
       let parsed: unknown;
       try {
         parsed = JSON.parse(responseText);
@@ -343,7 +344,7 @@ export class ImportService {
         continue;
       }
       // Optionally, add more property checks here to validate CsvBoxer shape
-      console.log('Parsed boxers from Import API response:', parsed);
+      this.logger.debug('Parsed boxers from Import API response:', parsed);
       csvBoxers.push(toApiImportBoxer(parsed as CsvBoxer));
     }
     return {

@@ -219,7 +219,7 @@ export interface ApiSharedFightCardGet {
   tournamentDate?: string;
 }
 
-export interface ApiGeneratedToken{
+export interface ApiGeneratedToken {
   token: string;
   qrcode: string;
   url: string;

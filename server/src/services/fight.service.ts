@@ -130,7 +130,6 @@ export class FightService {
   }
 
   async switch(fightId: string, user: AuthenticatedUser): Promise<Fight> {
-    console.log('Switching fight:', fightId);
     const existingFight = await this.fightRepository.findOneOrFail({
       where: { id: fightId, tournament: { userId: user.id } },
       relations: ['tournament'],
