@@ -25,10 +25,16 @@ export class ShareController {
   @Get('fightcard/:fightCardToken')
   async getFightsByFightCardToken(
     @Param('fightCardToken') fightCardToken: string,
-  ): Promise<ApiSharedFightCardGet> {
-    const res =
-      await this.shareService.getTournamentByFightCardToken(fightCardToken);
-    return res;
+    @Res() res: ExpressResponse,
+  ): Promise<void> {
+    try {
+      const data =
+        await this.shareService.getTournamentByFightCardToken(fightCardToken);
+      res.json(data);
+    } catch (err) {
+      console.error('Error fetching shared fight card:', err);
+      res.status(403).json({ error: 'Forbidden' });
+    }
   }
 
   @Post('fightcard/generateRoToken')
