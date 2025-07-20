@@ -129,26 +129,22 @@
                             <!-- QR Code Display -->
                             <div
                                 v-if="qrCodePng"
-                                class="mt-3 text-center"
+                                class="d-flex mt-3"
                             >
-                                <label class="form-label small text-muted"> QR Code: </label>
-                                <div class="d-flex justify-content-center">
-                                    <img
-                                        :src="qrCodePng"
-                                        alt="QR Code for share link"
-                                        class="qr-code-image"
-                                    />
-                                </div>
-                                <div class="mt-2">
-                                    <button
-                                        type="button"
-                                        class="btn btn-sm btn-outline-primary"
-                                        @click="downloadQrCode"
-                                    >
-                                        <i class="bi bi-download me-1"></i>
-                                        Download QR Code
-                                    </button>
-                                </div>
+                                <img
+                                    :src="qrCodePng"
+                                    alt="QR Code for share link"
+                                    class="qr-code-image w-100"
+                                />
+                                <button
+                                    class="btn align-items-center text-center ms-3"
+                                    @click="downloadQrCode"
+                                >
+                                    <span :class="`btn btn-outline-danger rounded-circle export-btn-circle`">
+                                        <i class="bi bi-download"></i>
+                                    </span>
+                                    <div class="mt-2 small fw-medium">QR Code</div>
+                                </button>
                             </div>
                         </div>
                     </div>
