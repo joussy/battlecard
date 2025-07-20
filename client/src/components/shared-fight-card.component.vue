@@ -11,8 +11,8 @@
             data-bs-toggle="modal"
             data-bs-target="#shareModal"
         >
-            <i class="me-1 bi bi-share" />
-            Share
+            <i class="me-1 bi bi-download" />
+            Download
         </button>
     </div>
     <div class="border border-light-subtle rounded-3 p-1">

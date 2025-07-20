@@ -24,11 +24,10 @@
                         <i class="bi bi-download me-2"></i>
                         Download Fight Card
                     </h6>
-                    <div class="row g-3">
+                    <div class="d-flex flex-wrap justify-content-around">
                         <div
                             v-for="format in exportFormats"
                             :key="format.type"
-                            class="col-3"
                         >
                             <button
                                 class="btn align-items-center text-center"
