@@ -61,7 +61,13 @@ export class ConfigService {
       googleClientId: process.env.GOOGLE_CLIENT_ID!,
       websiteBaseUrl: process.env.WEBSITE_BASE_URL!,
       dbHost: process.env.DB_HOST!,
-      dbPort: parseInt(process.env.DB_PORT!, 10),
+      dbPort: (() => {
+        const port = parseInt(process.env.DB_PORT!, 10);
+        if (isNaN(port)) {
+          throw new Error(`Invalid DB_PORT value: ${process.env.DB_PORT}`);
+        }
+        return port;
+      })(),
       dbUser: process.env.DB_USER!,
       dbPassword: process.env.DB_PASS!,
       dbName: process.env.DB_NAME!,
