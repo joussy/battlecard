@@ -7,7 +7,7 @@ import { ApiSharedFightCardGet } from '@/shared/types/api';
 import { decryptToken, encryptToken } from '@/utils/crypto.utils';
 import { toApiSharedFightCardGet } from '@/adapters/share.adapter';
 import { ModalityService } from '@/modality/modality.service';
-import { ConfigService } from './config.service';
+import { ConfigService } from '@/services/config.service';
 
 @Injectable()
 export class ShareService {
@@ -63,6 +63,6 @@ export class ShareService {
     return token;
   }
   getFightCardShareUrl(token: string): string {
-    return `${process.env.WEBSITE_BASE_URL}/#/shared-card/${token}`;
+    return `${this.configService.getConfig().websiteBaseUrl}/#/shared-card/${token}`;
   }
 }

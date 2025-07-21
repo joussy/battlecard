@@ -33,6 +33,7 @@ import { ShareController } from './controllers/share.controller';
 import { ShareService } from './services/share.service';
 import { ConfigService } from './services/config.service';
 import { QrCodeService } from './services/qrcode.service';
+import { TypeOrmConfigService } from './services/typeorm-config.service';
 
 @Module({
   imports: [
@@ -43,15 +44,9 @@ import { QrCodeService } from './services/qrcode.service';
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'public'),
     }),
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: process.env.DB_HOST || 'localhost',
-      port: parseInt(process.env.DB_PORT || '5432', 10),
-      username: process.env.DB_USER || 'postgres',
-      password: process.env.DB_PASS || 'postgres',
-      database: process.env.DB_NAME || 'battlecard',
-      autoLoadEntities: true,
-      synchronize: true, // set to false in production!
+    TypeOrmModule.forRootAsync({
+      imports: [AppModule],
+      useClass: TypeOrmConfigService,
     }),
     TypeOrmModule.forFeature([User, Tournament, Boxer, Fight, TournamentBoxer]),
     JwtModule.register({
@@ -70,6 +65,8 @@ import { QrCodeService } from './services/qrcode.service';
     ShareController,
   ],
   providers: [
+    TypeOrmConfigService,
+    ConfigService,
     GoogleStrategy,
     FightService,
     TournamentService,
@@ -87,7 +84,6 @@ import { QrCodeService } from './services/qrcode.service';
       useClass: JwtAuthGuard,
     },
     ModalityService,
-    ConfigService,
   ],
   exports: [ModalityService, ConfigService],
 })
