@@ -21,28 +21,6 @@ const dataSource = new DataSource({
 });
 
 async function seed() {
-  console.warn(
-    '\n⚠️  WARNING: This operation will DELETE ALL tournament, boxer, and fight data in your database!',
-  );
-  console.warn(
-    'All tables (fight, tournament_boxer, boxer, tournament) will be truncated and replaced with mock data.',
-  );
-  console.warn('If you wish to keep your data, stop this script now (Ctrl+C).');
-  process.stdout.write('Type YES to continue: ');
-  const userInput = await new Promise((resolve) => {
-    process.stdin.resume();
-    process.stdin.setEncoding('utf8');
-    process.stdin.once('data', (data: string | Buffer) => {
-      const str = typeof data === 'string' ? data : data.toString('utf8');
-      process.stdin.pause();
-      resolve(str.trim());
-    });
-  });
-  if (userInput !== 'YES') {
-    console.log('Aborted by user.');
-    process.exit(0);
-  }
-
   await dataSource.initialize();
 
   // Truncate all tables with CASCADE to handle foreign keys
@@ -56,13 +34,29 @@ async function seed() {
   const fightRepo = dataSource.getRepository(Fight);
   const tournamentBoxerRepo = dataSource.getRepository(TournamentBoxer);
 
-  // Create mock user
-  const user = await userRepo
+  const userEmail = process.env.SEED_INITIAL_USERNAME as string;
+  const userName = process.env.SEED_INITIAL_NAME as string;
+  const picture = process.env.SEED_INITIAL_PICTURE as string;
+
+  let user = await userRepo
     .find({ take: 1, order: { id: 'ASC' } })
     .then((results) => results[0] || null);
+
+  if (!user && userEmail && userName && picture) {
+    // Create mock user
+    user = await userRepo.save({
+      email: userEmail,
+      name: userName,
+      picture: picture,
+      apiEnabled: true,
+    });
+    console.log(`Mock user created with email: ${userEmail}`);
+  }
   if (!user) {
     throw new Error(
-      'Insert one user in the database before running this script. Mocked data requires a user to associate with tournaments and boxers.',
+      'Insert one user in the database before running this script. \
+      Mocked data requires a user to associate with tournaments and boxers. \
+      You can also setup one in .env.local using SEED_INITIAL_USERNAME, SEED_INITIAL_NAME, and SEED_INITIAL_PICTURE variables.',
     );
   }
 
@@ -111,7 +105,71 @@ async function seed() {
   await dataSource.destroy();
 }
 
-seed().catch((e) => {
-  console.error(e);
-  process.exit(1);
-});
+async function clearMeiliIndex() {
+  const meiliHost = process.env.MEILI_HOST as string;
+  const meiliBoxersIndex = process.env.MEILI_BOXER_INDEX as string;
+  const meiliMasterKey = process.env.MEILI_API_KEY as string;
+
+  if (!meiliBoxersIndex) {
+    console.error('MEILI_BOXER_INDEX environment variable is not set.');
+    process.exit(1);
+  }
+
+  if (!meiliHost) {
+    console.error('MEILI_HOST environment variable is not set.');
+    process.exit(1);
+  }
+
+  if (!meiliMasterKey) {
+    console.error('MEILI_API_KEY environment variable is not set.');
+    process.exit(1);
+  }
+
+  const client = new MeiliSearch({
+    host: meiliHost,
+    apiKey: meiliMasterKey,
+  });
+  try {
+    console.log(`Deleting Meilisearch Boxer Index '${meiliBoxersIndex}' ...`);
+    await client.deleteIndex(meiliBoxersIndex);
+    console.log('Deletion done...');
+  } catch (error) {
+    console.error(
+      'Failed to delete Meilisearch index:',
+      error.message || error,
+    );
+    process.exit(1);
+  }
+}
+
+async function promptDeletion() {
+  console.warn(
+    '\n⚠️  WARNING: This operation will DELETE ALL tournament, boxer, and fight data in your database!',
+  );
+  console.warn(
+    'All tables (fight, tournament_boxer, boxer, tournament) will be truncated and replaced with mock data.',
+  );
+  console.warn('If you wish to keep your data, stop this script now (Ctrl+C).');
+  process.stdout.write('Type YES to continue: ');
+  const userInput = await new Promise((resolve) => {
+    process.stdin.resume();
+    process.stdin.setEncoding('utf8');
+    process.stdin.once('data', (data: string | Buffer) => {
+      const str = typeof data === 'string' ? data : data.toString('utf8');
+      process.stdin.pause();
+      resolve(str.trim());
+    });
+  });
+  if (userInput !== 'YES') {
+    console.log('Aborted by user.');
+    process.exit(0);
+  }
+}
+
+promptDeletion()
+  .then(() => clearMeiliIndex())
+  .then(() => seed())
+  .catch((e) => {
+    console.error(e);
+    process.exit(1);
+  });
