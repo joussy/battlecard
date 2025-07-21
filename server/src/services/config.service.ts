@@ -1,28 +1,81 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { readFileSync, writeFileSync, existsSync } from 'fs';
+import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'fs';
 import { join } from 'path';
 import { randomBytes } from 'crypto';
-import { AppConfig } from '../interfaces/config.interface';
+import { homedir } from 'os';
+import {
+  AppConfig as FileConfig,
+  EnvConfig,
+} from '../interfaces/config.interface';
 
 // This service manages application configuration
 // It reads from a JSON file and ensures that the required properties are present,
 // generating a new configuration if necessary.
 @Injectable()
 export class ConfigService {
-  private config: AppConfig;
+  private fileConfig: FileConfig;
   private readonly configPath: string;
   private readonly logger = new Logger(ConfigService.name);
+  private readonly envConfig: EnvConfig;
+  private readonly config: EnvConfig & FileConfig;
+  private readonly configDir: string;
+
   constructor() {
-    this.configPath = join(process.cwd(), '.config.json');
     // Load the configuration from the file on startup
-    this.config = this.loadConfig();
+    this.configDir = join(homedir(), '.config', 'battlecard');
+    this.configPath = join(this.configDir, 'config.json');
+    this.fileConfig = this.loadFileConfig();
+    this.envConfig = this.loadEnvConfig();
+    this.config = {
+      ...this.envConfig,
+      ...this.fileConfig,
+    };
   }
 
-  private loadConfig(): AppConfig {
+  private loadEnvConfig(): EnvConfig {
+    //check if required environment variables are set
+    const requiredEnvVars = [
+      'IMPORT_API_URL',
+      'IMPORT_API_HEADER_X_API_KEY',
+      'GOTENBERG_URL',
+      'GOOGLE_CLIENT_ID',
+      'WEBSITE_BASE_URL',
+      'DB_HOST',
+      'DB_PORT',
+      'DB_USER',
+      'DB_PASS',
+      'DB_NAME',
+      'JWT_SECRET',
+      'GOOGLE_CALLBACK_URL',
+      'GOOGLE_CLIENT_SECRET',
+    ];
+    requiredEnvVars.forEach((envVar) => {
+      if (!process.env[envVar]) {
+        throw new Error(`Missing required environment variable: ${envVar}`);
+      }
+    });
+    return {
+      importApiUrl: process.env.IMPORT_API_URL!,
+      importApiHeaderXApiKey: process.env.IMPORT_API_HEADER_X_API_KEY!,
+      gotenbergUrl: process.env.GOTENBERG_URL!,
+      googleClientId: process.env.GOOGLE_CLIENT_ID!,
+      websiteBaseUrl: process.env.WEBSITE_BASE_URL!,
+      dbHost: process.env.DB_HOST!,
+      dbPort: parseInt(process.env.DB_PORT!, 10),
+      dbUser: process.env.DB_USER!,
+      dbPassword: process.env.DB_PASS!,
+      dbName: process.env.DB_NAME!,
+      jwtSecret: process.env.JWT_SECRET!,
+      googleCallbackUrl: process.env.GOOGLE_CALLBACK_URL!,
+      googleClientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+    };
+  }
+
+  private loadFileConfig(): FileConfig {
     if (existsSync(this.configPath)) {
       try {
         const configFile = readFileSync(this.configPath, 'utf8');
-        const parsedConfig = JSON.parse(configFile) as AppConfig;
+        const parsedConfig = JSON.parse(configFile) as FileConfig;
 
         // Validate that required properties exist
         if (!parsedConfig.fightCardShareSecret) {
@@ -46,8 +99,12 @@ export class ConfigService {
     }
   }
 
-  private generateAndSaveConfig(): AppConfig {
-    const newConfig: AppConfig = {
+  private generateAndSaveConfig(): FileConfig {
+    if (!existsSync(this.configDir)) {
+      mkdirSync(this.configDir, { recursive: true });
+    }
+
+    const newConfig: FileConfig = {
       fightCardShareSecret: this.generateSecret(),
     };
 
@@ -65,11 +122,11 @@ export class ConfigService {
     return randomBytes(32).toString('hex');
   }
 
-  getConfig(): AppConfig {
+  getConfig(): EnvConfig & FileConfig {
     return this.config;
   }
 
   getFightCardShareSecret(): string {
-    return this.config.fightCardShareSecret;
+    return this.fileConfig.fightCardShareSecret;
   }
 }

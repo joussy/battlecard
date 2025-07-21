@@ -8,14 +8,15 @@ import {
   VerifyCallback,
   Profile as GoogleProfile,
 } from 'passport-google-oauth20';
+import { ConfigService } from '@/services/config.service';
 
 @Injectable()
 export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
-  constructor() {
+  constructor(private configService: ConfigService) {
     super({
-      clientID: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: process.env.GOOGLE_CALLBACK_URL,
+      clientID: configService.getConfig().googleClientId,
+      clientSecret: configService.getConfig().googleClientSecret,
+      callbackURL: configService.getConfig().googleCallbackUrl,
       scope: ['email', 'profile'],
     });
   }
