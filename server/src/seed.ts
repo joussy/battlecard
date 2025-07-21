@@ -105,43 +105,6 @@ async function seed() {
   await dataSource.destroy();
 }
 
-async function clearMeiliIndex() {
-  const meiliHost = process.env.MEILI_HOST as string;
-  const meiliBoxersIndex = process.env.MEILI_BOXER_INDEX as string;
-  const meiliMasterKey = process.env.MEILI_API_KEY as string;
-
-  if (!meiliBoxersIndex) {
-    console.error('MEILI_BOXER_INDEX environment variable is not set.');
-    process.exit(1);
-  }
-
-  if (!meiliHost) {
-    console.error('MEILI_HOST environment variable is not set.');
-    process.exit(1);
-  }
-
-  if (!meiliMasterKey) {
-    console.error('MEILI_API_KEY environment variable is not set.');
-    process.exit(1);
-  }
-
-  const client = new MeiliSearch({
-    host: meiliHost,
-    apiKey: meiliMasterKey,
-  });
-  try {
-    console.log(`Deleting Meilisearch Boxer Index '${meiliBoxersIndex}' ...`);
-    await client.deleteIndex(meiliBoxersIndex);
-    console.log('Deletion done...');
-  } catch (error) {
-    console.error(
-      'Failed to delete Meilisearch index:',
-      error.message || error,
-    );
-    process.exit(1);
-  }
-}
-
 async function promptDeletion() {
   console.warn(
     '\n⚠️  WARNING: This operation will DELETE ALL tournament, boxer, and fight data in your database!',
@@ -167,7 +130,6 @@ async function promptDeletion() {
 }
 
 promptDeletion()
-  .then(() => clearMeiliIndex())
   .then(() => seed())
   .catch((e) => {
     console.error(e);
