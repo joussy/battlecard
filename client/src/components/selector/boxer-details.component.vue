@@ -14,7 +14,7 @@
         v-else-if="boxer != null"
         class="max-width-md"
     >
-        <div class="bg-body sticky-md-none sticky-top d-flex justify-content-center align-items-center pb-1">
+        <div class="bg-body pt-md-5 sticky-top d-flex justify-content-center align-items-center pb-1">
             <router-link
                 :to="{ name: 'selector' }"
                 class="nav-link text-center"
@@ -141,8 +141,7 @@ export default defineComponent({
             async () => {
                 if (this.boxerId) {
                     console.log("Boxer details for ID:", this.boxerId)
-                    await this.boxerStore.fetchBoxers()
-                    this.boxer = this.boxerStore.getBoxerById(this.boxerId)
+                    this.boxer = await this.boxerStore.fetchBoxerById(this.boxerId)
                     console.log("Boxer:", this.boxer)
                     if (!this.boxer) {
                         this.$router.push({ name: "selector" })
