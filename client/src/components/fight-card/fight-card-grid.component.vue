@@ -237,8 +237,7 @@ export default {
     animation: halo-dark 1s ease-in-out;
 }
 
-/* Parent component can control fight-extra-infos visibility */
-:global(.edition-mode) .fight-extra-infos {
+.edition-mode .fight-extra-infos {
     display: none;
 
     @include media-breakpoint-up(md) {

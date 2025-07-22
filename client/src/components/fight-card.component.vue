@@ -152,15 +152,3 @@ export default {
     },
 }
 </script>
-<style lang="scss" scoped>
-@import "bootstrap/scss/bootstrap";
-.edition-mode {
-    .fight-extra-infos {
-        display: none;
-
-        @include media-breakpoint-up(md) {
-            display: block;
-        }
-    }
-}
-</style>
