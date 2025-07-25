@@ -17,7 +17,7 @@ export default [
     // Main config for TS + Vue + Prettier
     {
         files: ["**/*.ts", "**/*.vue"],
-        ignores: ["dist", "node_modules"],
+        ignores: ["dist", "node_modules", "vite.config.ts"],
         languageOptions: {
             parser: vueParser,
             sourceType: "module",
@@ -41,14 +41,14 @@ export default [
         rules: {
             // Vue customizations
             "vue/multi-word-component-names": "off",
-            "vue/no-unused-vars": "warn",
+            "vue/no-unused-vars": "error",
 
             // TypeScript
-            "@typescript-eslint/no-unused-vars": "warn",
+            "@typescript-eslint/no-unused-vars": "error",
             "require-await": "error",
 
             // Prettier integration
-            "prettier/prettier": "off",
+            "prettier/prettier": "warn",
             "vue/html-indent": "off",
             "vue/script-indent": "off",
             "vue/html-self-closing": "off",
