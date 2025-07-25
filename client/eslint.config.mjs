@@ -1,52 +1,65 @@
-import typescriptEslint from "@typescript-eslint/eslint-plugin"
-import prettier from "eslint-plugin-prettier"
-import parser from "vue-eslint-parser"
 import path from "node:path"
 import { fileURLToPath } from "node:url"
-import js from "@eslint/js"
-import { FlatCompat } from "@eslint/eslintrc"
+import tsPlugin from "@typescript-eslint/eslint-plugin"
+import tsParser from "@typescript-eslint/parser"
+import vuePlugin from "eslint-plugin-vue"
+import vueParser from "vue-eslint-parser"
+import prettierPlugin from "eslint-plugin-prettier"
+import globals from "globals"
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
-const compat = new FlatCompat({
-    baseDirectory: __dirname,
-    recommendedConfig: js.configs.recommended,
-    allConfig: js.configs.all,
-})
 
 export default [
-    ...compat.extends(
-        "eslint:recommended",
-        "plugin:@typescript-eslint/recommended",
-        "plugin:vue/base",
-        "plugin:vue/vue3-essential",
-        "plugin:vue/vue3-recommended",
-        "plugin:vue/vue3-strongly-recommended",
-        "prettier"
-    ),
+    // Vue 3 recommended rules
     {
-        plugins: {
-            "@typescript-eslint": typescriptEslint,
-            prettier,
-        },
+        ...vuePlugin.configs["flat/vue3-essential"],
+        files: ["src/**/*.vue"],
+    },
+    {
+        ...vuePlugin.configs["flat/vue3-recommended"],
+        files: ["src/**/*.vue"],
+    },
+    {
+        ...vuePlugin.configs["flat/vue3-strongly-recommended"],
+        files: ["**/*.vue"],
+    },
 
+    // Main config for TS + Vue + Prettier
+    {
+        files: ["**/*.ts", "**/*.vue"],
+        ignores: ["dist", "node_modules"],
         languageOptions: {
-            parser: parser,
-            ecmaVersion: 2020,
-            sourceType: "module",
-
+            parser: vueParser,
             parserOptions: {
-                parser: "@typescript-eslint/parser",
+                parser: tsParser,
+                ecmaVersion: "latest",
+                sourceType: "module",
+                extraFileExtensions: [".vue"],
+                tsconfigRootDir: __dirname,
+                project: "./tsconfig.json",
+            },
+            globals: {
+                ...globals.browser,
+                ...globals.node,
             },
         },
-
+        plugins: {
+            "@typescript-eslint": tsPlugin,
+            vue: vuePlugin,
+            prettier: prettierPlugin,
+        },
         rules: {
-            "prettier/prettier": "warn",
-            "vue/require-v-for-key": "off",
-            "@typescript-eslint/no-unused-vars": "warn",
-            "vue/no-unused-vars": "warn",
-            "require-await": "error",
+            // Vue customizations
             "vue/multi-word-component-names": "off",
+            "vue/no-unused-vars": "warn",
+
+            // TypeScript
+            "@typescript-eslint/no-unused-vars": "warn",
+            "require-await": "error",
+
+            // Prettier integration
+            "prettier/prettier": "warn",
         },
     },
 ]
