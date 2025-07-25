@@ -18,7 +18,7 @@
                 <span class="d-none d-md-inline ms-2">Add Boxer</span>
             </button>
             <button
-                :disabled="getBoxersToDisplay().length == 0"
+                :disabled="boxersToDisplay.length == 0"
                 type="button"
                 class="btn btn-outline-secondary ms-2 dropdown-toggle"
                 data-bs-toggle="dropdown"
@@ -77,7 +77,7 @@
                 Filters
             </button>
             <BoxerSelectorFiltersComponent />
-            <BoxerAddOffcanvasComponent />
+            <BoxerAddOffcanvasComponent @boxer-saved="onBoxerSaved" />
         </div>
         <div class="mb-2 row">
             <!-- Search bar -->
@@ -101,7 +101,7 @@
             <SearchFacetsComponent />
         </div>
         <div
-            v-for="boxer in getBoxersToDisplay()"
+            v-for="boxer in boxersToDisplay"
             :key="boxer.id"
         >
             <BoxerTileComponent
@@ -111,7 +111,7 @@
             />
         </div>
         <div
-            v-if="getBoxersToDisplay().length == 0"
+            v-if="boxersToDisplay.length == 0"
             class="justify-content-center m-4 text-center"
         >
             <div class="mb-4"><i>No boxer available ...</i></div>
@@ -129,7 +129,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, watchEffect } from "vue"
+import { defineComponent, watch } from "vue"
 import { Gender, ModalityErrorType } from "@/shared/types/modality.type"
 import BoxerTileComponent from "@/components/selector/boxer-tile.component.vue"
 import BoxerAddOffcanvasComponent from "@/components/selector/add/boxer-add-offcanvas.component.vue"
@@ -164,6 +164,8 @@ export default defineComponent({
             boxersStore: useBoxerStore(),
             facets: useUiStore().facets,
             searchQuery: "", // Added for search bar binding
+            boxersToDisplay: [] as Boxer[],
+            searchTimeout: null as number | null,
         }
     },
     computed: {
@@ -177,14 +179,33 @@ export default defineComponent({
             return date instanceof Date && !isNaN(date.getTime()) ? date.toLocaleDateString() : null
         },
         nbBoxers() {
-            return this.getBoxersToDisplay().length
+            return this.boxersToDisplay.length
         },
     },
     mounted() {
-        watchEffect(() => {
-            this.selectedTournamentId = this.tournamentStore.currentTournamentId ?? null
-            this.boxersStore.fetchBoxers()
-        })
+        watch(
+            () => [this.tournamentStore.currentTournamentId],
+            async () => {
+                this.selectedTournamentId = this.tournamentStore.currentTournamentId ?? null
+                await this.boxersStore.fetchBoxers()
+                this.setBoxersToDisplay()
+            },
+            { immediate: true }
+        )
+        watch(
+            () => [this.searchQuery, this.uiStore.facets],
+            () => {
+                // Clear existing timeout
+                if (this.searchTimeout) {
+                    clearTimeout(this.searchTimeout)
+                }
+                // Set new timeout
+                this.searchTimeout = setTimeout(() => {
+                    this.setBoxersToDisplay()
+                }, 300) as unknown as number
+            },
+            { deep: true }
+        )
     },
     methods: {
         filterWithFacets(boxers: Boxer[]) {
@@ -232,10 +253,14 @@ export default defineComponent({
 
             return filteredBoxers
         },
-        getBoxersToDisplay() {
+        setBoxersToDisplay() {
+            console.debug("Setting boxers to display with search query:", this.boxersStore.boxers)
             // 1. Filter by facets first
             let filteredBoxers = this.filterWithFacets(this.boxersStore.boxers)
-            if (!this.searchQuery) return filteredBoxers
+            if (!this.searchQuery) {
+                this.boxersToDisplay = [...filteredBoxers]
+                return
+            }
 
             // 2. Then filter by search query using Fuse.js
             const boxersWithFullName = filteredBoxers.map((boxer) => ({
@@ -252,7 +277,7 @@ export default defineComponent({
                 ignoreLocation: true,
                 distance: 100,
             })
-            return fuse.search(this.searchQuery).map((result) => result.item)
+            this.boxersToDisplay = [...fuse.search(this.searchQuery).map((result) => result.item)]
         },
         clearSearch() {
             this.searchQuery = ""
@@ -262,7 +287,7 @@ export default defineComponent({
                 return
             }
 
-            const boxerIds = this.getBoxersToDisplay().map((boxer) => boxer.id)
+            const boxerIds = this.boxersToDisplay.map((boxer) => boxer.id)
 
             if (fileType === "xlsx") {
                 await exportManager.downloadSelectorXlsx(this.tournamentStore.currentTournamentId, boxerIds)
@@ -279,6 +304,14 @@ export default defineComponent({
             if (fileType === "pdf") {
                 await exportManager.downloadSelectorPdf(this.tournamentStore.currentTournamentId, boxerIds)
             }
+        },
+        async onBoxerSaved() {
+            // Refresh the boxers list after a boxer is saved
+            await this.boxersStore.fetchBoxers()
+            this.setBoxersToDisplay()
+        },
+        onFacetUpdated() {
+            this.setBoxersToDisplay()
         },
     },
 })

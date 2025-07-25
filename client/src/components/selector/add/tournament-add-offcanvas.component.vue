@@ -127,7 +127,6 @@ export default defineComponent({
             await tournamentStore.createTournament(tournament)
             resetForm()
             closeModal("#tournamentAddOffcanvasNavbar")
-            // emit("boxer-add", tournament)
         })
         return {
             onSubmit,

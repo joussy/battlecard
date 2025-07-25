@@ -23,7 +23,7 @@
         <div class="offcanvas-body">
             <BoxerAddFormComponent
                 :boxer="boxer"
-                @boxer-add="closeModal()"
+                @boxer-saved="onBoxerSaved()"
             ></BoxerAddFormComponent>
         </div>
     </div>
@@ -47,14 +47,16 @@ export default defineComponent({
             required: true,
         },
     },
+    emits: ["boxer-saved"],
     data() {
         return {
             uiStore: useUiStore(),
         }
     },
     methods: {
-        closeModal() {
+        onBoxerSaved() {
             closeModal("#boxerEditOffcanvasNavbar")
+            this.$emit("boxer-saved", this.boxer)
         },
     },
 })

@@ -32,7 +32,10 @@
                 <i class="bi bi-pencil"></i>
                 Edit boxer
             </div>
-            <BoxerEditOffcanvasComponent :boxer="boxer" />
+            <BoxerEditOffcanvasComponent
+                :boxer="boxer"
+                @boxer-saved="fetchBoxerData()"
+            />
         </div>
         <!-- Modal -->
         <div class="card mb-3">
@@ -138,19 +141,7 @@ export default defineComponent({
         )
         watch(
             () => [this.boxerId, this.fightStore.fights],
-            async () => {
-                if (this.boxerId) {
-                    console.log("Boxer details for ID:", this.boxerId)
-                    this.boxer = await this.boxerStore.fetchBoxerById(this.boxerId)
-                    console.log("Boxer:", this.boxer)
-                    if (!this.boxer) {
-                        this.$router.push({ name: "selector" })
-                        return
-                    }
-                    this.opponents = await this.tournamentBoxerStore.fetchBoxerOpponents(this.boxer.id)
-                    this.loading = false
-                }
-            },
+            async () => await this.fetchBoxerData(),
             { immediate: true, deep: true }
         )
     },
@@ -168,6 +159,19 @@ export default defineComponent({
             const age = differenceInYears(new Date(), boxer.birthDate)
             const birthDate = format(boxer.birthDate, "dd/MM/yyyy")
             return `${birthDate} (${age})`
+        },
+        async fetchBoxerData() {
+            if (this.boxerId) {
+                console.log("Boxer details for ID:", this.boxerId)
+                this.boxer = await this.boxerStore.fetchBoxerById(this.boxerId)
+                console.log("Boxer:", this.boxer)
+                if (!this.boxer) {
+                    this.$router.push({ name: "selector" })
+                    return
+                }
+                this.opponents = await this.tournamentBoxerStore.fetchBoxerOpponents(this.boxer.id)
+                this.loading = false
+            }
         },
     },
 })
