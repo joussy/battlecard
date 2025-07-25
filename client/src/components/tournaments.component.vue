@@ -27,7 +27,14 @@
                         class="flex-fill"
                         @click="setCurrentTournament(tournament)"
                     >
-                        {{ tournament.name }}
+                        <div class="fw-bold">{{ tournament.name }}</div>
+                        <div class="text-muted small" v-if="tournament.address || tournament.city || tournament.zipCode">
+                            <span v-if="tournament.address">{{ tournament.address }}</span>
+                            <span v-if="tournament.address && (tournament.zipCode || tournament.city)">, </span>
+                            <span v-if="tournament.zipCode">{{ tournament.zipCode }}</span>
+                            <span v-if="tournament.zipCode && tournament.city"> </span>
+                            <span v-if="tournament.city">{{ tournament.city }}</span>
+                        </div>
                     </div>
                     <div>
                         <button class="btn btn-outline-danger">
@@ -42,7 +49,7 @@
 <script lang="ts">
 import { Tournament } from "@/types/boxing"
 import { defineComponent } from "vue"
-import TournamentAddOffcanvasComponent from "@/components/selector/add/tournament-add-offcanvas.component.vue"
+import TournamentAddOffcanvasComponent from "@/components/tournament/tournament-add-offcanvas.component.vue"
 import { useTournamentStore } from "@/stores/tournament.store"
 
 export default defineComponent({

@@ -29,7 +29,7 @@
                         for="name"
                         class="form-label"
                     >
-                        Name
+                        <i class="bi bi-trophy me-2"></i>Name
                     </label>
                     <input
                         v-model="name"
@@ -50,7 +50,7 @@
                         for="date"
                         class="form-label"
                     >
-                        Date
+                        <i class="bi bi-calendar3 me-2"></i>Date
                     </label>
                     <input
                         v-model="date"
@@ -64,6 +64,69 @@
                         name="date"
                         class="invalid-feedback"
                         >{{ errors.date }}</span
+                    >
+                </div>
+                <div class="mb-3">
+                    <label
+                        for="address"
+                        class="form-label"
+                    >
+                        <i class="bi bi-geo-alt me-2"></i>Address
+                    </label>
+                    <input
+                        v-model="address"
+                        class="form-control"
+                        type="text"
+                        :class="{
+                            'is-invalid': errors.address?.length ?? 0 > 0,
+                        }"
+                    />
+                    <span
+                        name="address"
+                        class="invalid-feedback"
+                        >{{ errors.address }}</span
+                    >
+                </div>
+                <div class="mb-3">
+                    <label
+                        for="zipCode"
+                        class="form-label"
+                    >
+                        <i class="bi bi-mailbox me-2"></i>ZIP Code
+                    </label>
+                    <input
+                        v-model="zipCode"
+                        class="form-control"
+                        type="text"
+                        :class="{
+                            'is-invalid': errors.zipCode?.length ?? 0 > 0,
+                        }"
+                    />
+                    <span
+                        name="zipCode"
+                        class="invalid-feedback"
+                        >{{ errors.zipCode }}</span
+                    >
+                </div>
+                <div class="mb-3">
+                    <label
+                        for="city"
+                        class="form-label"
+                    >
+                        <i class="bi bi-buildings me-2"></i>City
+                    </label>
+                    <input
+                        v-model="city"
+                        class="form-control"
+                        type="text"
+                        :class="{
+                            'is-invalid': errors.city?.length ?? 0 > 0,
+                        }"
+                    />
+                    <span
+                        name="city"
+                        class="invalid-feedback"
+                        >{{ errors.city }}</span
                     >
                 </div>
                 <button
@@ -110,17 +173,26 @@ export default defineComponent({
             initialValues: {
                 name: "",
                 date: "",
+                address: "",
+                zipCode: "",
+                city: "",
             },
         })
 
         // Define fields
         const [name] = defineField("name")
         const [date] = defineField("date")
+        const [address] = defineField("address")
+        const [zipCode] = defineField("zipCode")
+        const [city] = defineField("city")
         const onSubmit = handleSubmit(async (form: GenericObject) => {
             if (!uiStore.account) return
             const tournament: Tournament = {
                 name: form.name,
                 date: form.date,
+                address: form.address || undefined,
+                zipCode: form.zipCode || undefined,
+                city: form.city || undefined,
                 id: "",
                 userId: uiStore.account?.id,
             }
@@ -133,6 +205,9 @@ export default defineComponent({
             errors,
             name,
             date,
+            address,
+            zipCode,
+            city,
             uiStore,
         }
     },

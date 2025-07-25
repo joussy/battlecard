@@ -60,6 +60,9 @@ export default class ApiAdapter {
             name: tournament.name,
             userId: tournament.userId,
             date: tournament.date,
+            address: tournament.address,
+            zipCode: tournament.zipCode,
+            city: tournament.city,
         }
     }
 
@@ -69,6 +72,9 @@ export default class ApiAdapter {
             name: tournament.name,
             userId: tournament.userId,
             date: tournament.date,
+            address: tournament.address,
+            zipCode: tournament.zipCode,
+            city: tournament.city,
         }
     }
 

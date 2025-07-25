@@ -124,6 +124,12 @@ export interface ApiTournament {
     userId: string;
     /** Tournament date (YYYY-MM-DD) */
     date: string;
+    /** Tournament address (optional) */
+    address?: string;
+    /** Tournament zip code (optional) */
+    zipCode?: string;
+    /** Tournament city (optional) */
+    city?: string;
 }
 
 export interface ApiTournamentCreate {
@@ -131,6 +137,12 @@ export interface ApiTournamentCreate {
     name: string;
     /** Tournament date (YYYY-MM-DD) */
     date: string;
+    /** Tournament address (optional) */
+    address?: string;
+    /** Tournament zip code (optional) */
+    zipCode?: string;
+    /** Tournament city (optional) */
+    city?: string;
 }
 
 /**

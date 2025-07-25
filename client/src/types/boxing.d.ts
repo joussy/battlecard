@@ -72,6 +72,9 @@ export interface Tournament {
     name: string
     userId: string
     date: string
+    address?: string
+    zipCode?: string
+    city?: string
 }
 
 export interface SharedFightCard {
