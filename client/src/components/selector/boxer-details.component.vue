@@ -140,7 +140,7 @@ export default defineComponent({
             }
         )
         watch(
-            () => [this.boxerId, this.fightStore.fights, this.boxerSaved],
+            () => [this.boxerId, this.fightStore.fights],
             async () => await this.fetchBoxerData(),
             { immediate: true, deep: true }
         )
