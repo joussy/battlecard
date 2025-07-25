@@ -183,11 +183,15 @@ export default defineComponent({
         },
     },
     mounted() {
-        this.selectedTournamentId = this.tournamentStore.currentTournamentId ?? null
-        this.boxersStore.fetchBoxers().then(() => {
-            this.setBoxersToDisplay()
-        })
-
+        watch(
+            () => [this.tournamentStore.currentTournamentId],
+            async () => {
+                this.selectedTournamentId = this.tournamentStore.currentTournamentId ?? null
+                await this.boxersStore.fetchBoxers()
+                this.setBoxersToDisplay()
+            },
+            { immediate: true }
+        )
         watch(
             () => [this.searchQuery, this.uiStore.facets],
             () => {
@@ -250,7 +254,7 @@ export default defineComponent({
             return filteredBoxers
         },
         setBoxersToDisplay() {
-            console.debug("Setting boxers to display with search query:", this.searchQuery)
+            console.debug("Setting boxers to display with search query:", this.boxersStore.boxers)
             // 1. Filter by facets first
             let filteredBoxers = this.filterWithFacets(this.boxersStore.boxers)
             if (!this.searchQuery) {
