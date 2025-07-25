@@ -12,18 +12,7 @@ const __dirname = path.dirname(__filename)
 
 export default [
     // Vue 3 recommended rules
-    {
-        ...vuePlugin.configs["flat/vue3-essential"],
-        files: ["src/**/*.vue"],
-    },
-    {
-        ...vuePlugin.configs["flat/vue3-recommended"],
-        files: ["src/**/*.vue"],
-    },
-    {
-        ...vuePlugin.configs["flat/vue3-strongly-recommended"],
-        files: ["**/*.vue"],
-    },
+    ...vuePlugin.configs["flat/recommended"],
 
     // Main config for TS + Vue + Prettier
     {
@@ -59,7 +48,12 @@ export default [
             "require-await": "error",
 
             // Prettier integration
-            "prettier/prettier": "warn",
+            "prettier/prettier": "off",
+            "vue/html-indent": "off",
+            "vue/script-indent": "off",
+            "vue/html-self-closing": "off",
+            "vue/singleline-html-element-content-newline": "off",
+            "vue/html-closing-bracket-newline": "off",
         },
     },
 ]

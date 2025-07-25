@@ -8,7 +8,7 @@
                     class="btn btn-warning ms-2"
                     @click="signInWithGoogle()"
                 >
-                    <i class="bi bi-google me-2"></i>Sign In with Google
+                    <i class="bi bi-google me-2" />Sign In with Google
                 </button>
                 <div
                     v-else
@@ -24,7 +24,7 @@
                         v-else
                         class="bi bi-person-circle me-2"
                         :style="{ 'font-size': '2.5rem' }"
-                    ></i>
+                    />
                     <div class="flex-grow-1">
                         <strong>{{ uiStore.account?.name }}</strong>
                         <div
@@ -39,7 +39,7 @@
                         alt="Sign out"
                         @click="logout()"
                     >
-                        <i class="bi bi-box-arrow-right"></i>
+                        <i class="bi bi-box-arrow-right" />
                     </button>
                 </div>
             </div>

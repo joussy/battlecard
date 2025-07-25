@@ -16,6 +16,7 @@
             <div class="card-header">Select an event</div>
             <ul
                 v-for="tournament in tournamentStore.tournaments"
+                :key="tournament.id"
                 class="list-group list-group-flush"
             >
                 <li

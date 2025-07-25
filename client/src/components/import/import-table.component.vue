@@ -22,8 +22,14 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="(row, idx) in rows">
-                        <template v-for="col in columns">
+                    <tr
+                        v-for="(row, idx) in rows"
+                        :key="idx"
+                    >
+                        <template
+                            v-for="col in columns"
+                            :key="col.key"
+                        >
                             <td
                                 v-if="editIdx !== idx"
                                 :data-bs-toggle="getErrorMessage(idx, col.key) ? 'tooltip' : undefined"

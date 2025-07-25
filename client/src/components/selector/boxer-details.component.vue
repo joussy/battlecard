@@ -73,7 +73,10 @@
         <h6 class="ps-1">Available opponents</h6>
         <div>
             <div class="ps-0 pe-0 pt-0 pb-0">
-                <div v-for="opponent in getOpponentsToDisplay()">
+                <div
+                    v-for="opponent in getOpponentsToDisplay()"
+                    :key="opponent.id"
+                >
                     <OpponentTileComponent
                         :boxer="boxer"
                         :opponent="opponent"

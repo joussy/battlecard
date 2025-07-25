@@ -29,7 +29,6 @@
             <tr
                 v-for="(item, index) in filteredResults"
                 :key="index"
-                @click="selectBoxer(item)"
             >
                 <td>
                     <button class="btn btn-s"><i class="bi bi-person-add me-1"></i></button>
@@ -83,9 +82,6 @@ export default defineComponent({
             //         item.lastName.toLowerCase().includes(term) ||
             //         item.license.toLowerCase().includes(term)
             // )
-        },
-        selectBoxer(boxer: Boxer) {
-            // await fightService.addBoxerToTournament(boxer.id)
         },
     },
 })

@@ -186,6 +186,7 @@
             <datalist id="club-list">
                 <option
                     v-for="clubName in clubsAutoCompleteList"
+                    :key="clubName"
                     :value="clubName"
                 ></option>
             </datalist>
