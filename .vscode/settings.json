@@ -1,19 +1,30 @@
 {
-    "eslint.validate": ["javascript", "javascriptreact", "vue", "typescript"],
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "[javascript]": {
-        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    // Enable ESLint for these languages
+    "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact",
+    "vue"
+    ],
+    // Run ESLint on save
+    "editor.codeActionsOnSave": {
+        "source.fixAll": "always",
+        "source.fixAll.eslint": "always"
     },
+    // Disable other formatters (like Vetur or default TS formatter)
     "[vue]": {
-        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
     },
     "[typescript]": {
         "editor.defaultFormatter": "esbenp.prettier-vscode"
     },
-    "prettier.singleAttributePerLine": true,
-    "editor.formatOnSave": true,
-    "editor.codeActionsOnSave": {
-        "source.fixAll.eslint": "explicit"
+    "[javascript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
     },
-    "eslint.useFlatConfig": true
+    // Format on save
+    "editor.formatOnSave": true,
+    // TypeScript SDK from node_modules
+    "typescript.tsdk": "node_modules/typescript/lib",
+    "volar.validation.template": false // optional: handled by ESLint if you prefer
 }
