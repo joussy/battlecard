@@ -262,13 +262,14 @@
 
 <script lang="ts">
 import { useUiStore } from "@/stores/ui.store"
-import { defineComponent, toRaw } from "vue"
+import { defineComponent } from "vue"
 import IconComponent from "../core/icon.component.vue"
 
 export default defineComponent({
     components: {
         IconComponent: IconComponent,
     },
+    emits: ["updateFacets"],
     data() {
         return {
             facets: useUiStore().facets,
@@ -282,12 +283,6 @@ export default defineComponent({
                 // Map radio value to facets.sort.by and direction
                 this.facets.sort.by = val
                 // Keep direction as selected
-            },
-        },
-        facets: {
-            deep: true,
-            handler() {
-                // console.debug("facets:", JSON.stringify(toRaw(this.facets), null, 2))
             },
         },
     },
