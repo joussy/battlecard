@@ -55,7 +55,7 @@
                 </ul>
             </div>
             <div v-if="displayMode == 'search'">
-                <BoxerSearchComponent @boxer-add="closeModal()"></BoxerSearchComponent>
+                <BoxerSearchComponent @boxer-saved="onBoxerSaved()"></BoxerSearchComponent>
                 <div class="mt-2 text-center">
                     <div class="mb-2"><i> Cannot find what you want ? </i></div>
                     <button
@@ -66,14 +66,11 @@
                     </button>
                 </div>
             </div>
-            <BoxerImportComponent
-                v-if="displayMode == 'import'"
-                @boxer-add="closeModal()"
-            ></BoxerImportComponent>
+            <BoxerImportComponent v-if="displayMode == 'import'"></BoxerImportComponent>
 
             <BoxerAddFormComponent
                 v-if="displayMode == 'create'"
-                @boxer-add="closeModal()"
+                @boxer-saved="onBoxerSaved()"
             ></BoxerAddFormComponent>
         </div>
     </div>
@@ -94,6 +91,7 @@ export default defineComponent({
         BoxerSearchComponent,
         BoxerImportComponent,
     },
+    emits: ["boxer-saved"],
     data() {
         return {
             uiStore: useUiStore(),
@@ -108,8 +106,9 @@ export default defineComponent({
         this.clear()
     },
     methods: {
-        closeModal() {
+        onBoxerSaved() {
             closeModal("#boxerAddOffcanvasNavbar")
+            this.$emit("boxer-saved")
         },
         clear() {
             this.displayMode = "create"

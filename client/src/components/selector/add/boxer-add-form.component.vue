@@ -275,7 +275,7 @@ export default defineComponent({
             default: null,
         },
     },
-    emits: ["boxer-add"],
+    emits: ["boxer-saved"],
     setup(properties, { emit }) {
         // Create the form
         const initialValues = {
@@ -334,7 +334,7 @@ export default defineComponent({
             }
 
             if (boxer != null) {
-                emit("boxer-add", boxer)
+                emit("boxer-saved", boxer)
             } else {
                 const toastEl = document.getElementById("errorToast") as HTMLElement
                 const toast = new Toast(toastEl)

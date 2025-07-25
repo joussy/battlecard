@@ -53,7 +53,6 @@ import { Boxer } from "@/types/boxing"
 import { defineComponent } from "vue"
 
 export default defineComponent({
-    emits: ["boxer-add"],
     data() {
         let ret = {
             license: null as string | null,
@@ -87,7 +86,6 @@ export default defineComponent({
         },
         selectBoxer(boxer: Boxer) {
             // await fightService.addBoxerToTournament(boxer.id)
-            this.$emit("boxer-add", boxer)
         },
     },
 })
