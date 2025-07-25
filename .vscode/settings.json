@@ -1,9 +1,11 @@
 {
     // Enable ESLint for these languages
     "eslint.validate": [
-        "javascript",
-        "typescript",
-        "vue"
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact",
+    "vue"
     ],
     // Run ESLint on save
     "editor.codeActionsOnSave": {
@@ -24,4 +26,5 @@
     "editor.formatOnSave": true,
     // TypeScript SDK from node_modules
     "typescript.tsdk": "node_modules/typescript/lib",
+    "volar.validation.template": false // optional: handled by ESLint if you prefer
 }

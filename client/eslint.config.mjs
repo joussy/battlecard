@@ -31,6 +31,7 @@ export default [
         ignores: ["dist", "node_modules"],
         languageOptions: {
             parser: vueParser,
+            sourceType: "module",
             parserOptions: {
                 parser: tsParser,
                 ecmaVersion: "latest",
@@ -41,7 +42,6 @@ export default [
             },
             globals: {
                 ...globals.browser,
-                ...globals.node,
             },
         },
         plugins: {
