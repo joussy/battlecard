@@ -8,12 +8,12 @@
                 data-bs-target="#tournamentAddOffcanvasNavbar"
             >
                 <i class="bi bi-calendar-plus-fill" />
-                Create
+                New event
             </button>
             <TournamentAddOffcanvasComponent />
         </div>
         <div class="card mb-2">
-            <div class="card-header">Select an event</div>
+            <div class="card-header fw-bold">Select an event</div>
             <ul
                 v-for="tournament in tournamentStore.tournaments"
                 :key="tournament.id"
@@ -21,19 +21,25 @@
             >
                 <li
                     class="list-group-item d-flex"
-                    :class="{ 'text-bg-secondary': selectedTournamentId == tournament.id }"
+                    :class="{
+                        'selected-card-border': selectedTournamentId == tournament.id,
+                    }"
                 >
                     <div
                         class="flex-fill"
                         @click="setCurrentTournament(tournament)"
                     >
-                        <div class="fw-bold">{{ tournament.name }}</div>
-                        <div class="text-muted small" v-if="tournament.address || tournament.city || tournament.zipCode">
-                            <span v-if="tournament.address">{{ tournament.address }}</span>
-                            <span v-if="tournament.address && (tournament.zipCode || tournament.city)">, </span>
-                            <span v-if="tournament.zipCode">{{ tournament.zipCode }}</span>
-                            <span v-if="tournament.zipCode && tournament.city"> </span>
-                            <span v-if="tournament.city">{{ tournament.city }}</span>
+                        <div>
+                            <span :class="{ 'fw-bold': selectedTournamentId == tournament.id }">{{
+                                tournament.name
+                            }}</span>
+                            <span v-if="selectedTournamentId == tournament.id"> - <i>selected</i></span>
+                        </div>
+                        <div
+                            v-if="tournament.formattedAddress"
+                            class="text-muted small"
+                        >
+                            <span>{{ tournament.formattedAddress }}</span>
                         </div>
                     </div>
                     <div>
@@ -77,4 +83,11 @@ export default defineComponent({
     },
 })
 </script>
-<style lang="scss"></style>
+<style scoped>
+.selected-card-border {
+    border-left: 10px solid var(--bs-primary);
+}
+.card ul:hover {
+    border: 1px solid black;
+}
+</style>

@@ -63,6 +63,7 @@ export default class ApiAdapter {
             address: tournament.address,
             zipCode: tournament.zipCode,
             city: tournament.city,
+            formattedAddress: tournament.formattedAddress,
         }
     }
 

@@ -75,6 +75,7 @@ export interface Tournament {
     address?: string
     zipCode?: string
     city?: string
+    formattedAddress?: string
 }
 
 export interface SharedFightCard {

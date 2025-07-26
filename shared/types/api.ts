@@ -130,6 +130,8 @@ export interface ApiTournament {
   zipCode?: string;
   /** Tournament city (optional) */
   city?: string;
+  /** Formatted address combining street, city, and postcode */
+  formattedAddress?: string;
 }
 
 export interface ApiTournamentCreate {
