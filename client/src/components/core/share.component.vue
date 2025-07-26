@@ -239,7 +239,7 @@ export default {
                         }
                     }
                 })
-                .catch((error) => {
+                .catch((error: unknown) => {
                     console.error(`Error downloading ${fileType}:`, error)
                     this.loadingFormat = null
                 })

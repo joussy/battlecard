@@ -45,12 +45,19 @@ export class FightExportService {
 
     return this.gotenbergService.generatePdf(html);
   }
-  async generateHtml(tournamentId: string): Promise<string> {
-    const { fights, tournament } = await this.getFightCardData(tournamentId);
+  async generateHtml(
+    tournamentId: string,
+    fightCardShareUrl?: string,
+  ): Promise<string> {
+    const { fights, tournament, svgQrCode } = await this.getFightCardData(
+      tournamentId,
+      fightCardShareUrl,
+    );
     const template = toFightCardTemplate(
       fights,
       tournament,
       this.modalityService.getModality(),
+      svgQrCode,
     );
     const html = this.templateService.generateFightCardHtml(template);
 

@@ -11,6 +11,8 @@ import {
     ApiPreviewBoxersResponse,
     ApiPreviewBoxersCsv,
     ApiSharedFightCardGet,
+    ApiAddressAutocompleteGet,
+    ApiTournamentCreate,
 } from "@/shared/types/api"
 import { get, mutate, upload } from "@/utils/manager.utils"
 
@@ -59,15 +61,23 @@ export class ApiManager {
     getTournaments(): Promise<ApiTournament[]> {
         return get<ApiTournament[]>("/api/tournaments", undefined, "Failed to fetch tournaments")
     }
-    addTournament(tournament: ApiTournament): Promise<ApiTournament> {
+    addTournament(tournament: ApiTournamentCreate): Promise<ApiTournament> {
         return mutate<ApiTournament>("/api/tournaments", "POST", tournament, "Failed to add tournament")
     }
     deleteTournament(tournamentId: string): Promise<void> {
-        return mutate<void>(
+        return mutate(
             `/api/tournaments/${encodeURIComponent(tournamentId)}`,
             "DELETE",
             undefined,
             "Failed to delete tournament"
+        )
+    }
+    updateTournament(tournament: ApiTournamentCreate, tournamentId: string): Promise<ApiTournament> {
+        return mutate<ApiTournament>(
+            `/api/tournaments/${encodeURIComponent(tournamentId)}`,
+            "PUT",
+            tournament,
+            "Failed to update tournament"
         )
     }
 
@@ -134,6 +144,14 @@ export class ApiManager {
             `/api/share/fightcard/${encodeURIComponent(fightCardToken)}`,
             undefined,
             "Failed to fetch fights by fight card token"
+        )
+    }
+
+    getAutoCompleteAddress(query: string): Promise<ApiAddressAutocompleteGet[]> {
+        return get<ApiAddressAutocompleteGet[]>(
+            `/api/places/autocomplete`,
+            { q: query },
+            "Failed to fetch address autocomplete"
         )
     }
 }

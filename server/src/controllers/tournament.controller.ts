@@ -1,4 +1,12 @@
-import { Controller, Get, Body, Post, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Body,
+  Post,
+  Param,
+  Delete,
+  Put,
+} from '@nestjs/common';
 import { ModalityService } from '../modality/modality.service';
 import { User } from '@/decorators/user.decorator';
 import { AuthenticatedUser } from '@/interfaces/auth.interface';
@@ -10,7 +18,6 @@ import {
   ApiTournament,
   ApiTournamentCreate,
 } from '@/shared/types/api';
-import { Response } from 'express';
 import { FightService } from '@/services/fight.service';
 
 @Controller('tournaments')
@@ -34,12 +41,30 @@ export class TournamentController {
     return this.tournamentService.create(tournament, user);
   }
 
+  @Put(':id')
+  async update(
+    @Param('id') tournamentId: string,
+    @Body() tournament: ApiTournamentCreate,
+    @User() user: AuthenticatedUser,
+  ): Promise<ApiTournament> {
+    await this.tournamentService.validateTournamentAccess(
+      tournamentId,
+      user.id,
+    );
+    return this.tournamentService.update(tournamentId, tournament, user);
+  }
+
   @Delete(':id')
   async delete(
-    @Param('id') id: string,
+    @Param('id') tournamentId: string,
     @User() user: AuthenticatedUser,
   ): Promise<void> {
-    return this.tournamentService.delete(id, user);
+    await this.tournamentService.validateTournamentAccess(
+      tournamentId,
+      user.id,
+    );
+
+    return this.tournamentService.delete(tournamentId, user);
   }
 
   @Get(':tournamentId/boxers')
@@ -47,6 +72,11 @@ export class TournamentController {
     @Param('tournamentId') tournamentId: string,
     @User() user: AuthenticatedUser,
   ): Promise<ApiBoxerGet[]> {
+    await this.tournamentService.validateTournamentAccess(
+      tournamentId,
+      user.id,
+    );
+
     return this.tournamentService.getBoxersForTournament(tournamentId, user);
   }
 
@@ -56,6 +86,10 @@ export class TournamentController {
     @Param('tournamentId') tournamentId: string,
     @User() user: AuthenticatedUser,
   ): Promise<ApiOpponentGet[]> {
+    await this.tournamentService.validateTournamentAccess(
+      tournamentId,
+      user.id,
+    );
     return this.tournamentService.getPossibleOpponents(
       boxerId,
       tournamentId,
@@ -68,6 +102,10 @@ export class TournamentController {
     @Param('tournamentId') tournamentId: string,
     @User() user: AuthenticatedUser,
   ): Promise<ApiFightGet[]> {
+    await this.tournamentService.validateTournamentAccess(
+      tournamentId,
+      user.id,
+    );
     return await this.fightService.findByTournamentId(tournamentId, user);
   }
 }

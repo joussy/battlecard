@@ -2,8 +2,8 @@ import {
   Body,
   Controller,
   Get,
-  Param,
   Post,
+  Query,
   Res,
   SetMetadata,
   UseGuards,
@@ -183,12 +183,15 @@ export class ExternalServicesController {
   @Get('fightcard/html')
   @SetMetadata('isPublic', true)
   async getTemplateHtml(
-    @Param('tournamentId')
+    @Query('tournamentId')
     tournamentId: string,
     @Res() res: ExpressResponse,
   ): Promise<void> {
     try {
-      const html = await this.fightExportService.generateHtml(tournamentId);
+      const html = await this.fightExportService.generateHtml(
+        tournamentId,
+        'https://example.com/fightcard',
+      );
       res.setHeader('Content-Type', 'text/html;charset=utf-8');
       res.send(html);
     } catch (err) {

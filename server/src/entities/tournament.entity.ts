@@ -24,4 +24,13 @@ export class Tournament {
 
   @Column({ type: 'date', nullable: false })
   date: string;
+
+  @Column({ nullable: true })
+  address?: string;
+
+  @Column({ nullable: true })
+  zipCode?: string;
+
+  @Column({ nullable: true })
+  city?: string;
 }

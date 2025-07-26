@@ -6,6 +6,7 @@ import { IModality } from '@/modality/IModality';
 import { Tournament } from '@/entities/tournament.entity';
 import { format } from 'date-fns';
 import { toApiBoxerGet } from './boxer.adapter';
+import { formatAddress } from '@/utils/addressUtils';
 
 export function toFight(apiFight: ApiFightGet): Fight {
   const fight = new Fight();
@@ -48,6 +49,11 @@ export function toFightCardTemplate(
   const template: FightCardTemplate = {
     subtitle: format(tournament.date, 'dd/MM/yyyy'),
     title: tournament.name,
+    formattedAddress: formatAddress({
+      street: tournament.address,
+      city: tournament.city,
+      zipCode: tournament.zipCode,
+    }),
     fights: fights.map((fight) => {
       const duration = modality.getFightDuration(fight.boxer1, fight.boxer2);
       return {

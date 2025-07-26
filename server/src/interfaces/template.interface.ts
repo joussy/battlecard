@@ -15,6 +15,7 @@ export interface FightCardTemplate {
     gender: string;
   }[];
   qrCodeSvg?: string;
+  formattedAddress?: string;
 }
 
 export interface SelectorTemplate {
