@@ -1,6 +1,5 @@
 import { ApiTournament, ApiTournamentCreate } from '@/shared/types/api';
 import { Tournament } from '../entities/tournament.entity';
-import { format } from 'path';
 import { formatAddress } from '@/utils/addressUtils';
 
 export function toTournament(

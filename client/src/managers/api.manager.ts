@@ -12,6 +12,7 @@ import {
     ApiPreviewBoxersCsv,
     ApiSharedFightCardGet,
     ApiAddressAutocompleteGet,
+    ApiTournamentCreate,
 } from "@/shared/types/api"
 import { get, mutate, upload } from "@/utils/manager.utils"
 
@@ -60,7 +61,7 @@ export class ApiManager {
     getTournaments(): Promise<ApiTournament[]> {
         return get<ApiTournament[]>("/api/tournaments", undefined, "Failed to fetch tournaments")
     }
-    addTournament(tournament: ApiTournament): Promise<ApiTournament> {
+    addTournament(tournament: ApiTournamentCreate): Promise<ApiTournament> {
         return mutate<ApiTournament>("/api/tournaments", "POST", tournament, "Failed to add tournament")
     }
     deleteTournament(tournamentId: string): Promise<void> {
@@ -69,6 +70,14 @@ export class ApiManager {
             "DELETE",
             undefined,
             "Failed to delete tournament"
+        )
+    }
+    updateTournament(tournament: ApiTournamentCreate, tournamentId: string): Promise<ApiTournament> {
+        return mutate<ApiTournament>(
+            `/api/tournaments/${encodeURIComponent(tournamentId)}`,
+            "PUT",
+            tournament,
+            "Failed to update tournament"
         )
     }
 

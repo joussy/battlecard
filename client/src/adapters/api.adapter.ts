@@ -5,6 +5,7 @@ import {
     ApiOpponentGet,
     ApiSharedFightCardGet,
     ApiTournament,
+    ApiTournamentCreate,
 } from "@/shared/types/api"
 import { Gender } from "@/shared/types/modality.type"
 import { Boxer, Fight, Opponent, SharedFightCard, Tournament } from "@/types/boxing.d"
@@ -72,6 +73,16 @@ export default class ApiAdapter {
             id: tournament.id,
             name: tournament.name,
             userId: tournament.userId,
+            date: tournament.date,
+            address: tournament.address,
+            zipCode: tournament.zipCode,
+            city: tournament.city,
+        }
+    }
+
+    static toApiTournamentCreate(tournament: Tournament): ApiTournamentCreate {
+        return {
+            name: tournament.name,
             date: tournament.date,
             address: tournament.address,
             zipCode: tournament.zipCode,
