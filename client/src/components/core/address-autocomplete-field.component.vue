@@ -54,7 +54,6 @@ export default {
     methods: {
         onInput(): void {
             this.$emit("update:modelValue", this.inputValue)
-            this.$emit("update:modelValue", this.inputValue)
             if (this.debounceTimeout) clearTimeout(this.debounceTimeout)
             this.debounceTimeout = setTimeout(() => {
                 if (this.inputValue.length < 3) {
@@ -62,7 +61,6 @@ export default {
                     return
                 }
                 apiManager.getAutoCompleteAddress(this.inputValue).then((result: ApiAddressAutocompleteGet[]) => {
-                    console.log("Suggestions:", result)
                     this.suggestions = result
                 })
             }, 300)

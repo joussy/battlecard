@@ -25,7 +25,6 @@ export class PlacesService {
           };
         }>;
       };
-      console.log('Response from Geoapify:', json);
       const features = json.features || [];
       return features.map<ApiAddressAutocompleteGet>((feature) => ({
         city: feature.properties?.city || '',
