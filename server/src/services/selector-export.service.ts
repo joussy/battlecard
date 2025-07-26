@@ -12,7 +12,7 @@ import {
   toSelectorExportData,
   toSelectorTemplate,
 } from '@/adapters/boxer.adapter';
-import { generateSelectorHtml } from '@/templates/selector-html.template';
+import { TemplateService } from './template.service';
 
 @Injectable()
 export class SelectorExportService {
@@ -23,6 +23,7 @@ export class SelectorExportService {
     private readonly tournamentBoxerRepository: Repository<TournamentBoxer>,
     private readonly modalityService: ModalityService,
     private readonly gotenbergService: GotenbergService,
+    private readonly templateService: TemplateService,
   ) {}
 
   async generatePdf(tournamentId: string, boxerIds: string[]): Promise<Buffer> {
@@ -35,7 +36,7 @@ export class SelectorExportService {
       data.tournament,
       this.modalityService.getModality(),
     );
-    const html = generateSelectorHtml(template);
+    const html = this.templateService.generateSelectorHtml(template);
     return this.gotenbergService.generatePdf(html);
   }
 
@@ -49,7 +50,7 @@ export class SelectorExportService {
       data.tournament,
       this.modalityService.getModality(),
     );
-    const html = generateSelectorHtml(template);
+    const html = this.templateService.generateSelectorHtml(template);
     return this.gotenbergService.generatePng(html);
   }
 

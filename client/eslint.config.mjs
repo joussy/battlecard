@@ -39,6 +39,7 @@ export default [
             prettier: prettierPlugin,
         },
         rules: {
+            ...tsPlugin.configs["strict-type-checked"].rules,
             // Vue customizations
             "vue/multi-word-component-names": "off",
             "vue/no-unused-vars": "error",

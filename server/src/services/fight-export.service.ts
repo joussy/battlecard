@@ -3,7 +3,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Tournament } from '../entities/tournament.entity';
 import { Fight } from '../entities/fight.entity';
-import { generateFightCardHtml } from '../templates/fight-card-html.template';
 import * as XLSX from 'xlsx';
 import { stringify } from 'csv-stringify/sync';
 import { ModalityService } from '../modality/modality.service';
@@ -13,7 +12,7 @@ import {
 } from '../adapters/fight.adapter';
 import { GotenbergService } from './gotenberg.service';
 import { QrCodeService } from './qrcode.service';
-import { ShareService } from './share.service';
+import { TemplateService } from './template.service';
 
 @Injectable()
 export class FightExportService {
@@ -25,7 +24,7 @@ export class FightExportService {
     private readonly modalityService: ModalityService,
     private readonly gotenbergService: GotenbergService,
     private readonly qrCodeService: QrCodeService,
-    private readonly shareService: ShareService,
+    private readonly templateService: TemplateService,
   ) {}
 
   async generatePdf(
@@ -42,7 +41,7 @@ export class FightExportService {
       this.modalityService.getModality(),
       svgQrCode,
     );
-    const html = generateFightCardHtml(template);
+    const html = this.templateService.generateFightCardHtml(template);
 
     return this.gotenbergService.generatePdf(html);
   }
@@ -53,7 +52,7 @@ export class FightExportService {
       tournament,
       this.modalityService.getModality(),
     );
-    const html = generateFightCardHtml(template);
+    const html = this.templateService.generateFightCardHtml(template);
 
     return html;
   }
@@ -72,7 +71,7 @@ export class FightExportService {
       this.modalityService.getModality(),
       svgQrCode,
     );
-    const html = generateFightCardHtml(template);
+    const html = this.templateService.generateFightCardHtml(template);
 
     return this.gotenbergService.generatePng(html);
   }

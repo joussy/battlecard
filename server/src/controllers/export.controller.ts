@@ -1,4 +1,13 @@
-import { Body, Controller, Get, Post, Res, SetMetadata } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Res,
+  SetMetadata,
+  UseGuards,
+} from '@nestjs/common';
 import { Response as ExpressResponse } from 'express';
 import { User } from '@/decorators/user.decorator';
 import { AuthenticatedUser } from '@/interfaces/auth.interface';
@@ -6,6 +15,7 @@ import { FightExportService } from '@/services/fight-export.service';
 import { TournamentService } from '@/services/tournament.service';
 import { SelectorExportService } from '@/services/selector-export.service';
 import { ShareService } from '@/services/share.service';
+import { DevOnlyGuard } from '@/guards/dev.guard';
 
 @Controller('export')
 export class ExternalServicesController {
@@ -169,6 +179,23 @@ export class ExternalServicesController {
     }
   }
 
+  @UseGuards(DevOnlyGuard)
+  @Get('fightcard/html')
+  @SetMetadata('isPublic', true)
+  async getTemplateHtml(
+    @Param('tournamentId')
+    tournamentId: string,
+    @Res() res: ExpressResponse,
+  ): Promise<void> {
+    try {
+      const html = await this.fightExportService.generateHtml(tournamentId);
+      res.setHeader('Content-Type', 'text/html;charset=utf-8');
+      res.send(html);
+    } catch (err) {
+      console.error('Error generating HTML:', err);
+      res.status(502).json({ error: 'Error generating HTML.' });
+    }
+  }
   @Post('selector/pdf')
   async getSelectorPdf(
     @Body() body: { tournamentId: string; boxerIds: string[] },
