@@ -1,4 +1,5 @@
 import { ApiAddressAutocompleteGet } from '@/shared/types/api';
+import { formatAddress } from '../utils/addressUtils';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from './config.service';
 
@@ -30,6 +31,7 @@ export class PlacesService {
         city: feature.properties?.city || '',
         street: feature.properties?.street || '',
         postcode: feature.properties?.postcode || '',
+        formatted: formatAddress(feature.properties),
       }));
     } catch {
       return [];

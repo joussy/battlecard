@@ -241,4 +241,8 @@ export interface ApiAddressAutocompleteGet {
   city: string;
   street: string;
   postcode: string;
+  /**
+   * Formatted address string combining street, city, and postcode.
+   */
+  formatted: string;
 }

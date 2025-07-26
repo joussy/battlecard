@@ -1,35 +1,26 @@
 <template>
-    <div class="mb-3">
-        <label
-            :for="id"
-            class="form-label"
-            >{{ label }}</label
+    <input
+        :id="id"
+        v-model="inputValue"
+        type="text"
+        class="form-control"
+        :placeholder="placeholder"
+        list="cityOptions"
+        @input="onInput"
+        @focus="showDropdown = true"
+        @blur="hideDropdown"
+    />
+    <div
+        v-if="showDropdown"
+        class="autocomplete-items border bg-secondary"
+    >
+        <div
+            v-for="(suggestion, index) in suggestions"
+            :key="index"
+            @mousedown.prevent="selectSuggestion(suggestion)"
         >
-        <input
-            :id="id"
-            v-model="inputValue"
-            type="text"
-            class="form-control"
-            :placeholder="placeholder"
-            autocomplete="off"
-            @input="onInput"
-            @focus="showDropdown = true"
-            @blur="hideDropdown"
-        />
-        <ul
-            v-if="showDropdown && suggestions.length"
-            class="list-group position-absolute w-100 z-3"
-            style="max-height: 200px; overflow-y: auto"
-        >
-            <li
-                v-for="(suggestion, idx) in suggestions"
-                :key="idx"
-                class="list-group-item list-group-item-action"
-                @mousedown.prevent="selectSuggestion(suggestion)"
-            >
-                {{ formatSuggestion(suggestion) }}
-            </li>
-        </ul>
+            {{ suggestion.formatted }}
+        </div>
     </div>
 </template>
 
@@ -47,17 +38,12 @@ export default {
         modelValue: { type: String as PropType<string>, default: "" },
     },
     emits: ["update:modelValue", "select"],
-    data(): {
-        inputValue: string
-        suggestions: ApiAddressAutocompleteGet[]
-        showDropdown: boolean
-        debounceTimeout: ReturnType<typeof setTimeout> | null
-    } {
+    data() {
         return {
             inputValue: this.modelValue as string,
             suggestions: [] as ApiAddressAutocompleteGet[],
             showDropdown: false,
-            debounceTimeout: null,
+            debounceTimeout: null as ReturnType<typeof setTimeout> | null,
         }
     },
     watch: {
@@ -76,12 +62,13 @@ export default {
                     return
                 }
                 apiManager.getAutoCompleteAddress(this.inputValue).then((result: ApiAddressAutocompleteGet[]) => {
+                    console.log("Suggestions:", result)
                     this.suggestions = result
                 })
             }, 300)
         },
         selectSuggestion(suggestion: ApiAddressAutocompleteGet): void {
-            this.inputValue = this.formatSuggestion(suggestion)
+            this.inputValue = suggestion.street
             this.$emit("update:modelValue", this.inputValue)
             this.$emit("select", suggestion)
             this.showDropdown = false
@@ -91,16 +78,12 @@ export default {
                 this.showDropdown = false
             }, 200)
         },
-        formatSuggestion(suggestion: ApiAddressAutocompleteGet): string {
-            return `${suggestion.street || ""} ${suggestion.city || ""} ${suggestion.postcode || ""}`.trim()
-        },
     },
 }
 </script>
-
 <style scoped>
-.list-group.position-absolute {
-    top: 100%;
-    left: 0;
+.autocomplete-items div {
+    padding: 10px;
+    cursor: pointer;
 }
 </style>

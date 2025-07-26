@@ -77,7 +77,7 @@
                         id="address"
                         v-model="address"
                         :label="'Address'"
-                        :placeholder="'Start typing address...'"
+                        placeholder="Start typing address..."
                         @select="onAddressSelect"
                     />
                     <span
