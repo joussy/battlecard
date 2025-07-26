@@ -139,6 +139,10 @@ export class TournamentService {
     tournamentId: string,
     userId: string,
   ): Promise<void> {
+    if (!tournamentId || !userId) {
+      //don't remove this check, it is important to prevent unauthorized access with typeorm
+      throw new Error('Invalid tournament or user ID');
+    }
     await this.tournamentRepository.findOneOrFail({
       where: { id: tournamentId, userId },
     });

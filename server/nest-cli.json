@@ -8,7 +8,7 @@
     "deleteOutDir": true,
     "assets": [
       {
-        "include": "views/*.html",
+        "include": "views/*.mustache",
         "outDir": "dist/server/src",
         "watchAssets": true
       }

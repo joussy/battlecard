@@ -34,6 +34,7 @@ import { ShareService } from './services/share.service';
 import { ConfigService } from './services/config.service';
 import { QrCodeService } from './services/qrcode.service';
 import { TypeOrmConfigService } from './services/typeorm-config.service';
+import { TemplateService } from './services/template.service';
 
 @Module({
   imports: [
@@ -83,6 +84,7 @@ import { TypeOrmConfigService } from './services/typeorm-config.service';
       provide: APP_GUARD,
       useClass: JwtAuthGuard,
     },
+    TemplateService,
     ModalityService,
   ],
   exports: [ModalityService, ConfigService],

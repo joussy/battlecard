@@ -40,4 +40,6 @@ export interface EnvConfig {
   // Application configuration
   /** Base URL of the website for generating links */
   websiteBaseUrl: string;
+  /** Environment in which the application is running */
+  environment: 'development' | 'production';
 }

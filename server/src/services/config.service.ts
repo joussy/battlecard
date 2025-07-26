@@ -74,6 +74,8 @@ export class ConfigService {
       jwtSecret: process.env.JWT_SECRET!,
       googleCallbackUrl: process.env.GOOGLE_CALLBACK_URL!,
       googleClientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+      environment:
+        process.env.NODE_ENV == 'development' ? 'development' : 'production',
     };
   }
 
