@@ -202,7 +202,7 @@ export default defineComponent({
     },
     data() {
         return {
-            onSubmit: null as any,
+            onSubmit: (() => {}) as (e: Event) => void,
         }
     },
     computed: {
