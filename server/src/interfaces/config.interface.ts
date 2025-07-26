@@ -5,6 +5,8 @@ export interface AppConfig {
 }
 
 export interface EnvConfig {
+  /** Geoapify API key for address autocomplete. Optional */
+  geoapifyApiKey?: string;
   // Database configuration
   /** PostgreSQL database host */
   dbHost: string;

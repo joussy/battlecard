@@ -35,6 +35,8 @@ import { ConfigService } from './services/config.service';
 import { QrCodeService } from './services/qrcode.service';
 import { TypeOrmConfigService } from './services/typeorm-config.service';
 import { TemplateService } from './services/template.service';
+import { PlacesController } from './controllers/places.controller';
+import { PlacesService } from './services/places.service';
 
 @Module({
   imports: [
@@ -64,6 +66,7 @@ import { TemplateService } from './services/template.service';
     ExternalServicesController,
     ImportController,
     ShareController,
+    PlacesController,
   ],
   providers: [
     TypeOrmConfigService,
@@ -86,6 +89,7 @@ import { TemplateService } from './services/template.service';
     },
     TemplateService,
     ModalityService,
+    PlacesService,
   ],
   exports: [ModalityService, ConfigService],
 })

@@ -55,6 +55,7 @@ export class ConfigService {
       }
     });
     return {
+      geoapifyApiKey: process.env.GEOAPIFY_API_KEY,
       importApiUrl: process.env.IMPORT_API_URL!,
       importApiHeaderXApiKey: process.env.IMPORT_API_HEADER_X_API_KEY!,
       gotenbergUrl: process.env.GOTENBERG_URL!,

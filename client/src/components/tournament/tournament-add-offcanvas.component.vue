@@ -73,13 +73,12 @@
                     >
                         <i class="bi bi-geo-alt me-2"></i>Address
                     </label>
-                    <input
+                    <AddressAutocompleteField
+                        id="address"
                         v-model="address"
-                        class="form-control"
-                        type="text"
-                        :class="{
-                            'is-invalid': errors.address?.length ?? 0 > 0,
-                        }"
+                        :label="'Address'"
+                        :placeholder="'Start typing address...'"
+                        @select="onAddressSelect"
                     />
                     <span
                         name="address"
@@ -148,6 +147,7 @@ import { Tournament } from "@/types/boxing.d"
 import { closeModal } from "@/utils/ui.utils"
 import { useUiStore } from "@/stores/ui.store"
 import { useTournamentStore } from "@/stores/tournament.store"
+import AddressAutocompleteFieldComponent from "@/components/core/address-autocomplete-field.component.vue"
 
 configure({
     validateOnInput: true,
@@ -160,7 +160,9 @@ defineRule("required", (value: string) => {
 })
 
 export default defineComponent({
-    components: {},
+    components: {
+        AddressAutocompleteField: AddressAutocompleteFieldComponent,
+    },
     setup() {
         const uiStore = useUiStore()
         const tournamentStore = useTournamentStore()
@@ -200,6 +202,11 @@ export default defineComponent({
             resetForm()
             closeModal("#tournamentAddOffcanvasNavbar")
         })
+        const onAddressSelect = (suggestion: any) => {
+            // Optionally fill zipCode and city from suggestion
+            if (suggestion.postcode) zipCode.value = suggestion.postcode
+            if (suggestion.city) city.value = suggestion.city
+        }
         return {
             onSubmit,
             errors,
@@ -209,6 +216,7 @@ export default defineComponent({
             zipCode,
             city,
             uiStore,
+            onAddressSelect,
         }
     },
     data() {
