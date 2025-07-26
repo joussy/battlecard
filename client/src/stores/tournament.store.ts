@@ -24,18 +24,6 @@ export const useTournamentStore = defineStore("tournament", {
                 this.loading = false
             }
         },
-        async createTournament(tournament: Tournament) {
-            try {
-                const apiTournament: ApiTournament = ApiAdapter.toApiTournament(tournament)
-                const created: ApiTournament = await dbManager.addTournament(apiTournament)
-                const newTournament = ApiAdapter.toTournament(created)
-                this.tournaments.push(newTournament)
-                return newTournament
-            } catch (e: unknown) {
-                this.error = e instanceof Error ? e.message : "Unknown error"
-                throw e
-            }
-        },
         setCurrentTournament(tournamentId: string | null) {
             this.currentTournamentId = tournamentId
         },

@@ -30,7 +30,7 @@ export class PlacesService {
       return features.map<ApiAddressAutocompleteGet>((feature) => ({
         city: feature.properties?.city || '',
         street: feature.properties?.street || '',
-        postcode: feature.properties?.postcode || '',
+        zipCode: feature.properties?.postcode || '',
         formatted: formatAddress(feature.properties),
       }));
     } catch {

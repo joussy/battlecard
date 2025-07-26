@@ -114,7 +114,10 @@
             v-if="boxersToDisplay.length == 0"
             class="justify-content-center m-4 text-center"
         >
-            <div class="mb-4"><i>No boxer available ...</i></div>
+            <div class="mb-4">
+                <div>It feels empty in here !</div>
+                <i> You have no boxers matching your search criteria.</i>
+            </div>
             <div>
                 <button
                     class="btn btn-outline-success"

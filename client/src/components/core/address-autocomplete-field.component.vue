@@ -12,7 +12,7 @@
     />
     <div
         v-if="showDropdown"
-        class="autocomplete-items border bg-secondary"
+        class="autocomplete-items border"
     >
         <div
             v-for="(suggestion, index) in suggestions"

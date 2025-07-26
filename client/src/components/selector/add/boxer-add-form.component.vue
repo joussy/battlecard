@@ -219,7 +219,7 @@
         </div>
         <button
             type="submit"
-            class="btn btn-primary"
+            class="btn btn-success"
         >
             <i class="bi bi-save me-2"></i>
             Save Boxer

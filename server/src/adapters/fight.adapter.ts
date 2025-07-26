@@ -52,7 +52,7 @@ export function toFightCardTemplate(
     formattedAddress: formatAddress({
       street: tournament.address,
       city: tournament.city,
-      postcode: tournament.zipCode,
+      zipCode: tournament.zipCode,
     }),
     fights: fights.map((fight) => {
       const duration = modality.getFightDuration(fight.boxer1, fight.boxer2);

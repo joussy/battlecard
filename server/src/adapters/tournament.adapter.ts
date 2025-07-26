@@ -28,7 +28,7 @@ export function toApiTournament(tournament: Tournament): ApiTournament {
     formattedAddress: formatAddress({
       street: tournament.address,
       city: tournament.city,
-      postcode: tournament.zipCode,
+      zipCode: tournament.zipCode,
     }),
   };
 }

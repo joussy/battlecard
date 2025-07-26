@@ -130,7 +130,7 @@ export interface ApiTournament {
   zipCode?: string;
   /** Tournament city (optional) */
   city?: string;
-  /** Formatted address combining street, city, and postcode */
+  /** Formatted address combining street, city, and zipCode */
   formattedAddress?: string;
 }
 
@@ -242,9 +242,9 @@ export interface ApiGeneratedToken {
 export interface ApiAddressAutocompleteGet {
   city: string;
   street: string;
-  postcode: string;
+  zipCode: string;
   /**
-   * Formatted address string combining street, city, and postcode.
+   * Formatted address string combining street, city, and zipCode.
    */
   formatted: string;
 }

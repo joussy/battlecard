@@ -33,6 +33,7 @@ export class TournamentService {
   async findAll(user: AuthenticatedUser): Promise<ApiTournament[]> {
     const dbTournaments = await this.tournamentRepository.find({
       where: { userId: user.id },
+      order: { date: 'DESC', name: 'ASC' },
     });
     return dbTournaments.map(toApiTournament);
   }
@@ -45,6 +46,18 @@ export class TournamentService {
       toTournament(tournament, user.id),
     );
     return toApiTournament(dbTournament);
+  }
+
+  async update(
+    tournamentId: string,
+    tournament: ApiTournamentCreate,
+    user: AuthenticatedUser,
+  ): Promise<ApiTournament> {
+    const dbTournament = toTournament(tournament, user.id);
+    dbTournament.id = tournamentId;
+    const updatedTournament =
+      await this.tournamentRepository.save(dbTournament);
+    return toApiTournament(updatedTournament);
   }
 
   async delete(id: string, user: AuthenticatedUser): Promise<void> {

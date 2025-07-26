@@ -10,7 +10,8 @@
                 id="tournamentAddOffcanvasNavbarLabel"
                 class="offcanvas-title"
             >
-                Add a new event
+                <i class="bi bi-calendar-plus me-2"></i>
+                {{ mode == "create" ? "Add new event" : "Edit event" }}
             </h5>
             <button
                 type="button"
@@ -130,9 +131,10 @@
                 </div>
                 <button
                     type="submit"
-                    class="btn btn-primary"
+                    class="btn btn-success"
                 >
-                    Create
+                    <i class="bi bi-save me-2"></i>
+                    {{ mode == "create" ? "Create" : "Update" }} event
                 </button>
             </form>
         </div>
@@ -145,9 +147,9 @@ import { defineComponent } from "vue"
 import { configure, defineRule, GenericObject, useForm } from "vee-validate"
 import { Tournament } from "@/types/boxing.d"
 import { closeModal } from "@/utils/ui.utils"
-import { useUiStore } from "@/stores/ui.store"
-import { useTournamentStore } from "@/stores/tournament.store"
 import AddressAutocompleteFieldComponent from "@/components/core/address-autocomplete-field.component.vue"
+import apiManager from "@/managers/api.manager"
+import { ApiAddressAutocompleteGet, ApiTournamentCreate } from "@/shared/types/api"
 
 configure({
     validateOnInput: true,
@@ -163,21 +165,19 @@ export default defineComponent({
     components: {
         AddressAutocompleteField: AddressAutocompleteFieldComponent,
     },
+    props: {
+        tournament: {
+            type: Object as () => Tournament | null,
+            default: null,
+        },
+    },
+    emits: ["tournament-saved"],
     setup() {
-        const uiStore = useUiStore()
-        const tournamentStore = useTournamentStore()
         // Create the form
         const { defineField, handleSubmit, errors, resetForm } = useForm({
             validationSchema: {
                 name: "required",
                 date: "required",
-            },
-            initialValues: {
-                name: "",
-                date: "",
-                address: "",
-                zipCode: "",
-                city: "",
             },
         })
 
@@ -187,40 +187,65 @@ export default defineComponent({
         const [address] = defineField("address")
         const [zipCode] = defineField("zipCode")
         const [city] = defineField("city")
-        const onSubmit = handleSubmit(async (form: GenericObject) => {
-            if (!uiStore.account) return
-            const tournament: Tournament = {
-                name: form.name,
-                date: form.date,
-                address: form.address || undefined,
-                zipCode: form.zipCode || undefined,
-                city: form.city || undefined,
-                id: "",
-                userId: uiStore.account?.id,
-            }
-            await tournamentStore.createTournament(tournament)
-            resetForm()
-            closeModal("#tournamentAddOffcanvasNavbar")
-        })
-        const onAddressSelect = (suggestion: any) => {
-            // Optionally fill zipCode and city from suggestion
-            if (suggestion.postcode) zipCode.value = suggestion.postcode
-            if (suggestion.city) city.value = suggestion.city
-        }
+
+        // Handle form submission
         return {
-            onSubmit,
             errors,
             name,
             date,
             address,
             zipCode,
             city,
-            uiStore,
-            onAddressSelect,
+            resetForm,
+            handleSubmit,
         }
     },
     data() {
-        return {}
+        return {
+            onSubmit: null as any,
+        }
+    },
+    computed: {
+        mode(): "create" | "edit" {
+            return this.tournament ? "edit" : "create"
+        },
+    },
+
+    watch: {
+        tournament() {
+            // Reset the form when tournament changes
+            this.resetForm()
+            this.name = this.tournament?.name || ""
+            this.date = this.tournament?.date || ""
+            this.address = this.tournament?.address || ""
+            this.zipCode = this.tournament?.zipCode || ""
+            this.city = this.tournament?.city || ""
+        },
+    },
+    created() {
+        this.onSubmit = this.handleSubmit(async (form: GenericObject) => {
+            const formTournament: ApiTournamentCreate = {
+                name: form.name,
+                date: form.date,
+                address: form.address || undefined,
+                zipCode: form.zipCode || undefined,
+                city: form.city || undefined,
+            }
+            if (this.tournament) {
+                await apiManager.updateTournament(formTournament, this.tournament.id)
+            } else {
+                await apiManager.addTournament(formTournament)
+            }
+            this.$emit("tournament-saved", formTournament)
+            this.resetForm()
+            closeModal("#tournamentAddOffcanvasNavbar")
+        })
+    },
+    methods: {
+        onAddressSelect(suggestion: ApiAddressAutocompleteGet) {
+            if (suggestion.zipCode) this.zipCode = suggestion.zipCode
+            if (suggestion.city) this.city = suggestion.city
+        },
     },
 })
 </script>
