@@ -2,12 +2,13 @@ ARG NODE_VERSION=22
 
 FROM node:${NODE_VERSION}-alpine AS client-builder
 
-WORKDIR /usr/src/app
+COPY . /app/
+COPY server/src/shared/ /app/server/src/shared
 
-COPY client/ client
+RUN find /app -type d \( -name node_modules -o -name .git \) -prune -o -type f -print
 
 # Install dependencies and build the frontend application.
-WORKDIR /usr/src/app/client
+WORKDIR /app/client
 
 RUN npm ci
 
@@ -16,20 +17,24 @@ ENV NODE_ENV production
 RUN npm run build
 
 #########
-FROM node:${NODE_VERSION}-alpine
+FROM node:${NODE_VERSION}-alpine AS server-builder
 
 # Install dependencies and build the backend application.
-WORKDIR /usr/src
-COPY server/ app
+COPY server/ /app
 
+
+RUN find /app -type d \( -name node_modules -o -name .git \) -prune -o -type f -print
+
+WORKDIR /app
 
 RUN npm ci
 RUN npm run build
+RUN rm -R /app/src /app/test
 
-COPY --from=client-builder /usr/src/app/client/dist /usr/src/app/dist/public
+COPY --from=client-builder /app/client/dist /app/dist/public
 
 # Print all files for debugging purposes.
-RUN find . -type d \( -name node_modules -o -name .git \) -prune -o -type f -print
+RUN find /app -type d \( -name node_modules -o -name .git \) -prune -o -type f -print
 
 ENV NODE_ENV production
 
@@ -40,4 +45,4 @@ USER node
 EXPOSE 3000
 
 # Run the application.
-CMD node /usr/src/app/dist/main
+CMD node /app/dist/main
