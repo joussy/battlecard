@@ -2,7 +2,7 @@ ARG NODE_VERSION=22
 
 FROM node:${NODE_VERSION}-alpine AS client-builder
 
-COPY . /app/
+COPY client/ /app/client
 COPY server/src/shared/ /app/server/src/shared
 
 RUN find /app -type d \( -name node_modules -o -name .git \) -prune -o -type f -print
