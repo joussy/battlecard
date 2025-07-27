@@ -8,9 +8,11 @@ export default function setupAuthRedirect(router: Router) {
         const requiresAuth = to.meta?.requiresAuth !== false
 
         if (!uiStore.jwtToken && requiresAuth) {
-            next({ name: "settings" })
-        } else {
-            next()
+            next({ name: "auth" })
         }
+        if (uiStore.jwtToken && to.name === "auth") {
+            next({ name: "tournaments" })
+        }
+        next()
     })
 }

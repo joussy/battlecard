@@ -142,6 +142,8 @@ export default defineComponent({
         },
         logout() {
             this.uiStore.logout()
+            // Redirect to authentication page
+            this.$router.push({ name: "auth" })
         },
     },
 })

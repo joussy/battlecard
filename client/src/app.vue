@@ -1,6 +1,6 @@
 <template>
-    <MenuTopComponent></MenuTopComponent>
-    <MenuBottomComponent></MenuBottomComponent>
+    <MenuTopComponent v-if="!$route.meta.hideMenu"></MenuTopComponent>
+    <MenuBottomComponent v-if="!$route.meta.hideMenu"></MenuBottomComponent>
     <div class="main-container container">
         <RouterView />
     </div>
