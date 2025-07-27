@@ -1,10 +1,6 @@
 <template>
     <template v-if="tournament">
         <div class="d-flex mb-3 justify-content-between align-items-center">
-            <div>
-                <h5>{{ tournament?.tournamentName }}</h5>
-                {{ tournamentDate }}
-            </div>
             <router-link
                 :to="{ path: '/' }"
                 class="d-flex align-items-center text-decoration-none"
@@ -24,6 +20,10 @@
                 <i class="me-1 bi bi-download" />
                 Download
             </button>
+        </div>
+        <div class="d-flex mb-3 justify-content-between align-items-center">
+            <h5>{{ tournament?.tournamentName }}</h5>
+            {{ tournamentDate }}
         </div>
         <div class="border border-light-subtle rounded-3 p-1">
             <FightCardGridComponent

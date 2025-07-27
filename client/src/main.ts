@@ -35,6 +35,13 @@ const routes = [
 
 const router = createRouter({
     history: createWebHashHistory(),
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    scrollBehavior(to, from, savedPosition) {
+        if (from.name == "selector-tile" && to.name == "selector-tile") {
+            return { top: 0 }
+        }
+    },
     routes,
 })
 
