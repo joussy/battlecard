@@ -6,15 +6,6 @@
                 class="svg-2"
             />
         </div>
-        <div class="nav-item">
-            <router-link
-                :to="{ name: 'settings' }"
-                class="nav-link link-secondary"
-                active-class="active"
-            >
-                Settings
-            </router-link>
-        </div>
         <div
             v-if="uiStore.account != null"
             class="nav-item"
@@ -24,6 +15,7 @@
                 class="nav-link link-secondary"
                 active-class="active"
             >
+                <i class="bi bi-calendar"></i>
                 Events
             </router-link>
         </div>
@@ -36,6 +28,10 @@
                 class="nav-link link-secondary"
                 active-class="active"
             >
+                <Icon
+                    name="group-of-people"
+                    class="user-logo"
+                />
                 Selector
             </router-link>
         </div>
@@ -48,43 +44,32 @@
                 class="nav-link link-secondary"
                 active-class="active"
             >
+                <Icon
+                    name="headgear"
+                    class="user-logo"
+                />
                 Card
                 <span class="badge rounded-pill bg-primary">{{ nbFights }}</span>
             </router-link>
         </div>
-        <div class="nav-item dropdown ms-auto me-3">
-            <div
-                class="border-0 d-flex align-items-center icon-img-2"
-                type="button"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
+        <div class="flex-grow-1"></div>
+        <div class="nav-item me-3">
+            <router-link
+                :to="{ name: 'settings' }"
+                class="nav-link link-secondary"
+                active-class="active"
             >
+                <span class="me-3">Settings</span>
                 <i
                     v-if="!uiStore.account?.picture"
-                    class="bi bi-person-circle fs-2"
+                    class="bi bi-person-circle user-logo"
                 ></i>
                 <img
                     v-else
                     :src="uiStore.account.picture"
-                    class="rounded-circle icon-img-2 align-text-bottom"
+                    class="rounded-circle align-text-bottom user-logo"
                 />
-            </div>
-            <ul class="dropdown-menu dropdown-menu-end">
-                <li v-if="uiStore.account">
-                    <a
-                        class="dropdown-item"
-                        @click="logout()"
-                        >Logout</a
-                    >
-                </li>
-                <li v-else>
-                    <a
-                        class="dropdown-item"
-                        @click="uiStore.authenticate()"
-                        >Login</a
-                    >
-                </li>
-            </ul>
+            </router-link>
         </div>
     </nav>
 </template>
@@ -121,3 +106,9 @@ export default {
     },
 }
 </script>
+<style scoped>
+.user-logo {
+    /* width: 30px; */
+    max-height: 18px;
+}
+</style>
