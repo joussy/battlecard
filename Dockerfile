@@ -1,48 +1,62 @@
+############################################################
+# Build arguments
+############################################################
 ARG NODE_VERSION=22
 
+############################################################
+# Stage 1: Build frontend (client)
+############################################################
 FROM node:${NODE_VERSION}-alpine AS client-builder
 
+# Copy client source code
 COPY client/ /app/client
+# Copy shared types for client usage
 COPY server/src/shared/ /app/server/src/shared
 
-RUN find /app -type d \( -name node_modules -o -name .git \) -prune -o -type f -print
-
-# Install dependencies and build the frontend application.
+# Set working directory for client build
 WORKDIR /app/client
 
+# Install dependencies and build the frontend
 RUN npm ci
-
 ENV NODE_ENV production
-
 RUN npm run build
 
-#########
+############################################################
+# Stage 2: Build backend (server)
+############################################################
 FROM node:${NODE_VERSION}-alpine AS server-builder
 
-# Install dependencies and build the backend application.
-COPY server/ /app
-
-
-RUN find /app -type d \( -name node_modules -o -name .git \) -prune -o -type f -print
-
+# Set working directory for server build
 WORKDIR /app
-
+# Copy only package.json and lock for dependency caching
+COPY server/package*.json ./
+# Install backend dependencies
 RUN npm ci
+# Copy backend source code
+COPY server/ ./
+# Build backend
 RUN npm run build
+# Remove source and test files after build to reduce image size
 RUN rm -R /app/src /app/test
 
+# Copy built frontend into backend public folder
 COPY --from=client-builder /app/client/dist /app/public
 
-# Print all files for debugging purposes.
+############################################################
+# Final image setup
+############################################################
+# Print all files for debugging purposes (optional)
 RUN find /app -type d \( -name node_modules -o -name .git \) -prune -o -type f -print
 
+# Set environment for production
 ENV NODE_ENV production
-
-# Run the application as a non-root user.
-USER node
-
-# Expose the port that the application listens on.
+# Set working directory for runtime
+WORKDIR /app
+# Expose application port
 EXPOSE 3000
-
-# Run the application.
+# Healthcheck for container
+HEALTHCHECK --interval=30s --timeout=5s CMD wget --spider -q http://localhost:3000 || exit 1
+# Run as non-root user for security
+USER node
+# Start the backend application
 CMD node /app/dist/main
