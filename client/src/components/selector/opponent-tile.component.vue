@@ -5,41 +5,11 @@
             'border-success': opponent.fightId,
         }"
     >
-        <div class="card-body">
+        <div class="card-body pt-1 pb-1">
             <div class="d-flex justify-content-between">
                 <div>
-                    <button
-                        v-if="loading"
-                        class="btn btn-outline-secondary btn-sm"
-                        disabled
-                    >
-                        <span
-                            class="spinner-border spinner-border-sm"
-                            role="status"
-                            aria-hidden="true"
-                        ></span>
-                    </button>
-                    <button
-                        v-else-if="!opponent.fightId"
-                        class="btn btn-outline-success btn-sm"
-                        @click="addToFightCard(opponent)"
-                    >
-                        <i class="bi bi-person-plus-fill" />
-                    </button>
-                    <button
-                        v-else-if="opponent.fightId"
-                        class="btn btn-outline-danger btn-sm"
-                        @click="removeFromFightCard(opponent)"
-                    >
-                        <i class="bi bi-person-dash-fill" />
-                    </button>
-
-                    <span class="ms-2">
+                    <span>
                         {{ getBoxerDisplayName(opponent) }}
-                        <i
-                            class="bi bi-box-arrow-up-right"
-                            @click="goToOpponentTile(opponent)"
-                        ></i>
                     </span>
                 </div>
                 <div
@@ -69,6 +39,51 @@
                     />
                 </div>
             </div>
+            <div class="border-top mt-2 pt-2 gap-2 d-flex justify-content-end">
+                <button
+                    v-if="loading"
+                    class="btn btn-outline-secondary btn-sm"
+                    disabled
+                >
+                    <span
+                        class="spinner-border spinner-border-sm"
+                        role="status"
+                        aria-hidden="true"
+                    ></span>
+                    <i class="ms-2">Loading...</i>
+                </button>
+                <button
+                    v-else-if="!opponent.fightId"
+                    class="btn btn-outline-success btn-sm"
+                    @click="addToFightCard()"
+                >
+                    <!-- <i class="bi bi-person-plus-fill" /> -->
+                    <Icon name="headgear" />
+                    Add to fight card
+                </button>
+                <button
+                    v-else-if="opponent.fightId"
+                    class="btn btn-outline-danger btn-sm"
+                    @click="removeFromFightCard()"
+                >
+                    <Icon name="headgear" />
+                    Remove from fight card
+                </button>
+                <button
+                    class="btn btn-outline-primary btn-sm"
+                    @click="goToOpponentTile()"
+                >
+                    <i class="bi bi-eye" />
+                    <span class="d-none d-sm-inline ms-1">Watch Profile</span>
+                </button>
+                <button
+                    class="btn btn-outline-secondary btn-sm"
+                    @click="copyToClipboard()"
+                >
+                    <i class="bi bi-clipboard" />
+                    <span class="d-none d-sm-inline ms-2">Copy to clipboard</span>
+                </button>
+            </div>
         </div>
     </div>
 </template>
@@ -83,8 +98,9 @@ import WeightBadgeComponent from "@/components/badges/weight-badge.component.vue
 import AgeBadgeComponent from "@/components/badges/age-badge.component.vue"
 import { useFightStore } from "@/stores/fight.store"
 import { useBoxerStore } from "@/stores/boxer.store"
-import { getBoxerDisplayName } from "@/utils/labels.utils"
+import { getBoxerDisplayName, getClipboardText } from "@/utils/labels.utils"
 import { useTournamentBoxerStore } from "@/stores/tournamentBoxer.store"
+import IconComponent from "../core/icon.component.vue"
 
 export default defineComponent({
     components: {
@@ -92,6 +108,7 @@ export default defineComponent({
         LinkedFightsBadgeComponent: LinkedFightsBadgeComponent,
         WeightBadgeComponent: WeightBadgeComponent,
         AgeBadgeComponent: AgeBadgeComponent,
+        Icon: IconComponent,
     },
     props: {
         boxer: {
@@ -123,20 +140,24 @@ export default defineComponent({
         },
     },
     methods: {
-        addToFightCard(opponent: Opponent) {
+        addToFightCard() {
             this.loading = true
-            this.fightStore.addToFightCard(this.boxer, opponent)
+            this.fightStore.addToFightCard(this.boxer, this.opponent)
         },
-        removeFromFightCard(opponent: Opponent) {
-            if (!opponent.fightId) {
+        removeFromFightCard() {
+            if (!this.opponent.fightId) {
                 return
             }
             this.loading = true
-            this.fightStore.removeFromFightCard([opponent.fightId])
+            this.fightStore.removeFromFightCard([this.opponent.fightId])
         },
-        goToOpponentTile(opponent: Opponent) {
+        goToOpponentTile() {
             // this.$router.push({ name: "selector" })
-            this.$router.push({ name: "selector-tile", params: { id: opponent.id } })
+            this.$router.push({ name: "selector-tile", params: { id: this.opponent.id } })
+        },
+        copyToClipboard() {
+            const text = getClipboardText(this.opponent)
+            navigator.clipboard.writeText(text)
         },
     },
 })

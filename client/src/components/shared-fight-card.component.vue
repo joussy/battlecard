@@ -1,11 +1,20 @@
 <template>
     <template v-if="tournament">
-        <div class="d-flex mb-3 align-items-start">
+        <div class="d-flex mb-3 justify-content-between align-items-center">
             <div>
                 <h5>{{ tournament?.tournamentName }}</h5>
                 {{ tournamentDate }}
             </div>
-            <div class="flex-grow-1"></div>
+            <router-link
+                :to="{ path: '/' }"
+                class="d-flex align-items-center text-decoration-none"
+            >
+                <Icon
+                    name="ring"
+                    class="me-2 svg-2"
+                />
+                <span class="fw-bold h4 mb-0 text-decoration-none">BattleCard</span>
+            </router-link>
             <button
                 type="button"
                 class="btn btn-outline-secondary ms-2"
@@ -33,6 +42,27 @@
             :enable-share-link="false"
             :download-callback="downloadCallback"
         />
+        <div class="mt-4 text-center">
+            <hr />
+            <div class="mb-2">
+                <i
+                    class="bi bi-stars text-primary"
+                    style="font-size: 2rem"
+                ></i>
+            </div>
+            <h5 class="mb-2">Want to organize your own tournaments?</h5>
+            <p class="text-muted mb-3">Create a free account to manage events, fight cards, and more!</p>
+            <router-link
+                :to="{ path: '/' }"
+                class="btn btn-outline-primary"
+            >
+                <Icon
+                    name="ring"
+                    class="svg-2 me-2"
+                />
+                Create your BattleCard account
+            </router-link>
+        </div>
     </template>
     <div
         v-else-if="accessDenied"
@@ -54,11 +84,13 @@ import apiManager from "@/managers/api.manager"
 import ApiAdapter from "@/adapters/api.adapter"
 import exportManager from "@/managers/export.manager"
 import ShareComponent from "@/components/core/share.component.vue"
+import IconComponent from "./core/icon.component.vue"
 
 export default {
     components: {
         FightCardGridComponent,
         ShareComponent,
+        Icon: IconComponent,
     },
     data() {
         return {

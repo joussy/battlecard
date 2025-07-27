@@ -14,7 +14,7 @@
         v-else-if="boxer != null"
         class="max-width-md"
     >
-        <div class="bg-body pt-md-5 sticky-top d-flex justify-content-center align-items-center pb-1">
+        <div class="bg-body sticky-top d-flex justify-content-center align-items-center pb-1">
             <router-link
                 :to="{ name: 'selector' }"
                 class="nav-link text-center"
@@ -24,23 +24,11 @@
             <h5 class="ps-2 card-title fw-bold flex-fill">
                 {{ getBoxerDisplayName(boxer) }}
             </h5>
-            <div
-                class="btn btn-sm btn-outline-success"
-                data-bs-toggle="offcanvas"
-                data-bs-target="#boxerEditOffcanvasNavbar"
-            >
-                <i class="bi bi-pencil"></i>
-                Edit boxer
-            </div>
-            <BoxerEditOffcanvasComponent
-                :boxer="boxer"
-                @boxer-saved="fetchBoxerData()"
-            />
         </div>
         <!-- Modal -->
         <div class="card mb-3">
             <div class="card shadow rounded">
-                <div class="card-body p-1 p-md-3">
+                <div class="card-body p-3 p-md-3">
                     <div class="row">
                         <p class="col-md-6 mb-1">
                             <Icon :name="boxer.gender == Gender.MALE ? 'male' : 'female'"></Icon>
@@ -66,6 +54,27 @@
                         <p class="col-md-6 mb-1">
                             <i class="bi bi-link me-1"></i>Scheduled for {{ boxer.selectedFights }} fights
                         </p>
+                    </div>
+                    <div class="d-flex flex- gap-2 align-items-start justify-content-end border-top mt-2 pt-2">
+                        <button
+                            class="btn btn-sm btn-outline-secondary"
+                            @click="copyToClipboard()"
+                        >
+                            <i class="bi bi-clipboard"></i>
+                            <span class="ms-2">Copy to clipboard</span>
+                        </button>
+                        <div
+                            class="btn btn-sm btn-outline-success"
+                            data-bs-toggle="offcanvas"
+                            data-bs-target="#boxerEditOffcanvasNavbar"
+                        >
+                            <i class="bi bi-pencil"></i>
+                            Edit boxer
+                        </div>
+                        <BoxerEditOffcanvasComponent
+                            :boxer="boxer"
+                            @boxer-saved="fetchBoxerData()"
+                        />
                     </div>
                 </div>
             </div>
@@ -102,7 +111,7 @@ import { useBoxerStore } from "@/stores/boxer.store"
 import { useUiStore } from "@/stores/ui.store"
 import { useTournamentStore } from "@/stores/tournament.store"
 import { useTournamentBoxerStore } from "@/stores/tournamentBoxer.store"
-import { getBoxerDisplayName } from "@/utils/labels.utils"
+import { getBoxerDisplayName, getClipboardText } from "@/utils/labels.utils"
 
 export default defineComponent({
     components: {
@@ -175,6 +184,13 @@ export default defineComponent({
                 this.opponents = await this.tournamentBoxerStore.fetchBoxerOpponents(this.boxer.id)
                 this.loading = false
             }
+        },
+        copyToClipboard() {
+            if (!this.boxer) {
+                return
+            }
+            const text = getClipboardText(this.boxer)
+            navigator.clipboard.writeText(text)
         },
     },
 })
