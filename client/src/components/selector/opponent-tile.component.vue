@@ -23,7 +23,11 @@
                 <div class="col-md-6 pb-1">
                     <i>{{ opponent.club }}</i>
                 </div>
-                <div class="col-md-6 d-flex align-items-end justify-content-end flex-wrap">
+                <div
+                    v-if="!expandDetails"
+                    class="col-md-6 d-flex align-items-end justify-content-end flex-wrap gap-1"
+                    @click="expandDetails = !expandDetails"
+                >
                     <LinkedFightsBadgeComponent :boxer="opponent" />
                     <AgeBadgeComponent
                         :boxer="opponent"
@@ -33,10 +37,46 @@
                         :boxer="opponent"
                         :modality-errors="opponent.modalityErrors"
                     />
-                    <WeightBadgeComponent
-                        :boxer="opponent"
-                        :modality-errors="opponent.modalityErrors"
-                    />
+                    <WeightBadgeComponent :boxer="opponent" />
+                </div>
+            </div>
+            <div class="d-flex flex-column align-items-end">
+                <div
+                    v-if="expandDetails"
+                    class="gap-1"
+                    @click="expandDetails = !expandDetails"
+                >
+                    <div>
+                        <LinkedFightsBadgeComponent
+                            :boxer="opponent"
+                            class="me-2"
+                        />Linked to fights
+                        <div class="text-warning"><i>1 more fight than adviced</i></div>
+                    </div>
+                    <div class="border-top mt-1 pt-1">
+                        <AgeBadgeComponent
+                            :boxer="opponent"
+                            :modality-errors="opponent.modalityErrors"
+                        />
+                        years old
+                        <div class="text-warning"><i>12 months of difference than expected</i></div>
+                    </div>
+                    <div class="border-top mt-1 pt-1">
+                        <RecordBadgeComponent
+                            :boxer="opponent"
+                            :modality-errors="opponent.modalityErrors"
+                        />
+                        Has already fought times
+                        <div class="text-warning"><i>10 fights of difference is a lot</i></div>
+                    </div>
+                    <div class="border-top mt-1 pt-1">
+                        <WeightBadgeComponent
+                            :boxer="opponent"
+                            :modality-errors="opponent.modalityErrors"
+                        />
+                        Weighted at kg
+                        <div class="text-warning"><i>Too heavy, difference of 5 kg</i></div>
+                    </div>
                 </div>
             </div>
             <div class="border-top mt-2 pt-2 gap-2 d-flex justify-content-end">
@@ -128,6 +168,7 @@ export default defineComponent({
             boxerStore: useBoxerStore(),
             boxerTournamentStore: useTournamentBoxerStore(),
             loading: false,
+            expandDetails: false,
         }
 
         return ret
