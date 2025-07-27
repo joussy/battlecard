@@ -45,7 +45,7 @@
                         v-if="editionMode"
                         class="btn ms-0 p-0 d-flex justify-content-center"
                     >
-                        <IconComponent name="drag-vertical" />
+                        <Icon name="drag-vertical" />
                     </div>
                 </th>
                 <td
