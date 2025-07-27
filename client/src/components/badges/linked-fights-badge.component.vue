@@ -1,7 +1,7 @@
 <template>
     <span
         v-if="boxer.selectedFights"
-        class="badge ms-1"
+        class="badge"
         :class="{
             'text-bg-success': boxer.selectedFights < 2,
             'text-bg-warning': boxer.selectedFights == 2,

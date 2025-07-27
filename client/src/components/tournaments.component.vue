@@ -24,7 +24,7 @@
                 class="list-group list-group-flush"
             >
                 <li
-                    class="list-group-item d-flex"
+                    class="list-group-item d-flex tournament-tile"
                     :class="{
                         'selected-card-border': selectedTournamentId == tournament.id,
                     }"
@@ -34,7 +34,7 @@
                         @click="setCurrentTournament(tournament)"
                     >
                         <div>
-                            <span class="tournament-title">{{ tournament.name }}</span>
+                            <span class="tournament-name">{{ tournament.name }}</span>
                             <span v-if="selectedTournamentId == tournament.id"> - <i>selected</i></span>
                         </div>
                         <div>
@@ -116,7 +116,10 @@ export default defineComponent({
 .card ul:hover {
     border: 1px solid black;
 }
-.tournament-title {
+.tournament-name {
     font-size: large;
+}
+.tournament-tile {
+    min-height: 90px;
 }
 </style>

@@ -20,7 +20,7 @@
                 <div class="col-md-6 pb-1">
                     <i>{{ boxer.club }}</i>
                 </div>
-                <div class="col-md-6 d-flex align-items-end justify-content-end flex-wrap">
+                <div class="col-md-6 d-flex align-items-end justify-content-end flex-wrap gap-1">
                     <LinkedFightsBadgeComponent :boxer="boxer" />
                     <PossibleBadgeComponent
                         v-if="boxer.eligibleFights"
