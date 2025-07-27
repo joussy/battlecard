@@ -118,6 +118,7 @@ export class ConfigService {
     };
 
     try {
+      this.logger.log('Writing config file at:', this.configPath);
       writeFileSync(this.configPath, JSON.stringify(newConfig, null, 2));
       this.logger.log('Generated new config file at:', this.configPath);
     } catch (error) {
