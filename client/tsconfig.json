@@ -13,10 +13,10 @@
         "skipLibCheck": true,
         "noEmit": true,
         "paths": {
-            "@/shared/*": ["../shared/*"],
+            "@/shared/*": ["../server/src/shared/*"],
             "@/*": ["./src/*", "./dist/*"],
         }
     },
-    "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "../shared/**/*.ts", "../shared/**/*.d.ts"],
+    "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "../server/src/shared/**/*.ts", "../shared/**/*.d.ts"],
     "references": [{ "path": "./tsconfig.node.json" }]
 }
