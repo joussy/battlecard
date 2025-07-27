@@ -93,7 +93,7 @@
                         class="btn btn-outline-danger btn-sm m-1"
                         @click="removeFromFightCard(fight.id)"
                     >
-                        <i class="bi bi-person-dash-fill" />
+                        <Icon name="headgear" />
                     </button>
                 </td>
             </tr>
@@ -113,7 +113,7 @@ import { Gender } from "@/shared/types/modality.type"
 
 export default {
     components: {
-        IconComponent,
+        Icon: IconComponent,
     },
     props: {
         fightCard: {
