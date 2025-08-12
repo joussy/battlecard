@@ -45,11 +45,15 @@ export const useUiStore = defineStore("ui", {
                 }
             } else {
                 this.account = null
+                if (res.status === 401) {
+                    console.warn("Unauthorized access, JWT token may be invalid.")
+                    this.jwtToken = null
+                    //redirect to auth page
+                    if (this.router) {
+                        this.router.push({ name: "auth" })
+                    }
+                }
             }
-        },
-        getAccountOrThrow(): UserAccount {
-            if (!this.account) throw "Cannot before action because the user is disconnected"
-            return this.account
         },
         logout() {
             this.jwtToken = null

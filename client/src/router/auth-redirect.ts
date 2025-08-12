@@ -9,10 +9,10 @@ export default function setupAuthRedirect(router: Router) {
 
         if (!uiStore.jwtToken && requiresAuth) {
             next({ name: "auth" })
-        }
-        if (uiStore.jwtToken && to.name === "auth") {
+        } else if (uiStore.jwtToken && to.name === "auth") {
             next({ name: "tournaments" })
+        } else {
+            next()
         }
-        next()
     })
 }

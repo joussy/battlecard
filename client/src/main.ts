@@ -1,5 +1,5 @@
 import { createApp } from "vue"
-import { createRouter } from "vue-router"
+import { createRouter, Router } from "vue-router"
 import { createWebHashHistory } from "vue-router"
 import App from "./app.vue"
 import FightCardComponent from "@/components/fight-card.component.vue"
@@ -15,6 +15,12 @@ import BoxerTileDetailsComponent from "@/components/selector/boxer-details.compo
 import TournamentsComponent from "@/components/tournaments.component.vue"
 import { createPinia } from "pinia"
 import SharedFightCardComponent from "./components/shared-fight-card.component.vue"
+
+declare module "pinia" {
+    export interface PiniaCustomProperties {
+        router: Router
+    }
+}
 
 const routes = [
     { path: "/", redirect: { name: "auth" } },
@@ -46,6 +52,7 @@ const router = createRouter({
 })
 
 const pinia = createPinia()
+pinia.use(() => ({ router }))
 const app = createApp(App)
 app.use(pinia)
 app.use(router)
