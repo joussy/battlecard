@@ -1,7 +1,7 @@
 <template>
-    <span class="badge ms-1 text-bg-light">
+    <span class="badge text-bg-light">
         <Icon name="group-of-people" />
-        {{ selected }}
+        <span class="number-text">{{ selected }}</span>
     </span>
 </template>
 

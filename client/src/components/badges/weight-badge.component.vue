@@ -1,13 +1,13 @@
 <template>
     <span
-        class="badge ms-1"
+        class="badge"
         :class="{
             'text-bg-danger': modalityError,
             'text-bg-light': !modalityError,
         }"
     >
         <Icon name="scale" />
-        {{ displayWeight() }}
+        <span class="ms-1 number-text">{{ displayWeight() }}</span>
     </span>
 </template>
 

@@ -1,13 +1,13 @@
 <template>
     <span
-        class="badge ms-1"
+        class="badge"
         :class="{
             'text-bg-danger': modalityError,
             'text-bg-light': !modalityError,
         }"
     >
         <Icon name="medal" />
-        {{ boxer.nbFights }}
+        <span class="number-text">{{ boxer.nbFights }}</span>
     </span>
 </template>
 
@@ -27,14 +27,14 @@ export default defineComponent({
             required: true,
         },
         modalityErrors: {
-            type: Object as PropType<ModalityError[]>,
+            type: Object as PropType<ModalityError[] | null>,
             required: false,
             default: [] as ModalityError[],
         },
     },
     computed: {
         modalityError(): boolean {
-            return this.modalityErrors.some((error) => error.type === ModalityErrorType.PRIZE_LIST)
+            return this.modalityErrors?.some((error) => error.type === ModalityErrorType.PRIZE_LIST) ?? false
         },
     },
 })

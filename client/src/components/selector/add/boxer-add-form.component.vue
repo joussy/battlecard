@@ -26,6 +26,27 @@
     >
         <div class="mb-3">
             <label
+                for="license"
+                class="form-label"
+            >
+                <i class="bi bi-person-vcard me-2"></i>License
+            </label>
+            <input
+                v-model="license"
+                class="form-control"
+                type="text"
+                :class="{
+                    'is-invalid': errors.license?.length ?? 0 > 0,
+                }"
+            />
+            <span
+                name="license"
+                class="invalid-feedback"
+                >{{ errors.license }}</span
+            >
+        </div>
+        <div class="mb-3">
+            <label
                 for="lastname"
                 class="form-label"
             >
@@ -194,27 +215,6 @@
                 name="club"
                 class="invalid-feedback"
                 >{{ errors.club }}</span
-            >
-        </div>
-        <div class="mb-3">
-            <label
-                for="license"
-                class="form-label"
-            >
-                <i class="bi bi-person-vcard me-2"></i>License
-            </label>
-            <input
-                v-model="license"
-                class="form-control"
-                type="text"
-                :class="{
-                    'is-invalid': errors.license?.length ?? 0 > 0,
-                }"
-            />
-            <span
-                name="license"
-                class="invalid-feedback"
-                >{{ errors.license }}</span
             >
         </div>
         <button

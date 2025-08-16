@@ -105,13 +105,14 @@ import BoxerEditOffcanvasComponent from "@/components/selector/add/boxer-edit-of
 
 import IconComponent from "@/components/core/icon.component.vue"
 
-import { differenceInYears, format } from "date-fns"
+import { format } from "date-fns"
 import { useFightStore } from "@/stores/fight.store"
 import { useBoxerStore } from "@/stores/boxer.store"
 import { useUiStore } from "@/stores/ui.store"
 import { useTournamentStore } from "@/stores/tournament.store"
 import { useTournamentBoxerStore } from "@/stores/tournamentBoxer.store"
 import { getBoxerDisplayName, getClipboardText } from "@/utils/labels.utils"
+import { getBoxerAge } from "@/utils/string.utils"
 
 export default defineComponent({
     components: {
@@ -168,7 +169,7 @@ export default defineComponent({
             })
         },
         getBirthDateAndAge(boxer: Boxer): string {
-            const age = differenceInYears(new Date(), boxer.birthDate)
+            const age = getBoxerAge(boxer.birthDate)
             const birthDate = format(boxer.birthDate, "dd/MM/yyyy")
             return `${birthDate} (${age})`
         },
