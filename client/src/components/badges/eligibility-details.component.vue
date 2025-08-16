@@ -88,9 +88,6 @@ export default defineComponent({
             }
         },
         getAgeExplanation(): string {
-            const lol = this.modalityErrors?.filter((error) => error.type === ModalityErrorType.AGE)
-            console.log(lol)
-
             if (this.modalityErrors?.some((error) => error.type == ModalityErrorType.AGE)) {
                 return "Age difference is too high. Boxer must be within 2 years of the opponent's age."
             } else {
