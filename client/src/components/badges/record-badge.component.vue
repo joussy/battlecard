@@ -27,14 +27,14 @@ export default defineComponent({
             required: true,
         },
         modalityErrors: {
-            type: Object as PropType<ModalityError[]>,
+            type: Object as PropType<ModalityError[] | null>,
             required: false,
             default: [] as ModalityError[],
         },
     },
     computed: {
         modalityError(): boolean {
-            return this.modalityErrors.some((error) => error.type === ModalityErrorType.PRIZE_LIST)
+            return this.modalityErrors?.some((error) => error.type === ModalityErrorType.PRIZE_LIST) ?? false
         },
     },
 })

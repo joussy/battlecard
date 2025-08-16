@@ -17,7 +17,7 @@
             <AgeBadgeComponent
                 class="me-2"
                 :boxer="boxer"
-                :modality-errors="boxer.modalityErrors"
+                :modality-errors="modalityErrors"
             />
             <span class="eligibility-title">{{ getBoxerAge(boxer.birthDate) }} years old</span>
         </div>
@@ -30,7 +30,7 @@
             <RecordBadgeComponent
                 class="me-2"
                 :boxer="boxer"
-                :modality-errors="boxer.modalityErrors"
+                :modality-errors="modalityErrors"
             />
             <span class="eligibility-title">Has already fought {{ boxer.nbFights }} times</span>
         </div>
@@ -41,7 +41,7 @@
             <WeightBadgeComponent
                 class="me-2"
                 :boxer="boxer"
-                :modality-errors="boxer.modalityErrors"
+                :modality-errors="modalityErrors"
             />
             <span class="eligibility-title">Weighs {{ boxer.weight }} kg</span>
         </div>
