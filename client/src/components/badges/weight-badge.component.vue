@@ -7,7 +7,7 @@
         }"
     >
         <Icon name="scale" />
-        {{ displayWeight() }}
+        <span class="ms-1 number-text">{{ displayWeight() }}</span>
     </span>
 </template>
 

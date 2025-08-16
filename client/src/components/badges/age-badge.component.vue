@@ -7,7 +7,7 @@
         }"
     >
         <Icon name="birthday-cake" />
-        {{ getBoxerAge() }}
+        <span class="number-text">{{ getBoxerAge() }}</span>
     </span>
 </template>
 
@@ -15,8 +15,8 @@
 import { Boxer } from "@/types/boxing"
 import { ModalityError, ModalityErrorType } from "@/shared/types/modality.type"
 import { PropType, defineComponent } from "vue"
-import { differenceInYears } from "date-fns"
 import Icon from "@/components/core/icon.component.vue"
+import { getBoxerAge } from "@/utils/string.utils"
 
 export default defineComponent({
     components: {
@@ -40,7 +40,7 @@ export default defineComponent({
     },
     methods: {
         getBoxerAge(): number {
-            return differenceInYears(new Date(), this.boxer.birthDate)
+            return getBoxerAge(this.boxer.birthDate)
         },
     },
 })

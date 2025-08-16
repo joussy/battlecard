@@ -147,9 +147,9 @@ import { useBoxerStore } from "@/stores/boxer.store"
 import SearchFacetsComponent from "@/components/selector/search-facets.component.vue"
 import Fuse from "fuse.js"
 import { Boxer } from "@/types/boxing"
-import { differenceInYears } from "date-fns"
 import { FileType } from "@/types/api"
 import exportManager from "@/managers/export.manager"
+import { getBoxerAge } from "@/utils/string.utils"
 
 export default defineComponent({
     components: {
@@ -222,7 +222,7 @@ export default defineComponent({
 
                 if (filters.weight.min !== null && boxer.weight < filters.weight.min) return false
                 if (filters.weight.max !== null && boxer.weight > filters.weight.max) return false
-                const age = differenceInYears(new Date(), boxer.birthDate)
+                const age = getBoxerAge(boxer.birthDate)
                 if (filters.age.min !== null && age < filters.age.min) return false
                 if (filters.age.max !== null && age > filters.age.max) return false
                 if (filters.nbFights.min !== null && age < filters.nbFights.min) return false

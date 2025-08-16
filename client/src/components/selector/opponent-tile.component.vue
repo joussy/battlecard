@@ -37,47 +37,21 @@
                         :boxer="opponent"
                         :modality-errors="opponent.modalityErrors"
                     />
-                    <WeightBadgeComponent :boxer="opponent" />
+                    <WeightBadgeComponent
+                        :boxer="opponent"
+                        :modality-errors="opponent.modalityErrors"
+                    />
                 </div>
             </div>
-            <div class="d-flex flex-column align-items-end">
-                <div
-                    v-if="expandDetails"
-                    class="gap-1"
-                    @click="expandDetails = !expandDetails"
-                >
-                    <div>
-                        <LinkedFightsBadgeComponent
-                            :boxer="opponent"
-                            class="me-2"
-                        />Linked to fights
-                        <div class="text-warning"><i>1 more fight than adviced</i></div>
-                    </div>
-                    <div class="border-top mt-1 pt-1">
-                        <AgeBadgeComponent
-                            :boxer="opponent"
-                            :modality-errors="opponent.modalityErrors"
-                        />
-                        years old
-                        <div class="text-warning"><i>12 months of difference than expected</i></div>
-                    </div>
-                    <div class="border-top mt-1 pt-1">
-                        <RecordBadgeComponent
-                            :boxer="opponent"
-                            :modality-errors="opponent.modalityErrors"
-                        />
-                        Has already fought times
-                        <div class="text-warning"><i>10 fights of difference is a lot</i></div>
-                    </div>
-                    <div class="border-top mt-1 pt-1">
-                        <WeightBadgeComponent
-                            :boxer="opponent"
-                            :modality-errors="opponent.modalityErrors"
-                        />
-                        Weighted at kg
-                        <div class="text-warning"><i>Too heavy, difference of 5 kg</i></div>
-                    </div>
-                </div>
+            <div
+                v-if="expandDetails"
+                class="expanded-details flex-wrap align-items-stretch d-block d-md-flex border"
+                @click="expandDetails = !expandDetails"
+            >
+                <EligibilityDetailsComponent
+                    :boxer="opponent"
+                    :modality-errors="opponent.modalityErrors"
+                />
             </div>
             <div class="border-top mt-2 pt-2 gap-2 d-flex justify-content-end">
                 <button
@@ -136,6 +110,7 @@ import RecordBadgeComponent from "@/components/badges/record-badge.component.vue
 import LinkedFightsBadgeComponent from "@/components/badges/linked-fights-badge.component.vue"
 import WeightBadgeComponent from "@/components/badges/weight-badge.component.vue"
 import AgeBadgeComponent from "@/components/badges/age-badge.component.vue"
+import EligibilityDetailsComponent from "@/components/badges/eligibility-details.component.vue"
 import { useFightStore } from "@/stores/fight.store"
 import { useBoxerStore } from "@/stores/boxer.store"
 import { getBoxerDisplayName, getClipboardText } from "@/utils/labels.utils"
@@ -146,6 +121,7 @@ export default defineComponent({
     components: {
         RecordBadgeComponent: RecordBadgeComponent,
         LinkedFightsBadgeComponent: LinkedFightsBadgeComponent,
+        EligibilityDetailsComponent: EligibilityDetailsComponent,
         WeightBadgeComponent: WeightBadgeComponent,
         AgeBadgeComponent: AgeBadgeComponent,
         Icon: IconComponent,
@@ -203,3 +179,17 @@ export default defineComponent({
     },
 })
 </script>
+<style lang="scss">
+.expanded-details {
+    & > div {
+        flex: 0 0 50%; /* each item takes 50% width. So 2 items max per line*/
+        padding: 10px;
+        margin: 0;
+        border: 1px solid var(--bs-border-color);
+        min-width: 200px;
+    }
+    .number-text {
+        // display: none;
+    }
+}
+</style>

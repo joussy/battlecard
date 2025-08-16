@@ -7,7 +7,7 @@
         }"
     >
         <Icon name="medal" />
-        {{ boxer.nbFights }}
+        <span class="number-text">{{ boxer.nbFights }}</span>
     </span>
 </template>
 

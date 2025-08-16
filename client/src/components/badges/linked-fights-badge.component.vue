@@ -10,7 +10,7 @@
         }"
     >
         <Icon name="link" />
-        {{ boxer.selectedFights }}
+        <span class="number-text">{{ boxer.selectedFights }}</span>
     </span>
 </template>
 
