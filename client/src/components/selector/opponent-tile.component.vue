@@ -188,8 +188,5 @@ export default defineComponent({
         border: 1px solid var(--bs-border-color);
         min-width: 200px;
     }
-    .number-text {
-        // display: none;
-    }
 }
 </style>

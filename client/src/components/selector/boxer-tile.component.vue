@@ -1,7 +1,7 @@
 <template>
     <div class="card mb-2">
         <div
-            class="card-body"
+            class="card-body pt-1 pb-1"
             role="tab"
         >
             <div class="d-flex justify-content-between">
