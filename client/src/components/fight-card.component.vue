@@ -1,4 +1,5 @@
 <template>
+    <TournamentHeaderComponent />
     <div :class="{ 'edition-mode': editionMode }">
         <div class="d-flex align-items-center mb-3">
             <div class="flex-grow-1"></div>
@@ -76,11 +77,13 @@ import { useTournamentStore } from "@/stores/tournament.store"
 import { watch } from "vue"
 import ShareComponent from "@/components/core/share.component.vue"
 import exportManager from "@/managers/export.manager"
+import TournamentHeaderComponent from "./tournament-header.component.vue"
 
 export default {
     components: {
         FightCardGridComponent,
         ShareComponent,
+        TournamentHeaderComponent: TournamentHeaderComponent,
     },
     data() {
         return {

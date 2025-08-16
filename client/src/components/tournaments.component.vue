@@ -9,59 +9,62 @@
                 @click="setTournamentToEdit(null)"
             >
                 <i class="bi bi-calendar-plus-fill" />
-                New event
+                New tournament
             </button>
             <TournamentAddOffcanvasComponent
                 :tournament="tournamentToEdit"
                 @tournament-saved="onTournamentSaved"
             />
         </div>
-        <div class="card mb-2">
-            <div class="card-header">Select an event</div>
-            <ul
-                v-for="tournament in tournamentStore.tournaments"
-                :key="tournament.id"
-                class="list-group list-group-flush"
-            >
-                <li
-                    class="list-group-item d-flex tournament-tile"
-                    :class="{
-                        'selected-card-border': selectedTournamentId == tournament.id,
-                    }"
-                >
-                    <div
-                        class="flex-fill"
+        <div
+            v-for="tournament in tournamentStore.tournaments"
+            :key="tournament.id"
+            class="card tournament-tile mb-2"
+            :class="{
+                'selected-card-border': selectedTournamentId == tournament.id,
+            }"
+        >
+            <div class="card-body">
+                <div>
+                    <span class="tournament-name">{{ tournament.name }}</span>
+                    <span v-if="selectedTournamentId == tournament.id"> - <i>selected</i></span>
+                </div>
+                <div>
+                    <span>
+                        <i class="bi bi-calendar" />
+                        {{ format(tournament.date, "dd/MM/yyyy") }}</span
+                    >
+                </div>
+                <div v-if="tournament.formattedAddress">
+                    <span>
+                        <i class="bi bi-geo-alt-fill" />
+                        {{ tournament.formattedAddress }}</span
+                    >
+                </div>
+                <div class="border-top mt-2 pt-2 gap-2 d-flex justify-content-end">
+                    <button
+                        v-if="selectedTournamentId != tournament.id"
+                        class="btn btn-outline-primary btn-sm"
                         @click="setCurrentTournament(tournament)"
                     >
-                        <div>
-                            <span class="tournament-name">{{ tournament.name }}</span>
-                            <span v-if="selectedTournamentId == tournament.id"> - <i>selected</i></span>
-                        </div>
-                        <div>
-                            <span>
-                                <i class="bi bi-calendar" />
-                                {{ format(tournament.date, "dd/MM/yyyy") }}</span
-                            >
-                        </div>
-                        <div v-if="tournament.formattedAddress">
-                            <span>
-                                <i class="bi bi-geo-alt-fill" />
-                                {{ tournament.formattedAddress }}</span
-                            >
-                        </div>
-                    </div>
-                    <div>
-                        <button
-                            class="btn btn-outline-success"
-                            data-bs-toggle="offcanvas"
-                            data-bs-target="#tournamentAddOffcanvasNavbar"
-                            @click="setTournamentToEdit(tournament)"
-                        >
-                            <i class="bi bi-pencil"></i>
-                        </button>
-                    </div>
-                </li>
-            </ul>
+                        <i class="bi bi-eye" />
+                        <span class="ms-1">Manage this tournament</span>
+                    </button>
+                    <button
+                        class="btn btn-outline-success btn-sm"
+                        data-bs-toggle="offcanvas"
+                        data-bs-target="#tournamentAddOffcanvasNavbar"
+                        @click="setTournamentToEdit(tournament)"
+                    >
+                        <i class="bi bi-pencil" />
+                        <span class="d-none d-sm-inline ms-1">Edit</span>
+                    </button>
+                    <button class="btn btn-outline-secondary btn-sm">
+                        <i class="bi bi-clipboard" />
+                        <span class="d-none d-sm-inline ms-2">Copy to clipboard</span>
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
 </template>

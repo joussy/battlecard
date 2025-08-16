@@ -1,85 +1,79 @@
 <template>
     <div class="max-width-md">
-        <div class="d-flex align-items-center mb-3">
-            <div class="d-none d-xs-none d-sm-block w-50">
-                <div>
-                    <i class="bi bi-calendar ms-2"></i>
-                    {{ tournamentName }} - <i>{{ tournamentDate }}</i>
-                </div>
-            </div>
+        <TournamentHeaderComponent />
+        <div class="mb-3 d-flex gap-1">
             <div class="flex-grow-1"></div>
-            <div class="d-flex align-items-baseline gap-1">
-                <button
-                    class="btn btn-outline-success"
-                    type="button"
-                    data-bs-toggle="offcanvas"
-                    data-bs-target="#boxerAddOffcanvasNavbar"
-                >
-                    <i class="bi bi-person-add" />
-                    <span class="d-none d-md-inline ms-2">Add Boxer</span>
-                </button>
-                <button
-                    :disabled="boxersToDisplay.length == 0"
-                    type="button"
-                    class="btn btn-outline-secondary dropdown-toggle"
-                    data-bs-toggle="dropdown"
-                    aria-expanded="false"
-                >
-                    <i class="bi bi-download" />
-                    <span class="d-none d-md-inline ms-2">Export</span>
-                </button>
-                <ul class="dropdown-menu">
-                    <li>
-                        <a
-                            class="dropdown-item"
-                            @click="downloadFile('battlecard')"
-                        >
-                            <i class="bi bi-file-earmark-spreadsheet" />
-                            CSV
-                        </a>
-                        <a
-                            class="dropdown-item"
-                            @click="downloadFile('xlsx')"
-                        >
-                            <i class="bi bi-file-earmark-spreadsheet" />
-                            XLSX
-                        </a>
-                        <a
-                            class="dropdown-item"
-                            @click="downloadFile('png')"
-                        >
-                            <i class="bi bi-file-image" />
-                            PNG
-                        </a>
-                        <a
-                            class="dropdown-item"
-                            @click="downloadFile('pdf')"
-                        >
-                            <i class="bi bi-file-earmark-pdf" />
-                            PDF
-                        </a>
-                    </li>
-                    <li>
-                        <a
-                            class="dropdown-item"
-                            @click="$router.push({ name: 'import' })"
-                        >
-                            <i class="bi bi-upload" />
-                            Import boxers
-                        </a>
-                    </li>
-                </ul>
-                <button
-                    class="btn btn-outline-secondary"
-                    data-bs-toggle="offcanvas"
-                    data-bs-target="#filtersOffcanvasNavbar"
-                >
-                    <span class="bi bi-funnel"></span>
-                    Filters
-                </button>
-                <BoxerSelectorFiltersComponent />
-                <BoxerAddOffcanvasComponent @boxer-saved="onBoxerSaved" />
-            </div>
+
+            <button
+                class="btn btn-outline-success"
+                type="button"
+                data-bs-toggle="offcanvas"
+                data-bs-target="#boxerAddOffcanvasNavbar"
+            >
+                <i class="bi bi-person-add" />
+                <span class="d-none d-md-inline ms-2">Add Boxer</span>
+            </button>
+            <button
+                :disabled="boxersToDisplay.length == 0"
+                type="button"
+                class="btn btn-outline-secondary dropdown-toggle"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+            >
+                <i class="bi bi-download" />
+                <span class="d-none d-md-inline ms-2">Export</span>
+            </button>
+            <ul class="dropdown-menu">
+                <li>
+                    <a
+                        class="dropdown-item"
+                        @click="downloadFile('battlecard')"
+                    >
+                        <i class="bi bi-file-earmark-spreadsheet" />
+                        CSV
+                    </a>
+                    <a
+                        class="dropdown-item"
+                        @click="downloadFile('xlsx')"
+                    >
+                        <i class="bi bi-file-earmark-spreadsheet" />
+                        XLSX
+                    </a>
+                    <a
+                        class="dropdown-item"
+                        @click="downloadFile('png')"
+                    >
+                        <i class="bi bi-file-image" />
+                        PNG
+                    </a>
+                    <a
+                        class="dropdown-item"
+                        @click="downloadFile('pdf')"
+                    >
+                        <i class="bi bi-file-earmark-pdf" />
+                        PDF
+                    </a>
+                </li>
+                <li>
+                    <a
+                        class="dropdown-item"
+                        @click="$router.push({ name: 'import' })"
+                    >
+                        <i class="bi bi-upload" />
+                        Import boxers
+                    </a>
+                </li>
+            </ul>
+            <button
+                class="btn btn-outline-secondary"
+                data-bs-toggle="offcanvas"
+                data-bs-target="#filtersOffcanvasNavbar"
+            >
+                <span class="bi bi-funnel"></span>
+                Filters
+            </button>
+            <BoxerSelectorFiltersComponent />
+            <BoxerAddOffcanvasComponent @boxer-saved="onBoxerSaved" />
         </div>
         <div class="mb-2 row">
             <!-- Search bar -->
@@ -109,7 +103,6 @@
             <BoxerTileComponent
                 :boxer="boxer"
                 :nb-opponents="boxer.eligibleFights"
-                @click="$router.push({ name: 'selector-tile', params: { id: boxer.id } })"
             />
         </div>
         <div
@@ -150,6 +143,7 @@ import { Boxer } from "@/types/boxing"
 import { FileType } from "@/types/api"
 import exportManager from "@/managers/export.manager"
 import { getBoxerAge } from "@/utils/string.utils"
+import TournamentHeaderComponent from "./tournament-header.component.vue"
 
 export default defineComponent({
     components: {
@@ -157,6 +151,7 @@ export default defineComponent({
         BoxerAddOffcanvasComponent: BoxerAddOffcanvasComponent,
         BoxerSelectorFiltersComponent: BoxerSelectorFiltersComponent,
         SearchFacetsComponent: SearchFacetsComponent,
+        TournamentHeaderComponent: TournamentHeaderComponent,
     },
     data() {
         return {
@@ -174,15 +169,6 @@ export default defineComponent({
         }
     },
     computed: {
-        tournamentName() {
-            return this.tournamentStore.getCurrentTournament()?.name
-        },
-        tournamentDate() {
-            const dateAsStr = this.tournamentStore.getCurrentTournament()?.date
-            if (!dateAsStr) return null
-            const date = new Date(dateAsStr)
-            return date instanceof Date && !isNaN(date.getTime()) ? date.toLocaleDateString() : null
-        },
         nbBoxers() {
             return this.boxersToDisplay.length
         },

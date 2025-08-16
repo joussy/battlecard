@@ -32,6 +32,22 @@
                     <WeightBadgeComponent :boxer="boxer" />
                 </div>
             </div>
+            <div class="border-top mt-2 pt-2 gap-2 d-flex justify-content-end">
+                <button
+                    class="btn btn-outline-primary btn-sm"
+                    @click="$router.push({ name: 'selector-tile', params: { id: boxer.id } })"
+                >
+                    <i class="bi bi-eye" />
+                    <span class="ms-1">Select opponents</span>
+                </button>
+                <button
+                    class="btn btn-outline-secondary btn-sm"
+                    @click="copyToClipboard()"
+                >
+                    <i class="bi bi-clipboard" />
+                    <span class="d-none d-sm-inline ms-2">Copy to clipboard</span>
+                </button>
+            </div>
         </div>
     </div>
 </template>
@@ -51,7 +67,7 @@ import { useUiStore } from "@/stores/ui.store"
 import { useBoxerStore } from "@/stores/boxer.store"
 import { useTournamentBoxerStore } from "@/stores/tournamentBoxer.store"
 import { useTournamentStore } from "@/stores/tournament.store"
-import { getBoxerDisplayName } from "@/utils/labels.utils"
+import { getBoxerDisplayName, getClipboardText } from "@/utils/labels.utils"
 
 export default defineComponent({
     components: {
@@ -88,11 +104,10 @@ export default defineComponent({
         boxerEdit(): void {
             this.$emit("boxer-edit")
         },
+        copyToClipboard() {
+            const text = getClipboardText(this.boxer)
+            navigator.clipboard.writeText(text)
+        },
     },
 })
 </script>
-<style lang="scss" scoped>
-.card:hover {
-    border: 1px solid black;
-}
-</style>
