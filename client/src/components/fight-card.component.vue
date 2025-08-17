@@ -23,6 +23,16 @@
                 <i class="me-1 bi bi-share" />
                 Share
             </button>
+            <button
+                type="button"
+                :disabled="editionMode"
+                class="btn btn-outline-purple ms-2"
+                data-bs-toggle="modal"
+                data-bs-target="#matchupModal"
+            >
+                <i class="me-1 bi bi-magic" />
+                Auto-Matchup
+            </button>
 
             <div
                 v-if="editionMode"
@@ -66,6 +76,7 @@
         :enable-share-link="true"
         :download-callback="downloadCallback"
     />
+    <MatchupModalComponent />
 </template>
 
 <script lang="ts">
@@ -76,6 +87,7 @@ import { useUiStore } from "@/stores/ui.store"
 import { useTournamentStore } from "@/stores/tournament.store"
 import { watch } from "vue"
 import ShareComponent from "@/components/core/share.component.vue"
+import MatchupModalComponent from "@/components/tournament/matchup-modal.component.vue"
 import exportManager from "@/managers/export.manager"
 import TournamentHeaderComponent from "@/components/tournament-header.component.vue"
 
@@ -84,6 +96,7 @@ export default {
         FightCardGridComponent,
         ShareComponent,
         TournamentHeaderComponent,
+        MatchupModalComponent,
     },
     data() {
         return {
