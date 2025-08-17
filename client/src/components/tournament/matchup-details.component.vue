@@ -7,29 +7,31 @@
                 class="col-md-6"
                 :class="`matchup-boxer-${index + 1}`"
             >
-                <div class="name">{{ boxer.firstName }} {{ boxer.lastName }}</div>
-                <div class="club"><i class="bi bi-house-fill me-1"></i>{{ boxer.club }}</div>
-                <div class="age">
-                    <IconComponent :name="boxer.gender == Gender.MALE ? 'male' : 'female'"> </IconComponent>
-                    {{ getBirthDateAndAge(boxer) }}
-                </div>
-                <IconComponent
-                    name="scale"
-                    class="me-1"
-                ></IconComponent
-                >{{ boxer.weight }} kg
-                <IconComponent
-                    name="medal"
-                    class="me-1"
-                ></IconComponent
-                >{{ boxer.nbFights }} fights
-                <div>
-                    <i class="bi bi-person-vcard"></i> {{ boxer.license }} -
-                    {{ boxer.category }}
+                <div class="pt-1 pb-1">
+                    <div class="name">{{ boxer.firstName }} {{ boxer.lastName }}</div>
+                    <div class="club"><i class="bi bi-house-fill me-1"></i>{{ boxer.club }}</div>
+                    <div class="age">
+                        <IconComponent :name="boxer.gender == Gender.MALE ? 'male' : 'female'"> </IconComponent>
+                        {{ getBirthDateAndAge(boxer) }}
+                    </div>
+                    <IconComponent
+                        name="scale"
+                        class="me-1"
+                    ></IconComponent
+                    >{{ boxer.weight }} kg
+                    <IconComponent
+                        name="medal"
+                        class="me-1"
+                    ></IconComponent
+                    >{{ boxer.nbFights }} fights
+                    <div>
+                        <i class="bi bi-person-vcard"></i> {{ boxer.license }} -
+                        {{ boxer.category }}
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="row">
+        <div class="row pt-1 pb-1">
             <div>
                 <i class="bi bi-stopwatch me-1"></i>
                 Fight Duration: {{ getFightDuration(fight) }}
@@ -86,10 +88,10 @@ export default defineComponent({
 </script>
 <style lang="scss">
 .matchup-boxer-1 {
-    background-color: #ffe4e1;
+    background-color: #d9241038;
 }
 .matchup-boxer-2 {
-    background-color: #f0f8ff;
+    background-color: #127dda38;
 }
 
 .eligibility-details {

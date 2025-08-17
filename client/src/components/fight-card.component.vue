@@ -31,7 +31,7 @@
                 data-bs-target="#matchupModal"
             >
                 <i class="me-1 bi bi-magic" />
-                Auto-Matchup
+                Matchup
             </button>
 
             <div
