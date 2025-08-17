@@ -2,6 +2,7 @@
     <!-- Share Modal -->
     <div
         id="shareModal"
+        ref="shareModal"
         class="modal fade"
         tabindex="-1"
     >
@@ -176,10 +177,18 @@
 import exportManager from "@/managers/export.manager"
 import { useTournamentStore } from "@/stores/tournament.store"
 import bootstrap from "@/utils/bootstrap.singleton"
+import { Modal } from "bootstrap"
 import { PropType } from "vue"
 
 export default {
     name: "ShareComponent",
+    beforeRouteLeave(to, from, next) {
+        // If you're using Vue Router
+        if (this.modal) {
+            this.modal.hide()
+        }
+        next()
+    },
     props: {
         downloadCallback: {
             type: Function as PropType<(fileType: string, displayQrCode: boolean) => Promise<void>>,
@@ -206,6 +215,7 @@ export default {
                 { type: "csv", icon: "bi-file-earmark-text", label: "CSV", color: "info" },
                 { type: "png", icon: "bi-file-image", label: "PNG", color: "warning" },
             ],
+            modal: null as Modal | null,
         }
     },
     computed: {
@@ -215,6 +225,16 @@ export default {
             }
             return this.tournamentStore.currentTournamentId
         },
+    },
+    mounted() {
+        // Keep a reference to the modal instance
+        this.modal = Modal.getOrCreateInstance(this.$refs.shareModal as HTMLElement)
+    },
+    beforeUnmount() {
+        // Close modal when component is destroyed
+        if (this.modal) {
+            this.modal.hide()
+        }
     },
     methods: {
         exportFile(fileType: string) {

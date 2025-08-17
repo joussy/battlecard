@@ -1,0 +1,14 @@
+@import "bootstrap/scss/functions";
+@import "bootstrap/scss/variables";
+@import "bootstrap/scss/maps";
+
+// Extend the $theme-colors map
+$theme-colors: map-merge(
+  $theme-colors,
+  (
+    "purple": #6f42c1
+  )
+);
+
+@import "bootstrap/scss/mixins";
+@import "bootstrap/scss/bootstrap";

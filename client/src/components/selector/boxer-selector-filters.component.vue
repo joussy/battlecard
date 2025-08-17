@@ -6,7 +6,10 @@
         tabindex="-1"
     >
         <div class="offcanvas-header">
-            <h5 class="offcanvas-title">Filters</h5>
+            <h5 class="offcanvas-title">
+                <i class="bi bi-funnel me-1"></i>
+                Filters
+            </h5>
             <button
                 type="button"
                 class="btn-close"

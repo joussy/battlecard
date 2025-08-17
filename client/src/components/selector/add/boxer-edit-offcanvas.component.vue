@@ -11,6 +11,7 @@
                 id="boxerEditOffcanvasNavbarLabel"
                 class="offcanvas-title"
             >
+                <i class="bi bi-pencil-square me-1"></i>
                 Edit a boxer
             </h5>
             <button

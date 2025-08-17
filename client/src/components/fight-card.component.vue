@@ -15,6 +15,15 @@
             </button>
             <button
                 type="button"
+                class="btn btn-outline-purple ms-2"
+                data-bs-toggle="modal"
+                data-bs-target="#matchupModal"
+            >
+                <i class="me-1 bi bi-magic" />
+                Matchmaker
+            </button>
+            <button
+                type="button"
                 :disabled="getNbFights() == 0 && !editionMode"
                 class="btn btn-outline-secondary ms-2"
                 data-bs-toggle="modal"
@@ -23,11 +32,10 @@
                 <i class="me-1 bi bi-share" />
                 Share
             </button>
-
             <div
                 v-if="editionMode"
                 id="editModeToast"
-                class="d-md-none toast show bg-success text-white position-fixed top-0 start-50 translate-middle-x mt-3"
+                class="d-md-none toast show bg-success text-white position-fixed top-0 start-50 translate-middle-x mt-5"
                 role="alert"
             >
                 <div
@@ -66,24 +74,27 @@
         :enable-share-link="true"
         :download-callback="downloadCallback"
     />
+    <MatchupModalComponent />
 </template>
 
 <script lang="ts">
 import { Fight } from "@/types/boxing.d"
-import FightCardGridComponent from "./fight-card/fight-card-grid.component.vue"
+import FightCardGridComponent from "./tournament/fight-card-grid.component.vue"
 import { useFightStore } from "@/stores/fight.store"
 import { useUiStore } from "@/stores/ui.store"
 import { useTournamentStore } from "@/stores/tournament.store"
 import { watch } from "vue"
 import ShareComponent from "@/components/core/share.component.vue"
+import MatchupModalComponent from "@/components/tournament/matchup-modal.component.vue"
 import exportManager from "@/managers/export.manager"
-import TournamentHeaderComponent from "./tournament-header.component.vue"
+import TournamentHeaderComponent from "@/components/tournament-header.component.vue"
 
 export default {
     components: {
         FightCardGridComponent,
         ShareComponent,
-        TournamentHeaderComponent: TournamentHeaderComponent,
+        TournamentHeaderComponent,
+        MatchupModalComponent,
     },
     data() {
         return {

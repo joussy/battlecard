@@ -79,12 +79,12 @@
 
 <script lang="ts">
 import { SharedFightCard } from "@/types/boxing.d"
-import FightCardGridComponent from "./fight-card/fight-card-grid.component.vue"
+import FightCardGridComponent from "@/components/tournament/fight-card-grid.component.vue"
 import apiManager from "@/managers/api.manager"
 import ApiAdapter from "@/adapters/api.adapter"
 import exportManager from "@/managers/export.manager"
 import ShareComponent from "@/components/core/share.component.vue"
-import IconComponent from "./core/icon.component.vue"
+import IconComponent from "@/components/core/icon.component.vue"
 
 export default {
     components: {

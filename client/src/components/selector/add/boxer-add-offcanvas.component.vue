@@ -11,6 +11,7 @@
                 id="boxerAddOffcanvasNavbarLabel"
                 class="offcanvas-title"
             >
+                <i class="bi bi-person-plus-fill me-1"></i>
                 Add a boxer
             </h5>
             <button
