@@ -28,43 +28,48 @@
                         Add more boxers to the selector to find suitable pairings.
                     </div>
                     <div v-else>
-                        <div class="matchup-header d-flex justify-content-between">
-                            <button
-                                class="btn btn-primary"
-                                :disabled="!canGoPrevious"
-                                @click="goToPrevious"
-                            >
-                                <i class="bi bi-chevron-left"></i>
-                            </button>
-                            <div
-                                v-if="fight && getRealFightId(fight) == null"
-                                class="btn btn-success"
-                                @click="addToFightCard(fight)"
-                            >
-                                <IconComponent
-                                    name="headgear"
-                                    class="me-1"
-                                ></IconComponent
-                                >Add fight
+                        <div>
+                            <div class="matchup-header d-flex justify-content-between">
+                                <button
+                                    class="btn btn-primary"
+                                    :disabled="!canGoPrevious"
+                                    @click="goToPrevious"
+                                >
+                                    <i class="bi bi-chevron-left"></i>
+                                </button>
+                                <div
+                                    v-if="fight && getRealFightId(fight) == null"
+                                    class="btn btn-success"
+                                    @click="addToFightCard(fight)"
+                                >
+                                    <IconComponent
+                                        name="headgear"
+                                        class="me-1"
+                                    ></IconComponent
+                                    >Add fight
+                                </div>
+                                <div
+                                    v-if="fight && getRealFightId(fight) != null"
+                                    class="btn btn-danger"
+                                    @click="removeFromFightCard(fight)"
+                                >
+                                    <IconComponent
+                                        name="headgear"
+                                        class="me-1"
+                                    ></IconComponent
+                                    >Remove fight
+                                </div>
+                                <button
+                                    class="btn btn-primary"
+                                    :disabled="!canGoNext"
+                                    @click="goToNext"
+                                >
+                                    <i class="bi bi-chevron-right"></i>
+                                </button>
                             </div>
-                            <div
-                                v-if="fight && getRealFightId(fight) != null"
-                                class="btn btn-danger"
-                                @click="removeFromFightCard(fight)"
-                            >
-                                <IconComponent
-                                    name="headgear"
-                                    class="me-1"
-                                ></IconComponent
-                                >Remove fight
-                            </div>
-                            <button
-                                class="btn btn-primary"
-                                :disabled="!canGoNext"
-                                @click="goToNext"
-                            >
-                                <i class="bi bi-chevron-right"></i>
-                            </button>
+                        </div>
+                        <div class="d-flex justify-content-center m-1">
+                            Matchup {{ currentFightIndex + 1 }} of {{ fights.length }}
                         </div>
                         <div class="matchup-content mt-3">
                             <MatchupDetailsComponent

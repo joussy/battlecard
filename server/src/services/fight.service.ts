@@ -9,6 +9,7 @@ import { ModalityService } from '../modality/modality.service';
 import { AuthenticatedUser } from '@/interfaces/auth.interface';
 import { TournamentService } from './tournament.service';
 import { toApiBoxerGet } from '@/adapters/boxer.adapter';
+import { TournamentBoxer } from '@/entities/tournament_boxer.entity';
 
 @Injectable()
 export class FightService {
@@ -19,6 +20,8 @@ export class FightService {
     private readonly boxerRepository: Repository<Boxer>,
     private readonly modalityService: ModalityService,
     private readonly tournamentService: TournamentService,
+    @InjectRepository(TournamentBoxer)
+    private readonly tournamentBoxerRepository: Repository<TournamentBoxer>,
   ) {}
 
   async findByTournamentId(
@@ -172,14 +175,19 @@ export class FightService {
     );
 
     const existingFights = await this.fightRepository.find({
-      where: { tournamentId, tournament: { userId: user.id } },
+      where: { tournament: { userId: user.id, id: tournamentId } },
       relations: ['boxer1', 'boxer2'],
       order: { order: 'ASC' },
     });
 
-    const boxers = await this.boxerRepository.find({
-      where: { userId: user.id },
+    const boxersTournament = await this.tournamentBoxerRepository.find({
+      where: { tournamentId: tournamentId },
+      relations: ['boxer'],
     });
+
+    const boxers = boxersTournament.map(
+      (tournamentBoxer) => tournamentBoxer.boxer,
+    );
 
     const modality = this.modalityService.getModality();
     const validMatchups: ApiFightGet[] = [];
