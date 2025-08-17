@@ -154,6 +154,13 @@ export class ApiManager {
             "Failed to fetch address autocomplete"
         )
     }
+    getMatchups(tournamentId: string): Promise<ApiFightGet[]> {
+        return get<ApiFightGet[]>(
+            `/api/fights/matchups/${encodeURIComponent(tournamentId)}`,
+            undefined,
+            "Failed to fetch matchups"
+        )
+    }
 }
 
 const instance = new ApiManager()

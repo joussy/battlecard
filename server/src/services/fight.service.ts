@@ -7,6 +7,8 @@ import { ApiFightGet, ApiFightCreate } from '@/shared/types/api';
 import { toApiFight, toFightFromCreate } from '../adapters/fight.adapter';
 import { ModalityService } from '../modality/modality.service';
 import { AuthenticatedUser } from '@/interfaces/auth.interface';
+import { TournamentService } from './tournament.service';
+import { toApiBoxerGet } from '@/adapters/boxer.adapter';
 
 @Injectable()
 export class FightService {
@@ -16,6 +18,7 @@ export class FightService {
     @InjectRepository(Boxer)
     private readonly boxerRepository: Repository<Boxer>,
     private readonly modalityService: ModalityService,
+    private readonly tournamentService: TournamentService,
   ) {}
 
   async findByTournamentId(
@@ -158,5 +161,64 @@ export class FightService {
       ],
       relations: ['boxer1', 'boxer2'],
     });
+  }
+  async getMatchups(
+    tournamentId: string,
+    user: AuthenticatedUser,
+  ): Promise<ApiFightGet[]> {
+    await this.tournamentService.validateTournamentAccess(
+      tournamentId,
+      user.id,
+    );
+
+    const existingFights = await this.fightRepository.find({
+      where: { tournamentId, tournament: { userId: user.id } },
+      relations: ['boxer1', 'boxer2'],
+      order: { order: 'ASC' },
+    });
+
+    const boxers = await this.boxerRepository.find({
+      where: { userId: user.id },
+    });
+
+    const modality = this.modalityService.getModality();
+    const validMatchups: ApiFightGet[] = [];
+
+    // Generate all possible boxer pairs
+    for (let i = 0; i < boxers.length; i++) {
+      for (let j = i + 1; j < boxers.length; j++) {
+        const boxer1 = boxers[i];
+        const boxer2 = boxers[j];
+
+        // Check if this pair already exists in existing fights
+        const existingFight = existingFights.find(
+          (fight) =>
+            (fight.boxer1Id === boxer1.id && fight.boxer2Id === boxer2.id) ||
+            (fight.boxer1Id === boxer2.id && fight.boxer2Id === boxer1.id),
+        );
+
+        if (!existingFight) {
+          // Check modality errors for this pair
+          const modalityErrors = modality.getModalityErrors(boxer1, boxer2);
+          const fightDuration = modality.getFightDuration(boxer1, boxer2);
+          if (modalityErrors.length === 0) {
+            // Create a virtual fight for this valid matchup
+            const virtualFight = {
+              id: `virtual-${boxer1.id}-${boxer2.id}`,
+              boxer1: toApiBoxerGet(boxer1, modality),
+              boxer2: toApiBoxerGet(boxer2, modality),
+              tournamentId,
+              order: validMatchups.length + 1,
+              rounds: fightDuration.rounds,
+              roundDurationAsSeconds: fightDuration.roundDurationAsSeconds,
+            } as ApiFightGet;
+
+            validMatchups.push(virtualFight);
+          }
+        }
+      }
+    }
+
+    return validMatchups;
   }
 }

@@ -57,6 +57,9 @@ import { Fight } from "@/types/boxing"
 import { Modal } from "bootstrap"
 import IconComponent from "@/components/core/icon.component.vue"
 import MatchupDetailsComponent from "@/components/tournament/matchup-details.component.vue"
+import { useTournamentStore } from "@/stores/tournament.store"
+import apiManager from "@/managers/api.manager"
+import ApiAdapter from "@/adapters/api.adapter"
 
 export default {
     components: {
@@ -75,6 +78,7 @@ export default {
         return {
             modal: null as Modal | null,
             fightStore: useFightStore(),
+            tournamentStore: useTournamentStore(),
             fights: [] as Fight[],
             fight: null as Fight | null,
             currentFightIndex: 0,
@@ -89,11 +93,12 @@ export default {
         },
     },
     mounted() {
+        const modalElement = this.$refs.matchupModal as HTMLElement
         // Keep a reference to the modal instance
-        this.modal = Modal.getOrCreateInstance(this.$refs.matchupModal as HTMLElement)
-        this.modal.show()
-
-        this.loadMatchups()
+        this.modal = Modal.getOrCreateInstance(modalElement as HTMLElement)
+        modalElement.addEventListener("show.bs.modal", async () => {
+            await this.loadMatchups()
+        })
     },
     beforeUnmount() {
         // Close modal when component is destroyed
@@ -102,8 +107,13 @@ export default {
         }
     },
     methods: {
-        loadMatchups() {
-            this.fights = this.fightStore.fights
+        async loadMatchups() {
+            if (!this.tournamentStore.currentTournamentId) {
+                console.error("No tournament selected")
+                return
+            }
+            const apiFights = await apiManager.getMatchups(this.tournamentStore.currentTournamentId)
+            this.fights = apiFights.map(ApiAdapter.toFight)
             this.currentFightIndex = 0
             this.fight = this.fights.length > 0 ? this.fights[0] : null
         },

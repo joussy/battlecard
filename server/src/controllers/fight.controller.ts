@@ -1,4 +1,13 @@
-import { Controller, Post, Delete, Body, Res, Inject } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Delete,
+  Body,
+  Res,
+  Inject,
+  Get,
+  Param,
+} from '@nestjs/common';
 import { Response } from 'express';
 import { ModalityService } from '../modality/modality.service';
 import { AuthenticatedUser } from '@/interfaces/auth.interface';
@@ -68,5 +77,14 @@ export class FightController {
   ): Promise<ApiFightGet> {
     const updated = await this.fightService.switch(body.fightId, user);
     return toApiFight(updated, this.modalityService.getModality());
+  }
+
+  @Get('matchups/:tournamentId')
+  async getMatchups(
+    @User() user: AuthenticatedUser,
+    @Param('tournamentId') tournamentId: string,
+  ): Promise<ApiFightGet[]> {
+    const fights = await this.fightService.getMatchups(tournamentId, user);
+    return fights;
   }
 }
