@@ -14,7 +14,7 @@
                         class="modal-title"
                     >
                         <i class="bi bi-magic"></i>
-                        Matchup
+                        Matchmaker
                     </h5>
                     <button
                         type="button"

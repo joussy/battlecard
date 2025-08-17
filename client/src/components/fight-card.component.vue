@@ -15,6 +15,15 @@
             </button>
             <button
                 type="button"
+                class="btn btn-outline-purple ms-2"
+                data-bs-toggle="modal"
+                data-bs-target="#matchupModal"
+            >
+                <i class="me-1 bi bi-magic" />
+                Matchmaker
+            </button>
+            <button
+                type="button"
                 :disabled="getNbFights() == 0 && !editionMode"
                 class="btn btn-outline-secondary ms-2"
                 data-bs-toggle="modal"
@@ -23,17 +32,6 @@
                 <i class="me-1 bi bi-share" />
                 Share
             </button>
-            <button
-                type="button"
-                :disabled="editionMode"
-                class="btn btn-outline-purple ms-2"
-                data-bs-toggle="modal"
-                data-bs-target="#matchupModal"
-            >
-                <i class="me-1 bi bi-magic" />
-                Matchup
-            </button>
-
             <div
                 v-if="editionMode"
                 id="editModeToast"
