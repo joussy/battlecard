@@ -79,7 +79,6 @@ export default defineComponent({
             return `${Math.abs(weight1 - weight2)} kg`
         },
         getAgeDifference(fight: Fight): string {
-            // return ""
             return getAgeDifference(fight.boxer1.birthDate, fight.boxer2.birthDate)
         },
         getNbFightsDifference(fight: Fight): string {
