@@ -112,7 +112,7 @@ import { useUiStore } from "@/stores/ui.store"
 import { useTournamentStore } from "@/stores/tournament.store"
 import { useTournamentBoxerStore } from "@/stores/tournamentBoxer.store"
 import { getBoxerDisplayName, getClipboardText } from "@/utils/labels.utils"
-import { getBoxerAge } from "@/utils/string.utils"
+import { getBirthDateAndAge, getBoxerAge } from "@/utils/string.utils"
 
 export default defineComponent({
     components: {
@@ -169,9 +169,7 @@ export default defineComponent({
             })
         },
         getBirthDateAndAge(boxer: Boxer): string {
-            const age = getBoxerAge(boxer.birthDate)
-            const birthDate = format(boxer.birthDate, "dd/MM/yyyy")
-            return `${birthDate} (${age})`
+            return getBirthDateAndAge(boxer.birthDate)
         },
         async fetchBoxerData() {
             if (this.boxerId) {

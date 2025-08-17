@@ -70,20 +70,20 @@
 
 <script lang="ts">
 import { Fight } from "@/types/boxing.d"
-import FightCardGridComponent from "./fight-card/fight-card-grid.component.vue"
+import FightCardGridComponent from "./tournament/fight-card-grid.component.vue"
 import { useFightStore } from "@/stores/fight.store"
 import { useUiStore } from "@/stores/ui.store"
 import { useTournamentStore } from "@/stores/tournament.store"
 import { watch } from "vue"
 import ShareComponent from "@/components/core/share.component.vue"
 import exportManager from "@/managers/export.manager"
-import TournamentHeaderComponent from "./tournament-header.component.vue"
+import TournamentHeaderComponent from "@/components/tournament-header.component.vue"
 
 export default {
     components: {
         FightCardGridComponent,
         ShareComponent,
-        TournamentHeaderComponent: TournamentHeaderComponent,
+        TournamentHeaderComponent,
     },
     data() {
         return {
