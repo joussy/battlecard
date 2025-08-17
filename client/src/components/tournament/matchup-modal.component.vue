@@ -6,13 +6,14 @@
         class="modal fade"
         tabindex="-1"
     >
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5
                         id="matchupModalLabel"
                         class="modal-title"
                     >
+                        <i class="bi bi-magic"></i>
                         Matchup
                     </h5>
                     <button
@@ -22,28 +23,55 @@
                     ></button>
                 </div>
                 <div class="modal-body p-3">
-                    <div class="matchup-header d-flex justify-content-between">
-                        <button
-                            class="btn btn-primary"
-                            :disabled="!canGoPrevious"
-                            @click="goToPrevious"
-                        >
-                            <i class="bi bi-chevron-left"></i>
-                        </button>
-                        <div class="btn btn-success"><IconComponent name="headgear"></IconComponent> Add/Remove</div>
-                        <button
-                            class="btn btn-primary"
-                            :disabled="!canGoNext"
-                            @click="goToNext"
-                        >
-                            <i class="bi bi-chevron-right"></i>
-                        </button>
+                    <div v-if="!fight">
+                        <h3>No matches available 😔</h3>
+                        Add more boxers to the selector to find suitable pairings.
                     </div>
-                    <div class="matchup-content mt-3">
-                        <MatchupDetailsComponent
-                            v-if="fight != null"
-                            :fight="fight"
-                        />
+                    <div v-else>
+                        <div class="matchup-header d-flex justify-content-between">
+                            <button
+                                class="btn btn-primary"
+                                :disabled="!canGoPrevious"
+                                @click="goToPrevious"
+                            >
+                                <i class="bi bi-chevron-left"></i>
+                            </button>
+                            <div
+                                v-if="fight && getRealFightId(fight) == null"
+                                class="btn btn-success"
+                                @click="addToFightCard(fight)"
+                            >
+                                <IconComponent
+                                    name="headgear"
+                                    class="me-1"
+                                ></IconComponent
+                                >Add fight
+                            </div>
+                            <div
+                                v-if="fight && getRealFightId(fight) != null"
+                                class="btn btn-danger"
+                                @click="removeFromFightCard(fight)"
+                            >
+                                <IconComponent
+                                    name="headgear"
+                                    class="me-1"
+                                ></IconComponent
+                                >Remove fight
+                            </div>
+                            <button
+                                class="btn btn-primary"
+                                :disabled="!canGoNext"
+                                @click="goToNext"
+                            >
+                                <i class="bi bi-chevron-right"></i>
+                            </button>
+                        </div>
+                        <div class="matchup-content mt-3">
+                            <MatchupDetailsComponent
+                                v-if="fight != null"
+                                :fight="fight"
+                            />
+                        </div>
                     </div>
                 </div>
             </div>
@@ -129,8 +157,32 @@ export default {
                 this.fight = this.fights[this.currentFightIndex]
             }
         },
+        addToFightCard(fight: Fight) {
+            this.fightStore.addToFightCard(fight.boxer1, fight.boxer2)
+        },
+        removeFromFightCard(fight: Fight) {
+            const realFightId = this.getRealFightId(fight)
+            if (!realFightId) {
+                console.error("No real fight ID found for the fight")
+                return
+            }
+            this.fightStore.removeFromFightCard([realFightId])
+        },
+        getRealFightId(fight: Fight): string | null {
+            return (
+                this.fightStore.fights?.find(
+                    (f) =>
+                        (f.boxer1.id === fight.boxer1.id && f.boxer2.id === fight.boxer2.id) ||
+                        (f.boxer1.id === fight.boxer2.id && f.boxer2.id === fight.boxer1.id)
+                )?.id || null
+            )
+        },
     },
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.modal-dialog {
+    /* max-width: 700px; */
+}
+</style>

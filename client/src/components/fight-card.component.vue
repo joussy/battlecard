@@ -37,7 +37,7 @@
             <div
                 v-if="editionMode"
                 id="editModeToast"
-                class="d-md-none toast show bg-success text-white position-fixed top-0 start-50 translate-middle-x mt-3"
+                class="d-md-none toast show bg-success text-white position-fixed top-0 start-50 translate-middle-x mt-5"
                 role="alert"
             >
                 <div

@@ -143,7 +143,11 @@ export default {
         watch(
             () => this.editionMode,
             () => {
-                this.initSortable()
+                if (this.editionMode) {
+                    this.initSortable()
+                } else {
+                    this.destroySortable()
+                }
             }
         )
     },
@@ -180,6 +184,16 @@ export default {
                 scroll: true,
                 direction: "horizontal",
             })
+        },
+        destroySortable() {
+            const table = this.$refs.sortableTable as HTMLElement
+            const tbody = table?.querySelector("tbody")
+
+            if (!tbody) {
+                return
+            }
+
+            Sortable.get(tbody)?.destroy()
         },
         removeFromFightCard(fightId: string) {
             this.$emit("removeFromFightCard", fightId)

@@ -4,7 +4,7 @@
             <div
                 v-for="(boxer, index) in [fight.boxer1, fight.boxer2]"
                 :key="boxer.id"
-                class="col-md-6"
+                class="col-sm-6"
                 :class="`matchup-boxer-${index + 1}`"
             >
                 <div class="pt-1 pb-1">
@@ -14,31 +14,35 @@
                         <IconComponent :name="boxer.gender == Gender.MALE ? 'male' : 'female'"> </IconComponent>
                         {{ getBirthDateAndAge(boxer) }}
                     </div>
-                    <IconComponent
-                        name="scale"
-                        class="me-1"
-                    ></IconComponent
-                    >{{ boxer.weight }} kg
-                    <IconComponent
-                        name="medal"
-                        class="me-1"
-                    ></IconComponent
-                    >{{ boxer.nbFights }} fights
+                    <div>
+                        <IconComponent
+                            name="scale"
+                            class="me-1"
+                        ></IconComponent>
+                        {{ boxer.weight }} kg
+                    </div>
+                    <div>
+                        <IconComponent
+                            name="medal"
+                            class="me-1"
+                        ></IconComponent
+                        >{{ boxer.nbFights }} fights
+                    </div>
                     <div>
                         <i class="bi bi-person-vcard"></i> {{ boxer.license }} -
                         {{ boxer.category }}
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="row pt-1 pb-1">
-            <div>
-                <i class="bi bi-stopwatch me-1"></i>
-                Fight Duration: {{ getFightDuration(fight) }}
+            <div class="row pt-1 pb-1">
+                <div>
+                    <i class="bi bi-stopwatch me-1"></i>
+                    Fight Duration: {{ getFightDuration(fight) }}
+                </div>
+                <div>Weight difference: {{ getWeightDifference(fight) }}</div>
+                <div>Age difference: {{ getAgeDifference(fight) }}</div>
+                <div>Fight count difference: {{ getNbFightsDifference(fight) }}</div>
             </div>
-            <div>Weight difference: {{ getWeightDifference(fight) }}</div>
-            <div>Age difference: {{ getAgeDifference(fight) }}</div>
-            <div>Fight count difference: {{ getNbFightsDifference(fight) }}</div>
         </div>
     </div>
 </template>
