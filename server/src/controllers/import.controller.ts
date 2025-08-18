@@ -119,4 +119,24 @@ export class ImportController {
     const ids = dto.payload.split('\n').filter((id) => id.trim() !== '');
     return await this.importService.previewBoxersFromApi(ids);
   }
+
+  @Post('previewFromImage')
+  @UseInterceptors(FileInterceptor('file'))
+  async previewBoxersFromImage(
+    @UploadedFile(
+      new ParseFilePipe({
+        validators: [
+          new MaxFileSizeValidator({ maxSize: 5_000_000 }), // 5 MB
+          new FileTypeValidator({ fileType: 'image/*' }),
+        ],
+      }),
+    )
+    file: Express.Multer.File,
+  ): Promise<ApiPreviewBoxersResponse> {
+    if (!file) {
+      throw new Error('File buffer is missing');
+    }
+    // Delegate to import service which will call configured AI/OCR provider
+    return await this.importService.previewBoxersFromImage(file.buffer);
+  }
 }

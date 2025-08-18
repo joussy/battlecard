@@ -24,6 +24,6 @@ export interface BeaCategory {
 }
 
 export enum Gender {
-    FEMALE = 'female',
-    MALE = 'male',
+  FEMALE = 'female',
+  MALE = 'male',
 }

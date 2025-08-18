@@ -18,6 +18,7 @@ import { CsvBoxer, csvDelimiter } from '@/interfaces/csv.interface';
 import { toApiImportBoxer } from '@/adapters/boxer.adapter';
 import { ConfigService } from '@nestjs/config';
 import { parse, format } from 'date-fns';
+import { Buffer } from 'buffer';
 
 @Injectable()
 export class ImportService {
@@ -352,5 +353,98 @@ export class ImportService {
       success: true,
       message: 'API import preview successful',
     };
+  }
+
+  /**
+   * Send image buffer to configured OpenAI Responses API and request CSV conversion.
+   * The model is asked to return a CSV with headers matching the project's CSV parser.
+   */
+  async previewBoxersFromImage(
+    buffer: Buffer,
+  ): Promise<ApiPreviewBoxersResponse> {
+    const openaiKey = this.configService.get<string>('OPENAI_API_KEY');
+    const openaiUrl =
+      this.configService.get<string>('OPENAI_RESPONSES_URL') ||
+      'https://api.openai.com/v1/responses';
+
+    if (!openaiKey) {
+      this.logger.error('OpenAI API key not configured');
+      return {
+        success: false,
+        message: 'AI provider not configured',
+        boxers: [],
+      };
+    }
+
+    // Encode image to base64 and build a simple instruction
+    const base64 = buffer.toString('base64');
+    const instruction = `You are given an image (base64). Extract a CSV containing boxers with headers: lastName,firstName,birthDate,weight,gender,club,license,fightRecord. Return ONLY the CSV content (no markdown, no commentary). If you fail, return an empty CSV with headers only.`;
+
+    // Build multipart/form-data body as JSON per OpenAI Responses API with inputs including the image
+    const body = {
+      model: 'gpt-4.1-mini',
+      input: [
+        {
+          role: 'user',
+          content: [
+            { type: 'input_text', text: instruction },
+            {
+              type: 'input_image',
+              image_base64: base64,
+              filename: 'boxers.jpg',
+            },
+          ],
+        },
+      ],
+      // ask model to be brief
+      max_output_tokens: 1500,
+    };
+
+    const getMessage = (err: unknown) => {
+      if (err === null || err === undefined) return '';
+      if (typeof err === 'string') return err;
+      if (err instanceof Error && typeof err.message === 'string')
+        return err.message;
+      return JSON.stringify(err);
+    };
+    try {
+      const res = await fetch(openaiUrl, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${openaiKey}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body),
+      });
+      if (!res.ok) {
+        const t = await res.text();
+        this.logger.error('OpenAI Responses API error', res.status, t);
+        return {
+          success: false,
+          message: 'AI provider error',
+          boxers: [],
+        };
+      }
+      const parsedRaw = await res.text();
+
+      if (!parsedRaw || parsedRaw.trim().length === 0) {
+        return {
+          success: false,
+          message: 'AI did not return CSV output',
+          boxers: [],
+        };
+      }
+
+      // Parse CSV into boxer objects using existing parser
+      const preview = await this.previewBoxersFromCsv(parsedRaw);
+      return preview;
+    } catch (e: any) {
+      this.logger.error('Failed to parse CSV from AI output', getMessage(e));
+      return {
+        success: false,
+        message: 'Failed to parse CSV from AI output',
+        boxers: [],
+      };
+    }
   }
 }
