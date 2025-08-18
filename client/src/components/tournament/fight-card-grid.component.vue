@@ -52,13 +52,15 @@
                     :ref="`fights-tr-red-${fight.id}`"
                     class="cell-red word-break-all"
                 >
-                    {{ getBoxerDisplayName(fight.boxer1) }}
+                    <div>{{ getBoxerDisplayName(fight.boxer1) }}</div>
+                    <i class="small">{{ fight.boxer1.club }}</i>
                 </td>
                 <td
                     :ref="`fights-tr-blue-${fight.id}`"
                     class="cell-blue word-break-all"
                 >
-                    {{ getBoxerDisplayName(fight.boxer2) }}
+                    <div>{{ getBoxerDisplayName(fight.boxer2) }}</div>
+                    <i class="small">{{ fight.boxer2.club }}</i>
                 </td>
                 <td class="fight-extra-infos">
                     <div class="me-1">
