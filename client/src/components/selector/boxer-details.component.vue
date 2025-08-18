@@ -105,14 +105,13 @@ import BoxerEditOffcanvasComponent from "@/components/selector/add/boxer-edit-of
 
 import IconComponent from "@/components/core/icon.component.vue"
 
-import { format } from "date-fns"
 import { useFightStore } from "@/stores/fight.store"
 import { useBoxerStore } from "@/stores/boxer.store"
 import { useUiStore } from "@/stores/ui.store"
 import { useTournamentStore } from "@/stores/tournament.store"
 import { useTournamentBoxerStore } from "@/stores/tournamentBoxer.store"
 import { getBoxerDisplayName, getClipboardText } from "@/utils/labels.utils"
-import { getBirthDateAndAge, getBoxerAge } from "@/utils/string.utils"
+import { getBirthDateAndAge } from "@/utils/string.utils"
 
 export default defineComponent({
     components: {

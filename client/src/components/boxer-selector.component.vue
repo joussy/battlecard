@@ -3,16 +3,46 @@
         <TournamentHeaderComponent />
         <div class="mb-3 d-flex gap-1">
             <div class="flex-grow-1"></div>
-
             <button
-                class="btn btn-outline-success"
+                class="btn btn-primary"
+                @click="showAddUserOffcanvas = true"
+            >
+                <i class="bi bi-person-vcard me-2"></i>
+                <span class="">Test</span>
+            </button>
+            <TestOffcanvasComponent v-model:show="showAddUserOffcanvas" />
+            <button
+                :disabled="boxersToDisplay.length == 0"
                 type="button"
-                data-bs-toggle="offcanvas"
-                data-bs-target="#boxerAddOffcanvasNavbar"
+                class="btn btn-outline-success dropdown-toggle"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
             >
                 <i class="bi bi-person-add" />
-                <span class="d-none d-md-inline ms-2">Add Boxer</span>
+                <span class="d-md-inline ms-2">Add boxer</span>
             </button>
+            <ul class="dropdown-menu">
+                <li>
+                    <a
+                        class="dropdown-item"
+                        data-bs-toggle="offcanvas"
+                        data-bs-target="#boxerAddOffcanvasNavbar"
+                    >
+                        <i class="bi bi-person-add" />
+                        Create a boxer
+                    </a>
+                </li>
+                <li>
+                    <a
+                        class="dropdown-item"
+                        @click="$router.push({ name: 'import' })"
+                    >
+                        <i class="bi bi-upload" />
+                        Import boxers from file
+                    </a>
+                </li>
+            </ul>
+
             <button
                 :disabled="boxersToDisplay.length == 0"
                 type="button"
@@ -21,7 +51,7 @@
                 aria-expanded="false"
             >
                 <i class="bi bi-download" />
-                <span class="d-none d-md-inline ms-2">Export</span>
+                <span class="d-none d-sm-inline ms-2">Export</span>
             </button>
             <ul class="dropdown-menu">
                 <li>
@@ -52,15 +82,6 @@
                     >
                         <i class="bi bi-file-earmark-pdf" />
                         PDF
-                    </a>
-                </li>
-                <li>
-                    <a
-                        class="dropdown-item"
-                        @click="$router.push({ name: 'import' })"
-                    >
-                        <i class="bi bi-upload" />
-                        Import boxers
                     </a>
                 </li>
             </ul>
@@ -144,6 +165,7 @@ import { FileType } from "@/types/api"
 import exportManager from "@/managers/export.manager"
 import { getBoxerAge } from "@/utils/string.utils"
 import TournamentHeaderComponent from "./tournament-header.component.vue"
+import TestOffcanvasComponent from "@/components/test-offcanvas.vue"
 
 export default defineComponent({
     components: {
@@ -152,6 +174,7 @@ export default defineComponent({
         BoxerSelectorFiltersComponent: BoxerSelectorFiltersComponent,
         SearchFacetsComponent: SearchFacetsComponent,
         TournamentHeaderComponent: TournamentHeaderComponent,
+        TestOffcanvasComponent: TestOffcanvasComponent,
     },
     data() {
         return {
@@ -166,6 +189,7 @@ export default defineComponent({
             searchQuery: "", // Added for search bar binding
             boxersToDisplay: [] as Boxer[],
             searchTimeout: null as number | null,
+            showAddUserOffcanvas: false,
         }
     },
     computed: {
