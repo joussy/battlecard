@@ -223,7 +223,8 @@ export function getCsvDelimiterFromType(delimiter: CsvDelimiter): string {
     case 'comma':
       return ',';
     default:
-      throw new Error(`Unknown CSV delimiter type: ${delimiter}`);
+      // Use type assertion to handle the never case in template literal
+      throw new Error(`Unknown CSV delimiter type: ${delimiter as string}`);
   }
 }
 

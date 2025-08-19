@@ -83,12 +83,22 @@ export const useFightStore = defineStore("fight", {
                 return
             }
 
-            // Remove the fight from its current position
-            fights.splice(fightIndex, 1)
+            try {
+                // Call backend API BEFORE modifying local array to ensure correct index calculation
+                await dbManager.reorderFight(fightId, newIndex)
 
-            // Insert the fight at the new position based on the order
-            fights.splice(newIndex, 0, fightToMove)
-            await dbManager.reorderFight(fightId, newIndex)
+                // Now update the local array to reflect the change
+                // Remove the fight from its current position
+                fights.splice(fightIndex, 1)
+
+                // Insert the fight at the new position based on the order
+                fights.splice(newIndex, 0, fightToMove)
+            } catch (error) {
+                // If backend call fails, don't modify local array
+                console.error("Failed to reorder fight:", error)
+                this.error = error instanceof Error ? error.message : "Failed to reorder fight"
+                throw error
+            }
         },
         async switchFight(fightId: string) {
             const fight = this.getFightById(fightId)
