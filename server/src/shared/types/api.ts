@@ -3,7 +3,7 @@
  * These interfaces define the structure of data exchanged between frontend and backend.
  */
 
-import { Gender, ModalityError } from "./modality.type";
+import { Gender, ModalityError } from './modality.type';
 
 /**
  * Boxer returned from the API.
@@ -24,7 +24,7 @@ export interface ApiBoxerGet {
   /** Weight in kg (optional) */
   weight?: number;
   /** Gender */
-  gender: "male" | "female";
+  gender: 'male' | 'female';
   /** License number */
   license: string;
   /** User who created this boxer */
@@ -212,18 +212,18 @@ export interface ApiPreviewBoxersResponse {
   boxers: ApiImportBoxer[];
 }
 
-export type CsvDelimiter = "tab" | "semi-column" | "comma";
+export type CsvDelimiter = 'tab' | 'semi-column' | 'comma';
 
 export function getCsvDelimiterFromType(delimiter: CsvDelimiter): string {
   switch (delimiter) {
-    case "tab":
-      return "\t";
-    case "semi-column":
-      return ";";
-    case "comma":
-      return ",";
+    case 'tab':
+      return '\t';
+    case 'semi-column':
+      return ';';
+    case 'comma':
+      return ',';
     default:
-      throw new Error(`Unknown CSV delimiter type: ${delimiter}`);
+      throw new Error(`Unknown CSV delimiter type: ${delimiter as string}`);
   }
 }
 
