@@ -287,7 +287,7 @@ export default {
             })
         },
         async importBoxers(verifyOnly: boolean) {
-            if (this.tournamentStore.currentTournamentId === null) {
+            if (!this.tournamentStore.currentTournamentId) {
                 this.importMessage = "Please select a tournament first."
                 return
             }

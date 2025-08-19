@@ -41,6 +41,13 @@
                     <span class="ms-1">Select opponents</span>
                 </button>
                 <button
+                    class="btn btn-outline-success btn-sm"
+                    @click="editBoxer()"
+                >
+                    <i class="bi bi-pencil" />
+                    <span class="ms-2">Edit</span>
+                </button>
+                <button
                     class="btn btn-outline-secondary btn-sm"
                     @click="copyToClipboard()"
                 >
@@ -107,6 +114,12 @@ export default defineComponent({
         copyToClipboard() {
             const text = getClipboardText(this.boxer)
             navigator.clipboard.writeText(text)
+        },
+        editBoxer() {
+            if (!this.boxer) {
+                return
+            }
+            this.boxerStore.boxerToEdit = this.boxer
         },
     },
 })

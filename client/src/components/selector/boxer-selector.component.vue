@@ -74,6 +74,7 @@
             </button>
             <BoxerSelectorFiltersComponent />
             <BoxerAddOffcanvasComponent @boxer-saved="onBoxerSaved" />
+            <BoxerEditOffcanvasComponent @boxer-saved="onBoxerSaved" />
         </div>
         <div class="mb-2 row">
             <!-- Search bar -->
@@ -131,6 +132,7 @@ import { defineComponent, watch } from "vue"
 import { Gender, ModalityErrorType } from "@/shared/types/modality.type"
 import BoxerTileComponent from "@/components/selector/boxer-tile.component.vue"
 import BoxerAddOffcanvasComponent from "@/components/selector/add/boxer-add-offcanvas.component.vue"
+import BoxerEditOffcanvasComponent from "@/components/selector/add/boxer-edit-offcanvas.component.vue"
 
 import BoxerSelectorFiltersComponent from "@/components/selector/boxer-selector-filters.component.vue"
 import { useTournamentStore } from "@/stores/tournament.store"
@@ -152,6 +154,7 @@ export default defineComponent({
         BoxerSelectorFiltersComponent: BoxerSelectorFiltersComponent,
         SearchFacetsComponent: SearchFacetsComponent,
         TournamentHeaderComponent: TournamentHeaderComponent,
+        BoxerEditOffcanvasComponent: BoxerEditOffcanvasComponent,
     },
     data() {
         return {
@@ -166,6 +169,7 @@ export default defineComponent({
             searchQuery: "", // Added for search bar binding
             boxersToDisplay: [] as Boxer[],
             searchTimeout: null as number | null,
+            boxerToEdit: null as Boxer | null,
         }
     },
     computed: {

@@ -6,3 +6,9 @@ export function closeModal(instanceName: string) {
         bsOffcanvas.hide()
     }
 }
+export function openModal(instanceName: string) {
+    const bsOffcanvas = bootstrap.getInstance().Offcanvas.getOrCreateInstance(instanceName)
+    if (bsOffcanvas) {
+        bsOffcanvas.show()
+    }
+}

@@ -1,5 +1,5 @@
 export interface UiStorage {
-    jwtToken: string | null
+    jwtToken: string | undefined
     theme: UiTheme
     hideNonMatchableOpponents: boolean
     hideFightersWithNoMatch: boolean

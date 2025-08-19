@@ -10,19 +10,21 @@ import {
   Logger,
 } from '@nestjs/common';
 import { ModalityService } from '../modality/modality.service';
-import { User } from '@/decorators/user.decorator';
+import { User } from '@/decorators/auth.decorator';
 import { AuthenticatedUser } from '@/interfaces/auth.interface';
 import { TournamentService } from '@/services/tournament.service';
 import { ImportService } from '@/services/import.service';
 import {
-  ApiImportBoxers,
   ApiImportBoxersResponse,
-  ApiPreviewBoxersApi,
-  ApiPreviewBoxersCsv,
   ApiPreviewBoxersResponse,
 } from '@/shared/types/api';
 import { Express } from 'express';
 import { FileInterceptor } from '@nestjs/platform-express';
+import {
+  ImportBoxersDto,
+  PreviewBoxersApiDto,
+  PreviewBoxersCsvDto,
+} from '@/dto/import.dto';
 
 @Controller('import')
 export class ImportController {
@@ -35,7 +37,7 @@ export class ImportController {
 
   @Post()
   async importBoxers(
-    @Body() dto: ApiImportBoxers,
+    @Body() dto: ImportBoxersDto,
     @User() user: AuthenticatedUser,
   ): Promise<ApiImportBoxersResponse> {
     return this.importService.importBoxers(
@@ -48,7 +50,7 @@ export class ImportController {
 
   @Post('previewfromcsvText')
   async previewBoxersFromCsvText(
-    @Body() dto: ApiPreviewBoxersCsv,
+    @Body() dto: PreviewBoxersCsvDto,
   ): Promise<ApiPreviewBoxersResponse> {
     return await this.importService.previewBoxersFromCsv(dto.payload);
   }
@@ -105,7 +107,7 @@ export class ImportController {
 
   @Post('previewFromApi')
   async previewFromApi(
-    @Body() dto: ApiPreviewBoxersApi,
+    @Body() dto: PreviewBoxersApiDto,
     @User() user: AuthenticatedUser,
   ): Promise<ApiPreviewBoxersResponse> {
     if (!user.apiEnabled) {
