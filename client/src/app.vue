@@ -42,7 +42,7 @@ export default defineComponent({
             () => [tournamentStore.currentTournamentId],
             async () => {
                 if (uiStore.account) {
-                    if (tournamentStore.currentTournamentId == null) {
+                    if (!tournamentStore.currentTournamentId) {
                         this.$router.push("tournaments")
                     } else {
                         //Just for the fight counter, but it's overkill
