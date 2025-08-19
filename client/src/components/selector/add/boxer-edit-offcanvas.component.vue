@@ -23,7 +23,8 @@
         </div>
         <div class="offcanvas-body">
             <BoxerAddFormComponent
-                :boxer="boxer"
+                v-if="boxerStore.boxerToEdit"
+                :boxer="boxerStore.boxerToEdit"
                 @boxer-saved="onBoxerSaved()"
             ></BoxerAddFormComponent>
         </div>
@@ -31,33 +32,39 @@
 </template>
 
 <script lang="ts">
-import { PropType, defineComponent } from "vue"
-import { Boxer } from "@/types/boxing.d"
+import { defineComponent } from "vue"
 
 import BoxerAddFormComponent from "./boxer-add-form.component.vue"
-import { closeModal } from "@/utils/ui.utils"
+import { closeModal, openModal } from "@/utils/ui.utils"
 import { useUiStore } from "@/stores/ui.store"
+import { useBoxerStore } from "@/stores/boxer.store"
+import { Boxer } from "@/types/boxing"
 
 export default defineComponent({
     components: {
         BoxerAddFormComponent,
     },
-    props: {
-        boxer: {
-            type: Object as PropType<Boxer>,
-            required: true,
-        },
-    },
     emits: ["boxer-saved"],
     data() {
         return {
             uiStore: useUiStore(),
+            boxerStore: useBoxerStore(),
         }
+    },
+    watch: {
+        "boxerStore.boxerToEdit": function (newBoxer: Boxer | null) {
+            console.log("Boxer to edit changed", newBoxer)
+            if (!newBoxer) {
+                closeModal("#boxerEditOffcanvasNavbar")
+            } else {
+                openModal("#boxerEditOffcanvasNavbar")
+            }
+        },
     },
     methods: {
         onBoxerSaved() {
-            closeModal("#boxerEditOffcanvasNavbar")
-            this.$emit("boxer-saved", this.boxer)
+            this.$emit("boxer-saved", this.boxerStore.boxerToEdit)
+            this.boxerStore.boxerToEdit = null
         },
     },
 })

@@ -11,6 +11,7 @@ export const useBoxerStore = defineStore("boxer", {
         loading: false,
         error: null as string | null,
         restored: false,
+        boxerToEdit: null as Boxer | null,
     }),
     actions: {
         async fetchBoxers() {

@@ -277,20 +277,8 @@ export default defineComponent({
         },
     },
     emits: ["boxer-saved"],
-    setup(properties, { emit }) {
-        // Create the form
-        const initialValues = {
-            lastname: properties.boxer?.lastName ?? "",
-            firstname: properties.boxer?.firstName ?? "",
-            weight: properties.boxer?.weight ?? "",
-            license: properties.boxer?.license ?? "",
-            club: properties.boxer?.club ?? "",
-            birthdate: isValid(properties.boxer?.birthDate) ? format(properties.boxer!.birthDate, "yyyy-MM-dd") : "",
-            gender: properties.boxer ? properties.boxer.gender : "",
-            id: properties.boxer?.id ?? "",
-        }
-
-        const { defineField, handleSubmit, errors } = useForm({
+    setup() {
+        const { defineField, handleSubmit, errors, resetForm } = useForm({
             validationSchema: {
                 lastname: "required",
                 firstname: "required",
@@ -300,7 +288,6 @@ export default defineComponent({
                 birthdate: "required",
                 gender: "genderRequired",
             },
-            initialValues,
         })
 
         // Define fields
@@ -311,7 +298,43 @@ export default defineComponent({
         const [club] = defineField("club")
         const [gender] = defineField("gender")
         const [birthdate] = defineField("birthdate")
-        const onSubmit = handleSubmit(async (form: GenericObject) => {
+        return {
+            handleSubmit,
+            lastname,
+            errors,
+            firstname,
+            weight,
+            license,
+            club,
+            resetForm,
+            gender,
+            birthdate,
+            clubsAutoCompleteList: [] as string[],
+            Gender,
+        }
+    },
+    data() {
+        return {
+            onSubmit: (() => {}) as (e: Event) => void,
+        }
+    },
+    watch: {
+        boxer() {
+            this.lastname = this.boxer?.lastName ?? ""
+            this.firstname = this.boxer?.firstName ?? ""
+            this.weight = this.boxer?.weight ?? ""
+            this.license = this.boxer?.license ?? ""
+            this.club = this.boxer?.club ?? ""
+            this.birthdate = isValid(this.boxer?.birthDate) ? format(this.boxer!.birthDate, "yyyy-MM-dd") : ""
+            this.gender = this.boxer ? this.boxer.gender : ""
+            // this.id = this.boxer?.id ?? ""
+        },
+    },
+    mounted() {
+        this.clubsAutoCompleteList = []
+    },
+    created() {
+        this.onSubmit = this.handleSubmit(async (form: GenericObject) => {
             const boxerStore = useBoxerStore()
             let boxer: Boxer = {
                 birthDate: new Date(form.birthdate),
@@ -324,40 +347,25 @@ export default defineComponent({
                 categoryShortText: "",
                 license: form.license,
                 nbFights: 0,
-                id: form.id,
+                id: "",
                 userId: "",
                 categoryShort: "",
             }
-            if (form.id) {
+            if (this.boxer?.id) {
                 boxer = await boxerStore.updateBoxer(boxer)
             } else {
                 boxer = await boxerStore.createBoxer(boxer)
             }
 
             if (boxer != null) {
-                emit("boxer-saved", boxer)
+                this.$emit("boxer-saved", boxer)
+                this.resetForm()
             } else {
                 const toastEl = document.getElementById("errorToast") as HTMLElement
                 const toast = new Toast(toastEl)
                 toast.show()
             }
         })
-        return {
-            onSubmit,
-            lastname,
-            errors,
-            firstname,
-            weight,
-            license,
-            club,
-            gender,
-            birthdate,
-            clubsAutoCompleteList: [] as string[],
-            Gender,
-        }
-    },
-    mounted() {
-        this.clubsAutoCompleteList = []
     },
 })
 </script>
