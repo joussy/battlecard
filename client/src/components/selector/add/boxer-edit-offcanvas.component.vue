@@ -53,7 +53,6 @@ export default defineComponent({
     },
     watch: {
         "boxerStore.boxerToEdit": function (newBoxer: Boxer | null) {
-            console.log("Boxer to edit changed", newBoxer)
             if (!newBoxer) {
                 closeModal("#boxerEditOffcanvasNavbar")
             } else {
@@ -61,9 +60,18 @@ export default defineComponent({
             }
         },
     },
+    mounted() {
+        const offcanvasRef = this.$refs.offcanvas as HTMLElement
+        offcanvasRef.addEventListener("hidden.bs.offcanvas", () => {
+            this.clear()
+        })
+    },
     methods: {
         onBoxerSaved() {
             this.$emit("boxer-saved", this.boxerStore.boxerToEdit)
+            this.clear()
+        },
+        clear() {
             this.boxerStore.boxerToEdit = null
         },
     },

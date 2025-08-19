@@ -44,8 +44,8 @@
                     class="btn btn-outline-success btn-sm"
                     @click="editBoxer()"
                 >
-                    <i class="bi bi-clipboard" />
-                    <span class="d-none d-sm-inline ms-2">Edit boxer</span>
+                    <i class="bi bi-pencil" />
+                    <span class="ms-2">Edit</span>
                 </button>
                 <button
                     class="btn btn-outline-secondary btn-sm"

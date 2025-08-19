@@ -1,25 +1,4 @@
 <template>
-    <!-- Toast container -->
-    <div class="position-fixed bottom-0 end-0 p-3">
-        <div
-            id="errorToast"
-            class="toast align-items-center text-white bg-danger border-0"
-            role="alert"
-            aria-live="assertive"
-            aria-atomic="true"
-        >
-            <div class="d-flex">
-                <div class="toast-body">Error while saving boxer</div>
-                <button
-                    type="button"
-                    class="btn-close btn-close-white me-2 m-auto"
-                    data-bs-dismiss="toast"
-                    aria-label="Close"
-                ></button>
-            </div>
-        </div>
-    </div>
-
     <form
         class=""
         @submit="onSubmit"
@@ -235,9 +214,9 @@ import { Boxer } from "@/types/boxing.d"
 import { isValid, format } from "date-fns"
 import IconComponent from "@/components/shared/core/icon.component.vue"
 
-import { Toast } from "bootstrap"
-import { useBoxerStore } from "@/stores/boxer.store"
 import { Gender } from "@/shared/types/modality.type"
+import { ApiBoxerCreate } from "@/shared/types/api"
+import apiManager from "@/managers/api.manager"
 
 configure({
     validateOnInput: true,
@@ -319,15 +298,17 @@ export default defineComponent({
         }
     },
     watch: {
-        boxer() {
-            this.lastname = this.boxer?.lastName ?? ""
-            this.firstname = this.boxer?.firstName ?? ""
-            this.weight = this.boxer?.weight ?? ""
-            this.license = this.boxer?.license ?? ""
-            this.club = this.boxer?.club ?? ""
-            this.birthdate = isValid(this.boxer?.birthDate) ? format(this.boxer!.birthDate, "yyyy-MM-dd") : ""
-            this.gender = this.boxer ? this.boxer.gender : ""
-            // this.id = this.boxer?.id ?? ""
+        boxer: {
+            handler() {
+                this.lastname = this.boxer?.lastName ?? ""
+                this.firstname = this.boxer?.firstName ?? ""
+                this.weight = this.boxer?.weight ?? ""
+                this.license = this.boxer?.license ?? ""
+                this.club = this.boxer?.club ?? ""
+                this.birthdate = isValid(this.boxer?.birthDate) ? format(this.boxer!.birthDate, "yyyy-MM-dd") : ""
+                this.gender = this.boxer ? this.boxer.gender : ""
+            },
+            immediate: true,
         },
     },
     mounted() {
@@ -335,36 +316,22 @@ export default defineComponent({
     },
     created() {
         this.onSubmit = this.handleSubmit(async (form: GenericObject) => {
-            const boxerStore = useBoxerStore()
-            let boxer: Boxer = {
-                birthDate: new Date(form.birthdate),
+            let boxer: ApiBoxerCreate = {
+                birthDate: form.birthdate,
                 club: form.club,
                 firstName: form.firstname,
                 lastName: form.lastname,
                 gender: form.gender == Gender.FEMALE ? Gender.FEMALE : Gender.MALE,
                 weight: parseInt(form.weight),
-                category: "",
-                categoryShortText: "",
                 license: form.license,
                 nbFights: 0,
-                id: "",
-                userId: "",
-                categoryShort: "",
             }
             if (this.boxer?.id) {
-                boxer = await boxerStore.updateBoxer(boxer)
+                await apiManager.updateBoxer(boxer, this.boxer.id)
             } else {
-                boxer = await boxerStore.createBoxer(boxer)
+                await apiManager.addBoxer(boxer)
             }
-
-            if (boxer != null) {
-                this.$emit("boxer-saved", boxer)
-                this.resetForm()
-            } else {
-                const toastEl = document.getElementById("errorToast") as HTMLElement
-                const toast = new Toast(toastEl)
-                toast.show()
-            }
+            this.$emit("boxer-saved", boxer)
         })
     },
 })
