@@ -9,7 +9,7 @@ export const useTournamentStore = defineStore("tournament", {
         tournaments: [] as Tournament[],
         loading: false,
         error: null as string | null,
-        currentTournamentId: null as string | null,
+        currentTournamentId: undefined as string | undefined,
     }),
     actions: {
         async fetchTournaments() {
@@ -24,12 +24,12 @@ export const useTournamentStore = defineStore("tournament", {
                 this.loading = false
             }
         },
-        setCurrentTournament(tournamentId: string | null) {
+        setCurrentTournament(tournamentId?: string) {
             this.currentTournamentId = tournamentId
         },
-        getCurrentTournament(): Tournament | null {
+        getCurrentTournament(): Tournament | undefined {
             const tournament = this.tournaments.find((t) => t.id === this.currentTournamentId)
-            return tournament || null
+            return tournament
         },
     },
 })

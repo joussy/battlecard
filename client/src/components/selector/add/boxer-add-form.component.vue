@@ -217,6 +217,7 @@ import IconComponent from "@/components/shared/core/icon.component.vue"
 import { Gender } from "@/shared/types/modality.type"
 import { ApiBoxerCreate } from "@/shared/types/api"
 import apiManager from "@/managers/api.manager"
+import { useTournamentStore } from "@/stores/tournament.store"
 
 configure({
     validateOnInput: true,
@@ -295,6 +296,7 @@ export default defineComponent({
     data() {
         return {
             onSubmit: (() => {}) as (e: Event) => void,
+            tournamentStore: useTournamentStore(),
         }
     },
     watch: {
@@ -325,6 +327,7 @@ export default defineComponent({
                 weight: parseInt(form.weight),
                 license: form.license,
                 nbFights: 0,
+                tournamentId: this.tournamentStore.currentTournamentId,
             }
             if (this.boxer?.id) {
                 await apiManager.updateBoxer(boxer, this.boxer.id)

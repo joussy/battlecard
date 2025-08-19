@@ -95,7 +95,7 @@ export default {
             return this.fightStore.fights.length
         },
         isTournamentSelected(): boolean {
-            return this.tournamentStore.currentTournamentId != null
+            return !this.tournamentStore.currentTournamentId
         },
     },
     methods: {
