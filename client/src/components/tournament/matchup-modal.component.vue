@@ -88,7 +88,7 @@
 import { useFightStore } from "@/stores/fight.store"
 import { Fight } from "@/types/boxing"
 import { Modal } from "bootstrap"
-import IconComponent from "@/components/core/icon.component.vue"
+import IconComponent from "@/components/shared/core/icon.component.vue"
 import MatchupDetailsComponent from "@/components/tournament/matchup-details.component.vue"
 import { useTournamentStore } from "@/stores/tournament.store"
 import apiManager from "@/managers/api.manager"
@@ -186,8 +186,4 @@ export default {
 }
 </script>
 
-<style scoped>
-.modal-dialog {
-    /* max-width: 700px; */
-}
-</style>
+<style scoped></style>

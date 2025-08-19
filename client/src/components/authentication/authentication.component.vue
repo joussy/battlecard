@@ -69,7 +69,7 @@
 <script lang="ts">
 import { defineComponent } from "vue"
 import { useUiStore } from "@/stores/ui.store"
-import IconComponent from "@/components/core/icon.component.vue"
+import IconComponent from "@/components/shared/core/icon.component.vue"
 export default defineComponent({
     components: {
         Icon: IconComponent,

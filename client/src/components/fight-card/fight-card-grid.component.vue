@@ -105,7 +105,7 @@
 import { Boxer, Fight } from "@/types/boxing.d"
 import { getFightDurationAsString } from "@/utils/string.utils"
 import Sortable from "sortablejs"
-import IconComponent from "../core/icon.component.vue"
+import IconComponent from "@/components/shared/core/icon.component.vue"
 import { useFightStore } from "@/stores/fight.store"
 import { watch, PropType } from "vue"
 import { getBoxerDisplayName } from "@/utils/labels.utils"

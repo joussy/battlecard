@@ -147,7 +147,7 @@ import { defineComponent } from "vue"
 import { configure, defineRule, GenericObject, useForm } from "vee-validate"
 import { Tournament } from "@/types/boxing.d"
 import { closeModal } from "@/utils/ui.utils"
-import AddressAutocompleteFieldComponent from "@/components/core/address-autocomplete-field.component.vue"
+import AddressAutocompleteFieldComponent from "@/components/shared/core/address-autocomplete-field.component.vue"
 import apiManager from "@/managers/api.manager"
 import { ApiAddressAutocompleteGet, ApiTournamentCreate } from "@/shared/types/api"
 

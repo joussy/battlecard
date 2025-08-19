@@ -143,7 +143,7 @@ import { Boxer } from "@/types/boxing"
 import { FileType } from "@/types/api"
 import exportManager from "@/managers/export.manager"
 import { getBoxerAge } from "@/utils/string.utils"
-import TournamentHeaderComponent from "./tournament-header.component.vue"
+import TournamentHeaderComponent from "@/components/shared/layout/tournament-header.component.vue"
 
 export default defineComponent({
     components: {

@@ -198,7 +198,7 @@
 <script lang="ts">
 import ImportTableComponent from "@/components/import/import-table.component.vue"
 import { ApiImportBoxer } from "@/shared/types/api"
-import IconComponent from "@/components/core/icon.component.vue"
+import IconComponent from "@/components/shared/core/icon.component.vue"
 import { defineComponent } from "vue"
 import { useUiStore } from "@/stores/ui.store"
 import dbManager from "@/managers/api.manager"

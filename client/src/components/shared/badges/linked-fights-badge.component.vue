@@ -19,7 +19,7 @@ import { PropType, defineComponent } from "vue"
 
 import { Boxer } from "@/types/boxing"
 import { ModalityError } from "@/shared/types/modality.type"
-import IconComponent from "@/components/core/icon.component.vue"
+import IconComponent from "@/components/shared/core/icon.component.vue"
 import { useBoxerStore } from "@/stores/boxer.store"
 
 export default defineComponent({

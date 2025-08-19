@@ -79,15 +79,15 @@
 
 <script lang="ts">
 import { Fight } from "@/types/boxing.d"
-import FightCardGridComponent from "./tournament/fight-card-grid.component.vue"
+import FightCardGridComponent from "@/components/fight-card/fight-card-grid.component.vue"
 import { useFightStore } from "@/stores/fight.store"
 import { useUiStore } from "@/stores/ui.store"
 import { useTournamentStore } from "@/stores/tournament.store"
 import { watch } from "vue"
-import ShareComponent from "@/components/core/share.component.vue"
+import ShareComponent from "@/components/shared/core/share.component.vue"
 import MatchupModalComponent from "@/components/tournament/matchup-modal.component.vue"
 import exportManager from "@/managers/export.manager"
-import TournamentHeaderComponent from "@/components/tournament-header.component.vue"
+import TournamentHeaderComponent from "@/components/shared/layout/tournament-header.component.vue"
 
 export default {
     components: {

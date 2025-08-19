@@ -74,7 +74,7 @@
     </nav>
 </template>
 <script lang="ts">
-import Icon from "@/components/core/icon.component.vue"
+import Icon from "@/components/shared/core/icon.component.vue"
 import { useFightStore } from "@/stores/fight.store"
 import { useTournamentStore } from "@/stores/tournament.store"
 import { useUiStore } from "@/stores/ui.store"

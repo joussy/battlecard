@@ -233,7 +233,7 @@ import { defineComponent, PropType } from "vue"
 import { configure, defineRule, GenericObject, useForm } from "vee-validate"
 import { Boxer } from "@/types/boxing.d"
 import { isValid, format } from "date-fns"
-import IconComponent from "@/components/core/icon.component.vue"
+import IconComponent from "@/components/shared/core/icon.component.vue"
 
 import { Toast } from "bootstrap"
 import { useBoxerStore } from "@/stores/boxer.store"

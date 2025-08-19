@@ -64,7 +64,7 @@
     </nav>
 </template>
 <script lang="ts">
-import Icon from "@/components/core/icon.component.vue"
+import Icon from "@/components/shared/core/icon.component.vue"
 import { useBoxerStore } from "@/stores/boxer.store"
 import { useFightStore } from "@/stores/fight.store"
 import { useTournamentStore } from "@/stores/tournament.store"

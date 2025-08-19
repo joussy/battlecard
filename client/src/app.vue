@@ -8,8 +8,8 @@
 
 <script lang="ts">
 import { defineComponent, watch } from "vue"
-import MenuTopComponent from "@/components/menu/menu-top.component.vue"
-import MenuBottomComponent from "@/components/menu/menu-bottom.component.vue"
+import MenuTopComponent from "@/components/shared/layout/menu-top.component.vue"
+import MenuBottomComponent from "@/components/shared/layout/menu-bottom.component.vue"
 import { useUiStore } from "@/stores/ui.store"
 import { useTournamentStore } from "@/stores/tournament.store"
 import { useFightStore } from "@/stores/fight.store"

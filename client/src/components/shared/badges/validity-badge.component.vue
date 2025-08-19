@@ -8,12 +8,9 @@
 <script lang="ts">
 import { ModalityError } from "@/shared/types/modality.type"
 import { PropType, defineComponent } from "vue"
-import IconComponent from "@/components/core/icon.component.vue"
 
 export default defineComponent({
-    components: {
-        Icon: IconComponent,
-    },
+    components: {},
     props: {
         modalityErrors: {
             type: Object as PropType<ModalityError[] | null>,

@@ -15,7 +15,7 @@
 import { Boxer } from "@/types/boxing"
 import { ModalityError, ModalityErrorType } from "@/shared/types/modality.type"
 import { PropType, defineComponent } from "vue"
-import Icon from "@/components/core/icon.component.vue"
+import Icon from "@/components/shared/core/icon.component.vue"
 import { getBoxerAge } from "@/utils/string.utils"
 
 export default defineComponent({
