@@ -11,6 +11,7 @@ export const useBoxerStore = defineStore("boxer", {
         loading: false,
         error: null as string | null,
         restored: false,
+        boxerToEdit: null as Boxer | null,
     }),
     actions: {
         async fetchBoxers() {
@@ -49,41 +50,6 @@ export const useBoxerStore = defineStore("boxer", {
             } finally {
                 this.loading = false
             }
-        },
-        async createBoxer(boxer: Boxer): Promise<Boxer> {
-            try {
-                const tournamentStore = useTournamentStore()
-                const apiBoxerCreate = ApiAdapter.toApiBoxerCreate(
-                    boxer,
-                    tournamentStore.currentTournamentId || undefined
-                )
-                const created: ApiBoxerGet = await dbManager.addBoxer(apiBoxerCreate)
-                const newBoxer = ApiAdapter.toBoxer(created)
-                this.boxers.push(newBoxer)
-                return newBoxer
-            } catch (e: unknown) {
-                this.error = e instanceof Error ? e.message : "Unknown error"
-                throw e
-            }
-        },
-        async updateBoxer(boxer: Boxer): Promise<Boxer> {
-            try {
-                const apiBoxerUpdate = ApiAdapter.toApiBoxerCreate(boxer, undefined)
-                const updated: ApiBoxerGet = await dbManager.updateBoxer(apiBoxerUpdate, boxer.id)
-                const updatedBoxer = ApiAdapter.toBoxer(updated)
-                // Update the boxer in the store
-                const idx = this.boxers.findIndex((b) => b.id === updatedBoxer.id)
-                if (idx !== -1) {
-                    this.boxers[idx] = updatedBoxer
-                }
-                return updatedBoxer
-            } catch (e: unknown) {
-                this.error = e instanceof Error ? e.message : "Unknown error"
-                throw e
-            }
-        },
-        getBoxerById(boxerId: string): Boxer | undefined {
-            return this.boxers.find((b) => b.id === boxerId)
         },
     },
 })

@@ -67,14 +67,12 @@
                             class="btn btn-sm btn-outline-success"
                             data-bs-toggle="offcanvas"
                             data-bs-target="#boxerEditOffcanvasNavbar"
+                            @click="editBoxer()"
                         >
                             <i class="bi bi-pencil"></i>
                             Edit boxer
                         </div>
-                        <BoxerEditOffcanvasComponent
-                            :boxer="boxer"
-                            @boxer-saved="fetchBoxerData()"
-                        />
+                        <BoxerEditOffcanvasComponent @boxer-saved="fetchBoxerData()" />
                     </div>
                 </div>
             </div>
@@ -189,6 +187,12 @@ export default defineComponent({
             }
             const text = getClipboardText(this.boxer)
             navigator.clipboard.writeText(text)
+        },
+        editBoxer() {
+            if (!this.boxer) {
+                return
+            }
+            this.boxerStore.boxerToEdit = this.boxer
         },
     },
 })
