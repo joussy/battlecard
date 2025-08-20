@@ -21,7 +21,6 @@ import {
   SwitchFightDto,
   DeleteFightsDto,
 } from '@/dto/fight.dto';
-import { TournamentIdParamDto } from '@/dto/params.dto';
 
 @Controller('fights')
 export class FightController {
@@ -89,10 +88,10 @@ export class FightController {
   @Get('matchups/:tournamentId')
   async getMatchups(
     @User() user: AuthenticatedUser,
-    @Param() params: TournamentIdParamDto,
+    @Param('tournamentId') tournamentId: string,
   ): Promise<ApiFightGet[]> {
     const fights = await this.fightService.getMatchups(
-      params.tournamentId,
+      tournamentId,
       user,
     );
     return fights;

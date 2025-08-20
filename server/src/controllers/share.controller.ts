@@ -14,11 +14,6 @@ import { User } from '@/decorators/user.decorator';
 import { AuthenticatedUser } from '@/interfaces/auth.interface';
 import { FightExportService } from '@/services/fight-export.service';
 import { QrCodeService } from '@/services/qrcode.service';
-import {
-  GenerateFightCardTokenDto,
-  FightCardTokenDto,
-  FightCardTokenParamDto,
-} from '@/dto/share.dto';
 
 @Controller('share')
 export class ShareController {
@@ -31,12 +26,12 @@ export class ShareController {
   @SetMetadata('isPublic', true)
   @Get('fightcard/:fightCardToken')
   async getFightsByFightCardToken(
-    @Param() params: FightCardTokenParamDto,
+    @Param('fightCardToken') fightCardToken: string,
     @Res() res: ExpressResponse,
   ): Promise<void> {
     try {
       const data = await this.shareService.getTournamentByFightCardToken(
-        params.fightCardToken,
+        fightCardToken,
       );
       res.json(data);
     } catch (err) {
@@ -47,7 +42,7 @@ export class ShareController {
 
   @Post('fightcard/generateRoToken')
   async generateFightCardToken(
-    @Body() body: GenerateFightCardTokenDto,
+    @Body() body: { tournamentId: string },
     @User() user: AuthenticatedUser,
   ): Promise<ApiGeneratedToken> {
     const token = await this.shareService.generateFightCardToken(
@@ -62,7 +57,7 @@ export class ShareController {
   @SetMetadata('isPublic', true)
   @Post('fightcard/xlsx')
   async downloadSharedFightCardXlsx(
-    @Body() body: FightCardTokenDto,
+    @Body() body: { fightCardToken: string },
     @Res() res: ExpressResponse,
   ): Promise<void> {
     try {
@@ -88,7 +83,7 @@ export class ShareController {
   @SetMetadata('isPublic', true)
   @Post('fightcard/pdf')
   async downloadSharedFightCardPdf(
-    @Body() body: FightCardTokenDto,
+    @Body() body: { fightCardToken: string },
     @Res() res: ExpressResponse,
   ): Promise<void> {
     try {
@@ -110,7 +105,7 @@ export class ShareController {
   @SetMetadata('isPublic', true)
   @Post('fightcard/png')
   async downloadSharedFightCardPng(
-    @Body() body: FightCardTokenDto,
+    @Body() body: { fightCardToken: string },
     @Res() res: ExpressResponse,
   ): Promise<void> {
     try {
@@ -132,7 +127,7 @@ export class ShareController {
   @SetMetadata('isPublic', true)
   @Post('fightcard/csv')
   async downloadSharedFightCardCsv(
-    @Body() body: FightCardTokenDto,
+    @Body() body: { fightCardToken: string },
     @Res() res: ExpressResponse,
   ): Promise<void> {
     try {
