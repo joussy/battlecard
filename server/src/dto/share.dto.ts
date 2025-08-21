@@ -1,2 +1,38 @@
-// This file is intentionally empty as single-parameter DTOs were removed
-// per feedback to use @Param('paramName') and inline types instead
+import { IsUUID, IsString, IsNotEmpty, IsBoolean } from 'class-validator';
+
+export class GenerateFightCardTokenDto {
+  @IsUUID()
+  @IsNotEmpty()
+  tournamentId: string;
+}
+
+export class FightCardTokenDto {
+  @IsString()
+  @IsNotEmpty()
+  fightCardToken: string;
+}
+
+export class ExportWithQrCodeDto {
+  @IsUUID()
+  @IsNotEmpty()
+  tournamentId: string;
+
+  @IsBoolean()
+  displayQrCode: boolean;
+}
+
+export class SelectorExportDto {
+  @IsUUID()
+  @IsNotEmpty()
+  tournamentId: string;
+
+  @IsUUID('all', { each: true })
+  @IsNotEmpty({ each: true })
+  boxerIds: string[];
+}
+
+export class SimpleTournamentDto {
+  @IsUUID()
+  @IsNotEmpty()
+  tournamentId: string;
+}

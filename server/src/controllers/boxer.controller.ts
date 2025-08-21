@@ -5,6 +5,7 @@ import { ApiBoxerGet } from '@/shared/types/api';
 import { User } from '../decorators/user.decorator';
 import { AuthenticatedUser } from '../interfaces/auth.interface';
 import { CreateBoxerDto, UpdateBoxerDto } from '@/dto/boxer.dto';
+import { IdParamsDto } from '@/dto/params.dto';
 
 @Controller('boxers')
 export class BoxerController {
@@ -23,18 +24,18 @@ export class BoxerController {
 
   @Get(':id')
   async getBoxer(
-    @Param('id') id: string,
+    @Param() params: IdParamsDto,
     @User() user: AuthenticatedUser,
   ): Promise<ApiBoxerGet> {
-    return this.boxerService.getBoxer(id, user);
+    return this.boxerService.getBoxer(params.id, user);
   }
 
   @Put(':id')
   async update(
-    @Param('id') boxerId: string,
+    @Param() params: IdParamsDto,
     @Body() boxer: UpdateBoxerDto,
     @User() user: AuthenticatedUser,
   ): Promise<ApiBoxerGet> {
-    return this.boxerService.update(boxerId, boxer, user);
+    return this.boxerService.update(params.id, boxer, user);
   }
 }

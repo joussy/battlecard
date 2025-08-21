@@ -19,7 +19,7 @@ import {
 } from '@/shared/types/api';
 import { FightService } from '@/services/fight.service';
 import { CreateTournamentDto, UpdateTournamentDto } from '@/dto/tournament.dto';
-import { TournamentBoxerParamsDto } from '@/dto/params.dto';
+import { TournamentBoxerParamsDto, IdParamsDto, TournamentIdParamsDto } from '@/dto/params.dto';
 
 @Controller('tournaments')
 export class TournamentController {
@@ -44,36 +44,36 @@ export class TournamentController {
 
   @Put(':id')
   async update(
-    @Param('id') tournamentId: string,
+    @Param() params: IdParamsDto,
     @Body() tournament: UpdateTournamentDto,
     @User() user: AuthenticatedUser,
   ): Promise<ApiTournament> {
-    await this.tournamentService.validateTournamentAccess(tournamentId, user.id);
-    return this.tournamentService.update(tournamentId, tournament, user);
+    await this.tournamentService.validateTournamentAccess(params.id, user.id);
+    return this.tournamentService.update(params.id, tournament, user);
   }
 
   @Delete(':id')
   async delete(
-    @Param('id') tournamentId: string,
+    @Param() params: IdParamsDto,
     @User() user: AuthenticatedUser,
   ): Promise<void> {
-    await this.tournamentService.validateTournamentAccess(tournamentId, user.id);
+    await this.tournamentService.validateTournamentAccess(params.id, user.id);
 
-    return this.tournamentService.delete(tournamentId, user);
+    return this.tournamentService.delete(params.id, user);
   }
 
   @Get(':tournamentId/boxers')
   async getBoxersForTournament(
-    @Param('tournamentId') tournamentId: string,
+    @Param() params: TournamentIdParamsDto,
     @User() user: AuthenticatedUser,
   ): Promise<ApiBoxerGet[]> {
     await this.tournamentService.validateTournamentAccess(
-      tournamentId,
+      params.tournamentId,
       user.id,
     );
 
     return this.tournamentService.getBoxersForTournament(
-      tournamentId,
+      params.tournamentId,
       user,
     );
   }
@@ -96,15 +96,15 @@ export class TournamentController {
 
   @Get(':tournamentId/fights')
   async getFightsByTournamentId(
-    @Param('tournamentId') tournamentId: string,
+    @Param() params: TournamentIdParamsDto,
     @User() user: AuthenticatedUser,
   ): Promise<ApiFightGet[]> {
     await this.tournamentService.validateTournamentAccess(
-      tournamentId,
+      params.tournamentId,
       user.id,
     );
     return await this.fightService.findByTournamentId(
-      tournamentId,
+      params.tournamentId,
       user,
     );
   }

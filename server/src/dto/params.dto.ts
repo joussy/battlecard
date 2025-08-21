@@ -1,4 +1,4 @@
-import { IsUUID } from 'class-validator';
+import { IsUUID, IsString, IsNotEmpty } from 'class-validator';
 
 export class TournamentBoxerParamsDto {
   @IsUUID()
@@ -6,4 +6,22 @@ export class TournamentBoxerParamsDto {
 
   @IsUUID()
   boxerId: string;
+}
+
+export class IdParamsDto {
+  @IsUUID()
+  @IsNotEmpty()
+  id: string;
+}
+
+export class TournamentIdParamsDto {
+  @IsUUID()
+  @IsNotEmpty()
+  tournamentId: string;
+}
+
+export class FightCardTokenParamsDto {
+  @IsString()
+  @IsNotEmpty()
+  fightCardToken: string;
 }
