@@ -1,0 +1,675 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/api/users/me": {
+      "get": {
+        "operationId": "UserController_getMe",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "User"
+        ]
+      }
+    },
+    "/api/auth/google": {
+      "get": {
+        "operationId": "AuthController_googleAuth",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/api/auth/google/callback": {
+      "get": {
+        "operationId": "AuthController_googleAuthRedirect",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/api/tournaments": {
+      "get": {
+        "operationId": "TournamentController_findAll",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Tournament"
+        ]
+      },
+      "post": {
+        "operationId": "TournamentController_create",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Tournament"
+        ]
+      }
+    },
+    "/api/tournaments/{id}": {
+      "put": {
+        "operationId": "TournamentController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Tournament"
+        ]
+      },
+      "delete": {
+        "operationId": "TournamentController_delete",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Tournament"
+        ]
+      }
+    },
+    "/api/tournaments/{tournamentId}/boxers": {
+      "get": {
+        "operationId": "TournamentController_getBoxersForTournament",
+        "parameters": [
+          {
+            "name": "tournamentId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Tournament"
+        ]
+      }
+    },
+    "/api/tournaments/{tournamentId}/opponents/{boxerId}": {
+      "get": {
+        "operationId": "TournamentController_getPossibleOpponents",
+        "parameters": [
+          {
+            "name": "boxerId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "tournamentId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Tournament"
+        ]
+      }
+    },
+    "/api/tournaments/{tournamentId}/fights": {
+      "get": {
+        "operationId": "TournamentController_getFightsByTournamentId",
+        "parameters": [
+          {
+            "name": "tournamentId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Tournament"
+        ]
+      }
+    },
+    "/api/boxers": {
+      "post": {
+        "operationId": "BoxerController_create",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Boxer"
+        ]
+      }
+    },
+    "/api/boxers/{id}": {
+      "get": {
+        "operationId": "BoxerController_getBoxer",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Boxer"
+        ]
+      },
+      "put": {
+        "operationId": "BoxerController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Boxer"
+        ]
+      }
+    },
+    "/api/fights": {
+      "post": {
+        "operationId": "FightController_create",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Fight"
+        ]
+      },
+      "delete": {
+        "operationId": "FightController_deleteMany",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Fight"
+        ]
+      }
+    },
+    "/api/fights/reorder": {
+      "post": {
+        "operationId": "FightController_reorderFight",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Fight"
+        ]
+      }
+    },
+    "/api/fights/switch": {
+      "post": {
+        "operationId": "FightController_switch",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Fight"
+        ]
+      }
+    },
+    "/api/fights/matchups/{tournamentId}": {
+      "get": {
+        "operationId": "FightController_getMatchups",
+        "parameters": [
+          {
+            "name": "tournamentId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Fight"
+        ]
+      }
+    },
+    "/api/export/fightcard/pdf": {
+      "post": {
+        "operationId": "ExternalServicesController_getFightCardPdf",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "ExternalServices"
+        ]
+      }
+    },
+    "/api/export/fightcard/png": {
+      "post": {
+        "operationId": "ExternalServicesController_getFightCardPng",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "ExternalServices"
+        ]
+      }
+    },
+    "/api/export/selector/battlecard": {
+      "post": {
+        "operationId": "ExternalServicesController_getBattlecard",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "ExternalServices"
+        ]
+      }
+    },
+    "/api/export/fightcard/csv": {
+      "post": {
+        "operationId": "ExternalServicesController_getFightCardCsv",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "ExternalServices"
+        ]
+      }
+    },
+    "/api/export/fightcard/xlsx": {
+      "post": {
+        "operationId": "ExternalServicesController_getFightCardXlsx",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "ExternalServices"
+        ]
+      }
+    },
+    "/api/export/fightcard/html": {
+      "get": {
+        "operationId": "ExternalServicesController_getTemplateHtml",
+        "parameters": [
+          {
+            "name": "tournamentId",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "ExternalServices"
+        ]
+      }
+    },
+    "/api/export/selector/pdf": {
+      "post": {
+        "operationId": "ExternalServicesController_getSelectorPdf",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "ExternalServices"
+        ]
+      }
+    },
+    "/api/export/selector/png": {
+      "post": {
+        "operationId": "ExternalServicesController_getSelectorPng",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "ExternalServices"
+        ]
+      }
+    },
+    "/api/export/selector/csv": {
+      "post": {
+        "operationId": "ExternalServicesController_getSelectorCsv",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "ExternalServices"
+        ]
+      }
+    },
+    "/api/export/selector/xlsx": {
+      "post": {
+        "operationId": "ExternalServicesController_getSelectorXlsx",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "ExternalServices"
+        ]
+      }
+    },
+    "/api/import": {
+      "post": {
+        "operationId": "ImportController_importBoxers",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Import"
+        ]
+      }
+    },
+    "/api/import/previewfromcsvText": {
+      "post": {
+        "operationId": "ImportController_previewBoxersFromCsvText",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Import"
+        ]
+      }
+    },
+    "/api/import/previewFromCsvFile": {
+      "post": {
+        "operationId": "ImportController_previewBoxersFromCsvFile",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Import"
+        ]
+      }
+    },
+    "/api/import/previewfromffboxeFile": {
+      "post": {
+        "operationId": "ImportController_previewBoxersFromFfboxeFile",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Import"
+        ]
+      }
+    },
+    "/api/import/previewFromApi": {
+      "post": {
+        "operationId": "ImportController_previewFromApi",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Import"
+        ]
+      }
+    },
+    "/api/share/fightcard/{fightCardToken}": {
+      "get": {
+        "operationId": "ShareController_getFightsByFightCardToken",
+        "parameters": [
+          {
+            "name": "fightCardToken",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Share"
+        ]
+      }
+    },
+    "/api/share/fightcard/generateRoToken": {
+      "post": {
+        "operationId": "ShareController_generateFightCardToken",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Share"
+        ]
+      }
+    },
+    "/api/share/fightcard/xlsx": {
+      "post": {
+        "operationId": "ShareController_downloadSharedFightCardXlsx",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Share"
+        ]
+      }
+    },
+    "/api/share/fightcard/pdf": {
+      "post": {
+        "operationId": "ShareController_downloadSharedFightCardPdf",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Share"
+        ]
+      }
+    },
+    "/api/share/fightcard/png": {
+      "post": {
+        "operationId": "ShareController_downloadSharedFightCardPng",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Share"
+        ]
+      }
+    },
+    "/api/share/fightcard/csv": {
+      "post": {
+        "operationId": "ShareController_downloadSharedFightCardCsv",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Share"
+        ]
+      }
+    },
+    "/api/places/autocomplete": {
+      "get": {
+        "operationId": "PlacesController_autocomplete",
+        "parameters": [
+          {
+            "name": "q",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Places"
+        ]
+      }
+    }
+  },
+  "info": {
+    "title": "Battlecard",
+    "description": "The Fightmaker App",
+    "version": "1.0",
+    "contact": {}
+  },
+  "tags": [],
+  "servers": [],
+  "components": {
+    "schemas": {}
+  }
+}
