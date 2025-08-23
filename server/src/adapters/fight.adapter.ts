@@ -80,3 +80,12 @@ export function toFight(fight: FightGetDto): Fight {
   entity.tournamentId = fight.tournamentId;
   return entity;
 }
+
+export function toFightFromCreateDto(fight: CreateFightDto): Fight {
+  const entity = new Fight();
+  entity.order = fight.order;
+  entity.boxer1Id = fight.boxer1Id;
+  entity.boxer2Id = fight.boxer2Id;
+  entity.tournamentId = fight.tournamentId;
+  return entity;
+}

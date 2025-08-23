@@ -5,7 +5,7 @@ import { Tournament } from '../entities/tournament.entity';
 import { TournamentBoxer } from '../entities/tournament_boxer.entity';
 import { Boxer } from '../entities/boxer.entity';
 import { Fight } from '../entities/fight.entity';
-import { toTournament, toTournamentDto } from '../adapters/tournament.adapter';
+import { toTournament, toTournamentDto, toTournamentFromCreateDto, toTournamentFromUpdateDto } from '../adapters/tournament.adapter';
 import { toBoxerGetDto, toOpponentGetDto } from '../adapters/boxer.adapter';
 import { TournamentDto, BoxerGetDto, OpponentGetDto } from '@/dto/response.dto';
 import { ModalityService } from '../modality/modality.service';
@@ -39,7 +39,7 @@ export class TournamentService {
     user: AuthenticatedUser,
   ): Promise<TournamentDto> {
     const dbTournament = await this.tournamentRepository.save(
-      toTournament(tournament, user.id),
+      toTournamentFromCreateDto(tournament, user.id),
     );
     return toTournamentDto(dbTournament);
   }
@@ -49,7 +49,7 @@ export class TournamentService {
     tournament: UpdateTournamentDto,
     user: AuthenticatedUser,
   ): Promise<TournamentDto> {
-    const dbTournament = toTournament(tournament, user.id);
+    const dbTournament = toTournamentFromUpdateDto(tournament, user.id);
     dbTournament.id = tournamentId;
     const updatedTournament =
       await this.tournamentRepository.save(dbTournament);

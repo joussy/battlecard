@@ -4,7 +4,7 @@ import { In, Repository } from 'typeorm';
 import { Fight } from '../entities/fight.entity';
 import { Boxer } from '../entities/boxer.entity';
 import { FightGetDto } from '@/dto/response.dto';
-import { toFight, toFightGetDto } from '../adapters/fight.adapter';
+import { toFight, toFightGetDto, toFightFromCreateDto } from '../adapters/fight.adapter';
 import { ModalityService } from '../modality/modality.service';
 import { AuthenticatedUser } from '@/interfaces/auth.interface';
 import { TournamentService } from './tournament.service';
@@ -72,7 +72,7 @@ export class FightService {
         'A fight between these two boxers already exists in this tournament.',
       );
     }
-    return this.fightRepository.save(toFight(fight));
+    return this.fightRepository.save(toFightFromCreateDto(fight));
   }
 
   async deleteMany(fightIds: string[], user: AuthenticatedUser): Promise<void> {
