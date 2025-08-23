@@ -33,22 +33,6 @@ export const useTournamentBoxerStore = defineStore("tournamentBoxer", {
                 this.loading = false
             }
         },
-        // TODO: These methods need to be implemented when tournament-boxer endpoints are added to the OpenAPI spec
-        async addBoxerToTournament(boxerId: string, tournamentId: string) {
-            // Implementation pending - tournament-boxer relationship endpoints not found in generated SDK
-            console.warn("addBoxerToTournament not implemented - endpoint not found in OpenAPI spec")
-            throw new Error("Method not implemented - tournament-boxer endpoints missing from API")
-        },
-        async removeBoxersFromTournament(boxerIds: string[], tournamentId: string) {
-            // Implementation pending - tournament-boxer relationship endpoints not found in generated SDK
-            console.warn("removeBoxersFromTournament not implemented - endpoint not found in OpenAPI spec")
-            throw new Error("Method not implemented - tournament-boxer endpoints missing from API")
-        },
-        async removeBoxersFromTournamentAll(tournamentId: string) {
-            // Implementation pending - tournament-boxer relationship endpoints not found in generated SDK
-            console.warn("removeBoxersFromTournamentAll not implemented - endpoint not found in OpenAPI spec")
-            throw new Error("Method not implemented - tournament-boxer endpoints missing from API")
-        },
         async fetchBoxerOpponents(boxerId: string): Promise<Opponent[]> {
             try {
                 this.loading = true

@@ -165,7 +165,7 @@ import { useTournamentStore } from "@/stores/tournament.store"
 export default {
     props: {
         inputBoxers: {
-            type: Array as PropType<ImportBoxerDto[]>, // TODO: Use proper import boxer type when SDK is updated
+            type: Array as PropType<ImportBoxerDto[]>,
             required: true,
         },
         addRowAllowed: {
@@ -193,7 +193,7 @@ export default {
                 { key: "birthDate", label: "Birth Date", type: "date" },
                 { key: "license", label: "License", type: "text" },
             ],
-            rows: this.inputBoxers as ImportBoxerDto[], // TODO: Use proper import boxer type
+            rows: this.inputBoxers as ImportBoxerDto[],
             editIdx: null as number | null,
             editRow: {
                 lastName: "",
@@ -234,7 +234,7 @@ export default {
         watch(
             () => this.inputBoxers,
             (newValue) => {
-                this.rows = [...newValue] as ImportBoxerDto[] // TODO: Use proper import boxer type
+                this.rows = [...newValue] as ImportBoxerDto[]
                 this.errors = []
                 this.dirty = true
                 nextTick(() => this.enableTooltips())

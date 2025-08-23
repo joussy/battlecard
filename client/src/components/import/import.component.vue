@@ -188,26 +188,21 @@
         <div v-if="showImportTable">
             <span class="badge rounded-pill bg-primary me-2 mb-3"><span class="step-badge"></span></span>Preview the
             data and finalize import
-            <!-- TODO: Re-enable ImportTableComponent when updated to use generated SDK -->
             <div class="alert alert-warning">
                 Import functionality temporarily disabled while migrating to generated SDK
             </div>
-            <!--
             <ImportTableComponent
                 :input-boxers="rows"
                 :add-row-allowed="false"
             />
-            -->
         </div>
     </div>
 </template>
 <script lang="ts">
-// TODO: Import components need to be updated to use generated SDK
 import ImportTableComponent from "@/components/import/import-table.component.vue"
 import IconComponent from "@/components/shared/core/icon.component.vue"
 import { defineComponent } from "vue"
 import { useUiStore } from "@/stores/ui.store"
-// NOTE: dbManager import removed - methods below need to be updated to use generated SDK
 import { useTournamentStore } from "@/stores/tournament.store"
 import { ImportBoxerDto, ImportOpenApi } from "@/api"
 
