@@ -75,13 +75,18 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/GetTournamentDto"
+                    "type": "object"
                   }
                 }
               }
             }
           }
         },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
         "tags": [
           "Tournament"
         ]
@@ -111,6 +116,11 @@
             }
           }
         },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
         "tags": [
           "Tournament"
         ]
@@ -151,6 +161,11 @@
             }
           }
         },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
         "tags": [
           "Tournament"
         ]
@@ -172,6 +187,11 @@
             "description": ""
           }
         },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
         "tags": [
           "Tournament"
         ]
@@ -205,6 +225,11 @@
             }
           }
         },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
         "tags": [
           "Tournament"
         ]
@@ -246,6 +271,11 @@
             }
           }
         },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
         "tags": [
           "Tournament"
         ]
@@ -279,6 +309,11 @@
             }
           }
         },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
         "tags": [
           "Tournament"
         ]
@@ -1151,49 +1186,6 @@
           "apiEnabled",
           "created",
           "updated"
-        ]
-      },
-      "GetTournamentDto": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "description": "Unique tournament ID"
-          },
-          "name": {
-            "type": "string",
-            "description": "Tournament name"
-          },
-          "userId": {
-            "type": "string",
-            "description": "User who created the tournament"
-          },
-          "date": {
-            "type": "string",
-            "description": "Tournament date (YYYY-MM-DD)"
-          },
-          "address": {
-            "type": "string",
-            "description": "Tournament address (optional)"
-          },
-          "zipCode": {
-            "type": "string",
-            "description": "Tournament zip code (optional)"
-          },
-          "city": {
-            "type": "string",
-            "description": "Tournament city (optional)"
-          },
-          "formattedAddress": {
-            "type": "string",
-            "description": "Formatted address combining street, city, and zipCode"
-          }
-        },
-        "required": [
-          "id",
-          "name",
-          "userId",
-          "date"
         ]
       },
       "CreateTournamentDto": {
