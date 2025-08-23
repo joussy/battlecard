@@ -4,6 +4,10 @@ import {
   ApiImportBoxer,
   ApiOpponentGet,
 } from '@/shared/types/api';
+import {
+  BoxerGetDto,
+  ImportBoxerResponseDto,
+} from '@/dto/response.dto';
 import { Boxer } from '../entities/boxer.entity';
 import { IModality } from '@/modality/IModality';
 import { Gender, ModalityError } from '@/shared/types/modality.type';
@@ -71,6 +75,22 @@ export function toApiOpponentGet(
 
 export function toApiImportBoxer(csvBoxer: CsvBoxer): ApiImportBoxer {
   const entry: ApiImportBoxer = {
+    lastName: csvBoxer.lastName,
+    firstName: csvBoxer.firstName,
+    gender:
+      csvBoxer.gender === Gender.MALE.toString() ? Gender.MALE : Gender.FEMALE,
+    weight: parseFloat(csvBoxer.weight) || 0,
+    club: csvBoxer.club || '',
+    birthDate: csvBoxer.birthDate || '',
+    license: csvBoxer.license || '',
+    fightRecord: csvBoxer.fightRecord,
+  };
+
+  return entry;
+}
+
+export function toImportBoxerDto(csvBoxer: CsvBoxer): ImportBoxerResponseDto {
+  const entry: ImportBoxerResponseDto = {
     lastName: csvBoxer.lastName,
     firstName: csvBoxer.firstName,
     gender:

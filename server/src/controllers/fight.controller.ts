@@ -13,7 +13,7 @@ import { ModalityService } from '../modality/modality.service';
 import { AuthenticatedUser } from '@/interfaces/auth.interface';
 import { FightService } from '../services/fight.service';
 import { toApiFight } from '../adapters/fight.adapter';
-import { ApiFightGet } from '@/shared/types/api';
+import { FightGetDto } from '@/dto/response.dto';
 import {
   CreateFightDto,
   ReorderFightDto,
@@ -81,7 +81,7 @@ export class FightController {
   async switch(
     @Body() body: SwitchFightDto,
     @User() user: AuthenticatedUser,
-  ): Promise<ApiFightGet> {
+  ): Promise<FightGetDto> {
     const updated = await this.fightService.switch(body.fightId, user);
     return toApiFight(updated, this.modalityService.getModality());
   }
@@ -90,7 +90,7 @@ export class FightController {
   async getMatchups(
     @User() user: AuthenticatedUser,
     @Param() params: TournamentIdParamsDto,
-  ): Promise<ApiFightGet[]> {
+  ): Promise<FightGetDto[]> {
     const fights = await this.fightService.getMatchups(
       params.tournamentId,
       user,

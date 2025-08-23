@@ -1,7 +1,7 @@
 import { Controller, Param, Get, Post, Body, Res } from '@nestjs/common';
 import { Response as ExpressResponse } from 'express';
 import { ShareService } from '@/services/share.service';
-import { ApiGeneratedToken } from '@/shared/types/api';
+import { GeneratedTokenDto } from '@/dto/response.dto';
 import { User } from '@/decorators/auth.decorator';
 import { AuthenticatedUser } from '@/interfaces/auth.interface';
 import { FightExportService } from '@/services/fight-export.service';
@@ -39,7 +39,7 @@ export class ShareController {
   async generateFightCardToken(
     @Body() body: GenerateFightCardTokenDto,
     @User() user: AuthenticatedUser,
-  ): Promise<ApiGeneratedToken> {
+  ): Promise<GeneratedTokenDto> {
     const token = await this.shareService.generateFightCardToken(
       body.tournamentId,
       user.id,

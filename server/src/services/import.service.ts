@@ -2,12 +2,12 @@ import { Injectable, Logger } from '@nestjs/common';
 import { AuthenticatedUser } from '@/interfaces/auth.interface';
 import { BoxerService } from './boxer.service';
 import {
-  ApiBoxerCreate,
-  ApiBoxerImportError,
-  ApiImportBoxer,
-  ApiImportBoxersResponse,
-  ApiPreviewBoxersResponse,
-} from '@/shared/types/api';
+  BoxerImportErrorDto,
+  ImportBoxersResponseDto,
+  PreviewBoxersResponseDto,
+  ImportBoxerResponseDto,
+} from '@/dto/response.dto';
+import { ApiBoxerCreate } from '@/shared/types/api';
 import { TournamentService } from './tournament.service';
 import { Repository } from 'typeorm';
 import { Boxer } from '@/entities/boxer.entity';
@@ -15,7 +15,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Gender } from '@/shared/types/modality.type';
 import { parseCsvAsync } from '@/utils/csv.utils';
 import { CsvBoxer, csvDelimiter } from '@/interfaces/csv.interface';
-import { toApiImportBoxer } from '@/adapters/boxer.adapter';
+import { toImportBoxerDto } from '@/adapters/boxer.adapter';
 import { ConfigService } from '@nestjs/config';
 import { parse, format } from 'date-fns';
 
@@ -32,7 +32,7 @@ export class ImportService {
 
   async previewBoxersFromCsv(
     payload: string,
-  ): Promise<ApiPreviewBoxersResponse> {
+  ): Promise<PreviewBoxersResponseDto> {
     // Parse the CSV payload using csv-parse
     const res = (await parseCsvAsync(payload, {
       columns: true,
@@ -47,8 +47,8 @@ export class ImportService {
         boxers: [],
       };
     }
-    // Map the parsed CSV data to ImportBoxerDto using array indices
-    const parsed: ApiImportBoxer[] = res.map((row) => toApiImportBoxer(row));
+    // Map the parsed CSV data to ImportBoxerResponseDto using array indices
+    const parsed: ImportBoxerResponseDto[] = res.map((row) => toImportBoxerDto(row));
     return {
       boxers: parsed,
       success: true,
@@ -58,7 +58,7 @@ export class ImportService {
 
   async previewBoxersFromFFboxe(
     payload: string,
-  ): Promise<ApiPreviewBoxersResponse> {
+  ): Promise<PreviewBoxersResponseDto> {
     // Parse the CSV payload using csv-parse
     const res = (await parseCsvAsync(payload, {
       columns: true,
@@ -80,8 +80,8 @@ export class ImportService {
         boxers: [],
       };
     }
-    // Map the parsed CSV data to ImportBoxerDto using array indices
-    const parsed: ApiImportBoxer[] = res.map((row) => {
+    // Map the parsed CSV data to ImportBoxerResponseDto using array indices
+    const parsed: ImportBoxerResponseDto[] = res.map((row) => {
       let gender: Gender | undefined = undefined;
       if (row['Civilité'] === 'M') {
         gender = Gender.MALE;
@@ -100,7 +100,7 @@ export class ImportService {
         }
       }
 
-      const entry: ApiImportBoxer = {
+      const entry: ImportBoxerResponseDto = {
         lastName: row['Nom'] || '',
         firstName: row['Prénom'] || '',
         // fights: row[CSV_IDX_FIGHTS] ? parseInt(row[CSV_IDX_FIGHTS], 10) : undefined, // optional
@@ -130,10 +130,10 @@ export class ImportService {
   }
 
   async verifyBoxers(
-    boxers: ApiImportBoxer[],
+    boxers: ImportBoxerResponseDto[],
     user: AuthenticatedUser,
-  ): Promise<ApiBoxerImportError[]> {
-    const errors: ApiBoxerImportError[] = [];
+  ): Promise<BoxerImportErrorDto[]> {
+    const errors: BoxerImportErrorDto[] = [];
     // Check for duplicate licenses in the import payload
     const licenseCount: Record<string, number> = {};
     boxers.forEach((boxer) => {
@@ -236,11 +236,11 @@ export class ImportService {
   }
 
   async importBoxers(
-    boxers: ApiImportBoxer[],
+    boxers: ImportBoxerResponseDto[],
     dry: boolean,
     tournamentId: string,
     user: AuthenticatedUser,
-  ): Promise<ApiImportBoxersResponse> {
+  ): Promise<ImportBoxersResponseDto> {
     const errors = await this.verifyBoxers(boxers, user);
     if (dry || errors.length > 0) {
       return {
@@ -293,9 +293,9 @@ export class ImportService {
       errors: errors,
     };
   }
-  async previewBoxersFromApi(ids: string[]): Promise<ApiPreviewBoxersResponse> {
+  async previewBoxersFromApi(ids: string[]): Promise<PreviewBoxersResponseDto> {
     let response: Response;
-    const csvBoxers: ApiImportBoxer[] = [];
+    const csvBoxers: ImportBoxerResponseDto[] = [];
     for (const id of ids) {
       try {
         this.logger.debug('Calling Import API to import boxer by ID:', id);
@@ -345,7 +345,7 @@ export class ImportService {
       }
       // Optionally, add more property checks here to validate CsvBoxer shape
       this.logger.debug('Parsed boxers from Import API response:', parsed);
-      csvBoxers.push(toApiImportBoxer(parsed as CsvBoxer));
+      csvBoxers.push(toImportBoxerDto(parsed as CsvBoxer));
     }
     return {
       boxers: csvBoxers,

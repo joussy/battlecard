@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Body, Param, Put } from '@nestjs/common';
 import { BoxerService } from '../services/boxer.service';
 import { ModalityService } from '../modality/modality.service';
-import { ApiBoxerGet } from '@/shared/types/api';
+import { BoxerGetDto } from '@/dto/response.dto';
 import { User } from '../decorators/auth.decorator';
 import { AuthenticatedUser } from '../interfaces/auth.interface';
 import { CreateBoxerDto, UpdateBoxerDto } from '@/dto/boxer.dto';
@@ -18,7 +18,7 @@ export class BoxerController {
   async create(
     @Body() boxer: CreateBoxerDto,
     @User() user: AuthenticatedUser,
-  ): Promise<ApiBoxerGet> {
+  ): Promise<BoxerGetDto> {
     return this.boxerService.create(boxer, user);
   }
 
@@ -26,7 +26,7 @@ export class BoxerController {
   async getBoxer(
     @Param() params: IdParamsDto,
     @User() user: AuthenticatedUser,
-  ): Promise<ApiBoxerGet> {
+  ): Promise<BoxerGetDto> {
     return this.boxerService.getBoxer(params.id, user);
   }
 
@@ -35,7 +35,7 @@ export class BoxerController {
     @Param() params: IdParamsDto,
     @Body() boxer: UpdateBoxerDto,
     @User() user: AuthenticatedUser,
-  ): Promise<ApiBoxerGet> {
+  ): Promise<BoxerGetDto> {
     return this.boxerService.update(params.id, boxer, user);
   }
 }

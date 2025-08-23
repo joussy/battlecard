@@ -15,9 +15,9 @@ import { AuthenticatedUser } from '@/interfaces/auth.interface';
 import { TournamentService } from '@/services/tournament.service';
 import { ImportService } from '@/services/import.service';
 import {
-  ApiImportBoxersResponse,
-  ApiPreviewBoxersResponse,
-} from '@/shared/types/api';
+  ImportBoxersResponseDto,
+  PreviewBoxersResponseDto,
+} from '@/dto/response.dto';
 import { Express } from 'express';
 import { FileInterceptor } from '@nestjs/platform-express';
 import {
@@ -39,7 +39,7 @@ export class ImportController {
   async importBoxers(
     @Body() dto: ImportBoxersDto,
     @User() user: AuthenticatedUser,
-  ): Promise<ApiImportBoxersResponse> {
+  ): Promise<ImportBoxersResponseDto> {
     return this.importService.importBoxers(
       dto.boxers,
       dto.dry,
@@ -51,7 +51,7 @@ export class ImportController {
   @Post('previewfromcsvText')
   async previewBoxersFromCsvText(
     @Body() dto: PreviewBoxersCsvDto,
-  ): Promise<ApiPreviewBoxersResponse> {
+  ): Promise<PreviewBoxersResponseDto> {
     return await this.importService.previewBoxersFromCsv(dto.payload);
   }
 
@@ -70,7 +70,7 @@ export class ImportController {
       }),
     )
     file: Express.Multer.File,
-  ): Promise<ApiPreviewBoxersResponse> {
+  ): Promise<PreviewBoxersResponseDto> {
     //convert file buffer to string
     if (!file) {
       throw new Error('File buffer is missing');
@@ -95,7 +95,7 @@ export class ImportController {
       }),
     )
     file: Express.Multer.File,
-  ): Promise<ApiPreviewBoxersResponse> {
+  ): Promise<PreviewBoxersResponseDto> {
     //convert file buffer to string
     if (!file) {
       throw new Error('File buffer is missing');
@@ -109,7 +109,7 @@ export class ImportController {
   async previewFromApi(
     @Body() dto: PreviewBoxersApiDto,
     @User() user: AuthenticatedUser,
-  ): Promise<ApiPreviewBoxersResponse> {
+  ): Promise<PreviewBoxersResponseDto> {
     if (!user.apiEnabled) {
       this.logger.error('API access is not enabled for user:', user.id);
       return {

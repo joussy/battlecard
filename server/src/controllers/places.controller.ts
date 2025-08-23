@@ -1,6 +1,6 @@
 import { Controller, Get, Query } from '@nestjs/common';
 import { PlacesService } from '@/services/places.service';
-import { ApiAddressAutocompleteGet } from '@/shared/types/api';
+import { AddressAutocompleteGetDto } from '@/dto/response.dto';
 import { SearchQueryDto } from '@/dto/query.dto';
 
 @Controller('places')
@@ -10,7 +10,7 @@ export class PlacesController {
   @Get('autocomplete')
   async autocomplete(
     @Query() query: SearchQueryDto,
-  ): Promise<ApiAddressAutocompleteGet[]> {
+  ): Promise<AddressAutocompleteGetDto[]> {
     return await this.placesService.autocomplete(query.q);
   }
 }
