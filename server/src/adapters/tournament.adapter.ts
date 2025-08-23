@@ -1,4 +1,5 @@
 import { ApiTournament, ApiTournamentCreate } from '@/shared/types/api';
+import { TournamentDto } from '@/dto/response.dto';
 import { Tournament } from '../entities/tournament.entity';
 import { formatAddress } from '@/utils/addressUtils';
 
@@ -17,6 +18,23 @@ export function toTournament(
 }
 
 export function toApiTournament(tournament: Tournament): ApiTournament {
+  return {
+    id: tournament.id,
+    name: tournament.name,
+    userId: tournament.userId,
+    date: tournament.date,
+    address: tournament.address,
+    zipCode: tournament.zipCode,
+    city: tournament.city,
+    formattedAddress: formatAddress({
+      street: tournament.address,
+      city: tournament.city,
+      zipCode: tournament.zipCode,
+    }),
+  };
+}
+
+export function toTournamentDto(tournament: Tournament): TournamentDto {
   return {
     id: tournament.id,
     name: tournament.name,

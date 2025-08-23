@@ -7,6 +7,7 @@ import {
 import {
   BoxerGetDto,
   ImportBoxerResponseDto,
+  OpponentGetDto,
 } from '@/dto/response.dto';
 import { Boxer } from '../entities/boxer.entity';
 import { IModality } from '@/modality/IModality';
@@ -55,6 +56,32 @@ export function toApiBoxerGet(
   };
 }
 
+export function toBoxerGetDto(
+  boxer: Boxer,
+  modality: IModality,
+  selectedFights?: number,
+  eligibleFights?: number,
+): BoxerGetDto {
+  return {
+    id: boxer.id,
+    lastName: boxer.lastName,
+    firstName: boxer.firstName,
+    birthDate: boxer.birthDate,
+    nbFights: boxer.nbFights,
+    club: boxer.club,
+    weight: boxer.weight,
+    gender: boxer.gender,
+    license: boxer.license,
+    userId: boxer.userId,
+    created: boxer.created,
+    updated: boxer.updated,
+    category: modality.getCategoryName(boxer, false),
+    categoryShort: modality.getCategoryName(boxer, true),
+    selectedFights: selectedFights,
+    eligibleFights: eligibleFights,
+  };
+}
+
 export function toApiOpponentGet(
   boxer: Boxer,
   modality: IModality,
@@ -64,6 +91,24 @@ export function toApiOpponentGet(
 ): ApiOpponentGet {
   return {
     ...toApiBoxerGet(boxer, modality),
+    // modalityErrors: [], // Assuming modalityErrors is not available in Boxer entity
+    weightDifference: 0, // Placeholder value, adjust as needed
+    isEligible: true, // Placeholder value, adjust as needed
+    fightId: fightId,
+    selectedFights: selectedFights,
+    modalityErrors: modalityErrors,
+  };
+}
+
+export function toOpponentGetDto(
+  boxer: Boxer,
+  modality: IModality,
+  selectedFights: number,
+  modalityErrors: ModalityError[],
+  fightId?: string,
+): OpponentGetDto {
+  return {
+    ...toBoxerGetDto(boxer, modality),
     // modalityErrors: [], // Assuming modalityErrors is not available in Boxer entity
     weightDifference: 0, // Placeholder value, adjust as needed
     isEligible: true, // Placeholder value, adjust as needed

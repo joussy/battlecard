@@ -1,11 +1,12 @@
 import { ApiFightCreate, ApiFightGet } from '@/shared/types/api';
+import { FightGetDto } from '@/dto/response.dto';
 import { Fight } from '../entities/fight.entity';
 import { Gender } from '@/shared/types/modality.type';
 import { FightCardTemplate } from '@/interfaces/template.interface';
 import { IModality } from '@/modality/IModality';
 import { Tournament } from '@/entities/tournament.entity';
 import { format } from 'date-fns';
-import { toApiBoxerGet } from './boxer.adapter';
+import { toApiBoxerGet, toBoxerGetDto } from './boxer.adapter';
 import { formatAddress } from '@/utils/addressUtils';
 
 export function toFight(apiFight: ApiFightGet): Fight {
@@ -34,6 +35,19 @@ export function toApiFight(fight: Fight, modality: IModality): ApiFightGet {
     order: fight.order,
     boxer1: toApiBoxerGet(fight.boxer1, modality),
     boxer2: toApiBoxerGet(fight.boxer2, modality),
+    tournamentId: fight.tournamentId,
+    roundDurationAsSeconds: fightDuration.roundDurationAsSeconds,
+    rounds: fightDuration.rounds,
+  };
+}
+
+export function toFightGetDto(fight: Fight, modality: IModality): FightGetDto {
+  const fightDuration = modality.getFightDuration(fight.boxer1, fight.boxer2);
+  return {
+    id: fight.id,
+    order: fight.order,
+    boxer1: toBoxerGetDto(fight.boxer1, modality),
+    boxer2: toBoxerGetDto(fight.boxer2, modality),
     tournamentId: fight.tournamentId,
     roundDurationAsSeconds: fightDuration.roundDurationAsSeconds,
     rounds: fightDuration.rounds,
