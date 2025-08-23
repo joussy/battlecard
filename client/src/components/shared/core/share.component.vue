@@ -174,7 +174,7 @@
 </template>
 
 <script lang="ts">
-import exportManager from "@/managers/export.manager"
+import { ShareOpenApi } from "@/api"
 import { useTournamentStore } from "@/stores/tournament.store"
 import bootstrap from "@/utils/bootstrap.singleton"
 import { Modal } from "bootstrap"
@@ -266,7 +266,16 @@ export default {
         },
         async generateShareLink() {
             this.isGeneratingLink = true
-            const shared = await exportManager.generateFightCardRoToken(this.tournamentId)
+            const shared = await ShareOpenApi.generateFightCardToken({
+                body: { tournamentId: this.tournamentId },
+            })
+
+            if (!shared) {
+                console.error("Failed to generate share link")
+                this.isGeneratingLink = false
+                return
+            }
+
             this.shareLink = shared.url
             this.qrCodePng = shared.qrcode
             this.isGeneratingLink = false

@@ -86,8 +86,9 @@ import { useTournamentStore } from "@/stores/tournament.store"
 import { watch } from "vue"
 import ShareComponent from "@/components/shared/core/share.component.vue"
 import MatchupModalComponent from "@/components/tournament/matchup-modal.component.vue"
-import exportManager from "@/managers/export.manager"
 import TournamentHeaderComponent from "@/components/shared/layout/tournament-header.component.vue"
+import { downloadWithDom } from "@/utils/download.utils"
+import { ExternalServicesOpenApi } from "@/api"
 
 export default {
     components: {
@@ -151,17 +152,29 @@ export default {
         getNbFights() {
             return this.fightCard.length
         },
-        downloadCallback(fileType: string, displayQrCode: boolean): Promise<void> {
+        async downloadCallback(fileType: string, displayQrCode: boolean): Promise<void> {
+            let res: Blob | File | undefined
             if (fileType === "xlsx") {
-                return exportManager.downloadFightCardXlsx(this.tournamentId)
+                res = await ExternalServicesOpenApi.getFightCardXlsx({
+                    body: { tournamentId: this.tournamentId },
+                })
             } else if (fileType === "csv") {
-                return exportManager.downloadFightCardCsv(this.tournamentId)
+                res = await ExternalServicesOpenApi.getFightCardCsv({
+                    body: { tournamentId: this.tournamentId },
+                })
             } else if (fileType === "pdf") {
-                return exportManager.downloadFightCardPdf(this.tournamentId, displayQrCode)
+                res = await ExternalServicesOpenApi.getFightCardPdf({
+                    body: { tournamentId: this.tournamentId, displayQrCode },
+                })
             } else if (fileType === "png") {
-                return exportManager.downloadFightCardPng(this.tournamentId, displayQrCode)
+                res = await ExternalServicesOpenApi.getFightCardPng({
+                    body: { tournamentId: this.tournamentId, displayQrCode },
+                })
+            } else {
+                return Promise.reject(new Error("Unsupported file type"))
             }
-            return Promise.reject(new Error("Unsupported file type"))
+            console.log("Downloaded file:", res)
+            downloadWithDom(res, `fight-card.${fileType}`)
         },
     },
 }

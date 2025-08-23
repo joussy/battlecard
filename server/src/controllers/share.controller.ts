@@ -17,7 +17,12 @@ import { QrCodeService } from '@/services/qrcode.service';
 import { FightCardTokenParamsDto } from '@/dto/params.dto';
 import { GenerateFightCardTokenDto, FightCardTokenDto } from '@/dto/share.dto';
 import { NoAuthRequired } from '@/decorators/auth.decorator';
-import { ApiOkResponse, ApiForbiddenResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiOkResponse,
+  ApiForbiddenResponse,
+  ApiTags,
+  ApiResponse,
+} from '@nestjs/swagger';
 
 @ApiTags('share')
 @Controller('share')
@@ -62,6 +67,14 @@ export class ShareController {
 
   @NoAuthRequired()
   @Post('fightcard/xlsx')
+  @ApiResponse({
+    status: 200,
+    content: {
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': {
+        schema: { type: 'string', format: 'binary' },
+      },
+    },
+  })
   async downloadSharedFightCardXlsx(
     @Body() body: FightCardTokenDto,
     @Res() res: ExpressResponse,
@@ -88,6 +101,14 @@ export class ShareController {
   }
   @NoAuthRequired()
   @Post('fightcard/pdf')
+  @ApiResponse({
+    status: 200,
+    content: {
+      'application/pdf': {
+        schema: { type: 'string', format: 'binary' },
+      },
+    },
+  })
   async downloadSharedFightCardPdf(
     @Body() body: FightCardTokenDto,
     @Res() res: ExpressResponse,
@@ -110,6 +131,14 @@ export class ShareController {
   }
   @NoAuthRequired()
   @Post('fightcard/png')
+  @ApiResponse({
+    status: 200,
+    content: {
+      'image/png': {
+        schema: { type: 'string', format: 'binary' },
+      },
+    },
+  })
   async downloadSharedFightCardPng(
     @Body() body: FightCardTokenDto,
     @Res() res: ExpressResponse,
@@ -132,6 +161,14 @@ export class ShareController {
   }
   @NoAuthRequired()
   @Post('fightcard/csv')
+  @ApiResponse({
+    status: 200,
+    content: {
+      'text/csv': {
+        schema: { type: 'string', format: 'binary' },
+      },
+    },
+  })
   async downloadSharedFightCardCsv(
     @Body() body: FightCardTokenDto,
     @Res() res: ExpressResponse,

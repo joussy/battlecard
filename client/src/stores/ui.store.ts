@@ -2,6 +2,7 @@ import { defineStore } from "pinia"
 import type { UiTheme, UiStorage, Facets } from "@/types/ui"
 import type { UserAccount } from "@/types/user"
 import { useTournamentStore } from "./tournament.store"
+import { User, UserOpenApi } from "@/api"
 
 export const useUiStore = defineStore("ui", {
     state: () => ({
@@ -30,20 +31,11 @@ export const useUiStore = defineStore("ui", {
                 console.warn("No JWT token set, cannot fetch user profile.")
                 return
             }
-            const res = await fetch("/api/users/me", {
-                headers: { Authorization: `Bearer ${this.jwtToken}` },
-            })
-            if (res.ok) {
-                const user = await res.json()
-                this.account = {
-                    id: user.id,
-                    name: user.name,
-                    email: user.email,
-                    picture: user.picture || null,
-                    apiEnabled: user.apiEnabled,
-                    authToken: this.jwtToken,
-                }
-            } else {
+            let user: User | undefined
+            try {
+                user = await UserOpenApi.getMe()
+            } catch (ex) {
+                const res = ex as Response
                 this.account = null
                 if (res.status === 401) {
                     console.warn("Unauthorized access, JWT token may be invalid.")
@@ -52,6 +44,16 @@ export const useUiStore = defineStore("ui", {
                     if (this.router) {
                         this.router.push({ name: "auth" })
                     }
+                }
+            }
+            if (user && this.jwtToken) {
+                this.account = {
+                    id: user.id,
+                    name: user.name,
+                    email: user.email,
+                    picture: user.picture || null,
+                    apiEnabled: user.apiEnabled,
+                    authToken: this.jwtToken,
                 }
             }
         },

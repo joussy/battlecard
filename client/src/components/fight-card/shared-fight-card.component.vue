@@ -82,9 +82,9 @@ import { SharedFightCard } from "@/types/boxing.d"
 import FightCardGridComponent from "@/components/fight-card/fight-card-grid.component.vue"
 import { ShareOpenApi } from "@/api"
 import ApiAdapter from "@/adapters/api.adapter"
-import exportManager from "@/managers/export.manager"
 import ShareComponent from "@/components/shared/core/share.component.vue"
 import IconComponent from "@/components/shared/core/icon.component.vue"
+import { downloadWithDom } from "@/utils/download.utils"
 
 export default {
     components: {
@@ -131,24 +131,32 @@ export default {
         }
     },
     methods: {
-        downloadCallback(fileType: string): Promise<void> {
+        async downloadCallback(fileType: string): Promise<void> {
             if (!this.roToken) {
                 return Promise.reject(new Error("RO Token is not set"))
             }
-            if (fileType === "pdf") {
-                return exportManager.downloadSharedFightCardPdf(this.roToken)
-            }
+            let res: Blob | File | undefined
             if (fileType === "xlsx") {
-                return exportManager.downloadSharedFightCardXlsx(this.roToken)
+                res = await ShareOpenApi.downloadSharedFightCardXlsx({
+                    body: { fightCardToken: this.roToken },
+                })
+            } else if (fileType === "csv") {
+                res = await ShareOpenApi.downloadSharedFightCardCsv({
+                    body: { fightCardToken: this.roToken },
+                })
+            } else if (fileType === "pdf") {
+                res = await ShareOpenApi.downloadSharedFightCardPdf({
+                    body: { fightCardToken: this.roToken },
+                })
+            } else if (fileType === "png") {
+                res = await ShareOpenApi.downloadSharedFightCardPng({
+                    body: { fightCardToken: this.roToken },
+                })
+            } else {
+                return Promise.reject(new Error("Unsupported file type"))
             }
-            if (fileType === "csv") {
-                return exportManager.downloadSharedFightCardCsv(this.roToken)
-            }
-            if (fileType === "png") {
-                return exportManager.downloadSharedFightCardPng(this.roToken)
-            }
-
-            return Promise.reject(new Error("Unsupported file type"))
+            console.log("Downloaded file:", res)
+            downloadWithDom(res, `fight-card.${fileType}`)
         },
     },
 }

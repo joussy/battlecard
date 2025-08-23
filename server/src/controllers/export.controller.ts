@@ -7,6 +7,7 @@ import {
   Res,
   UseGuards,
 } from '@nestjs/common';
+import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Response as ExpressResponse } from 'express';
 import { AuthenticatedUser } from '@/interfaces/auth.interface';
 import { FightExportService } from '@/services/fight-export.service';
@@ -32,6 +33,14 @@ export class ExternalServicesController {
   ) {}
 
   @Post('fightcard/pdf')
+  @ApiResponse({
+    status: 200,
+    content: {
+      'application/pdf': {
+        schema: { type: 'string', format: 'binary' },
+      },
+    },
+  })
   async getFightCardPdf(
     @Body() body: ExportWithQrCodeDto,
     @User() user: AuthenticatedUser,
@@ -68,6 +77,14 @@ export class ExternalServicesController {
   }
 
   @Post('fightcard/png')
+  @ApiResponse({
+    status: 200,
+    content: {
+      'image/png': {
+        schema: { type: 'string', format: 'binary' },
+      },
+    },
+  })
   async getFightCardPng(
     @Body() body: ExportWithQrCodeDto,
     @User() user: AuthenticatedUser,
@@ -103,6 +120,14 @@ export class ExternalServicesController {
   }
 
   @Post('selector/battlecard')
+  @ApiResponse({
+    status: 200,
+    content: {
+      'text/csv': {
+        schema: { type: 'string', format: 'binary' },
+      },
+    },
+  })
   async getBattlecard(
     @Body() body: SelectorExportDto,
     @User() user: AuthenticatedUser,
@@ -130,6 +155,14 @@ export class ExternalServicesController {
   }
 
   @Post('fightcard/csv')
+  @ApiResponse({
+    status: 200,
+    content: {
+      'text/csv': {
+        schema: { type: 'string', format: 'binary' },
+      },
+    },
+  })
   async getFightCardCsv(
     @Body() body: SimpleTournamentDto,
     @User() user: AuthenticatedUser,
@@ -146,7 +179,7 @@ export class ExternalServicesController {
       res.setHeader('Content-Type', 'text/csv');
       res.setHeader(
         'Content-Disposition',
-        'attachment; filename="fight-card.csv"',
+        'attachment; filename=fight-card.csv',
       );
       res.send(csvContent);
     } catch (err) {
@@ -156,6 +189,14 @@ export class ExternalServicesController {
   }
 
   @Post('fightcard/xlsx')
+  @ApiResponse({
+    status: 200,
+    content: {
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': {
+        schema: { type: 'string', format: 'binary' },
+      },
+    },
+  })
   async getFightCardXlsx(
     @Body() body: SimpleTournamentDto,
     @User() user: AuthenticatedUser,
@@ -204,6 +245,14 @@ export class ExternalServicesController {
     }
   }
   @Post('selector/pdf')
+  @ApiResponse({
+    status: 200,
+    content: {
+      'application/pdf': {
+        schema: { type: 'string', format: 'binary' },
+      },
+    },
+  })
   async getSelectorPdf(
     @Body() body: SelectorExportDto,
     @User() user: AuthenticatedUser,
@@ -231,6 +280,14 @@ export class ExternalServicesController {
   }
 
   @Post('selector/png')
+  @ApiResponse({
+    status: 200,
+    content: {
+      'image/png': {
+        schema: { type: 'string', format: 'binary' },
+      },
+    },
+  })
   async getSelectorPng(
     @Body() body: SelectorExportDto,
     @User() user: AuthenticatedUser,
@@ -258,6 +315,14 @@ export class ExternalServicesController {
   }
 
   @Post('selector/csv')
+  @ApiResponse({
+    status: 200,
+    content: {
+      'text/csv': {
+        schema: { type: 'string', format: 'binary' },
+      },
+    },
+  })
   async getSelectorCsv(
     @Body() body: SelectorExportDto,
     @User() user: AuthenticatedUser,
@@ -285,6 +350,14 @@ export class ExternalServicesController {
   }
 
   @Post('selector/xlsx')
+  @ApiResponse({
+    status: 200,
+    content: {
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': {
+        schema: { type: 'string', format: 'binary' },
+      },
+    },
+  })
   async getSelectorXlsx(
     @Body() body: SelectorExportDto,
     @User() user: AuthenticatedUser,

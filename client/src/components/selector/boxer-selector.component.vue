@@ -129,7 +129,7 @@
 
 <script lang="ts">
 import { defineComponent, watch } from "vue"
-import { Gender } from "@/api"
+import { ExternalServicesOpenApi, Gender } from "@/api"
 import { ModalityErrorType } from "@/api"
 import BoxerTileComponent from "@/components/selector/boxer-tile.component.vue"
 import BoxerAddOffcanvasComponent from "@/components/selector/add/boxer-add-offcanvas.component.vue"
@@ -144,9 +144,9 @@ import SearchFacetsComponent from "@/components/selector/search-facets.component
 import Fuse from "fuse.js"
 import { Boxer } from "@/types/boxing"
 import { FileType } from "@/types/api"
-import exportManager from "@/managers/export.manager"
 import { getBoxerAge } from "@/utils/string.utils"
 import TournamentHeaderComponent from "@/components/shared/layout/tournament-header.component.vue"
+import { downloadWithDom } from "@/utils/download.utils"
 
 export default defineComponent({
     components: {
@@ -284,22 +284,49 @@ export default defineComponent({
             }
 
             const boxerIds = this.boxersToDisplay.map((boxer) => boxer.id)
+            let res: Blob | File | undefined
 
             if (fileType === "xlsx") {
-                await exportManager.downloadSelectorXlsx(this.tournamentStore.currentTournamentId, boxerIds)
+                res = await ExternalServicesOpenApi.getSelectorXlsx({
+                    body: {
+                        tournamentId: this.tournamentStore.currentTournamentId,
+                        boxerIds: boxerIds,
+                    },
+                })
             }
             if (fileType === "battlecard") {
-                await exportManager.downloadSelectorBattlecard(this.tournamentStore.currentTournamentId, boxerIds)
+                res = await ExternalServicesOpenApi.getBattlecard({
+                    body: {
+                        tournamentId: this.tournamentStore.currentTournamentId,
+                        boxerIds: boxerIds,
+                    },
+                })
             }
             if (fileType === "csv") {
-                await exportManager.downloadSelectorCsv(this.tournamentStore.currentTournamentId, boxerIds)
+                res = await ExternalServicesOpenApi.getSelectorCsv({
+                    body: {
+                        tournamentId: this.tournamentStore.currentTournamentId,
+                        boxerIds: boxerIds,
+                    },
+                })
             }
             if (fileType === "png") {
-                await exportManager.downloadSelectorPng(this.tournamentStore.currentTournamentId, boxerIds)
+                res = await ExternalServicesOpenApi.getSelectorPng({
+                    body: {
+                        tournamentId: this.tournamentStore.currentTournamentId,
+                        boxerIds: boxerIds,
+                    },
+                })
             }
             if (fileType === "pdf") {
-                await exportManager.downloadSelectorPdf(this.tournamentStore.currentTournamentId, boxerIds)
+                res = await ExternalServicesOpenApi.getSelectorPdf({
+                    body: {
+                        tournamentId: this.tournamentStore.currentTournamentId,
+                        boxerIds: boxerIds,
+                    },
+                })
             }
+            downloadWithDom(res, `selector.${fileType}`)
         },
         async onBoxerSaved() {
             // Refresh the boxers list after a boxer is saved
