@@ -1,8 +1,7 @@
 import { defineStore } from "pinia"
 import type { Fight, Boxer } from "@/types/boxing.d"
-import type { ApiFightGet, ApiFightCreate } from "@/shared/types/api"
 import ApiAdapter from "@/adapters/api.adapter"
-import dbManager from "@/managers/api.manager"
+import { TournamentOpenApi, FightOpenApi } from "@/api"
 import { useTournamentStore } from "./tournament.store"
 
 export const useFightStore = defineStore("fight", {
@@ -23,8 +22,12 @@ export const useFightStore = defineStore("fight", {
             this.loading = true
             this.error = null
             try {
-                const apiFights: ApiFightGet[] = await dbManager.getFights(tournamentId)
-                this.fights = apiFights.map((apiFight) => ApiAdapter.toFight(apiFight))
+                const apiFights = await TournamentOpenApi.getFightsByTournamentId({
+                    path: { tournamentId },
+                })
+                if (apiFights) {
+                    this.fights = apiFights.map((apiFight) => ApiAdapter.toFight(apiFight))
+                }
                 this.restored = true
             } catch (e: unknown) {
                 this.error = e instanceof Error ? e.message : "Unknown error"
@@ -39,17 +42,21 @@ export const useFightStore = defineStore("fight", {
             }
             this.loading = true
 
-            const apiFight: ApiFightCreate = {
-                boxer1Id: boxer1.id,
-                boxer2Id: boxer2.id,
-                // modalityErrors: [],
-                order: this.fights.length + 1,
-                tournamentId: tournamentStore.currentTournamentId,
-            }
             try {
-                const created: ApiFightGet = await dbManager.addFight(apiFight)
-                const newFight = ApiAdapter.toFight(created)
-                this.fights.push(newFight)
+                const created = (await FightOpenApi.create({
+                    body: {
+                        boxer1Id: boxer1.id,
+                        boxer2Id: boxer2.id,
+                        order: this.fights.length + 1,
+                        tournamentId: tournamentStore.currentTournamentId,
+                    },
+                })) as any // The API returns a generic object, but we'll re-fetch to get the proper data
+
+                // Re-fetch fights to get the updated list with proper typing
+                await this.fetchFights()
+
+                // Find the newly created fight
+                const newFight = this.fights.find((f) => f.boxer1.id === boxer1.id && f.boxer2.id === boxer2.id)
                 return newFight
             } catch (e: unknown) {
                 this.error = e instanceof Error ? e.message : "Unknown error"
@@ -58,7 +65,9 @@ export const useFightStore = defineStore("fight", {
         },
 
         async removeFromFightCard(fightIds: string[]): Promise<void> {
-            await dbManager.deleteFights(fightIds)
+            await FightOpenApi.deleteMany({
+                body: { ids: fightIds },
+            })
             // Remove the fights from the local store
             this.fights = this.fights.filter((fight) => !fightIds.includes(fight.id))
         },
@@ -88,18 +97,25 @@ export const useFightStore = defineStore("fight", {
 
             // Insert the fight at the new position based on the order
             fights.splice(newIndex, 0, fightToMove)
-            await dbManager.reorderFight(fightId, newIndex)
+
+            await FightOpenApi.reorderFight({
+                body: { fightId, newIndex },
+            })
         },
         async switchFight(fightId: string) {
             const fight = this.getFightById(fightId)
             if (fight) {
-                const switchedFight = await dbManager.switchFights(fightId)
+                const switchedFight = await FightOpenApi.switch({
+                    body: { fightId },
+                })
                 // Update the fight in the store
-                const index = this.fights.findIndex((f) => f.id === fightId)
-                if (index !== -1) {
-                    this.fights[index] = ApiAdapter.toFight(switchedFight)
+                if (switchedFight) {
+                    const index = this.fights.findIndex((f) => f.id === fightId)
+                    if (index !== -1) {
+                        this.fights[index] = ApiAdapter.toFight(switchedFight)
+                    }
+                    return switchedFight
                 }
-                return switchedFight
             }
         },
         getFightById(fightId: string): Fight | undefined {

@@ -104,7 +104,7 @@
 
 <script lang="ts">
 import { PropType, defineComponent } from "vue"
-import { ModalityErrorType } from "@/shared/types/modality.type"
+import { ModalityErrorType } from "@/api"
 import { Boxer, Opponent } from "@/types/boxing.d"
 import RecordBadgeComponent from "@/components/shared/badges/record-badge.component.vue"
 import LinkedFightsBadgeComponent from "@/components/shared/badges/linked-fights-badge.component.vue"

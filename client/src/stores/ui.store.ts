@@ -10,7 +10,7 @@ export const useUiStore = defineStore("ui", {
         theme: "auto" as UiTheme,
         hideNonMatchableOpponents: false,
         hideFightersWithNoMatch: false,
-        jwtToken: null as string | null,
+        jwtToken: undefined as string | undefined,
         facets: null as Facets | null,
     }),
     actions: {
@@ -47,7 +47,7 @@ export const useUiStore = defineStore("ui", {
                 this.account = null
                 if (res.status === 401) {
                     console.warn("Unauthorized access, JWT token may be invalid.")
-                    this.jwtToken = null
+                    this.jwtToken = undefined
                     //redirect to auth page
                     if (this.router) {
                         this.router.push({ name: "auth" })
@@ -56,7 +56,7 @@ export const useUiStore = defineStore("ui", {
             }
         },
         logout() {
-            this.jwtToken = null
+            this.jwtToken = undefined
             this.account = null
         },
         clearFacets() {

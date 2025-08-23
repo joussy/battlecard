@@ -10,19 +10,23 @@ import {
   Logger,
 } from '@nestjs/common';
 import { ModalityService } from '../modality/modality.service';
-import { User } from '@/decorators/user.decorator';
+import { User } from '@/decorators/auth.decorator';
 import { AuthenticatedUser } from '@/interfaces/auth.interface';
 import { TournamentService } from '@/services/tournament.service';
 import { ImportService } from '@/services/import.service';
 import {
-  ApiImportBoxers,
-  ApiImportBoxersResponse,
-  ApiPreviewBoxersApi,
-  ApiPreviewBoxersCsv,
-  ApiPreviewBoxersResponse,
-} from '@/shared/types/api';
+  ImportBoxersResponseDto,
+  PreviewBoxersResponseDto,
+} from '@/dto/response.dto';
 import { Express } from 'express';
 import { FileInterceptor } from '@nestjs/platform-express';
+import {
+  ImportBoxersDto,
+  PreviewBoxersApiDto,
+  PreviewBoxersCsvDto,
+} from '@/dto/import.dto';
+import { ApiBody, ApiConsumes } from '@nestjs/swagger';
+import { FileUploadDto } from '@/dto/upload.dto';
 
 @Controller('import')
 export class ImportController {
@@ -35,9 +39,9 @@ export class ImportController {
 
   @Post()
   async importBoxers(
-    @Body() dto: ApiImportBoxers,
+    @Body() dto: ImportBoxersDto,
     @User() user: AuthenticatedUser,
-  ): Promise<ApiImportBoxersResponse> {
+  ): Promise<ImportBoxersResponseDto> {
     return this.importService.importBoxers(
       dto.boxers,
       dto.dry,
@@ -48,13 +52,17 @@ export class ImportController {
 
   @Post('previewfromcsvText')
   async previewBoxersFromCsvText(
-    @Body() dto: ApiPreviewBoxersCsv,
-  ): Promise<ApiPreviewBoxersResponse> {
+    @Body() dto: PreviewBoxersCsvDto,
+  ): Promise<PreviewBoxersResponseDto> {
     return await this.importService.previewBoxersFromCsv(dto.payload);
   }
 
   @Post('previewFromCsvFile')
   @UseInterceptors(FileInterceptor('file'))
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    type: FileUploadDto,
+  })
   async previewBoxersFromCsvFile(
     @UploadedFile(
       new ParseFilePipe({
@@ -68,7 +76,7 @@ export class ImportController {
       }),
     )
     file: Express.Multer.File,
-  ): Promise<ApiPreviewBoxersResponse> {
+  ): Promise<PreviewBoxersResponseDto> {
     //convert file buffer to string
     if (!file) {
       throw new Error('File buffer is missing');
@@ -80,6 +88,10 @@ export class ImportController {
 
   @Post('previewfromffboxeFile')
   @UseInterceptors(FileInterceptor('file'))
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    type: FileUploadDto,
+  })
   async previewBoxersFromFfboxeFile(
     @UploadedFile(
       new ParseFilePipe({
@@ -93,7 +105,7 @@ export class ImportController {
       }),
     )
     file: Express.Multer.File,
-  ): Promise<ApiPreviewBoxersResponse> {
+  ): Promise<PreviewBoxersResponseDto> {
     //convert file buffer to string
     if (!file) {
       throw new Error('File buffer is missing');
@@ -105,9 +117,9 @@ export class ImportController {
 
   @Post('previewFromApi')
   async previewFromApi(
-    @Body() dto: ApiPreviewBoxersApi,
+    @Body() dto: PreviewBoxersApiDto,
     @User() user: AuthenticatedUser,
-  ): Promise<ApiPreviewBoxersResponse> {
+  ): Promise<PreviewBoxersResponseDto> {
     if (!user.apiEnabled) {
       this.logger.error('API access is not enabled for user:', user.id);
       return {

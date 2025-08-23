@@ -1,36 +1,40 @@
 import {
-  ApiBoxerCreate,
-  ApiBoxerGet,
-  ApiImportBoxer,
-  ApiOpponentGet,
-} from '@/shared/types/api';
+  BoxerGetDto,
+  ImportBoxerResponseDto,
+  OpponentGetDto,
+} from '@/dto/response.dto';
 import { Boxer } from '../entities/boxer.entity';
 import { IModality } from '@/modality/IModality';
-import { Gender, ModalityError } from '@/shared/types/modality.type';
+import { Gender, ModalityError } from '@/interfaces/modality.interface';
 import { CsvBoxer } from '@/interfaces/csv.interface';
 import { Tournament } from '@/entities/tournament.entity';
 import { SelectorTemplate } from '@/interfaces/template.interface';
 import { format } from 'date-fns/format';
+import { CreateBoxerDto } from '@/dto/boxer.dto';
 
-export function toBoxer(apiBoxer: ApiBoxerCreate, userId: string): Boxer {
-  const boxer = new Boxer();
-  boxer.lastName = apiBoxer.lastName;
-  boxer.firstName = apiBoxer.firstName;
-  boxer.birthDate = apiBoxer.birthDate;
-  boxer.club = apiBoxer.club;
-  boxer.weight = apiBoxer.weight;
-  boxer.gender = apiBoxer.gender;
-  boxer.license = apiBoxer.license;
-  boxer.userId = userId;
-  return boxer;
+export function toBoxer(
+  boxer: BoxerGetDto | CreateBoxerDto,
+  userId: string,
+): Boxer {
+  const entity = new Boxer();
+  entity.lastName = boxer.lastName;
+  entity.firstName = boxer.firstName;
+  entity.birthDate = boxer.birthDate;
+  entity.nbFights = boxer.nbFights || 0;
+  entity.club = boxer.club;
+  entity.weight = boxer.weight;
+  entity.gender = boxer.gender;
+  entity.license = boxer.license;
+  entity.userId = userId;
+  return entity;
 }
 
-export function toApiBoxerGet(
+export function toBoxerGetDto(
   boxer: Boxer,
   modality: IModality,
   selectedFights?: number,
   eligibleFights?: number,
-): ApiBoxerGet {
+): BoxerGetDto {
   return {
     id: boxer.id,
     lastName: boxer.lastName,
@@ -51,15 +55,15 @@ export function toApiBoxerGet(
   };
 }
 
-export function toApiOpponentGet(
+export function toOpponentGetDto(
   boxer: Boxer,
   modality: IModality,
   selectedFights: number,
   modalityErrors: ModalityError[],
   fightId?: string,
-): ApiOpponentGet {
+): OpponentGetDto {
   return {
-    ...toApiBoxerGet(boxer, modality),
+    ...toBoxerGetDto(boxer, modality),
     // modalityErrors: [], // Assuming modalityErrors is not available in Boxer entity
     weightDifference: 0, // Placeholder value, adjust as needed
     isEligible: true, // Placeholder value, adjust as needed
@@ -69,8 +73,8 @@ export function toApiOpponentGet(
   };
 }
 
-export function toApiImportBoxer(csvBoxer: CsvBoxer): ApiImportBoxer {
-  const entry: ApiImportBoxer = {
+export function toImportBoxerDto(csvBoxer: CsvBoxer): ImportBoxerResponseDto {
+  const entry: ImportBoxerResponseDto = {
     lastName: csvBoxer.lastName,
     firstName: csvBoxer.firstName,
     gender:
@@ -79,7 +83,7 @@ export function toApiImportBoxer(csvBoxer: CsvBoxer): ApiImportBoxer {
     club: csvBoxer.club || '',
     birthDate: csvBoxer.birthDate || '',
     license: csvBoxer.license || '',
-    fightRecord: csvBoxer.fightRecord,
+    fightRecord: parseInt(csvBoxer.fightRecord) || 0,
   };
 
   return entry;
@@ -94,7 +98,7 @@ export function toBattlecard(boxers: Boxer[]): CsvBoxer[] {
     weight: (boxer.weight ?? 0).toString(),
     gender: boxer.gender,
     license: boxer.license,
-    fightRecord: boxer.nbFights,
+    fightRecord: boxer.nbFights.toString(),
   }));
 }
 

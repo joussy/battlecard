@@ -129,7 +129,8 @@
 
 <script lang="ts">
 import { defineComponent, watch } from "vue"
-import { Gender, ModalityErrorType } from "@/shared/types/modality.type"
+import { Gender } from "@/api"
+import { ModalityErrorType } from "@/api"
 import BoxerTileComponent from "@/components/selector/boxer-tile.component.vue"
 import BoxerAddOffcanvasComponent from "@/components/selector/add/boxer-add-offcanvas.component.vue"
 import BoxerEditOffcanvasComponent from "@/components/selector/add/boxer-edit-offcanvas.component.vue"

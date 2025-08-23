@@ -4,45 +4,47 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "run-p type-check \"build-only {@}\" --",
-    "preview": "vite preview",
+    "dev": "npm run openapi && vite",
+    "build": "npm run openapi && run-p type-check \"build-only {@}\" --",
+    "preview": "npm run openapi && vite preview",
     "build-only": "vite build",
     "type-check": "vue-tsc --build",
     "lint": "eslint . --fix",
-    "format": "prettier --write src/"
+    "format": "prettier --write src/",
+    "openapi": "openapi-ts"
   },
   "dependencies": {
-    "pinia": "^3.0.3",
-    "vue": "^3.5.17",
-    "vue-router": "^4.5.1",
     "@popperjs/core": "^2.11.8",
     "bootstrap": "5.3.3",
     "bootstrap-icons": "^1.11.3",
     "date-fns": "^4.1.0",
     "fuse.js": "^7.1.0",
+    "pinia": "^3.0.3",
     "sortablejs": "^1.15.6",
-    "vee-validate": "^4.13.1"
+    "vee-validate": "^4.13.1",
+    "vue": "^3.5.17",
+    "vue-router": "^4.5.1"
   },
   "devDependencies": {
+    "@hey-api/openapi-ts": "0.81.0",
     "@tsconfig/node22": "^22.0.2",
+    "@types/bootstrap": "^5.2.10",
     "@types/node": "^22.15.32",
+    "@types/sortablejs": "^1.15.8",
     "@vitejs/plugin-vue": "^6.0.0",
     "@vue/eslint-config-prettier": "^10.2.0",
     "@vue/eslint-config-typescript": "^14.5.1",
     "@vue/tsconfig": "^0.7.0",
     "eslint": "^9.29.0",
     "eslint-plugin-vue": "~10.2.0",
+    "globals": "^16.3.0",
     "jiti": "^2.4.2",
     "npm-run-all2": "^8.0.4",
     "prettier": "3.5.3",
+    "sass-embedded": "^1.85.0",
     "typescript": "~5.8.0",
     "vite": "^7.0.0",
-    "vue-tsc": "^3.0.4",
-    "@types/bootstrap": "^5.2.10",
-    "@types/sortablejs": "^1.15.8",
-    "sass-embedded": "^1.85.0",
     "vite-svg-loader": "^5.1.0",
-    "globals": "^16.3.0"
+    "vue-tsc": "^3.0.4"
   }
 }

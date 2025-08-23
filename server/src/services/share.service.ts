@@ -3,9 +3,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Tournament } from '../entities/tournament.entity';
 import { Fight } from '../entities/fight.entity';
-import { ApiSharedFightCardGet } from '@/shared/types/api';
+import { SharedFightCardGetDto } from '@/dto/response.dto';
 import { decryptToken, encryptToken } from '@/utils/crypto.utils';
-import { toApiSharedFightCardGet } from '@/adapters/share.adapter';
+import { toSharedFightCardGetDto } from '@/adapters/share.adapter';
 import { ModalityService } from '@/modality/modality.service';
 import { ConfigService } from '@/services/config.service';
 
@@ -32,7 +32,7 @@ export class ShareService {
 
   async getTournamentByFightCardToken(
     fightCardToken: string,
-  ): Promise<ApiSharedFightCardGet> {
+  ): Promise<SharedFightCardGetDto> {
     const tournamentId = decryptToken(this.secretKey, fightCardToken);
     const tournament = await this.tournamentRepository.findOneOrFail({
       where: { id: tournamentId },
@@ -43,7 +43,7 @@ export class ShareService {
       order: { order: 'ASC' }, // Ensure fights are ordered by their fight order
     });
     const modality = this.modalityService.getModality();
-    const sharedFightCard = toApiSharedFightCardGet(
+    const sharedFightCard = toSharedFightCardGetDto(
       tournament,
       fights,
       modality,

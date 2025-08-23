@@ -197,12 +197,11 @@
 </template>
 <script lang="ts">
 import ImportTableComponent from "@/components/import/import-table.component.vue"
-import { ApiImportBoxer } from "@/shared/types/api"
 import IconComponent from "@/components/shared/core/icon.component.vue"
 import { defineComponent } from "vue"
 import { useUiStore } from "@/stores/ui.store"
-import dbManager from "@/managers/api.manager"
 import { useTournamentStore } from "@/stores/tournament.store"
+import { ImportBoxerDto, ImportOpenApi } from "@/api"
 
 export default defineComponent({
     name: "ImportComponent",
@@ -228,7 +227,7 @@ Tyson;Mike;2011-06-30;Catskill Boxing Club;100;male;TYS002;58
 279688
 279689
 `,
-            rows: [] as ApiImportBoxer[],
+            rows: [] as ImportBoxerDto[],
         }
     },
     watch: {
@@ -241,9 +240,13 @@ Tyson;Mike;2011-06-30;Catskill Boxing Club;100;male;TYS002;58
     },
     methods: {
         async previewApiText() {
-            const res = await dbManager.previewBoxersFromApi(this.apiClipboard)
-            if (!res.success) {
-                console.error("Error previewing boxers:", res.message)
+            const res = await ImportOpenApi.previewFromApi({
+                body: {
+                    payload: this.apiClipboard,
+                },
+            })
+            if (!res || !res.success) {
+                console.error("Error previewing boxers:", res?.message)
                 return
             }
             console.log("Preview result:", res.boxers)
@@ -252,12 +255,15 @@ Tyson;Mike;2011-06-30;Catskill Boxing Club;100;male;TYS002;58
             this.showImportTable = true
         },
         async previewCsvText() {
-            const res = await dbManager.previewBoxersFromText(this.clipboard)
-            if (!res.success) {
-                console.error("Error previewing boxers:", res.message)
+            const res = await ImportOpenApi.previewBoxersFromCsvText({
+                body: {
+                    payload: this.clipboard,
+                },
+            })
+            if (!res || !res.success) {
+                console.error("Error previewing boxers:", res?.message)
                 return
             }
-            console.log("Preview result:", res.boxers)
             this.rows = [...res.boxers]
             console.log("this.rows:", this.rows)
             this.showImportTable = true
@@ -268,10 +274,15 @@ Tyson;Mike;2011-06-30;Catskill Boxing Club;100;male;TYS002;58
                 console.error("No file selected")
                 return
             }
+            console.warn("Import functionality temporarily disabled - needs to be migrated to generated SDK")
             const file = fileInput.files[0]
-            const res = await dbManager.previewBoxersFromCsvFile(file)
-            if (!res.success) {
-                console.error("Error previewing FFBoxe file:", res.message)
+            const res = await ImportOpenApi.previewBoxersFromCsvFile({
+                body: {
+                    file: file,
+                },
+            })
+            if (!res || !res.success) {
+                console.error("Error previewing FFBoxe file:", res?.message)
                 return
             }
             this.rows = [...res.boxers]
@@ -285,9 +296,13 @@ Tyson;Mike;2011-06-30;Catskill Boxing Club;100;male;TYS002;58
                 return
             }
             const file = fileInput.files[0]
-            const res = await dbManager.previewBoxersFromFfboxeFile(file)
-            if (!res.success) {
-                console.error("Error previewing FFBoxe file:", res.message)
+            const res = await ImportOpenApi.previewBoxersFromFfboxeFile({
+                body: {
+                    file: file,
+                },
+            })
+            if (!res || !res.success) {
+                console.error("Error previewing FFBoxe file:", res?.message)
                 return
             }
             this.rows = [...res.boxers]

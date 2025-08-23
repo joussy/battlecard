@@ -1,0 +1,2165 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/api/users/me": {
+      "get": {
+        "operationId": "UserController_getMe",
+        "parameters": [],
+        "responses": {
+          "default": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "User"
+        ]
+      }
+    },
+    "/api/auth/google": {
+      "get": {
+        "operationId": "AuthController_googleAuth",
+        "parameters": [],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
+        "security": [
+          {}
+        ],
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/api/auth/google/callback": {
+      "get": {
+        "operationId": "AuthController_googleAuthRedirect",
+        "parameters": [],
+        "responses": {
+          "default": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {}
+        ],
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/api/tournaments": {
+      "get": {
+        "operationId": "TournamentController_findAll",
+        "parameters": [],
+        "responses": {
+          "default": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TournamentDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Tournament"
+        ]
+      },
+      "post": {
+        "operationId": "TournamentController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTournamentDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TournamentDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Tournament"
+        ]
+      }
+    },
+    "/api/tournaments/{id}": {
+      "put": {
+        "operationId": "TournamentController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateTournamentDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TournamentDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Tournament"
+        ]
+      },
+      "delete": {
+        "operationId": "TournamentController_delete",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Tournament"
+        ]
+      }
+    },
+    "/api/tournaments/{tournamentId}/boxers": {
+      "get": {
+        "operationId": "TournamentController_getBoxersForTournament",
+        "parameters": [
+          {
+            "name": "tournamentId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/BoxerGetDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Tournament"
+        ]
+      }
+    },
+    "/api/tournaments/{tournamentId}/opponents/{boxerId}": {
+      "get": {
+        "operationId": "TournamentController_getPossibleOpponents",
+        "parameters": [
+          {
+            "name": "tournamentId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "boxerId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/OpponentGetDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Tournament"
+        ]
+      }
+    },
+    "/api/tournaments/{tournamentId}/fights": {
+      "get": {
+        "operationId": "TournamentController_getFightsByTournamentId",
+        "parameters": [
+          {
+            "name": "tournamentId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/FightGetDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Tournament"
+        ]
+      }
+    },
+    "/api/boxers": {
+      "post": {
+        "operationId": "BoxerController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateBoxerDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BoxerGetDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Boxer"
+        ]
+      }
+    },
+    "/api/boxers/{id}": {
+      "get": {
+        "operationId": "BoxerController_getBoxer",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BoxerGetDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Boxer"
+        ]
+      },
+      "put": {
+        "operationId": "BoxerController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateBoxerDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BoxerGetDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Boxer"
+        ]
+      }
+    },
+    "/api/fights": {
+      "post": {
+        "operationId": "FightController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateFightDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Fight"
+        ]
+      },
+      "delete": {
+        "operationId": "FightController_deleteMany",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeleteFightsDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Fight"
+        ]
+      }
+    },
+    "/api/fights/reorder": {
+      "post": {
+        "operationId": "FightController_reorderFight",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReorderFightDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Fight"
+        ]
+      }
+    },
+    "/api/fights/switch": {
+      "post": {
+        "operationId": "FightController_switch",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SwitchFightDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FightGetDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Fight"
+        ]
+      }
+    },
+    "/api/fights/matchups/{tournamentId}": {
+      "get": {
+        "operationId": "FightController_getMatchups",
+        "parameters": [
+          {
+            "name": "tournamentId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/FightGetDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Fight"
+        ]
+      }
+    },
+    "/api/export/fightcard/pdf": {
+      "post": {
+        "operationId": "ExternalServicesController_getFightCardPdf",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExportWithQrCodeDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "ExternalServices"
+        ]
+      }
+    },
+    "/api/export/fightcard/png": {
+      "post": {
+        "operationId": "ExternalServicesController_getFightCardPng",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExportWithQrCodeDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "ExternalServices"
+        ]
+      }
+    },
+    "/api/export/selector/battlecard": {
+      "post": {
+        "operationId": "ExternalServicesController_getBattlecard",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SelectorExportDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "ExternalServices"
+        ]
+      }
+    },
+    "/api/export/fightcard/csv": {
+      "post": {
+        "operationId": "ExternalServicesController_getFightCardCsv",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SimpleTournamentDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "ExternalServices"
+        ]
+      }
+    },
+    "/api/export/fightcard/xlsx": {
+      "post": {
+        "operationId": "ExternalServicesController_getFightCardXlsx",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SimpleTournamentDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "ExternalServices"
+        ]
+      }
+    },
+    "/api/export/fightcard/html": {
+      "get": {
+        "operationId": "ExternalServicesController_getTemplateHtml",
+        "parameters": [
+          {
+            "name": "tournamentId",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
+        "security": [
+          {}
+        ],
+        "tags": [
+          "ExternalServices"
+        ]
+      }
+    },
+    "/api/export/selector/pdf": {
+      "post": {
+        "operationId": "ExternalServicesController_getSelectorPdf",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SelectorExportDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "ExternalServices"
+        ]
+      }
+    },
+    "/api/export/selector/png": {
+      "post": {
+        "operationId": "ExternalServicesController_getSelectorPng",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SelectorExportDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "ExternalServices"
+        ]
+      }
+    },
+    "/api/export/selector/csv": {
+      "post": {
+        "operationId": "ExternalServicesController_getSelectorCsv",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SelectorExportDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "ExternalServices"
+        ]
+      }
+    },
+    "/api/export/selector/xlsx": {
+      "post": {
+        "operationId": "ExternalServicesController_getSelectorXlsx",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SelectorExportDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "ExternalServices"
+        ]
+      }
+    },
+    "/api/import": {
+      "post": {
+        "operationId": "ImportController_importBoxers",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ImportBoxersDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImportBoxersResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Import"
+        ]
+      }
+    },
+    "/api/import/previewfromcsvText": {
+      "post": {
+        "operationId": "ImportController_previewBoxersFromCsvText",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PreviewBoxersCsvDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PreviewBoxersResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Import"
+        ]
+      }
+    },
+    "/api/import/previewFromCsvFile": {
+      "post": {
+        "operationId": "ImportController_previewBoxersFromCsvFile",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/FileUploadDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PreviewBoxersResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Import"
+        ]
+      }
+    },
+    "/api/import/previewfromffboxeFile": {
+      "post": {
+        "operationId": "ImportController_previewBoxersFromFfboxeFile",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/FileUploadDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PreviewBoxersResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Import"
+        ]
+      }
+    },
+    "/api/import/previewFromApi": {
+      "post": {
+        "operationId": "ImportController_previewFromApi",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PreviewBoxersApiDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PreviewBoxersResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Import"
+        ]
+      }
+    },
+    "/api/share/fightcard/{fightCardToken}": {
+      "get": {
+        "operationId": "ShareController_getFightsByFightCardToken",
+        "parameters": [
+          {
+            "name": "fightCardToken",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SharedFightCardGetDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "default": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SharedFightCardGetDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {}
+        ],
+        "tags": [
+          "share"
+        ]
+      }
+    },
+    "/api/share/fightcard/generateRoToken": {
+      "post": {
+        "operationId": "ShareController_generateFightCardToken",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GenerateFightCardTokenDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GeneratedTokenDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "share"
+        ]
+      }
+    },
+    "/api/share/fightcard/xlsx": {
+      "post": {
+        "operationId": "ShareController_downloadSharedFightCardXlsx",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FightCardTokenDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
+        "security": [
+          {}
+        ],
+        "tags": [
+          "share"
+        ]
+      }
+    },
+    "/api/share/fightcard/pdf": {
+      "post": {
+        "operationId": "ShareController_downloadSharedFightCardPdf",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FightCardTokenDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
+        "security": [
+          {}
+        ],
+        "tags": [
+          "share"
+        ]
+      }
+    },
+    "/api/share/fightcard/png": {
+      "post": {
+        "operationId": "ShareController_downloadSharedFightCardPng",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FightCardTokenDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
+        "security": [
+          {}
+        ],
+        "tags": [
+          "share"
+        ]
+      }
+    },
+    "/api/share/fightcard/csv": {
+      "post": {
+        "operationId": "ShareController_downloadSharedFightCardCsv",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FightCardTokenDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
+        "security": [
+          {}
+        ],
+        "tags": [
+          "share"
+        ]
+      }
+    },
+    "/api/places/autocomplete": {
+      "get": {
+        "operationId": "PlacesController_autocomplete",
+        "parameters": [
+          {
+            "name": "q",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AddressAutocompleteGetDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Places"
+        ]
+      }
+    }
+  },
+  "info": {
+    "title": "Battlecard",
+    "description": "The Fightmaker App",
+    "version": "1.0",
+    "contact": {}
+  },
+  "tags": [],
+  "servers": [],
+  "components": {
+    "securitySchemes": {
+      "bearer": {
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "type": "http"
+      }
+    },
+    "schemas": {
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "apiEnabled": {
+            "type": "boolean"
+          },
+          "picture": {
+            "type": "string"
+          },
+          "created": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updated": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "email",
+          "apiEnabled",
+          "created",
+          "updated"
+        ]
+      },
+      "TournamentDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique tournament ID"
+          },
+          "name": {
+            "type": "string",
+            "description": "Tournament name"
+          },
+          "userId": {
+            "type": "string",
+            "description": "User who created the tournament"
+          },
+          "date": {
+            "type": "string",
+            "description": "Tournament date (YYYY-MM-DD)"
+          },
+          "address": {
+            "type": "string",
+            "description": "Tournament address (optional)"
+          },
+          "zipCode": {
+            "type": "string",
+            "description": "Tournament zip code (optional)"
+          },
+          "city": {
+            "type": "string",
+            "description": "Tournament city (optional)"
+          },
+          "formattedAddress": {
+            "type": "string",
+            "description": "Formatted address combining street, city, and zipCode"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "userId",
+          "date"
+        ]
+      },
+      "CreateTournamentDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Tournament name"
+          },
+          "date": {
+            "type": "string",
+            "description": "Tournament date (YYYY-MM-DD)"
+          },
+          "address": {
+            "type": "string",
+            "description": "Tournament address (optional)"
+          },
+          "zipCode": {
+            "type": "string",
+            "description": "Tournament zip code (optional)"
+          },
+          "city": {
+            "type": "string",
+            "description": "Tournament city (optional)"
+          }
+        },
+        "required": [
+          "name",
+          "date"
+        ]
+      },
+      "UpdateTournamentDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Tournament name"
+          },
+          "date": {
+            "type": "string",
+            "description": "Tournament date (YYYY-MM-DD)"
+          },
+          "address": {
+            "type": "string",
+            "description": "Tournament address (optional)"
+          },
+          "zipCode": {
+            "type": "string",
+            "description": "Tournament zip code (optional)"
+          },
+          "city": {
+            "type": "string",
+            "description": "Tournament city (optional)"
+          }
+        },
+        "required": [
+          "name",
+          "date"
+        ]
+      },
+      "Gender": {
+        "type": "string",
+        "enum": [
+          "female",
+          "male"
+        ],
+        "description": "Gender"
+      },
+      "BoxerGetDto": {
+        "type": "object",
+        "properties": {
+          "gender": {
+            "description": "Gender",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Gender"
+              }
+            ]
+          },
+          "id": {
+            "type": "string",
+            "description": "Unique boxer ID"
+          },
+          "lastName": {
+            "type": "string",
+            "description": "Boxer's last name"
+          },
+          "firstName": {
+            "type": "string",
+            "description": "Boxer's first name"
+          },
+          "birthDate": {
+            "type": "string",
+            "description": "Date of birth (YYYY-MM-DD)"
+          },
+          "nbFights": {
+            "type": "number",
+            "description": "Number of past fights of the boxer"
+          },
+          "club": {
+            "type": "string",
+            "description": "Club name"
+          },
+          "weight": {
+            "type": "number",
+            "description": "Weight in kg (optional)"
+          },
+          "license": {
+            "type": "string",
+            "description": "License number"
+          },
+          "userId": {
+            "type": "string",
+            "description": "User who created this boxer"
+          },
+          "created": {
+            "type": "string",
+            "description": "Creation timestamp"
+          },
+          "updated": {
+            "type": "string",
+            "description": "Update timestamp"
+          },
+          "category": {
+            "type": "string",
+            "description": "Weight/age category"
+          },
+          "categoryShort": {
+            "type": "string",
+            "description": "Short category label"
+          },
+          "eligibleFights": {
+            "type": "number",
+            "description": "Number of eligible fights (optional)"
+          },
+          "selectedFights": {
+            "type": "number",
+            "description": "Number of fights selected for the fight card (optional)"
+          }
+        },
+        "required": [
+          "gender",
+          "id",
+          "lastName",
+          "firstName",
+          "birthDate",
+          "club",
+          "license",
+          "userId",
+          "category",
+          "categoryShort"
+        ]
+      },
+      "ModalityErrorType": {
+        "type": "string",
+        "enum": [
+          "WEIGHT",
+          "AGE",
+          "SAME_CLUB",
+          "SAME_ID",
+          "OPPOSITE_GENDER",
+          "PRIZE_LIST"
+        ]
+      },
+      "ModalityErrorDao": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ModalityErrorType"
+              }
+            ]
+          }
+        },
+        "required": [
+          "type"
+        ]
+      },
+      "OpponentGetDto": {
+        "type": "object",
+        "properties": {
+          "gender": {
+            "description": "Gender",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Gender"
+              }
+            ]
+          },
+          "id": {
+            "type": "string",
+            "description": "Unique boxer ID"
+          },
+          "lastName": {
+            "type": "string",
+            "description": "Boxer's last name"
+          },
+          "firstName": {
+            "type": "string",
+            "description": "Boxer's first name"
+          },
+          "birthDate": {
+            "type": "string",
+            "description": "Date of birth (YYYY-MM-DD)"
+          },
+          "nbFights": {
+            "type": "number",
+            "description": "Number of past fights of the boxer"
+          },
+          "club": {
+            "type": "string",
+            "description": "Club name"
+          },
+          "weight": {
+            "type": "number",
+            "description": "Weight in kg (optional)"
+          },
+          "license": {
+            "type": "string",
+            "description": "License number"
+          },
+          "userId": {
+            "type": "string",
+            "description": "User who created this boxer"
+          },
+          "created": {
+            "type": "string",
+            "description": "Creation timestamp"
+          },
+          "updated": {
+            "type": "string",
+            "description": "Update timestamp"
+          },
+          "category": {
+            "type": "string",
+            "description": "Weight/age category"
+          },
+          "categoryShort": {
+            "type": "string",
+            "description": "Short category label"
+          },
+          "eligibleFights": {
+            "type": "number",
+            "description": "Number of eligible fights (optional)"
+          },
+          "selectedFights": {
+            "type": "number",
+            "description": "Number of fights selected for the fight card (optional)"
+          },
+          "weightDifference": {
+            "type": "number",
+            "description": "Difference in weight between main boxer and opponent"
+          },
+          "isEligible": {
+            "type": "boolean",
+            "description": "Whether this opponent is eligible for a fight"
+          },
+          "fightId": {
+            "type": "string",
+            "description": "Existing fight ID if a fight already exists"
+          },
+          "modalityErrors": {
+            "description": "Modality errors for this boxer",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ModalityErrorDao"
+            }
+          }
+        },
+        "required": [
+          "gender",
+          "id",
+          "lastName",
+          "firstName",
+          "birthDate",
+          "club",
+          "license",
+          "userId",
+          "category",
+          "categoryShort",
+          "weightDifference",
+          "isEligible"
+        ]
+      },
+      "FightGetDto": {
+        "type": "object",
+        "properties": {
+          "order": {
+            "type": "number",
+            "description": "Fight order in the tournament"
+          },
+          "id": {
+            "type": "string",
+            "description": "Unique fight ID"
+          },
+          "boxer1": {
+            "description": "Red corner boxer",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/BoxerGetDto"
+              }
+            ]
+          },
+          "boxer2": {
+            "description": "Blue corner boxer",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/BoxerGetDto"
+              }
+            ]
+          },
+          "tournamentId": {
+            "type": "string",
+            "description": "Tournament ID"
+          },
+          "roundDurationAsSeconds": {
+            "type": "number",
+            "description": "Fight duration in seconds"
+          },
+          "rounds": {
+            "type": "number",
+            "description": "Rounds in the fight"
+          }
+        },
+        "required": [
+          "order",
+          "id",
+          "boxer1",
+          "boxer2",
+          "tournamentId",
+          "roundDurationAsSeconds",
+          "rounds"
+        ]
+      },
+      "CreateBoxerDto": {
+        "type": "object",
+        "properties": {
+          "gender": {
+            "description": "Gender",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Gender"
+              }
+            ]
+          },
+          "lastName": {
+            "type": "string",
+            "description": "Last name"
+          },
+          "firstName": {
+            "type": "string",
+            "description": "First name"
+          },
+          "birthDate": {
+            "type": "string",
+            "description": "Date of birth (YYYY-MM-DD)"
+          },
+          "nbFights": {
+            "type": "number",
+            "description": "Number of fights (optional)"
+          },
+          "club": {
+            "type": "string",
+            "description": "Club name"
+          },
+          "weight": {
+            "type": "number",
+            "description": "Weight in kg (optional)"
+          },
+          "license": {
+            "type": "string",
+            "description": "License number"
+          },
+          "tournamentId": {
+            "type": "string",
+            "description": "Tournament ID (optional)"
+          }
+        },
+        "required": [
+          "gender",
+          "lastName",
+          "firstName",
+          "birthDate",
+          "nbFights",
+          "club",
+          "license"
+        ]
+      },
+      "UpdateBoxerDto": {
+        "type": "object",
+        "properties": {
+          "gender": {
+            "description": "Gender",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Gender"
+              }
+            ]
+          },
+          "lastName": {
+            "type": "string",
+            "description": "Last name"
+          },
+          "firstName": {
+            "type": "string",
+            "description": "First name"
+          },
+          "birthDate": {
+            "type": "string",
+            "description": "Date of birth (YYYY-MM-DD)"
+          },
+          "nbFights": {
+            "type": "number",
+            "description": "Number of fights (optional)"
+          },
+          "club": {
+            "type": "string",
+            "description": "Club name"
+          },
+          "weight": {
+            "type": "number",
+            "description": "Weight in kg (optional)"
+          },
+          "license": {
+            "type": "string",
+            "description": "License number"
+          },
+          "tournamentId": {
+            "type": "string",
+            "description": "Tournament ID (optional)"
+          }
+        },
+        "required": [
+          "gender",
+          "lastName",
+          "firstName",
+          "birthDate",
+          "nbFights",
+          "club",
+          "license"
+        ]
+      },
+      "CreateFightDto": {
+        "type": "object",
+        "properties": {
+          "boxer1Id": {
+            "type": "string",
+            "description": "Red corner boxer ID"
+          },
+          "boxer2Id": {
+            "type": "string",
+            "description": "Blue corner boxer ID"
+          },
+          "tournamentId": {
+            "type": "string",
+            "description": "Tournament ID"
+          },
+          "order": {
+            "type": "number",
+            "description": "Fight order in the tournament"
+          }
+        },
+        "required": [
+          "boxer1Id",
+          "boxer2Id",
+          "tournamentId",
+          "order"
+        ]
+      },
+      "DeleteFightsDto": {
+        "type": "object",
+        "properties": {
+          "ids": {
+            "description": "Array of fight IDs to delete",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "ids"
+        ]
+      },
+      "ReorderFightDto": {
+        "type": "object",
+        "properties": {
+          "fightId": {
+            "type": "string",
+            "description": "Fight ID to reorder"
+          },
+          "newIndex": {
+            "type": "number",
+            "description": "New index for the fight"
+          }
+        },
+        "required": [
+          "fightId",
+          "newIndex"
+        ]
+      },
+      "SwitchFightDto": {
+        "type": "object",
+        "properties": {
+          "fightId": {
+            "type": "string",
+            "description": "Fight ID to switch boxers"
+          }
+        },
+        "required": [
+          "fightId"
+        ]
+      },
+      "ExportWithQrCodeDto": {
+        "type": "object",
+        "properties": {
+          "tournamentId": {
+            "type": "string"
+          },
+          "displayQrCode": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "tournamentId",
+          "displayQrCode"
+        ]
+      },
+      "SelectorExportDto": {
+        "type": "object",
+        "properties": {
+          "tournamentId": {
+            "type": "string"
+          },
+          "boxerIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "tournamentId",
+          "boxerIds"
+        ]
+      },
+      "SimpleTournamentDto": {
+        "type": "object",
+        "properties": {
+          "tournamentId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "tournamentId"
+        ]
+      },
+      "ImportBoxerDto": {
+        "type": "object",
+        "properties": {
+          "gender": {
+            "description": "Boxer gender",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Gender"
+              }
+            ]
+          },
+          "lastName": {
+            "type": "string",
+            "description": "Boxer name"
+          },
+          "firstName": {
+            "type": "string",
+            "description": "Boxer first name"
+          },
+          "birthDate": {
+            "type": "string",
+            "description": "Boxer birth date (YYYY-MM-DD)"
+          },
+          "club": {
+            "type": "string",
+            "description": "Boxer club"
+          },
+          "weight": {
+            "type": "number",
+            "description": "Boxer weight"
+          },
+          "license": {
+            "type": "string",
+            "description": "Boxer license"
+          },
+          "fightRecord": {
+            "type": "number",
+            "description": "Boxer fight record"
+          }
+        },
+        "required": [
+          "lastName",
+          "firstName",
+          "birthDate",
+          "club",
+          "weight",
+          "license",
+          "fightRecord"
+        ]
+      },
+      "ImportBoxersDto": {
+        "type": "object",
+        "properties": {
+          "dry": {
+            "type": "boolean",
+            "description": "Whether this is a dry run"
+          },
+          "boxers": {
+            "description": "Array of boxers to import",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ImportBoxerDto"
+            }
+          },
+          "tournamentId": {
+            "type": "string",
+            "description": "Tournament ID"
+          }
+        },
+        "required": [
+          "dry",
+          "boxers",
+          "tournamentId"
+        ]
+      },
+      "BoxerImportErrorDto": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Error message"
+          },
+          "row": {
+            "type": "number",
+            "description": "Row number where error occurred"
+          },
+          "field": {
+            "type": "string",
+            "description": "Field name that caused the error"
+          }
+        },
+        "required": [
+          "message",
+          "row",
+          "field"
+        ]
+      },
+      "ImportBoxersResponseDto": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "Whether the import was successful"
+          },
+          "message": {
+            "type": "string",
+            "description": "Response message"
+          },
+          "errors": {
+            "description": "Array of import errors",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BoxerImportErrorDto"
+            }
+          }
+        },
+        "required": [
+          "success",
+          "message",
+          "errors"
+        ]
+      },
+      "PreviewBoxersCsvDto": {
+        "type": "object",
+        "properties": {
+          "payload": {
+            "type": "string",
+            "description": "CSV payload"
+          }
+        },
+        "required": [
+          "payload"
+        ]
+      },
+      "ImportBoxerResponseDto": {
+        "type": "object",
+        "properties": {
+          "gender": {
+            "description": "Boxer gender",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Gender"
+              }
+            ]
+          },
+          "lastName": {
+            "type": "string",
+            "description": "Boxer name"
+          },
+          "firstName": {
+            "type": "string",
+            "description": "Boxer first name"
+          },
+          "birthDate": {
+            "type": "string",
+            "description": "Boxer birth date (YYYY-MM-DD)"
+          },
+          "club": {
+            "type": "string",
+            "description": "Boxer club"
+          },
+          "weight": {
+            "type": "number",
+            "description": "Boxer weight"
+          },
+          "license": {
+            "type": "string",
+            "description": "Boxer license"
+          },
+          "fightRecord": {
+            "type": "number",
+            "description": "Boxer fight record"
+          }
+        },
+        "required": [
+          "lastName",
+          "firstName",
+          "birthDate",
+          "club",
+          "weight",
+          "license",
+          "fightRecord"
+        ]
+      },
+      "PreviewBoxersResponseDto": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "Whether the preview was successful"
+          },
+          "message": {
+            "type": "string",
+            "description": "Response message"
+          },
+          "boxers": {
+            "description": "Array of preview boxers",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ImportBoxerResponseDto"
+            }
+          }
+        },
+        "required": [
+          "success",
+          "message",
+          "boxers"
+        ]
+      },
+      "FileUploadDto": {
+        "type": "object",
+        "properties": {
+          "file": {
+            "type": "string",
+            "format": "binary"
+          }
+        },
+        "required": [
+          "file"
+        ]
+      },
+      "PreviewBoxersApiDto": {
+        "type": "object",
+        "properties": {
+          "payload": {
+            "type": "string",
+            "description": "Payload containing boxer IDs"
+          }
+        },
+        "required": [
+          "payload"
+        ]
+      },
+      "SharedFightCardGetDto": {
+        "type": "object",
+        "properties": {
+          "tournamentName": {
+            "type": "string",
+            "description": "Tournament name"
+          },
+          "fights": {
+            "description": "Array of fights",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FightGetDto"
+            }
+          },
+          "tournamentDate": {
+            "type": "string",
+            "description": "Tournament date (optional)"
+          }
+        },
+        "required": [
+          "tournamentName",
+          "fights"
+        ]
+      },
+      "GenerateFightCardTokenDto": {
+        "type": "object",
+        "properties": {
+          "tournamentId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "tournamentId"
+        ]
+      },
+      "GeneratedTokenDto": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "description": "Token string"
+          },
+          "qrcode": {
+            "type": "string",
+            "description": "QR code image data"
+          },
+          "url": {
+            "type": "string",
+            "description": "Shareable URL"
+          }
+        },
+        "required": [
+          "token",
+          "qrcode",
+          "url"
+        ]
+      },
+      "FightCardTokenDto": {
+        "type": "object",
+        "properties": {
+          "fightCardToken": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "fightCardToken"
+        ]
+      },
+      "AddressAutocompleteGetDto": {
+        "type": "object",
+        "properties": {
+          "city": {
+            "type": "string",
+            "description": "City name"
+          },
+          "street": {
+            "type": "string",
+            "description": "Street address"
+          },
+          "zipCode": {
+            "type": "string",
+            "description": "ZIP code"
+          },
+          "formatted": {
+            "type": "string",
+            "description": "Formatted address string"
+          }
+        },
+        "required": [
+          "city",
+          "street",
+          "zipCode",
+          "formatted"
+        ]
+      }
+    }
+  },
+  "security": [
+    {
+      "bearer": []
+    }
+  ]
+}

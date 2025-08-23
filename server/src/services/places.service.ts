@@ -1,4 +1,4 @@
-import { ApiAddressAutocompleteGet } from '@/shared/types/api';
+import { AddressAutocompleteGetDto } from '@/dto/response.dto';
 import { formatAddress } from '../utils/addressUtils';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from './config.service';
@@ -7,7 +7,7 @@ import { ConfigService } from './config.service';
 export class PlacesService {
   constructor(private readonly configService: ConfigService) {}
 
-  async autocomplete(query: string): Promise<ApiAddressAutocompleteGet[]> {
+  async autocomplete(query: string): Promise<AddressAutocompleteGetDto[]> {
     if (!query) return [];
     const apiKey = this.configService.getConfig().geoapifyApiKey;
     if (!apiKey) {
@@ -26,7 +26,7 @@ export class PlacesService {
         }>;
       };
       const features = json.features || [];
-      return features.map<ApiAddressAutocompleteGet>((feature) => ({
+      return features.map<AddressAutocompleteGetDto>((feature) => ({
         city: feature.properties?.city || '',
         street: feature.properties?.street || '',
         zipCode: feature.properties?.postcode || '',

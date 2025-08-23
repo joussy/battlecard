@@ -25,8 +25,7 @@
 </template>
 
 <script lang="ts">
-import apiManager from "@/managers/api.manager"
-import { ApiAddressAutocompleteGet } from "@/shared/types/api"
+import { PlacesOpenApi, AddressAutocompleteGetDto } from "@/api"
 import { PropType } from "vue"
 
 export default {
@@ -41,7 +40,7 @@ export default {
     data() {
         return {
             inputValue: this.modelValue as string,
-            suggestions: [] as ApiAddressAutocompleteGet[],
+            suggestions: [] as AddressAutocompleteGetDto[],
             showDropdown: false,
             debounceTimeout: null as ReturnType<typeof setTimeout> | null,
         }
@@ -55,17 +54,25 @@ export default {
         onInput(): void {
             this.$emit("update:modelValue", this.inputValue)
             if (this.debounceTimeout) clearTimeout(this.debounceTimeout)
-            this.debounceTimeout = setTimeout(() => {
+            this.debounceTimeout = setTimeout(async () => {
                 if (this.inputValue.length < 3) {
                     this.suggestions = []
                     return
                 }
-                apiManager.getAutoCompleteAddress(this.inputValue).then((result: ApiAddressAutocompleteGet[]) => {
-                    this.suggestions = result
-                })
+                try {
+                    const result = await PlacesOpenApi.autocomplete({
+                        query: { q: this.inputValue },
+                    })
+                    if (result) {
+                        this.suggestions = result
+                    }
+                } catch (error) {
+                    console.error("Error fetching address suggestions:", error)
+                    this.suggestions = []
+                }
             }, 300)
         },
-        selectSuggestion(suggestion: ApiAddressAutocompleteGet): void {
+        selectSuggestion(suggestion: AddressAutocompleteGetDto): void {
             this.inputValue = suggestion.street
             this.$emit("update:modelValue", this.inputValue)
             this.$emit("select", suggestion)

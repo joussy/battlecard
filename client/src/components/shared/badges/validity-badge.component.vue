@@ -6,14 +6,14 @@
 </template>
 
 <script lang="ts">
-import { ModalityError } from "@/shared/types/modality.type"
+import { ModalityErrorDao } from "@/api"
 import { PropType, defineComponent } from "vue"
 
 export default defineComponent({
     components: {},
     props: {
         modalityErrors: {
-            type: Object as PropType<ModalityError[] | null>,
+            type: Object as PropType<ModalityErrorDao[] | null>,
             required: false,
             default: null,
         },

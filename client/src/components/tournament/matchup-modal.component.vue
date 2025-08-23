@@ -91,7 +91,7 @@ import { Modal } from "bootstrap"
 import IconComponent from "@/components/shared/core/icon.component.vue"
 import MatchupDetailsComponent from "@/components/tournament/matchup-details.component.vue"
 import { useTournamentStore } from "@/stores/tournament.store"
-import apiManager from "@/managers/api.manager"
+import { FightOpenApi } from "@/api"
 import ApiAdapter from "@/adapters/api.adapter"
 
 export default {
@@ -145,10 +145,22 @@ export default {
                 console.error("No tournament selected")
                 return
             }
-            const apiFights = await apiManager.getMatchups(this.tournamentStore.currentTournamentId)
-            this.fights = apiFights.map(ApiAdapter.toFight)
-            this.currentFightIndex = 0
-            this.fight = this.fights.length > 0 ? this.fights[0] : null
+            try {
+                const apiFights = await FightOpenApi.getMatchups({
+                    path: { tournamentId: this.tournamentStore.currentTournamentId },
+                })
+                if (apiFights) {
+                    this.fights = apiFights.map(ApiAdapter.toFight)
+                } else {
+                    this.fights = []
+                }
+                this.currentFightIndex = 0
+                this.fight = this.fights.length > 0 ? this.fights[0] : null
+            } catch (error) {
+                console.error("Error loading matchups:", error)
+                this.fights = []
+                this.fight = null
+            }
         },
         goToPrevious() {
             if (this.canGoPrevious) {

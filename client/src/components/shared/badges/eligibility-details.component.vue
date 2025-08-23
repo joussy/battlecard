@@ -55,7 +55,7 @@ import AgeBadgeComponent from "@/components/shared/badges/age-badge.component.vu
 import RecordBadgeComponent from "@/components/shared/badges/record-badge.component.vue"
 import WeightBadgeComponent from "@/components/shared/badges/weight-badge.component.vue"
 import { Boxer } from "@/types/boxing"
-import { ModalityError, ModalityErrorType } from "@/shared/types/modality.type"
+import { ModalityErrorDao, ModalityErrorType } from "@/api"
 import { getBoxerAge } from "@/utils/string.utils"
 
 export default defineComponent({
@@ -71,7 +71,7 @@ export default defineComponent({
             required: true,
         },
         modalityErrors: {
-            type: Object as PropType<ModalityError[] | null>,
+            type: Object as PropType<ModalityErrorDao[] | null>,
             required: false,
             default: null,
         },

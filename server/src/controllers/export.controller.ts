@@ -5,17 +5,22 @@ import {
   Post,
   Query,
   Res,
-  SetMetadata,
   UseGuards,
 } from '@nestjs/common';
 import { Response as ExpressResponse } from 'express';
-import { User } from '@/decorators/user.decorator';
 import { AuthenticatedUser } from '@/interfaces/auth.interface';
 import { FightExportService } from '@/services/fight-export.service';
 import { TournamentService } from '@/services/tournament.service';
 import { SelectorExportService } from '@/services/selector-export.service';
 import { ShareService } from '@/services/share.service';
 import { DevOnlyGuard } from '@/guards/dev.guard';
+import {
+  ExportWithQrCodeDto,
+  SelectorExportDto,
+  SimpleTournamentDto,
+} from '@/dto/share.dto';
+import { TournamentIdQueryDto } from '@/dto/query.dto';
+import { NoAuthRequired, User } from '@/decorators/auth.decorator';
 
 @Controller('export')
 export class ExternalServicesController {
@@ -28,7 +33,7 @@ export class ExternalServicesController {
 
   @Post('fightcard/pdf')
   async getFightCardPdf(
-    @Body() body: { tournamentId: string; displayQrCode: boolean },
+    @Body() body: ExportWithQrCodeDto,
     @User() user: AuthenticatedUser,
     @Res() res: ExpressResponse,
   ): Promise<void> {
@@ -64,7 +69,7 @@ export class ExternalServicesController {
 
   @Post('fightcard/png')
   async getFightCardPng(
-    @Body() body: { tournamentId: string; displayQrCode: boolean },
+    @Body() body: ExportWithQrCodeDto,
     @User() user: AuthenticatedUser,
     @Res() res: ExpressResponse,
   ): Promise<void> {
@@ -99,7 +104,7 @@ export class ExternalServicesController {
 
   @Post('selector/battlecard')
   async getBattlecard(
-    @Body() body: { tournamentId: string; boxerIds: string[] },
+    @Body() body: SelectorExportDto,
     @User() user: AuthenticatedUser,
     @Res() res: ExpressResponse,
   ) {
@@ -126,7 +131,7 @@ export class ExternalServicesController {
 
   @Post('fightcard/csv')
   async getFightCardCsv(
-    @Body() body: { tournamentId: string },
+    @Body() body: SimpleTournamentDto,
     @User() user: AuthenticatedUser,
     @Res() res: ExpressResponse,
   ): Promise<void> {
@@ -152,7 +157,7 @@ export class ExternalServicesController {
 
   @Post('fightcard/xlsx')
   async getFightCardXlsx(
-    @Body() body: { tournamentId: string },
+    @Body() body: SimpleTournamentDto,
     @User() user: AuthenticatedUser,
     @Res() res: ExpressResponse,
   ): Promise<void> {
@@ -181,15 +186,14 @@ export class ExternalServicesController {
 
   @UseGuards(DevOnlyGuard)
   @Get('fightcard/html')
-  @SetMetadata('isPublic', true)
+  @NoAuthRequired()
   async getTemplateHtml(
-    @Query('tournamentId')
-    tournamentId: string,
+    @Query() query: TournamentIdQueryDto,
     @Res() res: ExpressResponse,
   ): Promise<void> {
     try {
       const html = await this.fightExportService.generateHtml(
-        tournamentId,
+        query.tournamentId,
         'https://example.com/fightcard',
       );
       res.setHeader('Content-Type', 'text/html;charset=utf-8');
@@ -201,7 +205,7 @@ export class ExternalServicesController {
   }
   @Post('selector/pdf')
   async getSelectorPdf(
-    @Body() body: { tournamentId: string; boxerIds: string[] },
+    @Body() body: SelectorExportDto,
     @User() user: AuthenticatedUser,
     @Res() res: ExpressResponse,
   ): Promise<void> {
@@ -228,7 +232,7 @@ export class ExternalServicesController {
 
   @Post('selector/png')
   async getSelectorPng(
-    @Body() body: { tournamentId: string; boxerIds: string[] },
+    @Body() body: SelectorExportDto,
     @User() user: AuthenticatedUser,
     @Res() res: ExpressResponse,
   ): Promise<void> {
@@ -255,7 +259,7 @@ export class ExternalServicesController {
 
   @Post('selector/csv')
   async getSelectorCsv(
-    @Body() body: { tournamentId: string; boxerIds: string[] },
+    @Body() body: SelectorExportDto,
     @User() user: AuthenticatedUser,
     @Res() res: ExpressResponse,
   ): Promise<void> {
@@ -282,7 +286,7 @@ export class ExternalServicesController {
 
   @Post('selector/xlsx')
   async getSelectorXlsx(
-    @Body() body: { tournamentId: string; boxerIds: string[] },
+    @Body() body: SelectorExportDto,
     @User() user: AuthenticatedUser,
     @Res() res: ExpressResponse,
   ): Promise<void> {
