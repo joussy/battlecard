@@ -24,6 +24,9 @@
             "description": ""
           }
         },
+        "security": [
+          {}
+        ],
         "tags": [
           "Auth"
         ]
@@ -38,6 +41,9 @@
             "description": ""
           }
         },
+        "security": [
+          {}
+        ],
         "tags": [
           "Auth"
         ]
@@ -454,6 +460,9 @@
             "description": ""
           }
         },
+        "security": [
+          {}
+        ],
         "tags": [
           "ExternalServices"
         ]

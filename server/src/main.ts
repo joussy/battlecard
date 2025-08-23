@@ -26,6 +26,7 @@ async function bootstrap() {
       .setDescription('The Fightmaker App')
       .setVersion('1.0')
       .addBearerAuth()
+      .addSecurityRequirements('bearer')
       .build();
     const documentFactory = () => SwaggerModule.createDocument(app, config);
     SwaggerModule.setup('api', app, documentFactory);

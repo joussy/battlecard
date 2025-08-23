@@ -5,7 +5,6 @@ import {
   Post,
   Query,
   Res,
-  SetMetadata,
   UseGuards,
 } from '@nestjs/common';
 import { Response as ExpressResponse } from 'express';
@@ -16,8 +15,13 @@ import { TournamentService } from '@/services/tournament.service';
 import { SelectorExportService } from '@/services/selector-export.service';
 import { ShareService } from '@/services/share.service';
 import { DevOnlyGuard } from '@/guards/dev.guard';
-import { ExportWithQrCodeDto, SelectorExportDto, SimpleTournamentDto } from '@/dto/share.dto';
+import {
+  ExportWithQrCodeDto,
+  SelectorExportDto,
+  SimpleTournamentDto,
+} from '@/dto/share.dto';
 import { TournamentIdQueryDto } from '@/dto/query.dto';
+import { NoAuthRequired } from '@/decorators/auth.decorator';
 
 @Controller('export')
 export class ExternalServicesController {
@@ -183,7 +187,7 @@ export class ExternalServicesController {
 
   @UseGuards(DevOnlyGuard)
   @Get('fightcard/html')
-  @SetMetadata('isPublic', true)
+  @NoAuthRequired()
   async getTemplateHtml(
     @Query() query: TournamentIdQueryDto,
     @Res() res: ExpressResponse,

@@ -1,12 +1,4 @@
-import {
-  Controller,
-  Param,
-  Get,
-  Post,
-  Body,
-  SetMetadata,
-  Res,
-} from '@nestjs/common';
+import { Controller, Param, Get, Post, Body, Res } from '@nestjs/common';
 import { Response as ExpressResponse } from 'express';
 import { ShareService } from '@/services/share.service';
 import { ApiGeneratedToken } from '@/shared/types/api';
@@ -16,6 +8,7 @@ import { FightExportService } from '@/services/fight-export.service';
 import { QrCodeService } from '@/services/qrcode.service';
 import { FightCardTokenParamsDto } from '@/dto/params.dto';
 import { GenerateFightCardTokenDto, FightCardTokenDto } from '@/dto/share.dto';
+import { NoAuthRequired } from '@/decorators/auth.decorator';
 
 @Controller('share')
 export class ShareController {
@@ -25,7 +18,7 @@ export class ShareController {
     private readonly qrCodeService: QrCodeService,
   ) {}
 
-  @SetMetadata('isPublic', true)
+  @NoAuthRequired()
   @Get('fightcard/:fightCardToken')
   async getFightsByFightCardToken(
     @Param() params: FightCardTokenParamsDto,
@@ -56,7 +49,7 @@ export class ShareController {
     return { token, qrcode, url };
   }
 
-  @SetMetadata('isPublic', true)
+  @NoAuthRequired()
   @Post('fightcard/xlsx')
   async downloadSharedFightCardXlsx(
     @Body() body: FightCardTokenDto,
@@ -82,7 +75,7 @@ export class ShareController {
       res.status(502).json({ error: 'Error generating XLSX.' });
     }
   }
-  @SetMetadata('isPublic', true)
+  @NoAuthRequired()
   @Post('fightcard/pdf')
   async downloadSharedFightCardPdf(
     @Body() body: FightCardTokenDto,
@@ -104,7 +97,7 @@ export class ShareController {
       res.status(502).json({ error: 'Error generating PDF.' });
     }
   }
-  @SetMetadata('isPublic', true)
+  @NoAuthRequired()
   @Post('fightcard/png')
   async downloadSharedFightCardPng(
     @Body() body: FightCardTokenDto,
@@ -126,7 +119,7 @@ export class ShareController {
       res.status(502).json({ error: 'Error generating PNG.' });
     }
   }
-  @SetMetadata('isPublic', true)
+  @NoAuthRequired()
   @Post('fightcard/csv')
   async downloadSharedFightCardCsv(
     @Body() body: FightCardTokenDto,

@@ -11,6 +11,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '../entities/user.entity';
 import { AuthService } from './auth.service';
+import { NoAuthRequired } from '@/decorators/auth.decorator';
 
 @Controller('auth')
 export class AuthController {
@@ -23,14 +24,14 @@ export class AuthController {
 
   @Get('google')
   @UseGuards(AuthGuard('google'))
-  @SetMetadata('isPublic', true)
+  @NoAuthRequired()
   async googleAuth() {
     // Initiates the Google OAuth2 login flow
   }
 
   @Get('google/callback')
   @UseGuards(AuthGuard('google'))
-  @SetMetadata('isPublic', true)
+  @NoAuthRequired()
   async googleAuthRedirect(
     @Req() req: { user: { email: string; name: string; picture?: string } },
   ) {
