@@ -11,7 +11,6 @@ import {
 import { Response } from 'express';
 import { ModalityService } from '../modality/modality.service';
 import { AuthenticatedUser } from '@/interfaces/auth.interface';
-import { User } from '@/decorators/user.decorator';
 import { FightService } from '../services/fight.service';
 import { toApiFight } from '../adapters/fight.adapter';
 import { ApiFightGet } from '@/shared/types/api';
@@ -22,6 +21,7 @@ import {
   DeleteFightsDto,
 } from '@/dto/fight.dto';
 import { TournamentIdParamsDto } from '@/dto/params.dto';
+import { User } from '@/decorators/auth.decorator';
 
 @Controller('fights')
 export class FightController {

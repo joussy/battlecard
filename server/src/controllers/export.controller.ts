@@ -8,7 +8,6 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { Response as ExpressResponse } from 'express';
-import { User } from '@/decorators/user.decorator';
 import { AuthenticatedUser } from '@/interfaces/auth.interface';
 import { FightExportService } from '@/services/fight-export.service';
 import { TournamentService } from '@/services/tournament.service';
@@ -21,7 +20,7 @@ import {
   SimpleTournamentDto,
 } from '@/dto/share.dto';
 import { TournamentIdQueryDto } from '@/dto/query.dto';
-import { NoAuthRequired } from '@/decorators/auth.decorator';
+import { NoAuthRequired, User } from '@/decorators/auth.decorator';
 
 @Controller('export')
 export class ExternalServicesController {

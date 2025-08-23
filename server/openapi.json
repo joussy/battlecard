@@ -58,6 +58,11 @@
             "description": ""
           }
         },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
         "tags": [
           "Tournament"
         ]
@@ -80,6 +85,11 @@
             "description": ""
           }
         },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
         "tags": [
           "Tournament"
         ]
@@ -104,6 +114,11 @@
             "description": ""
           }
         },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
         "tags": [
           "Tournament"
         ]
@@ -116,6 +131,11 @@
             "description": ""
           }
         },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
         "tags": [
           "Tournament"
         ]
@@ -130,6 +150,11 @@
             "description": ""
           }
         },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
         "tags": [
           "Tournament"
         ]
@@ -144,6 +169,11 @@
             "description": ""
           }
         },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
         "tags": [
           "Tournament"
         ]
@@ -158,6 +188,11 @@
             "description": ""
           }
         },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
         "tags": [
           "Tournament"
         ]
@@ -667,16 +702,7 @@
     "/api/share/fightcard/{fightCardToken}": {
       "get": {
         "operationId": "ShareController_getFightsByFightCardToken",
-        "parameters": [
-          {
-            "name": "fightCardToken",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
+        "parameters": [],
         "responses": {
           "200": {
             "description": ""
@@ -694,6 +720,16 @@
       "post": {
         "operationId": "ShareController_generateFightCardToken",
         "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GenerateFightCardTokenDto"
+              }
+            }
+          }
+        },
         "responses": {
           "201": {
             "description": ""
@@ -708,6 +744,16 @@
       "post": {
         "operationId": "ShareController_downloadSharedFightCardXlsx",
         "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FightCardTokenDto"
+              }
+            }
+          }
+        },
         "responses": {
           "201": {
             "description": ""
@@ -725,6 +771,16 @@
       "post": {
         "operationId": "ShareController_downloadSharedFightCardPdf",
         "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FightCardTokenDto"
+              }
+            }
+          }
+        },
         "responses": {
           "201": {
             "description": ""
@@ -742,6 +798,16 @@
       "post": {
         "operationId": "ShareController_downloadSharedFightCardPng",
         "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FightCardTokenDto"
+              }
+            }
+          }
+        },
         "responses": {
           "201": {
             "description": ""
@@ -759,6 +825,16 @@
       "post": {
         "operationId": "ShareController_downloadSharedFightCardCsv",
         "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FightCardTokenDto"
+              }
+            }
+          }
+        },
         "responses": {
           "201": {
             "description": ""
@@ -859,7 +935,20 @@
       "PreviewBoxersApiDto": {
         "type": "object",
         "properties": {}
+      },
+      "GenerateFightCardTokenDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "FightCardTokenDto": {
+        "type": "object",
+        "properties": {}
       }
     }
-  }
+  },
+  "security": [
+    {
+      "bearer": []
+    }
+  ]
 }

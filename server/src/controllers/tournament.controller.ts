@@ -8,7 +8,7 @@ import {
   Put,
 } from '@nestjs/common';
 import { ModalityService } from '../modality/modality.service';
-import { User } from '@/decorators/user.decorator';
+import { User } from '@/decorators/auth.decorator';
 import { AuthenticatedUser } from '@/interfaces/auth.interface';
 import { TournamentService } from '../services/tournament.service';
 import {

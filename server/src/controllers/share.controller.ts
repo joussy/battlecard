@@ -2,7 +2,7 @@ import { Controller, Param, Get, Post, Body, Res } from '@nestjs/common';
 import { Response as ExpressResponse } from 'express';
 import { ShareService } from '@/services/share.service';
 import { ApiGeneratedToken } from '@/shared/types/api';
-import { User } from '@/decorators/user.decorator';
+import { User } from '@/decorators/auth.decorator';
 import { AuthenticatedUser } from '@/interfaces/auth.interface';
 import { FightExportService } from '@/services/fight-export.service';
 import { QrCodeService } from '@/services/qrcode.service';
