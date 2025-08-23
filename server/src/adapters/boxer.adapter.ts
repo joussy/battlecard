@@ -17,14 +17,14 @@ export function toBoxer(
   userId: string,
 ): Boxer {
   const entity = new Boxer();
-  entity.lastName = boxer.lastName || '';
-  entity.firstName = boxer.firstName || '';
-  entity.birthDate = boxer.birthDate || '';
+  entity.lastName = boxer.lastName;
+  entity.firstName = boxer.firstName;
+  entity.birthDate = boxer.birthDate;
   entity.nbFights = boxer.nbFights || 0;
-  entity.club = boxer.club || '';
-  entity.weight = boxer.weight || 0;
-  entity.gender = boxer.gender || Gender.FEMALE;
-  entity.license = boxer.license || '';
+  entity.club = boxer.club;
+  entity.weight = boxer.weight;
+  entity.gender = boxer.gender;
+  entity.license = boxer.license;
   entity.userId = userId;
   return entity;
 }
