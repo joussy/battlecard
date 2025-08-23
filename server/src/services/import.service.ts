@@ -48,7 +48,9 @@ export class ImportService {
       };
     }
     // Map the parsed CSV data to ImportBoxerResponseDto using array indices
-    const parsed: ImportBoxerResponseDto[] = res.map((row) => toImportBoxerDto(row));
+    const parsed: ImportBoxerResponseDto[] = res.map((row) =>
+      toImportBoxerDto(row),
+    );
     return {
       boxers: parsed,
       success: true,

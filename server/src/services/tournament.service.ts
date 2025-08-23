@@ -7,11 +7,7 @@ import { Boxer } from '../entities/boxer.entity';
 import { Fight } from '../entities/fight.entity';
 import { toTournament, toTournamentDto } from '../adapters/tournament.adapter';
 import { toBoxerGetDto, toOpponentGetDto } from '../adapters/boxer.adapter';
-import {
-  TournamentDto,
-  BoxerGetDto,
-  OpponentGetDto,
-} from '@/dto/response.dto';
+import { TournamentDto, BoxerGetDto, OpponentGetDto } from '@/dto/response.dto';
 import { ApiTournamentCreate } from '@/shared/types/api';
 import { ModalityService } from '../modality/modality.service';
 import { AuthenticatedUser } from '@/interfaces/auth.interface';
