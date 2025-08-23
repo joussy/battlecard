@@ -109,7 +109,7 @@ import IconComponent from "@/components/shared/core/icon.component.vue"
 import { useFightStore } from "@/stores/fight.store"
 import { watch, PropType } from "vue"
 import { getBoxerDisplayName } from "@/utils/labels.utils"
-import { Gender } from "@/shared/types/modality.type"
+import { Gender } from "@/api"
 
 export default {
     components: {

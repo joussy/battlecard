@@ -4,17 +4,22 @@ import {
   Get,
   Post,
   Body,
-  SetMetadata,
   Res,
+  ForbiddenException,
 } from '@nestjs/common';
-import { Response as ExpressResponse } from 'express';
 import { ShareService } from '@/services/share.service';
-import { ApiGeneratedToken } from '@/shared/types/api';
-import { User } from '@/decorators/user.decorator';
+import { GeneratedTokenDto, SharedFightCardGetDto } from '@/dto/response.dto';
+import { Response as ExpressResponse } from 'express';
+import { User } from '@/decorators/auth.decorator';
 import { AuthenticatedUser } from '@/interfaces/auth.interface';
 import { FightExportService } from '@/services/fight-export.service';
 import { QrCodeService } from '@/services/qrcode.service';
+import { FightCardTokenParamsDto } from '@/dto/params.dto';
+import { GenerateFightCardTokenDto, FightCardTokenDto } from '@/dto/share.dto';
+import { NoAuthRequired } from '@/decorators/auth.decorator';
+import { ApiOkResponse, ApiForbiddenResponse, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('share')
 @Controller('share')
 export class ShareController {
   constructor(
@@ -23,27 +28,29 @@ export class ShareController {
     private readonly qrCodeService: QrCodeService,
   ) {}
 
-  @SetMetadata('isPublic', true)
+  @NoAuthRequired()
   @Get('fightcard/:fightCardToken')
+  @ApiOkResponse({ type: SharedFightCardGetDto })
+  @ApiForbiddenResponse({ description: 'Forbidden' })
   async getFightsByFightCardToken(
-    @Param('fightCardToken') fightCardToken: string,
-    @Res() res: ExpressResponse,
-  ): Promise<void> {
+    @Param() params: FightCardTokenParamsDto,
+  ): Promise<SharedFightCardGetDto> {
     try {
-      const data =
-        await this.shareService.getTournamentByFightCardToken(fightCardToken);
-      res.json(data);
+      const data = await this.shareService.getTournamentByFightCardToken(
+        params.fightCardToken,
+      );
+      return data;
     } catch (err) {
       console.error('Error fetching shared fight card:', err);
-      res.status(403).json({ error: 'Forbidden' });
+      throw new ForbiddenException('Forbidden');
     }
   }
 
   @Post('fightcard/generateRoToken')
   async generateFightCardToken(
-    @Body() body: { tournamentId: string },
+    @Body() body: GenerateFightCardTokenDto,
     @User() user: AuthenticatedUser,
-  ): Promise<ApiGeneratedToken> {
+  ): Promise<GeneratedTokenDto> {
     const token = await this.shareService.generateFightCardToken(
       body.tournamentId,
       user.id,
@@ -53,10 +60,10 @@ export class ShareController {
     return { token, qrcode, url };
   }
 
-  @SetMetadata('isPublic', true)
+  @NoAuthRequired()
   @Post('fightcard/xlsx')
   async downloadSharedFightCardXlsx(
-    @Body() body: { fightCardToken: string },
+    @Body() body: FightCardTokenDto,
     @Res() res: ExpressResponse,
   ): Promise<void> {
     try {
@@ -79,10 +86,10 @@ export class ShareController {
       res.status(502).json({ error: 'Error generating XLSX.' });
     }
   }
-  @SetMetadata('isPublic', true)
+  @NoAuthRequired()
   @Post('fightcard/pdf')
   async downloadSharedFightCardPdf(
-    @Body() body: { fightCardToken: string },
+    @Body() body: FightCardTokenDto,
     @Res() res: ExpressResponse,
   ): Promise<void> {
     try {
@@ -101,10 +108,10 @@ export class ShareController {
       res.status(502).json({ error: 'Error generating PDF.' });
     }
   }
-  @SetMetadata('isPublic', true)
+  @NoAuthRequired()
   @Post('fightcard/png')
   async downloadSharedFightCardPng(
-    @Body() body: { fightCardToken: string },
+    @Body() body: FightCardTokenDto,
     @Res() res: ExpressResponse,
   ): Promise<void> {
     try {
@@ -123,10 +130,10 @@ export class ShareController {
       res.status(502).json({ error: 'Error generating PNG.' });
     }
   }
-  @SetMetadata('isPublic', true)
+  @NoAuthRequired()
   @Post('fightcard/csv')
   async downloadSharedFightCardCsv(
-    @Body() body: { fightCardToken: string },
+    @Body() body: FightCardTokenDto,
     @Res() res: ExpressResponse,
   ): Promise<void> {
     try {

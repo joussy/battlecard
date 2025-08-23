@@ -11,10 +11,17 @@ import {
 import { Response } from 'express';
 import { ModalityService } from '../modality/modality.service';
 import { AuthenticatedUser } from '@/interfaces/auth.interface';
-import { User } from '@/decorators/user.decorator';
 import { FightService } from '../services/fight.service';
-import { toApiFight } from '../adapters/fight.adapter';
-import { ApiFightGet, ApiFightCreate } from '@/shared/types/api';
+import { FightGetDto } from '@/dto/response.dto';
+import {
+  CreateFightDto,
+  ReorderFightDto,
+  SwitchFightDto,
+  DeleteFightsDto,
+} from '@/dto/fight.dto';
+import { TournamentIdParamsDto } from '@/dto/params.dto';
+import { User } from '@/decorators/auth.decorator';
+import { toFightGetDto } from '@/adapters/fight.adapter';
 
 @Controller('fights')
 export class FightController {
@@ -27,7 +34,7 @@ export class FightController {
 
   @Post()
   async create(
-    @Body() fight: ApiFightCreate,
+    @Body() fight: CreateFightDto,
     @User() user: AuthenticatedUser,
     @Res() res: Response,
   ): Promise<any> {
@@ -43,7 +50,7 @@ export class FightController {
         return res.status(404).json({ error: 'Fight not found' });
       }
       const modality = this.modalityService.getModality();
-      return res.json(toApiFight(dbFight, modality));
+      return res.json(toFightGetDto(dbFight, modality));
     } catch (err) {
       if (err instanceof Error && err.message.includes('already exists')) {
         return res.status(409).json({ error: err.message });
@@ -54,17 +61,17 @@ export class FightController {
 
   @Delete()
   async deleteMany(
-    @Body('ids') fightIds: string[],
+    @Body() dto: DeleteFightsDto,
     @User() user: AuthenticatedUser,
   ): Promise<void> {
-    const fight = await this.fightService.findById(fightIds[0], user);
-    await this.fightService.deleteMany(fightIds, user);
+    const fight = await this.fightService.findById(dto.ids[0], user);
+    await this.fightService.deleteMany(dto.ids, user);
     await this.fightService.reorderFights(fight.tournamentId, user);
   }
 
   @Post('reorder')
   async reorderFight(
-    @Body() body: { fightId: string; newIndex: number },
+    @Body() body: ReorderFightDto,
     @User() user: AuthenticatedUser,
   ): Promise<void> {
     return this.fightService.reorderFight(body.fightId, body.newIndex, user);
@@ -72,19 +79,22 @@ export class FightController {
 
   @Post('switch')
   async switch(
-    @Body() body: { fightId: string },
+    @Body() body: SwitchFightDto,
     @User() user: AuthenticatedUser,
-  ): Promise<ApiFightGet> {
+  ): Promise<FightGetDto> {
     const updated = await this.fightService.switch(body.fightId, user);
-    return toApiFight(updated, this.modalityService.getModality());
+    return toFightGetDto(updated, this.modalityService.getModality());
   }
 
   @Get('matchups/:tournamentId')
   async getMatchups(
     @User() user: AuthenticatedUser,
-    @Param('tournamentId') tournamentId: string,
-  ): Promise<ApiFightGet[]> {
-    const fights = await this.fightService.getMatchups(tournamentId, user);
+    @Param() params: TournamentIdParamsDto,
+  ): Promise<FightGetDto[]> {
+    const fights = await this.fightService.getMatchups(
+      params.tournamentId,
+      user,
+    );
     return fights;
   }
 }

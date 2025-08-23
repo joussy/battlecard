@@ -214,9 +214,8 @@ import { Boxer } from "@/types/boxing.d"
 import { isValid, format } from "date-fns"
 import IconComponent from "@/components/shared/core/icon.component.vue"
 
-import { Gender } from "@/shared/types/modality.type"
-import { ApiBoxerCreate } from "@/shared/types/api"
-import apiManager from "@/managers/api.manager"
+import { Gender } from "@/api"
+import { BoxerOpenApi, CreateBoxerDto, UpdateBoxerDto } from "@/api"
 import { useTournamentStore } from "@/stores/tournament.store"
 
 configure({
@@ -318,7 +317,7 @@ export default defineComponent({
     },
     created() {
         this.onSubmit = this.handleSubmit(async (form: GenericObject) => {
-            let boxer: ApiBoxerCreate = {
+            let boxerData = {
                 birthDate: form.birthdate,
                 club: form.club,
                 firstName: form.firstname,
@@ -330,11 +329,16 @@ export default defineComponent({
                 tournamentId: this.tournamentStore.currentTournamentId,
             }
             if (this.boxer?.id) {
-                await apiManager.updateBoxer(boxer, this.boxer.id)
+                await BoxerOpenApi.update({
+                    path: { id: this.boxer.id },
+                    body: boxerData as UpdateBoxerDto,
+                })
             } else {
-                await apiManager.addBoxer(boxer)
+                await BoxerOpenApi.create({
+                    body: boxerData as CreateBoxerDto,
+                })
             }
-            this.$emit("boxer-saved", boxer)
+            this.$emit("boxer-saved", boxerData)
         })
     },
 })

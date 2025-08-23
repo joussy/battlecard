@@ -11,6 +11,8 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
 export default [
+    // Ignore generated OpenAPI client files (flat config style)
+    { ignores: ["src/api/**"] },
     // Vue 3 recommended rules
     ...vuePlugin.configs["flat/recommended"],
 

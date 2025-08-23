@@ -50,7 +50,7 @@
 import { Boxer, Fight } from "@/types/boxing"
 import { defineComponent, PropType } from "vue"
 import { getAgeDifference, getBirthDateAndAge, getFightDurationAsString } from "@/utils/string.utils"
-import { Gender } from "@/shared/types/modality.type"
+import { Gender } from "@/api"
 import IconComponent from "@/components/shared/core/icon.component.vue"
 
 export default defineComponent({

@@ -18,7 +18,7 @@
 import { PropType, defineComponent } from "vue"
 
 import { Boxer } from "@/types/boxing"
-import { ModalityError } from "@/shared/types/modality.type"
+import { ModalityErrorDao } from "@/api"
 import IconComponent from "@/components/shared/core/icon.component.vue"
 import { useBoxerStore } from "@/stores/boxer.store"
 
@@ -32,7 +32,7 @@ export default defineComponent({
             required: true,
         },
         modalityErrors: {
-            type: Object as PropType<ModalityError[]>,
+            type: Object as PropType<ModalityErrorDao[]>,
             required: false,
             default: null,
         },

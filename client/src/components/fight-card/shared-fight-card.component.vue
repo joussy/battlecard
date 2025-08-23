@@ -80,7 +80,7 @@
 <script lang="ts">
 import { SharedFightCard } from "@/types/boxing.d"
 import FightCardGridComponent from "@/components/fight-card/fight-card-grid.component.vue"
-import apiManager from "@/managers/api.manager"
+import { ShareOpenApi } from "@/api"
 import ApiAdapter from "@/adapters/api.adapter"
 import exportManager from "@/managers/export.manager"
 import ShareComponent from "@/components/shared/core/share.component.vue"
@@ -115,8 +115,14 @@ export default {
     async mounted() {
         this.roToken = this.$route.params.roToken as string
         try {
-            const apiSharedFightCardGet = await apiManager.getFightsByFightCardToken(this.roToken)
-            this.tournament = ApiAdapter.toSharedFightCard(apiSharedFightCardGet)
+            const apiSharedFightCardGet = await ShareOpenApi.getFightsByFightCardToken({
+                path: { fightCardToken: this.roToken },
+            })
+            if (apiSharedFightCardGet) {
+                this.tournament = ApiAdapter.toSharedFightCard(apiSharedFightCardGet)
+            } else {
+                throw new Error("No data received")
+            }
         } catch (error) {
             console.error("Error fetching shared fight card:", error)
             this.tournament = null

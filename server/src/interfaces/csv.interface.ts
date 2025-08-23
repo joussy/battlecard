@@ -14,7 +14,7 @@ export interface CsvBoxer {
   /** Boxer license */
   license: string;
   /** Boxer fight record */
-  fightRecord: number;
+  fightRecord: string;
 }
 
 export const csvDelimiter = ';';

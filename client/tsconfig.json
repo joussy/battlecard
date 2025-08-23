@@ -18,5 +18,6 @@
         }
     },
     "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "../server/src/shared/**/*.ts", "../shared/**/*.d.ts"],
+    "exclude": ["src/api/**/*"],
     "references": [{ "path": "./tsconfig.node.json" }]
 }
