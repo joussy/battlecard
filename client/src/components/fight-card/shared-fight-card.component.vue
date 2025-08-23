@@ -119,8 +119,7 @@ export default {
                 path: { fightCardToken: this.roToken },
             })
             if (apiSharedFightCardGet) {
-                // TODO: Fix OpenAPI spec - ShareOpenApi returns 'unknown' type instead of proper SharedFightCardGet
-                this.tournament = ApiAdapter.toSharedFightCard(apiSharedFightCardGet as any)
+                this.tournament = ApiAdapter.toSharedFightCard(apiSharedFightCardGet)
             } else {
                 throw new Error("No data received")
             }

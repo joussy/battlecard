@@ -189,7 +189,9 @@
             <span class="badge rounded-pill bg-primary me-2 mb-3"><span class="step-badge"></span></span>Preview the
             data and finalize import
             <!-- TODO: Re-enable ImportTableComponent when updated to use generated SDK -->
-            <div class="alert alert-warning">Import functionality temporarily disabled while migrating to generated SDK</div>
+            <div class="alert alert-warning">
+                Import functionality temporarily disabled while migrating to generated SDK
+            </div>
             <!--
             <ImportTableComponent
                 :input-boxers="rows"
@@ -201,18 +203,18 @@
 </template>
 <script lang="ts">
 // TODO: Import components need to be updated to use generated SDK
-// import ImportTableComponent from "@/components/import/import-table.component.vue"
-// import { ApiImportBoxer } from "@/shared/types/api"
+import ImportTableComponent from "@/components/import/import-table.component.vue"
 import IconComponent from "@/components/shared/core/icon.component.vue"
 import { defineComponent } from "vue"
 import { useUiStore } from "@/stores/ui.store"
 // NOTE: dbManager import removed - methods below need to be updated to use generated SDK
 import { useTournamentStore } from "@/stores/tournament.store"
+import { ImportBoxerDto, ImportOpenApi } from "@/api"
 
 export default defineComponent({
     name: "ImportComponent",
     components: {
-        // ImportTableComponent: ImportTableComponent, // TODO: Re-enable when updated to use generated SDK
+        ImportTableComponent: ImportTableComponent,
         IconComponent,
     },
     data() {
@@ -233,7 +235,7 @@ Tyson;Mike;2011-06-30;Catskill Boxing Club;100;male;TYS002;58
 279688
 279689
 `,
-            rows: [] as any[], // TODO: Use proper import boxer type when SDK is updated
+            rows: [] as ImportBoxerDto[],
         }
     },
     watch: {
@@ -246,36 +248,35 @@ Tyson;Mike;2011-06-30;Catskill Boxing Club;100;male;TYS002;58
     },
     methods: {
         async previewApiText() {
-            // TODO: Update to use generated SDK - ImportOpenApi.previewFromApi
-            console.warn("Import functionality temporarily disabled - needs to be migrated to generated SDK")
-            /*
-            const res = await dbManager.previewBoxersFromApi(this.apiClipboard)
-            if (!res.success) {
-                console.error("Error previewing boxers:", res.message)
+            const res = await ImportOpenApi.previewFromApi({
+                body: {
+                    payload: this.apiClipboard,
+                },
+            })
+            if (!res || !res.success) {
+                console.error("Error previewing boxers:", res?.message)
                 return
             }
             console.log("Preview result:", res.boxers)
             this.rows = [...res.boxers]
             console.log("this.rows:", this.rows)
             this.showImportTable = true
-            */
         },
         async previewCsvText() {
-            // TODO: Update to use generated SDK - ImportOpenApi.previewBoxersFromCsvText
-            console.warn("Import functionality temporarily disabled - needs to be migrated to generated SDK")
-            /*
-            const res = await dbManager.previewBoxersFromText(this.clipboard)
-            if (!res.success) {
-                console.error("Error previewing boxers:", res.message)
+            const res = await ImportOpenApi.previewBoxersFromCsvText({
+                body: {
+                    payload: this.clipboard,
+                },
+            })
+            if (!res || !res.success) {
+                console.error("Error previewing boxers:", res?.message)
                 return
             }
-            console.log("Preview result:", res.boxers)
             this.rows = [...res.boxers]
             console.log("this.rows:", this.rows)
             this.showImportTable = true
-            */
         },
-        async previewCsvFile() {
+        previewCsvFile() {
             const fileInput = document.getElementById("formFileCsv") as HTMLInputElement
             if (!fileInput.files || fileInput.files.length === 0) {
                 console.error("No file selected")
@@ -295,13 +296,13 @@ Tyson;Mike;2011-06-30;Catskill Boxing Club;100;male;TYS002;58
             */
         },
 
-        async previewFfboxeFile() {
+        previewFfboxeFile() {
             const fileInput = document.getElementById("formFileDisabled") as HTMLInputElement
             if (!fileInput.files || fileInput.files.length === 0) {
                 console.error("No file selected")
                 return
             }
-            // TODO: Update to use generated SDK - ImportOpenApi.previewBoxersFromFfboxeFile  
+            // TODO: Update to use generated SDK - ImportOpenApi.previewBoxersFromFfboxeFile
             console.warn("Import functionality temporarily disabled - needs to be migrated to generated SDK")
             /*
             const file = fileInput.files[0]
