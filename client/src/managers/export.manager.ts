@@ -1,4 +1,3 @@
-import { ApiGeneratedToken } from "@/shared/types/api"
 import { mutate, postAndDownload } from "@/utils/manager.utils"
 
 export class ExportManager {

@@ -1,18 +1,16 @@
 import {
-    ApiBoxerCreate,
-    ApiBoxerGet,
-    ApiFightGet,
-    ApiOpponentGet,
-    ApiSharedFightCardGet,
-    ApiTournament,
-    ApiTournamentCreate,
-} from "@/shared/types/api"
-import { BoxerGetDto, TournamentDto, FightGetDto, CreateFightDto, OpponentGetDto } from "@/api/types.gen"
+    BoxerGetDto,
+    TournamentDto,
+    FightGetDto,
+    OpponentGetDto,
+    CreateBoxerDto,
+    CreateTournamentDto,
+} from "@/api/types.gen"
 import { Gender } from "@/shared/types/modality.type"
 import { Boxer, Fight, Opponent, SharedFightCard, Tournament } from "@/types/boxing.d"
 
 export default class ApiAdapter {
-    static toApiBoxerCreate(boxer: Boxer, tournamentId: string | undefined): ApiBoxerCreate {
+    static toApiBoxerCreate(boxer: Boxer, tournamentId: string | undefined): CreateBoxerDto {
         return {
             birthDate: boxer.birthDate?.toISOString(),
             club: boxer.club,
@@ -26,7 +24,7 @@ export default class ApiAdapter {
         }
     }
 
-    static toOpponent(opponent: ApiOpponentGet | OpponentGetDto): Opponent {
+    static toOpponent(opponent: OpponentGetDto): Opponent {
         return {
             ...ApiAdapter.toBoxer(opponent),
             weightDifference: opponent.weightDifference,
@@ -36,7 +34,7 @@ export default class ApiAdapter {
         }
     }
 
-    static toBoxer(boxer: ApiBoxerGet | BoxerGetDto): Boxer {
+    static toBoxer(boxer: BoxerGetDto): Boxer {
         return {
             birthDate: new Date(boxer.birthDate),
             club: boxer.club,
@@ -56,7 +54,7 @@ export default class ApiAdapter {
         }
     }
 
-    static toTournament(tournament: ApiTournament | TournamentDto): Tournament {
+    static toTournament(tournament: TournamentDto): Tournament {
         return {
             id: tournament.id,
             name: tournament.name,
@@ -69,7 +67,7 @@ export default class ApiAdapter {
         }
     }
 
-    static toApiTournament(tournament: Tournament): ApiTournament {
+    static toApiTournament(tournament: Tournament): TournamentDto {
         return {
             id: tournament.id,
             name: tournament.name,
@@ -81,7 +79,7 @@ export default class ApiAdapter {
         }
     }
 
-    static toApiTournamentCreate(tournament: Tournament): ApiTournamentCreate {
+    static toApiTournamentCreate(tournament: Tournament): CreateTournamentDto {
         return {
             name: tournament.name,
             date: tournament.date,
@@ -91,7 +89,7 @@ export default class ApiAdapter {
         }
     }
 
-    static toFight(fight: ApiFightGet | FightGetDto): Fight {
+    static toFight(fight: FightGetDto): Fight {
         return {
             boxer1: ApiAdapter.toBoxer(fight.boxer1),
             boxer2: ApiAdapter.toBoxer(fight.boxer2),
