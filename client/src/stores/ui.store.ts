@@ -10,7 +10,7 @@ export const useUiStore = defineStore("ui", {
         theme: "auto" as UiTheme,
         hideNonMatchableOpponents: false,
         hideFightersWithNoMatch: false,
-        jwtToken: null as string | null,
+        jwtToken: undefined as string | undefined,
         facets: null as Facets | null,
     }),
     actions: {

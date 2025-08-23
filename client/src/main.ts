@@ -15,6 +15,8 @@ import BoxerTileDetailsComponent from "@/components/selector/boxer-details.compo
 import TournamentsComponent from "@/components/tournament/tournaments.component.vue"
 import { createPinia } from "pinia"
 import SharedFightCardComponent from "./components/fight-card/shared-fight-card.component.vue"
+import { client } from "./api/client.gen"
+import { useUiStore } from "./stores/ui.store"
 
 declare module "pinia" {
     export interface PiniaCustomProperties {
@@ -49,6 +51,11 @@ const router = createRouter({
         }
     },
     routes,
+})
+
+client.setConfig({
+    baseUrl: "/",
+    auth: () => useUiStore().jwtToken,
 })
 
 const pinia = createPinia()

@@ -59,6 +59,16 @@
       "post": {
         "operationId": "TournamentController_create",
         "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTournamentDto"
+              }
+            }
+          }
+        },
         "responses": {
           "201": {
             "description": ""
@@ -72,16 +82,17 @@
     "/api/tournaments/{id}": {
       "put": {
         "operationId": "TournamentController_update",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateTournamentDto"
+              }
             }
           }
-        ],
+        },
         "responses": {
           "200": {
             "description": ""
@@ -93,16 +104,7 @@
       },
       "delete": {
         "operationId": "TournamentController_delete",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
+        "parameters": [],
         "responses": {
           "200": {
             "description": ""
@@ -116,16 +118,7 @@
     "/api/tournaments/{tournamentId}/boxers": {
       "get": {
         "operationId": "TournamentController_getBoxersForTournament",
-        "parameters": [
-          {
-            "name": "tournamentId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
+        "parameters": [],
         "responses": {
           "200": {
             "description": ""
@@ -139,24 +132,7 @@
     "/api/tournaments/{tournamentId}/opponents/{boxerId}": {
       "get": {
         "operationId": "TournamentController_getPossibleOpponents",
-        "parameters": [
-          {
-            "name": "boxerId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "tournamentId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
+        "parameters": [],
         "responses": {
           "200": {
             "description": ""
@@ -170,16 +146,7 @@
     "/api/tournaments/{tournamentId}/fights": {
       "get": {
         "operationId": "TournamentController_getFightsByTournamentId",
-        "parameters": [
-          {
-            "name": "tournamentId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
+        "parameters": [],
         "responses": {
           "200": {
             "description": ""
@@ -194,6 +161,16 @@
       "post": {
         "operationId": "BoxerController_create",
         "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateBoxerDto"
+              }
+            }
+          }
+        },
         "responses": {
           "201": {
             "description": ""
@@ -207,16 +184,7 @@
     "/api/boxers/{id}": {
       "get": {
         "operationId": "BoxerController_getBoxer",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
+        "parameters": [],
         "responses": {
           "200": {
             "description": ""
@@ -228,16 +196,17 @@
       },
       "put": {
         "operationId": "BoxerController_update",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateBoxerDto"
+              }
             }
           }
-        ],
+        },
         "responses": {
           "200": {
             "description": ""
@@ -252,6 +221,16 @@
       "post": {
         "operationId": "FightController_create",
         "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateFightDto"
+              }
+            }
+          }
+        },
         "responses": {
           "201": {
             "description": ""
@@ -264,6 +243,16 @@
       "delete": {
         "operationId": "FightController_deleteMany",
         "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeleteFightsDto"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": ""
@@ -278,6 +267,16 @@
       "post": {
         "operationId": "FightController_reorderFight",
         "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReorderFightDto"
+              }
+            }
+          }
+        },
         "responses": {
           "201": {
             "description": ""
@@ -292,6 +291,16 @@
       "post": {
         "operationId": "FightController_switch",
         "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SwitchFightDto"
+              }
+            }
+          }
+        },
         "responses": {
           "201": {
             "description": ""
@@ -305,16 +314,7 @@
     "/api/fights/matchups/{tournamentId}": {
       "get": {
         "operationId": "FightController_getMatchups",
-        "parameters": [
-          {
-            "name": "tournamentId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
+        "parameters": [],
         "responses": {
           "200": {
             "description": ""
@@ -329,6 +329,16 @@
       "post": {
         "operationId": "ExternalServicesController_getFightCardPdf",
         "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExportWithQrCodeDto"
+              }
+            }
+          }
+        },
         "responses": {
           "201": {
             "description": ""
@@ -343,6 +353,16 @@
       "post": {
         "operationId": "ExternalServicesController_getFightCardPng",
         "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExportWithQrCodeDto"
+              }
+            }
+          }
+        },
         "responses": {
           "201": {
             "description": ""
@@ -357,6 +377,16 @@
       "post": {
         "operationId": "ExternalServicesController_getBattlecard",
         "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SelectorExportDto"
+              }
+            }
+          }
+        },
         "responses": {
           "201": {
             "description": ""
@@ -371,6 +401,16 @@
       "post": {
         "operationId": "ExternalServicesController_getFightCardCsv",
         "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SimpleTournamentDto"
+              }
+            }
+          }
+        },
         "responses": {
           "201": {
             "description": ""
@@ -385,6 +425,16 @@
       "post": {
         "operationId": "ExternalServicesController_getFightCardXlsx",
         "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SimpleTournamentDto"
+              }
+            }
+          }
+        },
         "responses": {
           "201": {
             "description": ""
@@ -398,16 +448,7 @@
     "/api/export/fightcard/html": {
       "get": {
         "operationId": "ExternalServicesController_getTemplateHtml",
-        "parameters": [
-          {
-            "name": "tournamentId",
-            "required": true,
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
+        "parameters": [],
         "responses": {
           "200": {
             "description": ""
@@ -422,6 +463,16 @@
       "post": {
         "operationId": "ExternalServicesController_getSelectorPdf",
         "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SelectorExportDto"
+              }
+            }
+          }
+        },
         "responses": {
           "201": {
             "description": ""
@@ -436,6 +487,16 @@
       "post": {
         "operationId": "ExternalServicesController_getSelectorPng",
         "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SelectorExportDto"
+              }
+            }
+          }
+        },
         "responses": {
           "201": {
             "description": ""
@@ -450,6 +511,16 @@
       "post": {
         "operationId": "ExternalServicesController_getSelectorCsv",
         "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SelectorExportDto"
+              }
+            }
+          }
+        },
         "responses": {
           "201": {
             "description": ""
@@ -464,6 +535,16 @@
       "post": {
         "operationId": "ExternalServicesController_getSelectorXlsx",
         "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SelectorExportDto"
+              }
+            }
+          }
+        },
         "responses": {
           "201": {
             "description": ""
@@ -478,6 +559,16 @@
       "post": {
         "operationId": "ImportController_importBoxers",
         "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ImportBoxersDto"
+              }
+            }
+          }
+        },
         "responses": {
           "201": {
             "description": ""
@@ -492,6 +583,16 @@
       "post": {
         "operationId": "ImportController_previewBoxersFromCsvText",
         "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PreviewBoxersCsvDto"
+              }
+            }
+          }
+        },
         "responses": {
           "201": {
             "description": ""
@@ -534,6 +635,16 @@
       "post": {
         "operationId": "ImportController_previewFromApi",
         "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PreviewBoxersApiDto"
+              }
+            }
+          }
+        },
         "responses": {
           "201": {
             "description": ""
@@ -562,6 +673,9 @@
             "description": ""
           }
         },
+        "security": [
+          {}
+        ],
         "tags": [
           "Share"
         ]
@@ -590,6 +704,9 @@
             "description": ""
           }
         },
+        "security": [
+          {}
+        ],
         "tags": [
           "Share"
         ]
@@ -604,6 +721,9 @@
             "description": ""
           }
         },
+        "security": [
+          {}
+        ],
         "tags": [
           "Share"
         ]
@@ -618,6 +738,9 @@
             "description": ""
           }
         },
+        "security": [
+          {}
+        ],
         "tags": [
           "Share"
         ]
@@ -632,6 +755,9 @@
             "description": ""
           }
         },
+        "security": [
+          {}
+        ],
         "tags": [
           "Share"
         ]
@@ -640,16 +766,7 @@
     "/api/places/autocomplete": {
       "get": {
         "operationId": "PlacesController_autocomplete",
-        "parameters": [
-          {
-            "name": "q",
-            "required": true,
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
+        "parameters": [],
         "responses": {
           "200": {
             "description": ""
@@ -670,6 +787,70 @@
   "tags": [],
   "servers": [],
   "components": {
-    "schemas": {}
+    "securitySchemes": {
+      "bearer": {
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "type": "http"
+      }
+    },
+    "schemas": {
+      "CreateTournamentDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "UpdateTournamentDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "CreateBoxerDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "UpdateBoxerDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "CreateFightDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "DeleteFightsDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "ReorderFightDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "SwitchFightDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "ExportWithQrCodeDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "SelectorExportDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "SimpleTournamentDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "ImportBoxersDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "PreviewBoxersCsvDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "PreviewBoxersApiDto": {
+        "type": "object",
+        "properties": {}
+      }
+    }
   }
 }

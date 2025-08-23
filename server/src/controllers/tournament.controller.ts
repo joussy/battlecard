@@ -19,8 +19,14 @@ import {
 } from '@/shared/types/api';
 import { FightService } from '@/services/fight.service';
 import { CreateTournamentDto, UpdateTournamentDto } from '@/dto/tournament.dto';
-import { TournamentBoxerParamsDto, IdParamsDto, TournamentIdParamsDto } from '@/dto/params.dto';
+import {
+  TournamentBoxerParamsDto,
+  IdParamsDto,
+  TournamentIdParamsDto,
+} from '@/dto/params.dto';
 
+import { ApiBearerAuth } from '@nestjs/swagger';
+@ApiBearerAuth()
 @Controller('tournaments')
 export class TournamentController {
   constructor(
