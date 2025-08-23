@@ -4,13 +4,13 @@ import { In, Repository } from 'typeorm';
 import { Fight } from '../entities/fight.entity';
 import { Boxer } from '../entities/boxer.entity';
 import { FightGetDto } from '@/dto/response.dto';
-import { ApiFightCreate } from '@/shared/types/api';
-import { toFightGetDto, toFightFromCreate } from '../adapters/fight.adapter';
+import { toFight, toFightGetDto } from '../adapters/fight.adapter';
 import { ModalityService } from '../modality/modality.service';
 import { AuthenticatedUser } from '@/interfaces/auth.interface';
 import { TournamentService } from './tournament.service';
 import { toBoxerGetDto } from '@/adapters/boxer.adapter';
 import { TournamentBoxer } from '@/entities/tournament_boxer.entity';
+import { CreateFightDto } from '@/dto/fight.dto';
 
 @Injectable()
 export class FightService {
@@ -46,7 +46,7 @@ export class FightService {
     return toFightGetDto(fight, modality);
   }
 
-  async create(fight: ApiFightCreate, user: AuthenticatedUser): Promise<Fight> {
+  async create(fight: CreateFightDto, user: AuthenticatedUser): Promise<Fight> {
     await this.boxerRepository.findOneOrFail({
       where: [{ id: fight.boxer1Id, userId: user.id }],
     });
@@ -72,7 +72,7 @@ export class FightService {
         'A fight between these two boxers already exists in this tournament.',
       );
     }
-    return this.fightRepository.save(toFightFromCreate(fight));
+    return this.fightRepository.save(toFight(fight));
   }
 
   async deleteMany(fightIds: string[], user: AuthenticatedUser): Promise<void> {

@@ -8,9 +8,9 @@ import { Fight } from '../entities/fight.entity';
 import { toTournament, toTournamentDto } from '../adapters/tournament.adapter';
 import { toBoxerGetDto, toOpponentGetDto } from '../adapters/boxer.adapter';
 import { TournamentDto, BoxerGetDto, OpponentGetDto } from '@/dto/response.dto';
-import { ApiTournamentCreate } from '@/shared/types/api';
 import { ModalityService } from '../modality/modality.service';
 import { AuthenticatedUser } from '@/interfaces/auth.interface';
+import { CreateTournamentDto, UpdateTournamentDto } from '@/dto/tournament.dto';
 
 @Injectable()
 export class TournamentService {
@@ -35,7 +35,7 @@ export class TournamentService {
   }
 
   async create(
-    tournament: ApiTournamentCreate,
+    tournament: CreateTournamentDto,
     user: AuthenticatedUser,
   ): Promise<TournamentDto> {
     const dbTournament = await this.tournamentRepository.save(
@@ -46,7 +46,7 @@ export class TournamentService {
 
   async update(
     tournamentId: string,
-    tournament: ApiTournamentCreate,
+    tournament: UpdateTournamentDto,
     user: AuthenticatedUser,
   ): Promise<TournamentDto> {
     const dbTournament = toTournament(tournament, user.id);

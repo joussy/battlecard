@@ -137,7 +137,7 @@ export class BoxerGetDto {
 
   /** Gender */
   @IsString()
-  gender: 'male' | 'female';
+  gender: Gender;
 
   /** License number */
   @IsString()

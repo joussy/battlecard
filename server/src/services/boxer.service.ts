@@ -7,9 +7,9 @@ import { Fight } from '../entities/fight.entity';
 import { Tournament } from '@/entities/tournament.entity';
 import { toBoxer, toBoxerGetDto } from '../adapters/boxer.adapter';
 import { BoxerGetDto } from '@/dto/response.dto';
-import { ApiBoxerCreate } from '@/shared/types/api';
 import { ModalityService } from '../modality/modality.service';
 import { AuthenticatedUser } from '../interfaces/auth.interface';
+import { CreateBoxerDto } from '@/dto/boxer.dto';
 
 @Injectable()
 export class BoxerService {
@@ -26,7 +26,7 @@ export class BoxerService {
   ) {}
 
   async create(
-    boxer: ApiBoxerCreate,
+    boxer: CreateBoxerDto,
     user: AuthenticatedUser,
   ): Promise<BoxerGetDto> {
     const tournament = await this.tournamentRepository.findOne({
@@ -69,7 +69,7 @@ export class BoxerService {
 
   async update(
     boxerId: string,
-    boxer: ApiBoxerCreate,
+    boxer: CreateBoxerDto,
     user: AuthenticatedUser,
   ): Promise<BoxerGetDto> {
     await this.boxerRepository.findOneOrFail({
