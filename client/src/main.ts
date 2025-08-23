@@ -57,6 +57,12 @@ client.setConfig({
     baseUrl: "/",
     auth: () => useUiStore().jwtToken,
 })
+client.interceptors.response.use((response) => {
+    if (response.status >= 400) {
+        throw response
+    }
+    return response
+})
 
 const pinia = createPinia()
 pinia.use(() => ({ router }))

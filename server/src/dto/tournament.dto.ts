@@ -38,3 +38,25 @@ export class CreateTournamentDto {
 }
 
 export class UpdateTournamentDto extends CreateTournamentDto {}
+
+/**
+ * Tournament object returned from the API.
+ */
+export class GetTournamentDto {
+  /** Unique tournament ID */
+  id: string;
+  /** Tournament name */
+  name: string;
+  /** User who created the tournament */
+  userId: string;
+  /** Tournament date (YYYY-MM-DD) */
+  date: string;
+  /** Tournament address (optional) */
+  address?: string;
+  /** Tournament zip code (optional) */
+  zipCode?: string;
+  /** Tournament city (optional) */
+  city?: string;
+  /** Formatted address combining street, city, and zipCode */
+  formattedAddress?: string;
+}

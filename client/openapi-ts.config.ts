@@ -21,6 +21,7 @@ export default defineConfig({
                     .replace(/^.*Controller/, "")
                     .replace(/^[A-Z]/, (match) => match.toLowerCase())
             },
+            responseStyle: "data",
         },
     ],
 })
