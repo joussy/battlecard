@@ -82,11 +82,6 @@
             }
           }
         },
-        "security": [
-          {
-            "bearer": []
-          }
-        ],
         "tags": [
           "Tournament"
         ]
@@ -116,11 +111,6 @@
             }
           }
         },
-        "security": [
-          {
-            "bearer": []
-          }
-        ],
         "tags": [
           "Tournament"
         ]
@@ -161,11 +151,6 @@
             }
           }
         },
-        "security": [
-          {
-            "bearer": []
-          }
-        ],
         "tags": [
           "Tournament"
         ]
@@ -187,11 +172,6 @@
             "description": ""
           }
         },
-        "security": [
-          {
-            "bearer": []
-          }
-        ],
         "tags": [
           "Tournament"
         ]
@@ -225,11 +205,6 @@
             }
           }
         },
-        "security": [
-          {
-            "bearer": []
-          }
-        ],
         "tags": [
           "Tournament"
         ]
@@ -271,11 +246,6 @@
             }
           }
         },
-        "security": [
-          {
-            "bearer": []
-          }
-        ],
         "tags": [
           "Tournament"
         ]
@@ -309,11 +279,6 @@
             }
           }
         },
-        "security": [
-          {
-            "bearer": []
-          }
-        ],
         "tags": [
           "Tournament"
         ]
