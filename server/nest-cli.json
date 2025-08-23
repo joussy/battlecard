@@ -6,6 +6,16 @@
   "monorepo": true,
   "compilerOptions": {
     "deleteOutDir": true,
+    "plugins": [
+      {
+        "name": "@nestjs/swagger",
+        "options": {
+          "classValidatorShim": false,
+          "introspectComments": true,
+          "skipAutoHttpCode": true
+        }
+      }
+    ],
     "assets": [
       {
         "include": "views/*.mustache",
