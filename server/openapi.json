@@ -1402,6 +1402,32 @@
           "categoryShort"
         ]
       },
+      "ModalityErrorType": {
+        "type": "string",
+        "enum": [
+          "WEIGHT",
+          "AGE",
+          "SAME_CLUB",
+          "SAME_ID",
+          "OPPOSITE_GENDER",
+          "PRIZE_LIST"
+        ]
+      },
+      "ModalityErrorDao": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ModalityErrorType"
+              }
+            ]
+          }
+        },
+        "required": [
+          "type"
+        ]
+      },
       "OpponentGetDto": {
         "type": "object",
         "properties": {
@@ -1489,7 +1515,7 @@
             "description": "Modality errors for this boxer",
             "type": "array",
             "items": {
-              "type": "object"
+              "$ref": "#/components/schemas/ModalityErrorDao"
             }
           }
         },

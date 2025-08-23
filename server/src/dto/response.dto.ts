@@ -13,6 +13,7 @@ import { Type } from 'class-transformer';
 import { Gender } from '@/interfaces/modality.interface';
 
 import { ApiProperty } from '@nestjs/swagger';
+import { ModalityErrorDao } from './modality.dto';
 
 export class BoxerImportErrorDto {
   /** Error message */
@@ -322,5 +323,5 @@ export class OpponentGetDto extends BoxerGetDto {
   /** Modality errors for this boxer */
   @IsOptional()
   @IsArray()
-  modalityErrors?: any[];
+  modalityErrors?: ModalityErrorDao[];
 }

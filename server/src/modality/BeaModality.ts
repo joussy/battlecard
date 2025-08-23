@@ -2,11 +2,11 @@ import { BaseModality } from './BaseModality';
 import { differenceInDays } from 'date-fns';
 import { Boxer } from '@/entities/boxer.entity';
 import {
+  BeaCategory,
   FightDuration,
   ModalityError,
-  BeaCategory,
   ModalityErrorType,
-} from '@/shared/types/modality.type';
+} from '@/interfaces/modality.interface';
 
 export class BeaModality extends BaseModality {
   categories: BeaCategory[] = [

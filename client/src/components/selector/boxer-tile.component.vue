@@ -62,7 +62,7 @@
 <script lang="ts">
 import { PropType, defineComponent } from "vue"
 import { Boxer } from "@/types/boxing.d"
-import { ModalityErrorType } from "@/shared/types/modality.type"
+import { ModalityErrorType } from "@/api"
 import { Gender } from "@/api"
 import RecordBadgeComponent from "@/components/shared/badges/record-badge.component.vue"
 import AgeBadgeComponent from "@/components/shared/badges/age-badge.component.vue"

@@ -5,8 +5,7 @@ import {
 } from '@/dto/response.dto';
 import { Boxer } from '../entities/boxer.entity';
 import { IModality } from '@/modality/IModality';
-import { ModalityError } from '@/shared/types/modality.type';
-import { Gender } from '@/interfaces/modality.interface';
+import { Gender, ModalityError } from '@/interfaces/modality.interface';
 import { CsvBoxer } from '@/interfaces/csv.interface';
 import { Tournament } from '@/entities/tournament.entity';
 import { SelectorTemplate } from '@/interfaces/template.interface';

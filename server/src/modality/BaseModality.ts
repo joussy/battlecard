@@ -1,6 +1,6 @@
+import { FightDuration, ModalityError } from '@/interfaces/modality.interface';
 import { IModality } from './IModality';
 import { Boxer } from 'src/entities/boxer.entity';
-import { FightDuration, ModalityError } from '@/shared/types/modality.type';
 
 export abstract class BaseModality implements IModality {
   abstract getCategoryName(boxer: Boxer, shortText: boolean): string;

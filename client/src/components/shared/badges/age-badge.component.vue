@@ -13,7 +13,7 @@
 
 <script lang="ts">
 import { Boxer } from "@/types/boxing"
-import { ModalityError, ModalityErrorType } from "@/shared/types/modality.type"
+import { ModalityErrorDao, ModalityErrorType } from "@/api"
 import { PropType, defineComponent } from "vue"
 import Icon from "@/components/shared/core/icon.component.vue"
 import { getBoxerAge } from "@/utils/string.utils"
@@ -28,7 +28,7 @@ export default defineComponent({
             required: true,
         },
         modalityErrors: {
-            type: Object as PropType<ModalityError[] | null>,
+            type: Object as PropType<ModalityErrorDao[] | null>,
             required: false,
             default: null,
         },
