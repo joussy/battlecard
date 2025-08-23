@@ -188,26 +188,31 @@
         <div v-if="showImportTable">
             <span class="badge rounded-pill bg-primary me-2 mb-3"><span class="step-badge"></span></span>Preview the
             data and finalize import
+            <!-- TODO: Re-enable ImportTableComponent when updated to use generated SDK -->
+            <div class="alert alert-warning">Import functionality temporarily disabled while migrating to generated SDK</div>
+            <!--
             <ImportTableComponent
                 :input-boxers="rows"
                 :add-row-allowed="false"
             />
+            -->
         </div>
     </div>
 </template>
 <script lang="ts">
-import ImportTableComponent from "@/components/import/import-table.component.vue"
-import { ApiImportBoxer } from "@/shared/types/api"
+// TODO: Import components need to be updated to use generated SDK
+// import ImportTableComponent from "@/components/import/import-table.component.vue"
+// import { ApiImportBoxer } from "@/shared/types/api"
 import IconComponent from "@/components/shared/core/icon.component.vue"
 import { defineComponent } from "vue"
 import { useUiStore } from "@/stores/ui.store"
-import dbManager from "@/managers/api.manager"
+// NOTE: dbManager import removed - methods below need to be updated to use generated SDK
 import { useTournamentStore } from "@/stores/tournament.store"
 
 export default defineComponent({
     name: "ImportComponent",
     components: {
-        ImportTableComponent: ImportTableComponent,
+        // ImportTableComponent: ImportTableComponent, // TODO: Re-enable when updated to use generated SDK
         IconComponent,
     },
     data() {
@@ -228,7 +233,7 @@ Tyson;Mike;2011-06-30;Catskill Boxing Club;100;male;TYS002;58
 279688
 279689
 `,
-            rows: [] as ApiImportBoxer[],
+            rows: [] as any[], // TODO: Use proper import boxer type when SDK is updated
         }
     },
     watch: {
@@ -241,6 +246,9 @@ Tyson;Mike;2011-06-30;Catskill Boxing Club;100;male;TYS002;58
     },
     methods: {
         async previewApiText() {
+            // TODO: Update to use generated SDK - ImportOpenApi.previewFromApi
+            console.warn("Import functionality temporarily disabled - needs to be migrated to generated SDK")
+            /*
             const res = await dbManager.previewBoxersFromApi(this.apiClipboard)
             if (!res.success) {
                 console.error("Error previewing boxers:", res.message)
@@ -250,8 +258,12 @@ Tyson;Mike;2011-06-30;Catskill Boxing Club;100;male;TYS002;58
             this.rows = [...res.boxers]
             console.log("this.rows:", this.rows)
             this.showImportTable = true
+            */
         },
         async previewCsvText() {
+            // TODO: Update to use generated SDK - ImportOpenApi.previewBoxersFromCsvText
+            console.warn("Import functionality temporarily disabled - needs to be migrated to generated SDK")
+            /*
             const res = await dbManager.previewBoxersFromText(this.clipboard)
             if (!res.success) {
                 console.error("Error previewing boxers:", res.message)
@@ -261,6 +273,7 @@ Tyson;Mike;2011-06-30;Catskill Boxing Club;100;male;TYS002;58
             this.rows = [...res.boxers]
             console.log("this.rows:", this.rows)
             this.showImportTable = true
+            */
         },
         async previewCsvFile() {
             const fileInput = document.getElementById("formFileCsv") as HTMLInputElement
@@ -268,6 +281,9 @@ Tyson;Mike;2011-06-30;Catskill Boxing Club;100;male;TYS002;58
                 console.error("No file selected")
                 return
             }
+            // TODO: Update to use generated SDK - ImportOpenApi.previewBoxersFromCsvFile
+            console.warn("Import functionality temporarily disabled - needs to be migrated to generated SDK")
+            /*
             const file = fileInput.files[0]
             const res = await dbManager.previewBoxersFromCsvFile(file)
             if (!res.success) {
@@ -276,6 +292,7 @@ Tyson;Mike;2011-06-30;Catskill Boxing Club;100;male;TYS002;58
             }
             this.rows = [...res.boxers]
             this.showImportTable = true
+            */
         },
 
         async previewFfboxeFile() {
@@ -284,6 +301,9 @@ Tyson;Mike;2011-06-30;Catskill Boxing Club;100;male;TYS002;58
                 console.error("No file selected")
                 return
             }
+            // TODO: Update to use generated SDK - ImportOpenApi.previewBoxersFromFfboxeFile  
+            console.warn("Import functionality temporarily disabled - needs to be migrated to generated SDK")
+            /*
             const file = fileInput.files[0]
             const res = await dbManager.previewBoxersFromFfboxeFile(file)
             if (!res.success) {
@@ -292,6 +312,7 @@ Tyson;Mike;2011-06-30;Catskill Boxing Club;100;male;TYS002;58
             }
             this.rows = [...res.boxers]
             this.showImportTable = true
+            */
         },
     },
 })

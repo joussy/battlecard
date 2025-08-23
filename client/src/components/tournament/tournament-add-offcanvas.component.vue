@@ -148,8 +148,8 @@ import { configure, defineRule, GenericObject, useForm } from "vee-validate"
 import { Tournament } from "@/types/boxing.d"
 import { closeModal } from "@/utils/ui.utils"
 import AddressAutocompleteFieldComponent from "@/components/shared/core/address-autocomplete-field.component.vue"
-import apiManager from "@/managers/api.manager"
-import { ApiAddressAutocompleteGet, ApiTournamentCreate } from "@/shared/types/api"
+import { TournamentOpenApi, CreateTournamentDto, UpdateTournamentDto, AddressAutocompleteGetDto } from "@/api"
+import { createApiClient } from "@/utils/api.client"
 
 configure({
     validateOnInput: true,
@@ -224,7 +224,8 @@ export default defineComponent({
     },
     created() {
         this.onSubmit = this.handleSubmit(async (form: GenericObject) => {
-            const formTournament: ApiTournamentCreate = {
+            const client = createApiClient()
+            const formTournament = {
                 name: form.name,
                 date: form.date,
                 address: form.address || undefined,
@@ -232,9 +233,16 @@ export default defineComponent({
                 city: form.city || undefined,
             }
             if (this.tournament) {
-                await apiManager.updateTournament(formTournament, this.tournament.id)
+                await TournamentOpenApi.update({
+                    client,
+                    path: { id: this.tournament.id },
+                    body: formTournament as UpdateTournamentDto
+                })
             } else {
-                await apiManager.addTournament(formTournament)
+                await TournamentOpenApi.create({
+                    client,
+                    body: formTournament as CreateTournamentDto
+                })
             }
             this.$emit("tournament-saved", formTournament)
             this.resetForm()
@@ -242,7 +250,7 @@ export default defineComponent({
         })
     },
     methods: {
-        onAddressSelect(suggestion: ApiAddressAutocompleteGet) {
+        onAddressSelect(suggestion: AddressAutocompleteGetDto) {
             if (suggestion.zipCode) this.zipCode = suggestion.zipCode
             if (suggestion.city) this.city = suggestion.city
         },
