@@ -5,8 +5,8 @@ import {
     OpponentGetDto,
     CreateBoxerDto,
     CreateTournamentDto,
+    SharedFightCardGetDto,
 } from "@/api/types.gen"
-import { Gender } from "@/shared/types/modality.type"
 import { Boxer, Fight, Opponent, SharedFightCard, Tournament } from "@/types/boxing.d"
 
 export default class ApiAdapter {
@@ -102,7 +102,7 @@ export default class ApiAdapter {
         }
     }
 
-    static toSharedFightCard(sharedFightCardApi: ApiSharedFightCardGet): SharedFightCard {
+    static toSharedFightCard(sharedFightCardApi: SharedFightCardGetDto): SharedFightCard {
         return {
             tournamentName: sharedFightCardApi.tournamentName,
             fights: sharedFightCardApi.fights.map(ApiAdapter.toFight),

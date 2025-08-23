@@ -1,3 +1,4 @@
+import { GeneratedTokenDto } from "@/api"
 import { mutate, postAndDownload } from "@/utils/manager.utils"
 
 export class ExportManager {
@@ -31,8 +32,8 @@ export class ExportManager {
         await postAndDownload(`/api/export/selector/csv`, { tournamentId, boxerIds }, `selector.csv`)
     }
 
-    async generateFightCardRoToken(tournamentId: string): Promise<ApiGeneratedToken> {
-        const res = await mutate<ApiGeneratedToken>(`/api/share/fightcard/generateRoToken`, "POST", {
+    async generateFightCardRoToken(tournamentId: string): Promise<GeneratedTokenDto> {
+        const res = await mutate<GeneratedTokenDto>(`/api/share/fightcard/generateRoToken`, "POST", {
             tournamentId,
         })
         return res

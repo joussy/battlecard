@@ -950,15 +950,35 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SharedFightCardGetDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden"
+          },
           "default": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SharedFightCardGetDto"
+                }
+              }
+            }
           }
         },
         "security": [
           {}
         ],
         "tags": [
-          "Share"
+          "share"
         ]
       }
     },
@@ -989,7 +1009,7 @@
           }
         },
         "tags": [
-          "Share"
+          "share"
         ]
       }
     },
@@ -1016,7 +1036,7 @@
           {}
         ],
         "tags": [
-          "Share"
+          "share"
         ]
       }
     },
@@ -1043,7 +1063,7 @@
           {}
         ],
         "tags": [
-          "Share"
+          "share"
         ]
       }
     },
@@ -1070,7 +1090,7 @@
           {}
         ],
         "tags": [
-          "Share"
+          "share"
         ]
       }
     },
@@ -1097,7 +1117,7 @@
           {}
         ],
         "tags": [
-          "Share"
+          "share"
         ]
       }
     },
@@ -1970,6 +1990,30 @@
         },
         "required": [
           "payload"
+        ]
+      },
+      "SharedFightCardGetDto": {
+        "type": "object",
+        "properties": {
+          "tournamentName": {
+            "type": "string",
+            "description": "Tournament name"
+          },
+          "fights": {
+            "description": "Array of fights",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FightGetDto"
+            }
+          },
+          "tournamentDate": {
+            "type": "string",
+            "description": "Tournament date (optional)"
+          }
+        },
+        "required": [
+          "tournamentName",
+          "fights"
         ]
       },
       "GenerateFightCardTokenDto": {

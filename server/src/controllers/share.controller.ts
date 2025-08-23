@@ -1,7 +1,15 @@
-import { Controller, Param, Get, Post, Body, Res } from '@nestjs/common';
-import { Response as ExpressResponse } from 'express';
+import {
+  Controller,
+  Param,
+  Get,
+  Post,
+  Body,
+  Res,
+  ForbiddenException,
+} from '@nestjs/common';
 import { ShareService } from '@/services/share.service';
-import { GeneratedTokenDto } from '@/dto/response.dto';
+import { GeneratedTokenDto, SharedFightCardGetDto } from '@/dto/response.dto';
+import { Response as ExpressResponse } from 'express';
 import { User } from '@/decorators/auth.decorator';
 import { AuthenticatedUser } from '@/interfaces/auth.interface';
 import { FightExportService } from '@/services/fight-export.service';
@@ -9,7 +17,9 @@ import { QrCodeService } from '@/services/qrcode.service';
 import { FightCardTokenParamsDto } from '@/dto/params.dto';
 import { GenerateFightCardTokenDto, FightCardTokenDto } from '@/dto/share.dto';
 import { NoAuthRequired } from '@/decorators/auth.decorator';
+import { ApiOkResponse, ApiForbiddenResponse, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('share')
 @Controller('share')
 export class ShareController {
   constructor(
@@ -20,18 +30,19 @@ export class ShareController {
 
   @NoAuthRequired()
   @Get('fightcard/:fightCardToken')
+  @ApiOkResponse({ type: SharedFightCardGetDto })
+  @ApiForbiddenResponse({ description: 'Forbidden' })
   async getFightsByFightCardToken(
     @Param() params: FightCardTokenParamsDto,
-    @Res() res: ExpressResponse,
-  ): Promise<void> {
+  ): Promise<SharedFightCardGetDto> {
     try {
       const data = await this.shareService.getTournamentByFightCardToken(
         params.fightCardToken,
       );
-      res.json(data);
+      return data;
     } catch (err) {
       console.error('Error fetching shared fight card:', err);
-      res.status(403).json({ error: 'Forbidden' });
+      throw new ForbiddenException('Forbidden');
     }
   }
 
