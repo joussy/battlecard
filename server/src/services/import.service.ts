@@ -7,7 +7,6 @@ import {
   PreviewBoxersResponseDto,
   ImportBoxerResponseDto,
 } from '@/dto/response.dto';
-import { ApiBoxerCreate } from '@/shared/types/api';
 import { TournamentService } from './tournament.service';
 import { Repository } from 'typeorm';
 import { Boxer } from '@/entities/boxer.entity';
@@ -18,6 +17,7 @@ import { CsvBoxer, csvDelimiter } from '@/interfaces/csv.interface';
 import { toImportBoxerDto } from '@/adapters/boxer.adapter';
 import { ConfigService } from '@nestjs/config';
 import { parse, format } from 'date-fns';
+import { CreateBoxerDto } from '@/dto/boxer.dto';
 
 @Injectable()
 export class ImportService {
@@ -256,7 +256,7 @@ export class ImportService {
       const boxer = boxers[i];
       try {
         // Map DTO fields to ApiBoxerCreate
-        const boxerCreate: ApiBoxerCreate = {
+        const boxerCreate: CreateBoxerDto = {
           lastName: boxer.lastName,
           firstName: boxer.firstName,
           birthDate: boxer.birthDate,

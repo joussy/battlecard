@@ -1321,8 +1321,12 @@
             "description": "Weight in kg (optional)"
           },
           "gender": {
-            "type": "object",
-            "description": "Gender"
+            "description": "Gender",
+            "enum": [
+              "female",
+              "male"
+            ],
+            "type": "string"
           },
           "license": {
             "type": "string",
@@ -1402,8 +1406,12 @@
             "description": "Weight in kg (optional)"
           },
           "gender": {
-            "type": "object",
-            "description": "Gender"
+            "description": "Gender",
+            "enum": [
+              "female",
+              "male"
+            ],
+            "type": "string"
           },
           "license": {
             "type": "string",
