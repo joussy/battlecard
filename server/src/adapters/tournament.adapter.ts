@@ -1,22 +1,9 @@
-import { ApiTournament, ApiTournamentCreate } from '@/shared/types/api';
+import { TournamentDto } from '@/dto/response.dto';
+import { CreateTournamentDto, UpdateTournamentDto } from '@/dto/tournament.dto';
 import { Tournament } from '../entities/tournament.entity';
 import { formatAddress } from '@/utils/addressUtils';
 
-export function toTournament(
-  apiTournament: ApiTournamentCreate,
-  userId: string,
-): Tournament {
-  const tournament = new Tournament();
-  tournament.name = apiTournament.name;
-  tournament.userId = userId;
-  tournament.date = apiTournament.date;
-  tournament.address = apiTournament.address;
-  tournament.zipCode = apiTournament.zipCode;
-  tournament.city = apiTournament.city;
-  return tournament;
-}
-
-export function toApiTournament(tournament: Tournament): ApiTournament {
+export function toTournamentDto(tournament: Tournament): TournamentDto {
   return {
     id: tournament.id,
     name: tournament.name,
@@ -31,4 +18,47 @@ export function toApiTournament(tournament: Tournament): ApiTournament {
       zipCode: tournament.zipCode,
     }),
   };
+}
+
+export function toTournament(
+  tournament: TournamentDto,
+  userId: string,
+): Tournament {
+  const entity = new Tournament();
+  entity.id = tournament.id;
+  entity.name = tournament.name;
+  entity.userId = userId;
+  entity.date = tournament.date;
+  entity.address = tournament.address;
+  entity.zipCode = tournament.zipCode;
+  entity.city = tournament.city;
+  return entity;
+}
+
+export function toTournamentFromCreateDto(
+  tournament: CreateTournamentDto,
+  userId: string,
+): Tournament {
+  const entity = new Tournament();
+  entity.name = tournament.name;
+  entity.userId = userId;
+  entity.date = tournament.date;
+  entity.address = tournament.address;
+  entity.zipCode = tournament.zipCode;
+  entity.city = tournament.city;
+  return entity;
+}
+
+export function toTournamentFromUpdateDto(
+  tournament: UpdateTournamentDto,
+  userId: string,
+): Tournament {
+  const entity = new Tournament();
+  entity.name = tournament.name;
+  entity.userId = userId;
+  entity.date = tournament.date;
+  entity.address = tournament.address;
+  entity.zipCode = tournament.zipCode;
+  entity.city = tournament.city;
+  return entity;
 }

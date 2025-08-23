@@ -75,7 +75,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "type": "object"
+                    "$ref": "#/components/schemas/TournamentDto"
                   }
                 }
               }
@@ -110,7 +110,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/TournamentDto"
                 }
               }
             }
@@ -155,7 +155,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/TournamentDto"
                 }
               }
             }
@@ -218,7 +218,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "type": "object"
+                    "$ref": "#/components/schemas/BoxerGetDto"
                   }
                 }
               }
@@ -264,7 +264,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "type": "object"
+                    "$ref": "#/components/schemas/OpponentGetDto"
                   }
                 }
               }
@@ -302,7 +302,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "type": "object"
+                    "$ref": "#/components/schemas/FightGetDto"
                   }
                 }
               }
@@ -339,7 +339,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/BoxerGetDto"
                 }
               }
             }
@@ -369,7 +369,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/BoxerGetDto"
                 }
               }
             }
@@ -407,7 +407,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/BoxerGetDto"
                 }
               }
             }
@@ -515,7 +515,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/FightGetDto"
                 }
               }
             }
@@ -547,7 +547,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "type": "object"
+                    "$ref": "#/components/schemas/FightGetDto"
                   }
                 }
               }
@@ -821,7 +821,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/ImportBoxersResponseDto"
                 }
               }
             }
@@ -852,7 +852,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/PreviewBoxersResponseDto"
                 }
               }
             }
@@ -873,7 +873,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/PreviewBoxersResponseDto"
                 }
               }
             }
@@ -894,7 +894,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/PreviewBoxersResponseDto"
                 }
               }
             }
@@ -925,7 +925,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/PreviewBoxersResponseDto"
                 }
               }
             }
@@ -982,7 +982,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/GeneratedTokenDto"
                 }
               }
             }
@@ -1122,7 +1122,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "type": "object"
+                    "$ref": "#/components/schemas/AddressAutocompleteGetDto"
                   }
                 }
               }
@@ -1188,6 +1188,49 @@
           "updated"
         ]
       },
+      "TournamentDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique tournament ID"
+          },
+          "name": {
+            "type": "string",
+            "description": "Tournament name"
+          },
+          "userId": {
+            "type": "string",
+            "description": "User who created the tournament"
+          },
+          "date": {
+            "type": "string",
+            "description": "Tournament date (YYYY-MM-DD)"
+          },
+          "address": {
+            "type": "string",
+            "description": "Tournament address (optional)"
+          },
+          "zipCode": {
+            "type": "string",
+            "description": "Tournament zip code (optional)"
+          },
+          "city": {
+            "type": "string",
+            "description": "Tournament city (optional)"
+          },
+          "formattedAddress": {
+            "type": "string",
+            "description": "Formatted address combining street, city, and zipCode"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "userId",
+          "date"
+        ]
+      },
       "CreateTournamentDto": {
         "type": "object",
         "properties": {
@@ -1244,6 +1287,247 @@
         "required": [
           "name",
           "date"
+        ]
+      },
+      "BoxerGetDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique boxer ID"
+          },
+          "lastName": {
+            "type": "string",
+            "description": "Boxer's last name"
+          },
+          "firstName": {
+            "type": "string",
+            "description": "Boxer's first name"
+          },
+          "birthDate": {
+            "type": "string",
+            "description": "Date of birth (YYYY-MM-DD)"
+          },
+          "nbFights": {
+            "type": "number",
+            "description": "Number of past fights of the boxer"
+          },
+          "club": {
+            "type": "string",
+            "description": "Club name"
+          },
+          "weight": {
+            "type": "number",
+            "description": "Weight in kg (optional)"
+          },
+          "gender": {
+            "description": "Gender",
+            "enum": [
+              "female",
+              "male"
+            ],
+            "type": "string"
+          },
+          "license": {
+            "type": "string",
+            "description": "License number"
+          },
+          "userId": {
+            "type": "string",
+            "description": "User who created this boxer"
+          },
+          "created": {
+            "type": "string",
+            "description": "Creation timestamp"
+          },
+          "updated": {
+            "type": "string",
+            "description": "Update timestamp"
+          },
+          "category": {
+            "type": "string",
+            "description": "Weight/age category"
+          },
+          "categoryShort": {
+            "type": "string",
+            "description": "Short category label"
+          },
+          "eligibleFights": {
+            "type": "number",
+            "description": "Number of eligible fights (optional)"
+          },
+          "selectedFights": {
+            "type": "number",
+            "description": "Number of fights selected for the fight card (optional)"
+          }
+        },
+        "required": [
+          "id",
+          "lastName",
+          "firstName",
+          "birthDate",
+          "club",
+          "gender",
+          "license",
+          "userId",
+          "category",
+          "categoryShort"
+        ]
+      },
+      "OpponentGetDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique boxer ID"
+          },
+          "lastName": {
+            "type": "string",
+            "description": "Boxer's last name"
+          },
+          "firstName": {
+            "type": "string",
+            "description": "Boxer's first name"
+          },
+          "birthDate": {
+            "type": "string",
+            "description": "Date of birth (YYYY-MM-DD)"
+          },
+          "nbFights": {
+            "type": "number",
+            "description": "Number of past fights of the boxer"
+          },
+          "club": {
+            "type": "string",
+            "description": "Club name"
+          },
+          "weight": {
+            "type": "number",
+            "description": "Weight in kg (optional)"
+          },
+          "gender": {
+            "description": "Gender",
+            "enum": [
+              "female",
+              "male"
+            ],
+            "type": "string"
+          },
+          "license": {
+            "type": "string",
+            "description": "License number"
+          },
+          "userId": {
+            "type": "string",
+            "description": "User who created this boxer"
+          },
+          "created": {
+            "type": "string",
+            "description": "Creation timestamp"
+          },
+          "updated": {
+            "type": "string",
+            "description": "Update timestamp"
+          },
+          "category": {
+            "type": "string",
+            "description": "Weight/age category"
+          },
+          "categoryShort": {
+            "type": "string",
+            "description": "Short category label"
+          },
+          "eligibleFights": {
+            "type": "number",
+            "description": "Number of eligible fights (optional)"
+          },
+          "selectedFights": {
+            "type": "number",
+            "description": "Number of fights selected for the fight card (optional)"
+          },
+          "weightDifference": {
+            "type": "number",
+            "description": "Difference in weight between main boxer and opponent"
+          },
+          "isEligible": {
+            "type": "boolean",
+            "description": "Whether this opponent is eligible for a fight"
+          },
+          "fightId": {
+            "type": "string",
+            "description": "Existing fight ID if a fight already exists"
+          },
+          "modalityErrors": {
+            "description": "Modality errors for this boxer",
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "lastName",
+          "firstName",
+          "birthDate",
+          "club",
+          "gender",
+          "license",
+          "userId",
+          "category",
+          "categoryShort",
+          "weightDifference",
+          "isEligible"
+        ]
+      },
+      "FightGetDto": {
+        "type": "object",
+        "properties": {
+          "order": {
+            "type": "number",
+            "description": "Fight order in the tournament"
+          },
+          "id": {
+            "type": "string",
+            "description": "Unique fight ID"
+          },
+          "boxer1": {
+            "description": "Red corner boxer",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/BoxerGetDto"
+              }
+            ]
+          },
+          "boxer2": {
+            "description": "Blue corner boxer",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/BoxerGetDto"
+              }
+            ]
+          },
+          "tournamentId": {
+            "type": "string",
+            "description": "Tournament ID"
+          },
+          "roundDurationAsSeconds": {
+            "type": "number",
+            "description": "Fight duration in seconds"
+          },
+          "rounds": {
+            "type": "number",
+            "description": "Rounds in the fight"
+          }
+        },
+        "required": [
+          "order",
+          "id",
+          "boxer1",
+          "boxer2",
+          "tournamentId",
+          "roundDurationAsSeconds",
+          "rounds"
         ]
       },
       "CreateBoxerDto": {
@@ -1542,6 +1826,53 @@
           "tournamentId"
         ]
       },
+      "BoxerImportErrorDto": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Error message"
+          },
+          "row": {
+            "type": "number",
+            "description": "Row number where error occurred"
+          },
+          "field": {
+            "type": "string",
+            "description": "Field name that caused the error"
+          }
+        },
+        "required": [
+          "message",
+          "row",
+          "field"
+        ]
+      },
+      "ImportBoxersResponseDto": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "Whether the import was successful"
+          },
+          "message": {
+            "type": "string",
+            "description": "Response message"
+          },
+          "errors": {
+            "description": "Array of import errors",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BoxerImportErrorDto"
+            }
+          }
+        },
+        "required": [
+          "success",
+          "message",
+          "errors"
+        ]
+      },
       "PreviewBoxersCsvDto": {
         "type": "object",
         "properties": {
@@ -1552,6 +1883,81 @@
         },
         "required": [
           "payload"
+        ]
+      },
+      "ImportBoxerResponseDto": {
+        "type": "object",
+        "properties": {
+          "lastName": {
+            "type": "string",
+            "description": "Boxer name"
+          },
+          "firstName": {
+            "type": "string",
+            "description": "Boxer first name"
+          },
+          "birthDate": {
+            "type": "string",
+            "description": "Boxer birth date (YYYY-MM-DD)"
+          },
+          "club": {
+            "type": "string",
+            "description": "Boxer club"
+          },
+          "weight": {
+            "type": "number",
+            "description": "Boxer weight"
+          },
+          "gender": {
+            "type": "string",
+            "description": "Boxer gender",
+            "enum": [
+              "female",
+              "male"
+            ]
+          },
+          "license": {
+            "type": "string",
+            "description": "Boxer license"
+          },
+          "fightRecord": {
+            "type": "number",
+            "description": "Boxer fight record"
+          }
+        },
+        "required": [
+          "lastName",
+          "firstName",
+          "birthDate",
+          "club",
+          "weight",
+          "license",
+          "fightRecord"
+        ]
+      },
+      "PreviewBoxersResponseDto": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "Whether the preview was successful"
+          },
+          "message": {
+            "type": "string",
+            "description": "Response message"
+          },
+          "boxers": {
+            "description": "Array of preview boxers",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ImportBoxerResponseDto"
+            }
+          }
+        },
+        "required": [
+          "success",
+          "message",
+          "boxers"
         ]
       },
       "PreviewBoxersApiDto": {
@@ -1577,6 +1983,28 @@
           "tournamentId"
         ]
       },
+      "GeneratedTokenDto": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "description": "Token string"
+          },
+          "qrcode": {
+            "type": "string",
+            "description": "QR code image data"
+          },
+          "url": {
+            "type": "string",
+            "description": "Shareable URL"
+          }
+        },
+        "required": [
+          "token",
+          "qrcode",
+          "url"
+        ]
+      },
       "FightCardTokenDto": {
         "type": "object",
         "properties": {
@@ -1586,6 +2014,33 @@
         },
         "required": [
           "fightCardToken"
+        ]
+      },
+      "AddressAutocompleteGetDto": {
+        "type": "object",
+        "properties": {
+          "city": {
+            "type": "string",
+            "description": "City name"
+          },
+          "street": {
+            "type": "string",
+            "description": "Street address"
+          },
+          "zipCode": {
+            "type": "string",
+            "description": "ZIP code"
+          },
+          "formatted": {
+            "type": "string",
+            "description": "Formatted address string"
+          }
+        },
+        "required": [
+          "city",
+          "street",
+          "zipCode",
+          "formatted"
         ]
       }
     }

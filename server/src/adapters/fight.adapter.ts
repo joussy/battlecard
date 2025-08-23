@@ -1,39 +1,21 @@
-import { ApiFightCreate, ApiFightGet } from '@/shared/types/api';
+import { FightGetDto } from '@/dto/response.dto';
 import { Fight } from '../entities/fight.entity';
 import { Gender } from '@/shared/types/modality.type';
 import { FightCardTemplate } from '@/interfaces/template.interface';
 import { IModality } from '@/modality/IModality';
 import { Tournament } from '@/entities/tournament.entity';
 import { format } from 'date-fns';
-import { toApiBoxerGet } from './boxer.adapter';
+import { toBoxerGetDto } from './boxer.adapter';
 import { formatAddress } from '@/utils/addressUtils';
+import { CreateFightDto } from '@/dto/fight.dto';
 
-export function toFight(apiFight: ApiFightGet): Fight {
-  const fight = new Fight();
-  fight.id = apiFight.id;
-  fight.order = apiFight.order;
-  fight.boxer1Id = apiFight.boxer1.id;
-  fight.boxer2Id = apiFight.boxer2.id;
-  fight.tournamentId = apiFight.tournamentId;
-  return fight;
-}
-
-export function toFightFromCreate(apiFight: ApiFightCreate): Fight {
-  const fight = new Fight();
-  fight.order = apiFight.order;
-  fight.boxer1Id = apiFight.boxer1Id;
-  fight.boxer2Id = apiFight.boxer2Id;
-  fight.tournamentId = apiFight.tournamentId;
-  return fight;
-}
-
-export function toApiFight(fight: Fight, modality: IModality): ApiFightGet {
+export function toFightGetDto(fight: Fight, modality: IModality): FightGetDto {
   const fightDuration = modality.getFightDuration(fight.boxer1, fight.boxer2);
   return {
     id: fight.id,
     order: fight.order,
-    boxer1: toApiBoxerGet(fight.boxer1, modality),
-    boxer2: toApiBoxerGet(fight.boxer2, modality),
+    boxer1: toBoxerGetDto(fight.boxer1, modality),
+    boxer2: toBoxerGetDto(fight.boxer2, modality),
     tournamentId: fight.tournamentId,
     roundDurationAsSeconds: fightDuration.roundDurationAsSeconds,
     rounds: fightDuration.rounds,
@@ -87,4 +69,23 @@ export function toFightCardExportData(fights: Fight[]) {
       `${fight.boxer2?.firstName || ''} ${fight.boxer2?.lastName || ''}`.trim(),
     'Blue Club': fight.boxer2?.club || '',
   }));
+}
+
+export function toFight(fight: FightGetDto): Fight {
+  const entity = new Fight();
+  entity.id = fight.id;
+  entity.order = fight.order;
+  entity.boxer1Id = fight.boxer1.id;
+  entity.boxer2Id = fight.boxer2.id;
+  entity.tournamentId = fight.tournamentId;
+  return entity;
+}
+
+export function toFightFromCreateDto(fight: CreateFightDto): Fight {
+  const entity = new Fight();
+  entity.order = fight.order;
+  entity.boxer1Id = fight.boxer1Id;
+  entity.boxer2Id = fight.boxer2Id;
+  entity.tournamentId = fight.tournamentId;
+  return entity;
 }

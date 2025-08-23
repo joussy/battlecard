@@ -12,11 +12,11 @@ import { User } from '@/decorators/auth.decorator';
 import { AuthenticatedUser } from '@/interfaces/auth.interface';
 import { TournamentService } from '../services/tournament.service';
 import {
-  ApiBoxerGet,
-  ApiFightGet,
-  ApiOpponentGet,
-  ApiTournament,
-} from '@/shared/types/api';
+  BoxerGetDto,
+  OpponentGetDto,
+  FightGetDto,
+  TournamentDto,
+} from '@/dto/response.dto';
 import { FightService } from '@/services/fight.service';
 import { CreateTournamentDto, UpdateTournamentDto } from '@/dto/tournament.dto';
 import {
@@ -36,7 +36,7 @@ export class TournamentController {
   ) {}
 
   @Get()
-  async findAll(@User() user: AuthenticatedUser): Promise<ApiTournament[]> {
+  async findAll(@User() user: AuthenticatedUser): Promise<TournamentDto[]> {
     return this.tournamentService.findAll(user);
   }
 
@@ -44,7 +44,7 @@ export class TournamentController {
   async create(
     @Body() tournament: CreateTournamentDto,
     @User() user: AuthenticatedUser,
-  ): Promise<ApiTournament> {
+  ): Promise<TournamentDto> {
     return this.tournamentService.create(tournament, user);
   }
 
@@ -53,7 +53,7 @@ export class TournamentController {
     @Param() params: IdParamsDto,
     @Body() tournament: UpdateTournamentDto,
     @User() user: AuthenticatedUser,
-  ): Promise<ApiTournament> {
+  ): Promise<TournamentDto> {
     await this.tournamentService.validateTournamentAccess(params.id, user.id);
     return this.tournamentService.update(params.id, tournament, user);
   }
@@ -72,7 +72,7 @@ export class TournamentController {
   async getBoxersForTournament(
     @Param() params: TournamentIdParamsDto,
     @User() user: AuthenticatedUser,
-  ): Promise<ApiBoxerGet[]> {
+  ): Promise<BoxerGetDto[]> {
     await this.tournamentService.validateTournamentAccess(
       params.tournamentId,
       user.id,
@@ -88,7 +88,7 @@ export class TournamentController {
   async getPossibleOpponents(
     @Param() params: TournamentBoxerParamsDto,
     @User() user: AuthenticatedUser,
-  ): Promise<ApiOpponentGet[]> {
+  ): Promise<OpponentGetDto[]> {
     await this.tournamentService.validateTournamentAccess(
       params.tournamentId,
       user.id,
@@ -104,7 +104,7 @@ export class TournamentController {
   async getFightsByTournamentId(
     @Param() params: TournamentIdParamsDto,
     @User() user: AuthenticatedUser,
-  ): Promise<ApiFightGet[]> {
+  ): Promise<FightGetDto[]> {
     await this.tournamentService.validateTournamentAccess(
       params.tournamentId,
       user.id,

@@ -1,17 +1,18 @@
-import { Tournament } from '@/entities/tournament.entity';
-import { toApiFight } from './fight.adapter';
-import { Fight } from '@/entities/fight.entity';
+import { SharedFightCardGetDto, FightGetDto } from '@/dto/response.dto';
+import { Tournament } from '../entities/tournament.entity';
+import { Fight } from '../entities/fight.entity';
 import { IModality } from '@/modality/IModality';
-import { ApiSharedFightCardGet } from '@/shared/types/api';
+import { toFightGetDto } from './fight.adapter';
+import { format } from 'date-fns';
 
-export function toApiSharedFightCardGet(
+export function toSharedFightCardGetDto(
   tournament: Tournament,
   fights: Fight[],
   modality: IModality,
-): ApiSharedFightCardGet {
+): SharedFightCardGetDto {
   return {
-    fights: fights.map((fight) => toApiFight(fight, modality)),
     tournamentName: tournament.name,
-    tournamentDate: tournament.date,
+    tournamentDate: tournament.date ? format(new Date(tournament.date), 'dd/MM/yyyy') : undefined,
+    fights: fights.map((fight) => toFightGetDto(fight, modality)),
   };
 }

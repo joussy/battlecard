@@ -5,10 +5,11 @@ import { Boxer } from '../entities/boxer.entity';
 import { TournamentBoxer } from '../entities/tournament_boxer.entity';
 import { Fight } from '../entities/fight.entity';
 import { Tournament } from '@/entities/tournament.entity';
-import { toBoxer, toApiBoxerGet } from '../adapters/boxer.adapter';
-import { ApiBoxerGet, ApiBoxerCreate } from '@/shared/types/api';
+import { toBoxer, toBoxerGetDto } from '../adapters/boxer.adapter';
+import { BoxerGetDto } from '@/dto/response.dto';
 import { ModalityService } from '../modality/modality.service';
 import { AuthenticatedUser } from '../interfaces/auth.interface';
+import { CreateBoxerDto } from '@/dto/boxer.dto';
 
 @Injectable()
 export class BoxerService {
@@ -25,9 +26,9 @@ export class BoxerService {
   ) {}
 
   async create(
-    boxer: ApiBoxerCreate,
+    boxer: CreateBoxerDto,
     user: AuthenticatedUser,
-  ): Promise<ApiBoxerGet> {
+  ): Promise<BoxerGetDto> {
     const tournament = await this.tournamentRepository.findOne({
       where: [{ id: boxer.tournamentId, userId: user.id }],
     });
@@ -44,10 +45,10 @@ export class BoxerService {
       await this.tournamentBoxerRepository.save(tournamentBoxer);
     }
     const modality = this.modalityService.getModality();
-    return toApiBoxerGet(dbBoxer, modality);
+    return toBoxerGetDto(dbBoxer, modality);
   }
 
-  async getBoxer(id: string, user: AuthenticatedUser): Promise<ApiBoxerGet> {
+  async getBoxer(id: string, user: AuthenticatedUser): Promise<BoxerGetDto> {
     const dbBoxer = await this.boxerRepository.findOneOrFail({
       where: [{ id, userId: user.id }],
     });
@@ -55,22 +56,22 @@ export class BoxerService {
     const selectedFights = await this.fightRepository.count({
       where: [{ boxer1Id: id }, { boxer2Id: id }],
     });
-    return toApiBoxerGet(dbBoxer, modality, selectedFights);
+    return toBoxerGetDto(dbBoxer, modality, selectedFights);
   }
 
-  async getBoxersForUser(user: AuthenticatedUser): Promise<ApiBoxerGet[]> {
+  async getBoxersForUser(user: AuthenticatedUser): Promise<BoxerGetDto[]> {
     const dbBoxers = await this.boxerRepository.find({
       where: { userId: user.id },
     });
     const modality = this.modalityService.getModality();
-    return dbBoxers.map((boxer) => toApiBoxerGet(boxer, modality));
+    return dbBoxers.map((boxer) => toBoxerGetDto(boxer, modality));
   }
 
   async update(
     boxerId: string,
-    boxer: ApiBoxerCreate,
+    boxer: CreateBoxerDto,
     user: AuthenticatedUser,
-  ): Promise<ApiBoxerGet> {
+  ): Promise<BoxerGetDto> {
     await this.boxerRepository.findOneOrFail({
       where: [{ id: boxerId, userId: user.id }],
     });
@@ -78,6 +79,6 @@ export class BoxerService {
     const updated = await this.boxerRepository.findOneBy({ id: boxerId });
     if (!updated) throw new NotFoundException('Boxer not found');
     const modality = this.modalityService.getModality();
-    return toApiBoxerGet(updated, modality);
+    return toBoxerGetDto(updated, modality);
   }
 }

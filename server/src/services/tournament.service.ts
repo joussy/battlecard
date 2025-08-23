@@ -5,16 +5,12 @@ import { Tournament } from '../entities/tournament.entity';
 import { TournamentBoxer } from '../entities/tournament_boxer.entity';
 import { Boxer } from '../entities/boxer.entity';
 import { Fight } from '../entities/fight.entity';
-import { toTournament, toApiTournament } from '../adapters/tournament.adapter';
-import { toApiBoxerGet, toApiOpponentGet } from '../adapters/boxer.adapter';
-import {
-  ApiTournament,
-  ApiTournamentCreate,
-  ApiBoxerGet,
-  ApiOpponentGet,
-} from '@/shared/types/api';
+import { toTournament, toTournamentDto, toTournamentFromCreateDto, toTournamentFromUpdateDto } from '../adapters/tournament.adapter';
+import { toBoxerGetDto, toOpponentGetDto } from '../adapters/boxer.adapter';
+import { TournamentDto, BoxerGetDto, OpponentGetDto } from '@/dto/response.dto';
 import { ModalityService } from '../modality/modality.service';
 import { AuthenticatedUser } from '@/interfaces/auth.interface';
+import { CreateTournamentDto, UpdateTournamentDto } from '@/dto/tournament.dto';
 
 @Injectable()
 export class TournamentService {
@@ -30,34 +26,34 @@ export class TournamentService {
     private readonly modalityService: ModalityService,
   ) {}
 
-  async findAll(user: AuthenticatedUser): Promise<ApiTournament[]> {
+  async findAll(user: AuthenticatedUser): Promise<TournamentDto[]> {
     const dbTournaments = await this.tournamentRepository.find({
       where: { userId: user.id },
       order: { date: 'DESC', name: 'ASC' },
     });
-    return dbTournaments.map(toApiTournament);
+    return dbTournaments.map(toTournamentDto);
   }
 
   async create(
-    tournament: ApiTournamentCreate,
+    tournament: CreateTournamentDto,
     user: AuthenticatedUser,
-  ): Promise<ApiTournament> {
+  ): Promise<TournamentDto> {
     const dbTournament = await this.tournamentRepository.save(
-      toTournament(tournament, user.id),
+      toTournamentFromCreateDto(tournament, user.id),
     );
-    return toApiTournament(dbTournament);
+    return toTournamentDto(dbTournament);
   }
 
   async update(
     tournamentId: string,
-    tournament: ApiTournamentCreate,
+    tournament: UpdateTournamentDto,
     user: AuthenticatedUser,
-  ): Promise<ApiTournament> {
-    const dbTournament = toTournament(tournament, user.id);
+  ): Promise<TournamentDto> {
+    const dbTournament = toTournamentFromUpdateDto(tournament, user.id);
     dbTournament.id = tournamentId;
     const updatedTournament =
       await this.tournamentRepository.save(dbTournament);
-    return toApiTournament(updatedTournament);
+    return toTournamentDto(updatedTournament);
   }
 
   async delete(id: string, user: AuthenticatedUser): Promise<void> {
@@ -70,7 +66,7 @@ export class TournamentService {
   async getBoxersForTournament(
     tournamentId: string,
     user: AuthenticatedUser,
-  ): Promise<ApiBoxerGet[]> {
+  ): Promise<BoxerGetDto[]> {
     await this.tournamentRepository.findOneOrFail({
       where: { id: tournamentId, userId: user.id },
     });
@@ -87,7 +83,7 @@ export class TournamentService {
       const selectedFights = fights.filter(
         (f) => f.boxer1Id === b.id || f.boxer2Id === b.id,
       ).length;
-      return toApiBoxerGet(
+      return toBoxerGetDto(
         b,
         this.modalityService.getModality(),
         selectedFights,
@@ -99,7 +95,7 @@ export class TournamentService {
     boxerId: string,
     tournamentId: string,
     user: AuthenticatedUser,
-  ): Promise<ApiOpponentGet[]> {
+  ): Promise<OpponentGetDto[]> {
     if (!boxerId || !tournamentId) {
       return [];
     }
@@ -137,7 +133,7 @@ export class TournamentService {
       )?.length;
       const modality = this.modalityService.getModality();
       const modalityErrors = modality.getModalityErrors(mainBoxer, o);
-      return toApiOpponentGet(
+      return toOpponentGetDto(
         o,
         modality,
         selectedFights,
