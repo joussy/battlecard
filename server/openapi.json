@@ -1309,9 +1309,25 @@
           "date"
         ]
       },
+      "Gender": {
+        "type": "string",
+        "enum": [
+          "female",
+          "male"
+        ],
+        "description": "Gender"
+      },
       "BoxerGetDto": {
         "type": "object",
         "properties": {
+          "gender": {
+            "description": "Gender",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Gender"
+              }
+            ]
+          },
           "id": {
             "type": "string",
             "description": "Unique boxer ID"
@@ -1339,14 +1355,6 @@
           "weight": {
             "type": "number",
             "description": "Weight in kg (optional)"
-          },
-          "gender": {
-            "description": "Gender",
-            "enum": [
-              "female",
-              "male"
-            ],
-            "type": "string"
           },
           "license": {
             "type": "string",
@@ -1382,12 +1390,12 @@
           }
         },
         "required": [
+          "gender",
           "id",
           "lastName",
           "firstName",
           "birthDate",
           "club",
-          "gender",
           "license",
           "userId",
           "category",
@@ -1397,6 +1405,14 @@
       "OpponentGetDto": {
         "type": "object",
         "properties": {
+          "gender": {
+            "description": "Gender",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Gender"
+              }
+            ]
+          },
           "id": {
             "type": "string",
             "description": "Unique boxer ID"
@@ -1424,14 +1440,6 @@
           "weight": {
             "type": "number",
             "description": "Weight in kg (optional)"
-          },
-          "gender": {
-            "description": "Gender",
-            "enum": [
-              "female",
-              "male"
-            ],
-            "type": "string"
           },
           "license": {
             "type": "string",
@@ -1486,12 +1494,12 @@
           }
         },
         "required": [
+          "gender",
           "id",
           "lastName",
           "firstName",
           "birthDate",
           "club",
-          "gender",
           "license",
           "userId",
           "category",
@@ -1553,6 +1561,14 @@
       "CreateBoxerDto": {
         "type": "object",
         "properties": {
+          "gender": {
+            "description": "Gender",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Gender"
+              }
+            ]
+          },
           "lastName": {
             "type": "string",
             "description": "Last name"
@@ -1577,14 +1593,6 @@
             "type": "number",
             "description": "Weight in kg (optional)"
           },
-          "gender": {
-            "type": "string",
-            "description": "Gender",
-            "enum": [
-              "female",
-              "male"
-            ]
-          },
           "license": {
             "type": "string",
             "description": "License number"
@@ -1595,17 +1603,25 @@
           }
         },
         "required": [
+          "gender",
           "lastName",
           "firstName",
           "birthDate",
           "club",
-          "gender",
           "license"
         ]
       },
       "UpdateBoxerDto": {
         "type": "object",
         "properties": {
+          "gender": {
+            "description": "Gender",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Gender"
+              }
+            ]
+          },
           "lastName": {
             "type": "string",
             "description": "Last name"
@@ -1630,14 +1646,6 @@
             "type": "number",
             "description": "Weight in kg (optional)"
           },
-          "gender": {
-            "description": "Gender",
-            "enum": [
-              "female",
-              "male"
-            ],
-            "type": "string"
-          },
           "license": {
             "type": "string",
             "description": "License number"
@@ -1648,11 +1656,11 @@
           }
         },
         "required": [
+          "gender",
           "lastName",
           "firstName",
           "birthDate",
           "club",
-          "gender",
           "license"
         ]
       },
@@ -1774,6 +1782,14 @@
       "ImportBoxerDto": {
         "type": "object",
         "properties": {
+          "gender": {
+            "description": "Boxer gender",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Gender"
+              }
+            ]
+          },
           "lastName": {
             "type": "string",
             "description": "Boxer name"
@@ -1793,14 +1809,6 @@
           "weight": {
             "type": "number",
             "description": "Boxer weight"
-          },
-          "gender": {
-            "type": "string",
-            "description": "Boxer gender",
-            "enum": [
-              "female",
-              "male"
-            ]
           },
           "license": {
             "type": "string",
@@ -1908,6 +1916,14 @@
       "ImportBoxerResponseDto": {
         "type": "object",
         "properties": {
+          "gender": {
+            "description": "Boxer gender",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Gender"
+              }
+            ]
+          },
           "lastName": {
             "type": "string",
             "description": "Boxer name"
@@ -1927,14 +1943,6 @@
           "weight": {
             "type": "number",
             "description": "Boxer weight"
-          },
-          "gender": {
-            "type": "string",
-            "description": "Boxer gender",
-            "enum": [
-              "female",
-              "male"
-            ]
           },
           "license": {
             "type": "string",

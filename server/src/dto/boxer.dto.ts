@@ -9,7 +9,9 @@ import {
   Min,
   IsUUID,
 } from 'class-validator';
-import { Gender } from '@/shared/types/modality.type';
+import { Gender } from '@/interfaces/modality.interface';
+
+import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateBoxerDto {
   /** Last name */
@@ -50,6 +52,7 @@ export class CreateBoxerDto {
   /** Gender */
   @IsEnum(Gender)
   @IsNotEmpty()
+  @ApiProperty({ enum: Gender, enumName: 'Gender' })
   gender: Gender;
 
   /** License number */
@@ -98,6 +101,7 @@ export class ImportBoxerDto {
   /** Boxer gender */
   @IsOptional()
   @IsEnum(Gender)
+  @ApiProperty({ enum: Gender, enumName: 'Gender' })
   gender?: Gender;
 
   /** Boxer license */

@@ -162,7 +162,7 @@ import { nextTick, PropType, watch } from "vue"
 // import bootstrapInstance from "@/utils/bootstrap.singleton"
 // import dbManager from "@/managers/api.manager"
 // import { ApiImportBoxer } from "@/shared/types/api"
-import { Gender } from "@/shared/types/modality.type"
+import { Gender } from "@/api"
 import { useTournamentStore } from "@/stores/tournament.store"
 
 export default {

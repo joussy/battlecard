@@ -1,4 +1,4 @@
-import { Gender } from "@/shared/types/modality.type"
+import { Gender } from "@/api"
 import { Boxer } from "@/types/boxing"
 import { format } from "date-fns"
 

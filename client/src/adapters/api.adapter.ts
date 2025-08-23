@@ -1,5 +1,6 @@
 import {
     BoxerGetDto,
+    Gender,
     TournamentDto,
     FightGetDto,
     OpponentGetDto,
@@ -40,7 +41,7 @@ export default class ApiAdapter {
             club: boxer.club,
             firstName: boxer.firstName,
             lastName: boxer.lastName,
-            gender: boxer.gender == "female" ? Gender.FEMALE : Gender.MALE,
+            gender: boxer.gender == Gender.FEMALE ? Gender.FEMALE : Gender.MALE,
             license: boxer.license,
             nbFights: boxer.nbFights ?? 0,
             weight: boxer.weight ?? 0,

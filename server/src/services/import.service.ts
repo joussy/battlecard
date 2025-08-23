@@ -11,13 +11,14 @@ import { TournamentService } from './tournament.service';
 import { Repository } from 'typeorm';
 import { Boxer } from '@/entities/boxer.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Gender } from '@/shared/types/modality.type';
+
 import { parseCsvAsync } from '@/utils/csv.utils';
 import { CsvBoxer, csvDelimiter } from '@/interfaces/csv.interface';
 import { toImportBoxerDto } from '@/adapters/boxer.adapter';
 import { ConfigService } from '@nestjs/config';
 import { parse, format } from 'date-fns';
 import { CreateBoxerDto } from '@/dto/boxer.dto';
+import { Gender } from '@/interfaces/modality.interface';
 
 @Injectable()
 export class ImportService {

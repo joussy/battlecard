@@ -1,6 +1,6 @@
 import { FightGetDto } from '@/dto/response.dto';
 import { Fight } from '../entities/fight.entity';
-import { Gender } from '@/shared/types/modality.type';
+
 import { FightCardTemplate } from '@/interfaces/template.interface';
 import { IModality } from '@/modality/IModality';
 import { Tournament } from '@/entities/tournament.entity';
@@ -8,6 +8,7 @@ import { format } from 'date-fns';
 import { toBoxerGetDto } from './boxer.adapter';
 import { formatAddress } from '@/utils/addressUtils';
 import { CreateFightDto } from '@/dto/fight.dto';
+import { Gender } from '@/interfaces/modality.interface';
 
 export function toFightGetDto(fight: Fight, modality: IModality): FightGetDto {
   const fightDuration = modality.getFightDuration(fight.boxer1, fight.boxer2);

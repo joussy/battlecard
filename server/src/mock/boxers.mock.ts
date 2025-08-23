@@ -1,6 +1,6 @@
 import { DeepPartial } from 'typeorm';
 import { Boxer } from '../entities/boxer.entity';
-import { Gender } from '@/shared/types/modality.type';
+import { Gender } from '@/interfaces/modality.interface';
 
 // Returns an array of DeepPartial<Boxer> objects for seeding
 export const mockBoxers: DeepPartial<Boxer>[] = [

@@ -108,7 +108,7 @@
 import { defineComponent } from "vue"
 import { UiTheme } from "@/types/ui"
 import { useUiStore } from "@/stores/ui.store"
-import { Gender } from "@/shared/types/modality.type"
+import { Gender } from "@/api"
 
 export default defineComponent({
     data() {

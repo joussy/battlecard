@@ -6,7 +6,7 @@ import {
   JoinColumn,
 } from 'typeorm';
 import { User } from './user.entity';
-import { Gender } from '@/shared/types/modality.type';
+import { Gender } from '@/interfaces/modality.interface';
 
 @Entity()
 export class Boxer {

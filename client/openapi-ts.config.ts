@@ -4,9 +4,12 @@ export default defineConfig({
     input: "../server/openapi.json",
     output: "src/api",
     plugins: [
-        // ...other plugins
         {
-            asClass: true, // default
+            enums: true, // default
+            name: "@hey-api/typescript",
+        },
+        {
+            asClass: true,
             name: "@hey-api/sdk",
             classNameBuilder: (tag) => {
                 return (

@@ -214,7 +214,7 @@ import { Boxer } from "@/types/boxing.d"
 import { isValid, format } from "date-fns"
 import IconComponent from "@/components/shared/core/icon.component.vue"
 
-import { Gender } from "@/shared/types/modality.type"
+import { Gender } from "@/api"
 import { BoxerOpenApi, CreateBoxerDto, UpdateBoxerDto } from "@/api"
 import { useTournamentStore } from "@/stores/tournament.store"
 

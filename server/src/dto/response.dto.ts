@@ -10,7 +10,9 @@ import {
   Min,
 } from 'class-validator';
 import { Type } from 'class-transformer';
-import { Gender } from '@/shared/types/modality.type';
+import { Gender } from '@/interfaces/modality.interface';
+
+import { ApiProperty } from '@nestjs/swagger';
 
 export class BoxerImportErrorDto {
   /** Error message */
@@ -70,6 +72,7 @@ export class ImportBoxerResponseDto {
   /** Boxer gender */
   @IsOptional()
   @IsEnum(Gender)
+  @ApiProperty({ enum: Gender, enumName: 'Gender' })
   gender?: Gender;
 
   /** Boxer license */
@@ -137,6 +140,7 @@ export class BoxerGetDto {
 
   /** Gender */
   @IsString()
+  @ApiProperty({ enum: Gender, enumName: 'Gender' })
   gender: Gender;
 
   /** License number */
