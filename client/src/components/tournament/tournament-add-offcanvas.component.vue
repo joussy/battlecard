@@ -149,7 +149,6 @@ import { Tournament } from "@/types/boxing.d"
 import { closeModal } from "@/utils/ui.utils"
 import AddressAutocompleteFieldComponent from "@/components/shared/core/address-autocomplete-field.component.vue"
 import { TournamentOpenApi, CreateTournamentDto, UpdateTournamentDto, AddressAutocompleteGetDto } from "@/api"
-import { createApiClient } from "@/utils/api.client"
 
 configure({
     validateOnInput: true,
@@ -224,7 +223,6 @@ export default defineComponent({
     },
     created() {
         this.onSubmit = this.handleSubmit(async (form: GenericObject) => {
-            const client = createApiClient()
             const formTournament = {
                 name: form.name,
                 date: form.date,
@@ -234,14 +232,12 @@ export default defineComponent({
             }
             if (this.tournament) {
                 await TournamentOpenApi.update({
-                    client,
                     path: { id: this.tournament.id },
-                    body: formTournament as UpdateTournamentDto
+                    body: formTournament as UpdateTournamentDto,
                 })
             } else {
                 await TournamentOpenApi.create({
-                    client,
-                    body: formTournament as CreateTournamentDto
+                    body: formTournament as CreateTournamentDto,
                 })
             }
             this.$emit("tournament-saved", formTournament)

@@ -81,7 +81,6 @@
 import { SharedFightCard } from "@/types/boxing.d"
 import FightCardGridComponent from "@/components/fight-card/fight-card-grid.component.vue"
 import { ShareOpenApi } from "@/api"
-import { createApiClient } from "@/utils/api.client"
 import ApiAdapter from "@/adapters/api.adapter"
 import exportManager from "@/managers/export.manager"
 import ShareComponent from "@/components/shared/core/share.component.vue"
@@ -116,10 +115,8 @@ export default {
     async mounted() {
         this.roToken = this.$route.params.roToken as string
         try {
-            const client = createApiClient()
             const apiSharedFightCardGet = await ShareOpenApi.getFightsByFightCardToken({
-                client,
-                path: { fightCardToken: this.roToken }
+                path: { fightCardToken: this.roToken },
             })
             if (apiSharedFightCardGet) {
                 // TODO: Fix OpenAPI spec - ShareOpenApi returns 'unknown' type instead of proper SharedFightCardGet

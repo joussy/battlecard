@@ -26,7 +26,6 @@
 
 <script lang="ts">
 import { PlacesOpenApi, AddressAutocompleteGetDto } from "@/api"
-import { createApiClient } from "@/utils/api.client"
 import { PropType } from "vue"
 
 export default {
@@ -61,10 +60,8 @@ export default {
                     return
                 }
                 try {
-                    const client = createApiClient()
                     const result = await PlacesOpenApi.autocomplete({
-                        client,
-                        query: { q: this.inputValue }
+                        query: { q: this.inputValue },
                     })
                     if (result) {
                         this.suggestions = result

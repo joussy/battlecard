@@ -2,7 +2,6 @@ import { defineStore } from "pinia"
 import type { Boxer } from "@/types/boxing.d"
 import ApiAdapter from "@/adapters/api.adapter"
 import { TournamentOpenApi, BoxerOpenApi } from "@/api"
-import { createApiClient } from "@/utils/api.client"
 import { useTournamentStore } from "./tournament.store"
 
 export const useBoxerStore = defineStore("boxer", {
@@ -22,10 +21,8 @@ export const useBoxerStore = defineStore("boxer", {
                 if (!tournamentStore.currentTournamentId) {
                     return
                 }
-                const client = createApiClient()
                 const apiBoxers = await TournamentOpenApi.getBoxersForTournament({
-                    client,
-                    path: { tournamentId: tournamentStore.currentTournamentId }
+                    path: { tournamentId: tournamentStore.currentTournamentId },
                 })
                 if (apiBoxers) {
                     this.boxers = apiBoxers.map(ApiAdapter.toBoxer)
@@ -41,13 +38,11 @@ export const useBoxerStore = defineStore("boxer", {
             this.loading = true
             this.error = null
             try {
-                const client = createApiClient()
                 const apiBoxer = await BoxerOpenApi.getBoxer({
-                    client,
-                    path: { id: boxerId }
+                    path: { id: boxerId },
                 })
                 if (!apiBoxer) {
-                    throw new Error('Boxer not found')
+                    throw new Error("Boxer not found")
                 }
                 const boxer = ApiAdapter.toBoxer(apiBoxer)
                 // Update or insert the boxer in the store

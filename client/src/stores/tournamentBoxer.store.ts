@@ -2,7 +2,6 @@ import { defineStore } from "pinia"
 import type { Boxer, Opponent } from "@/types/boxing.d"
 import ApiAdapter from "@/adapters/api.adapter"
 import { TournamentOpenApi } from "@/api"
-import { createApiClient } from "@/utils/api.client"
 import { useTournamentStore } from "./tournament.store"
 
 export const useTournamentBoxerStore = defineStore("tournamentBoxer", {
@@ -22,10 +21,8 @@ export const useTournamentBoxerStore = defineStore("tournamentBoxer", {
             this.loading = true
             this.error = null
             try {
-                const client = createApiClient()
                 const apiBoxers = await TournamentOpenApi.getBoxersForTournament({
-                    client,
-                    path: { tournamentId }
+                    path: { tournamentId },
                 })
                 if (apiBoxers) {
                     this.tournamentBoxers = apiBoxers.map(ApiAdapter.toBoxer)
@@ -60,10 +57,8 @@ export const useTournamentBoxerStore = defineStore("tournamentBoxer", {
                 if (!tournamentId) {
                     throw new Error("No current tournament selected")
                 }
-                const client = createApiClient()
                 const apiOpponents = await TournamentOpenApi.getPossibleOpponents({
-                    client,
-                    path: { tournamentId, boxerId }
+                    path: { tournamentId, boxerId },
                 })
                 if (apiOpponents) {
                     return apiOpponents.map(ApiAdapter.toOpponent)

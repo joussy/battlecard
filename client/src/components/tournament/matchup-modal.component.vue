@@ -92,7 +92,6 @@ import IconComponent from "@/components/shared/core/icon.component.vue"
 import MatchupDetailsComponent from "@/components/tournament/matchup-details.component.vue"
 import { useTournamentStore } from "@/stores/tournament.store"
 import { FightOpenApi } from "@/api"
-import { createApiClient } from "@/utils/api.client"
 import ApiAdapter from "@/adapters/api.adapter"
 
 export default {
@@ -147,10 +146,8 @@ export default {
                 return
             }
             try {
-                const client = createApiClient()
                 const apiFights = await FightOpenApi.getMatchups({
-                    client,
-                    path: { tournamentId: this.tournamentStore.currentTournamentId }
+                    path: { tournamentId: this.tournamentStore.currentTournamentId },
                 })
                 if (apiFights) {
                     this.fights = apiFights.map(ApiAdapter.toFight)

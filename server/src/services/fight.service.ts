@@ -4,7 +4,7 @@ import { In, Repository } from 'typeorm';
 import { Fight } from '../entities/fight.entity';
 import { Boxer } from '../entities/boxer.entity';
 import { FightGetDto } from '@/dto/response.dto';
-import { toFight, toFightGetDto, toFightFromCreateDto } from '../adapters/fight.adapter';
+import { toFightGetDto, toFightFromCreateDto } from '../adapters/fight.adapter';
 import { ModalityService } from '../modality/modality.service';
 import { AuthenticatedUser } from '@/interfaces/auth.interface';
 import { TournamentService } from './tournament.service';

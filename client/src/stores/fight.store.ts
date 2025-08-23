@@ -2,7 +2,6 @@ import { defineStore } from "pinia"
 import type { Fight, Boxer } from "@/types/boxing.d"
 import ApiAdapter from "@/adapters/api.adapter"
 import { TournamentOpenApi, FightOpenApi } from "@/api"
-import { createApiClient } from "@/utils/api.client"
 import { useTournamentStore } from "./tournament.store"
 
 export const useFightStore = defineStore("fight", {
@@ -23,10 +22,8 @@ export const useFightStore = defineStore("fight", {
             this.loading = true
             this.error = null
             try {
-                const client = createApiClient()
                 const apiFights = await TournamentOpenApi.getFightsByTournamentId({
-                    client,
-                    path: { tournamentId }
+                    path: { tournamentId },
                 })
                 if (apiFights) {
                     this.fights = apiFights.map((apiFight) => ApiAdapter.toFight(apiFight))
@@ -46,22 +43,20 @@ export const useFightStore = defineStore("fight", {
             this.loading = true
 
             try {
-                const client = createApiClient()
-                const created = await FightOpenApi.create({
-                    client,
+                const created = (await FightOpenApi.create({
                     body: {
                         boxer1Id: boxer1.id,
                         boxer2Id: boxer2.id,
                         order: this.fights.length + 1,
                         tournamentId: tournamentStore.currentTournamentId,
-                    }
-                }) as any // The API returns a generic object, but we'll re-fetch to get the proper data
-                
+                    },
+                })) as any // The API returns a generic object, but we'll re-fetch to get the proper data
+
                 // Re-fetch fights to get the updated list with proper typing
                 await this.fetchFights()
-                
+
                 // Find the newly created fight
-                const newFight = this.fights.find(f => f.boxer1.id === boxer1.id && f.boxer2.id === boxer2.id)
+                const newFight = this.fights.find((f) => f.boxer1.id === boxer1.id && f.boxer2.id === boxer2.id)
                 return newFight
             } catch (e: unknown) {
                 this.error = e instanceof Error ? e.message : "Unknown error"
@@ -70,10 +65,8 @@ export const useFightStore = defineStore("fight", {
         },
 
         async removeFromFightCard(fightIds: string[]): Promise<void> {
-            const client = createApiClient()
             await FightOpenApi.deleteMany({
-                client,
-                body: { ids: fightIds }
+                body: { ids: fightIds },
             })
             // Remove the fights from the local store
             this.fights = this.fights.filter((fight) => !fightIds.includes(fight.id))
@@ -104,20 +97,16 @@ export const useFightStore = defineStore("fight", {
 
             // Insert the fight at the new position based on the order
             fights.splice(newIndex, 0, fightToMove)
-            
-            const client = createApiClient()
+
             await FightOpenApi.reorderFight({
-                client,
-                body: { fightId, newIndex }
+                body: { fightId, newIndex },
             })
         },
         async switchFight(fightId: string) {
             const fight = this.getFightById(fightId)
             if (fight) {
-                const client = createApiClient()
                 const switchedFight = await FightOpenApi.switch({
-                    client,
-                    body: { fightId }
+                    body: { fightId },
                 })
                 // Update the fight in the store
                 if (switchedFight) {
