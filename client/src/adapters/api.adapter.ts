@@ -7,6 +7,7 @@ import {
     ApiTournament,
     ApiTournamentCreate,
 } from "@/shared/types/api"
+import { BoxerGetDto, TournamentDto, FightGetDto, CreateFightDto, OpponentGetDto } from "@/api/types.gen"
 import { Gender } from "@/shared/types/modality.type"
 import { Boxer, Fight, Opponent, SharedFightCard, Tournament } from "@/types/boxing.d"
 
@@ -25,7 +26,7 @@ export default class ApiAdapter {
         }
     }
 
-    static toOpponent(opponent: ApiOpponentGet): Opponent {
+    static toOpponent(opponent: ApiOpponentGet | OpponentGetDto): Opponent {
         return {
             ...ApiAdapter.toBoxer(opponent),
             weightDifference: opponent.weightDifference,
@@ -35,7 +36,7 @@ export default class ApiAdapter {
         }
     }
 
-    static toBoxer(boxer: ApiBoxerGet): Boxer {
+    static toBoxer(boxer: ApiBoxerGet | BoxerGetDto): Boxer {
         return {
             birthDate: new Date(boxer.birthDate),
             club: boxer.club,
@@ -55,7 +56,7 @@ export default class ApiAdapter {
         }
     }
 
-    static toTournament(tournament: ApiTournament): Tournament {
+    static toTournament(tournament: ApiTournament | TournamentDto): Tournament {
         return {
             id: tournament.id,
             name: tournament.name,
@@ -90,7 +91,7 @@ export default class ApiAdapter {
         }
     }
 
-    static toFight(fight: ApiFightGet): Fight {
+    static toFight(fight: ApiFightGet | FightGetDto): Fight {
         return {
             boxer1: ApiAdapter.toBoxer(fight.boxer1),
             boxer2: ApiAdapter.toBoxer(fight.boxer2),

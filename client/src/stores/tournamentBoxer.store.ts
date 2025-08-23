@@ -1,8 +1,8 @@
 import { defineStore } from "pinia"
 import type { Boxer, Opponent } from "@/types/boxing.d"
-import type { ApiBoxerGet, ApiOpponentGet } from "@/shared/types/api"
 import ApiAdapter from "@/adapters/api.adapter"
-import dbManager from "@/managers/api.manager"
+import { TournamentOpenApi } from "@/api"
+import { createApiClient } from "@/utils/api.client"
 import { useTournamentStore } from "./tournament.store"
 
 export const useTournamentBoxerStore = defineStore("tournamentBoxer", {
@@ -22,47 +22,35 @@ export const useTournamentBoxerStore = defineStore("tournamentBoxer", {
             this.loading = true
             this.error = null
             try {
-                const apiBoxers: ApiBoxerGet[] = await dbManager.getTournamentBoxers(tournamentId)
-                this.tournamentBoxers = apiBoxers.map(ApiAdapter.toBoxer)
+                const client = createApiClient()
+                const apiBoxers = await TournamentOpenApi.getBoxersForTournament({
+                    client,
+                    path: { tournamentId }
+                })
+                if (apiBoxers) {
+                    this.tournamentBoxers = apiBoxers.map(ApiAdapter.toBoxer)
+                }
             } catch (e: unknown) {
                 this.error = e instanceof Error ? e.message : "Unknown error"
             } finally {
                 this.loading = false
             }
         },
+        // TODO: These methods need to be implemented when tournament-boxer endpoints are added to the OpenAPI spec
         async addBoxerToTournament(boxerId: string, tournamentId: string) {
-            this.loading = true
-            try {
-                await dbManager.addBoxerToTournament(boxerId, tournamentId)
-                // Optionally, refetch or update state
-                await this.fetchTournamentBoxers()
-            } catch (e: unknown) {
-                this.error = e instanceof Error ? e.message : "Unknown error"
-                throw e
-            } finally {
-                this.loading = false
-            }
+            // Implementation pending - tournament-boxer relationship endpoints not found in generated SDK
+            console.warn("addBoxerToTournament not implemented - endpoint not found in OpenAPI spec")
+            throw new Error("Method not implemented - tournament-boxer endpoints missing from API")
         },
         async removeBoxersFromTournament(boxerIds: string[], tournamentId: string) {
-            try {
-                await dbManager.deleteBoxersFromTournament(boxerIds, tournamentId)
-                // Optionally, refetch or update state
-                await this.fetchTournamentBoxers()
-            } catch (e: unknown) {
-                this.error = e instanceof Error ? e.message : "Unknown error"
-                throw e
-            }
+            // Implementation pending - tournament-boxer relationship endpoints not found in generated SDK
+            console.warn("removeBoxersFromTournament not implemented - endpoint not found in OpenAPI spec")
+            throw new Error("Method not implemented - tournament-boxer endpoints missing from API")
         },
         async removeBoxersFromTournamentAll(tournamentId: string) {
-            try {
-                const boxerIds = this.tournamentBoxers.map((b) => b.id)
-                if (boxerIds.length === 0) return
-                await dbManager.deleteBoxersFromTournament(boxerIds, tournamentId)
-                await this.fetchTournamentBoxers()
-            } catch (e: unknown) {
-                this.error = e instanceof Error ? e.message : "Unknown error"
-                throw e
-            }
+            // Implementation pending - tournament-boxer relationship endpoints not found in generated SDK
+            console.warn("removeBoxersFromTournamentAll not implemented - endpoint not found in OpenAPI spec")
+            throw new Error("Method not implemented - tournament-boxer endpoints missing from API")
         },
         async fetchBoxerOpponents(boxerId: string): Promise<Opponent[]> {
             try {
@@ -72,8 +60,15 @@ export const useTournamentBoxerStore = defineStore("tournamentBoxer", {
                 if (!tournamentId) {
                     throw new Error("No current tournament selected")
                 }
-                const apiBoxers: ApiOpponentGet[] = await dbManager.getPossibleOpponents(boxerId, tournamentId)
-                return apiBoxers.map(ApiAdapter.toOpponent)
+                const client = createApiClient()
+                const apiOpponents = await TournamentOpenApi.getPossibleOpponents({
+                    client,
+                    path: { tournamentId, boxerId }
+                })
+                if (apiOpponents) {
+                    return apiOpponents.map(ApiAdapter.toOpponent)
+                }
+                return []
             } catch (e: unknown) {
                 this.error = e instanceof Error ? e.message : "Unknown error"
                 throw e

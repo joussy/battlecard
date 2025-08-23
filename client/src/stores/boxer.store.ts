@@ -1,8 +1,8 @@
 import { defineStore } from "pinia"
 import type { Boxer } from "@/types/boxing.d"
 import ApiAdapter from "@/adapters/api.adapter"
-import dbManager from "@/managers/api.manager"
-import { ApiBoxerGet } from "@/shared/types/api"
+import { TournamentOpenApi, BoxerOpenApi } from "@/api"
+import { createApiClient } from "@/utils/api.client"
 import { useTournamentStore } from "./tournament.store"
 
 export const useBoxerStore = defineStore("boxer", {
@@ -22,10 +22,14 @@ export const useBoxerStore = defineStore("boxer", {
                 if (!tournamentStore.currentTournamentId) {
                     return
                 }
-                const apiBoxers: ApiBoxerGet[] = await dbManager.getTournamentBoxers(
-                    tournamentStore.currentTournamentId
-                )
-                this.boxers = apiBoxers.map(ApiAdapter.toBoxer)
+                const client = createApiClient()
+                const apiBoxers = await TournamentOpenApi.getBoxersForTournament({
+                    client,
+                    path: { tournamentId: tournamentStore.currentTournamentId }
+                })
+                if (apiBoxers) {
+                    this.boxers = apiBoxers.map(ApiAdapter.toBoxer)
+                }
                 this.restored = true
             } catch (e: unknown) {
                 this.error = e instanceof Error ? e.message : "Unknown error"
@@ -37,7 +41,14 @@ export const useBoxerStore = defineStore("boxer", {
             this.loading = true
             this.error = null
             try {
-                const apiBoxer: ApiBoxerGet = await dbManager.getBoxer(boxerId)
+                const client = createApiClient()
+                const apiBoxer = await BoxerOpenApi.getBoxer({
+                    client,
+                    path: { id: boxerId }
+                })
+                if (!apiBoxer) {
+                    throw new Error('Boxer not found')
+                }
                 const boxer = ApiAdapter.toBoxer(apiBoxer)
                 // Update or insert the boxer in the store
                 const idx = this.boxers.findIndex((b) => b.id === boxerId)
