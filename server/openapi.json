@@ -6,8 +6,15 @@
         "operationId": "UserController_getMe",
         "parameters": [],
         "responses": {
-          "200": {
-            "description": ""
+          "default": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -20,7 +27,7 @@
         "operationId": "AuthController_googleAuth",
         "parameters": [],
         "responses": {
-          "200": {
+          "default": {
             "description": ""
           }
         },
@@ -37,8 +44,15 @@
         "operationId": "AuthController_googleAuthRedirect",
         "parameters": [],
         "responses": {
-          "200": {
-            "description": ""
+          "default": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -54,8 +68,18 @@
         "operationId": "TournamentController_findAll",
         "parameters": [],
         "responses": {
-          "200": {
-            "description": ""
+          "default": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GetTournamentDto"
+                  }
+                }
+              }
+            }
           }
         },
         "security": [
@@ -81,8 +105,15 @@
           }
         },
         "responses": {
-          "201": {
-            "description": ""
+          "default": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -98,7 +129,16 @@
     "/api/tournaments/{id}": {
       "put": {
         "operationId": "TournamentController_update",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -110,8 +150,15 @@
           }
         },
         "responses": {
-          "200": {
-            "description": ""
+          "default": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -125,9 +172,18 @@
       },
       "delete": {
         "operationId": "TournamentController_delete",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
-          "200": {
+          "default": {
             "description": ""
           }
         },
@@ -144,10 +200,29 @@
     "/api/tournaments/{tournamentId}/boxers": {
       "get": {
         "operationId": "TournamentController_getBoxersForTournament",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "tournamentId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
-          "200": {
-            "description": ""
+          "default": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
           }
         },
         "security": [
@@ -163,10 +238,37 @@
     "/api/tournaments/{tournamentId}/opponents/{boxerId}": {
       "get": {
         "operationId": "TournamentController_getPossibleOpponents",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "tournamentId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "boxerId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
-          "200": {
-            "description": ""
+          "default": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
           }
         },
         "security": [
@@ -182,10 +284,29 @@
     "/api/tournaments/{tournamentId}/fights": {
       "get": {
         "operationId": "TournamentController_getFightsByTournamentId",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "tournamentId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
-          "200": {
-            "description": ""
+          "default": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
           }
         },
         "security": [
@@ -213,8 +334,15 @@
           }
         },
         "responses": {
-          "201": {
-            "description": ""
+          "default": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -225,10 +353,26 @@
     "/api/boxers/{id}": {
       "get": {
         "operationId": "BoxerController_getBoxer",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
-          "200": {
-            "description": ""
+          "default": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -237,7 +381,16 @@
       },
       "put": {
         "operationId": "BoxerController_update",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -249,8 +402,15 @@
           }
         },
         "responses": {
-          "200": {
-            "description": ""
+          "default": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -273,8 +433,15 @@
           }
         },
         "responses": {
-          "201": {
-            "description": ""
+          "default": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -295,7 +462,7 @@
           }
         },
         "responses": {
-          "200": {
+          "default": {
             "description": ""
           }
         },
@@ -319,7 +486,7 @@
           }
         },
         "responses": {
-          "201": {
+          "default": {
             "description": ""
           }
         },
@@ -343,8 +510,15 @@
           }
         },
         "responses": {
-          "201": {
-            "description": ""
+          "default": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -355,10 +529,29 @@
     "/api/fights/matchups/{tournamentId}": {
       "get": {
         "operationId": "FightController_getMatchups",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "tournamentId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
-          "200": {
-            "description": ""
+          "default": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -381,7 +574,7 @@
           }
         },
         "responses": {
-          "201": {
+          "default": {
             "description": ""
           }
         },
@@ -405,7 +598,7 @@
           }
         },
         "responses": {
-          "201": {
+          "default": {
             "description": ""
           }
         },
@@ -429,7 +622,7 @@
           }
         },
         "responses": {
-          "201": {
+          "default": {
             "description": ""
           }
         },
@@ -453,7 +646,7 @@
           }
         },
         "responses": {
-          "201": {
+          "default": {
             "description": ""
           }
         },
@@ -477,7 +670,7 @@
           }
         },
         "responses": {
-          "201": {
+          "default": {
             "description": ""
           }
         },
@@ -489,9 +682,18 @@
     "/api/export/fightcard/html": {
       "get": {
         "operationId": "ExternalServicesController_getTemplateHtml",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "tournamentId",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
-          "200": {
+          "default": {
             "description": ""
           }
         },
@@ -518,7 +720,7 @@
           }
         },
         "responses": {
-          "201": {
+          "default": {
             "description": ""
           }
         },
@@ -542,7 +744,7 @@
           }
         },
         "responses": {
-          "201": {
+          "default": {
             "description": ""
           }
         },
@@ -566,7 +768,7 @@
           }
         },
         "responses": {
-          "201": {
+          "default": {
             "description": ""
           }
         },
@@ -590,7 +792,7 @@
           }
         },
         "responses": {
-          "201": {
+          "default": {
             "description": ""
           }
         },
@@ -614,8 +816,15 @@
           }
         },
         "responses": {
-          "201": {
-            "description": ""
+          "default": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -638,8 +847,15 @@
           }
         },
         "responses": {
-          "201": {
-            "description": ""
+          "default": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -652,8 +868,15 @@
         "operationId": "ImportController_previewBoxersFromCsvFile",
         "parameters": [],
         "responses": {
-          "201": {
-            "description": ""
+          "default": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -666,8 +889,15 @@
         "operationId": "ImportController_previewBoxersFromFfboxeFile",
         "parameters": [],
         "responses": {
-          "201": {
-            "description": ""
+          "default": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -690,8 +920,15 @@
           }
         },
         "responses": {
-          "201": {
-            "description": ""
+          "default": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -702,9 +939,18 @@
     "/api/share/fightcard/{fightCardToken}": {
       "get": {
         "operationId": "ShareController_getFightsByFightCardToken",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "fightCardToken",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
-          "200": {
+          "default": {
             "description": ""
           }
         },
@@ -731,8 +977,15 @@
           }
         },
         "responses": {
-          "201": {
-            "description": ""
+          "default": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -755,7 +1008,7 @@
           }
         },
         "responses": {
-          "201": {
+          "default": {
             "description": ""
           }
         },
@@ -782,7 +1035,7 @@
           }
         },
         "responses": {
-          "201": {
+          "default": {
             "description": ""
           }
         },
@@ -809,7 +1062,7 @@
           }
         },
         "responses": {
-          "201": {
+          "default": {
             "description": ""
           }
         },
@@ -836,7 +1089,7 @@
           }
         },
         "responses": {
-          "201": {
+          "default": {
             "description": ""
           }
         },
@@ -851,10 +1104,29 @@
     "/api/places/autocomplete": {
       "get": {
         "operationId": "PlacesController_autocomplete",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "q",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
-          "200": {
-            "description": ""
+          "default": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -880,69 +1152,484 @@
       }
     },
     "schemas": {
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "apiEnabled": {
+            "type": "boolean"
+          },
+          "picture": {
+            "type": "string"
+          },
+          "created": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updated": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "email",
+          "apiEnabled",
+          "created",
+          "updated"
+        ]
+      },
+      "GetTournamentDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique tournament ID"
+          },
+          "name": {
+            "type": "string",
+            "description": "Tournament name"
+          },
+          "userId": {
+            "type": "string",
+            "description": "User who created the tournament"
+          },
+          "date": {
+            "type": "string",
+            "description": "Tournament date (YYYY-MM-DD)"
+          },
+          "address": {
+            "type": "string",
+            "description": "Tournament address (optional)"
+          },
+          "zipCode": {
+            "type": "string",
+            "description": "Tournament zip code (optional)"
+          },
+          "city": {
+            "type": "string",
+            "description": "Tournament city (optional)"
+          },
+          "formattedAddress": {
+            "type": "string",
+            "description": "Formatted address combining street, city, and zipCode"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "userId",
+          "date"
+        ]
+      },
       "CreateTournamentDto": {
         "type": "object",
-        "properties": {}
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Tournament name"
+          },
+          "date": {
+            "type": "string",
+            "description": "Tournament date (YYYY-MM-DD)"
+          },
+          "address": {
+            "type": "string",
+            "description": "Tournament address (optional)"
+          },
+          "zipCode": {
+            "type": "string",
+            "description": "Tournament zip code (optional)"
+          },
+          "city": {
+            "type": "string",
+            "description": "Tournament city (optional)"
+          }
+        },
+        "required": [
+          "name",
+          "date"
+        ]
       },
       "UpdateTournamentDto": {
         "type": "object",
-        "properties": {}
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Tournament name"
+          },
+          "date": {
+            "type": "string",
+            "description": "Tournament date (YYYY-MM-DD)"
+          },
+          "address": {
+            "type": "string",
+            "description": "Tournament address (optional)"
+          },
+          "zipCode": {
+            "type": "string",
+            "description": "Tournament zip code (optional)"
+          },
+          "city": {
+            "type": "string",
+            "description": "Tournament city (optional)"
+          }
+        },
+        "required": [
+          "name",
+          "date"
+        ]
       },
       "CreateBoxerDto": {
         "type": "object",
-        "properties": {}
+        "properties": {
+          "lastName": {
+            "type": "string",
+            "description": "Last name"
+          },
+          "firstName": {
+            "type": "string",
+            "description": "First name"
+          },
+          "birthDate": {
+            "type": "string",
+            "description": "Date of birth (YYYY-MM-DD)"
+          },
+          "nbFights": {
+            "type": "number",
+            "description": "Number of fights (optional)"
+          },
+          "club": {
+            "type": "string",
+            "description": "Club name"
+          },
+          "weight": {
+            "type": "number",
+            "description": "Weight in kg (optional)"
+          },
+          "gender": {
+            "type": "string",
+            "description": "Gender",
+            "enum": [
+              "female",
+              "male"
+            ]
+          },
+          "license": {
+            "type": "string",
+            "description": "License number"
+          },
+          "tournamentId": {
+            "type": "string",
+            "description": "Tournament ID (optional)"
+          }
+        },
+        "required": [
+          "lastName",
+          "firstName",
+          "birthDate",
+          "club",
+          "gender",
+          "license"
+        ]
       },
       "UpdateBoxerDto": {
         "type": "object",
-        "properties": {}
+        "properties": {
+          "lastName": {
+            "type": "string",
+            "description": "Last name"
+          },
+          "firstName": {
+            "type": "string",
+            "description": "First name"
+          },
+          "birthDate": {
+            "type": "string",
+            "description": "Date of birth (YYYY-MM-DD)"
+          },
+          "nbFights": {
+            "type": "number",
+            "description": "Number of fights (optional)"
+          },
+          "club": {
+            "type": "string",
+            "description": "Club name"
+          },
+          "weight": {
+            "type": "number",
+            "description": "Weight in kg (optional)"
+          },
+          "gender": {
+            "description": "Gender",
+            "enum": [
+              "female",
+              "male"
+            ],
+            "type": "string"
+          },
+          "license": {
+            "type": "string",
+            "description": "License number"
+          },
+          "tournamentId": {
+            "type": "string",
+            "description": "Tournament ID (optional)"
+          }
+        },
+        "required": [
+          "lastName",
+          "firstName",
+          "birthDate",
+          "club",
+          "gender",
+          "license"
+        ]
       },
       "CreateFightDto": {
         "type": "object",
-        "properties": {}
+        "properties": {
+          "boxer1Id": {
+            "type": "string",
+            "description": "Red corner boxer ID"
+          },
+          "boxer2Id": {
+            "type": "string",
+            "description": "Blue corner boxer ID"
+          },
+          "tournamentId": {
+            "type": "string",
+            "description": "Tournament ID"
+          },
+          "order": {
+            "type": "number",
+            "description": "Fight order in the tournament"
+          }
+        },
+        "required": [
+          "boxer1Id",
+          "boxer2Id",
+          "tournamentId",
+          "order"
+        ]
       },
       "DeleteFightsDto": {
         "type": "object",
-        "properties": {}
+        "properties": {
+          "ids": {
+            "description": "Array of fight IDs to delete",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "ids"
+        ]
       },
       "ReorderFightDto": {
         "type": "object",
-        "properties": {}
+        "properties": {
+          "fightId": {
+            "type": "string",
+            "description": "Fight ID to reorder"
+          },
+          "newIndex": {
+            "type": "number",
+            "description": "New index for the fight"
+          }
+        },
+        "required": [
+          "fightId",
+          "newIndex"
+        ]
       },
       "SwitchFightDto": {
         "type": "object",
-        "properties": {}
+        "properties": {
+          "fightId": {
+            "type": "string",
+            "description": "Fight ID to switch boxers"
+          }
+        },
+        "required": [
+          "fightId"
+        ]
       },
       "ExportWithQrCodeDto": {
         "type": "object",
-        "properties": {}
+        "properties": {
+          "tournamentId": {
+            "type": "string"
+          },
+          "displayQrCode": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "tournamentId",
+          "displayQrCode"
+        ]
       },
       "SelectorExportDto": {
         "type": "object",
-        "properties": {}
+        "properties": {
+          "tournamentId": {
+            "type": "string"
+          },
+          "boxerIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "tournamentId",
+          "boxerIds"
+        ]
       },
       "SimpleTournamentDto": {
         "type": "object",
-        "properties": {}
+        "properties": {
+          "tournamentId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "tournamentId"
+        ]
+      },
+      "ImportBoxerDto": {
+        "type": "object",
+        "properties": {
+          "lastName": {
+            "type": "string",
+            "description": "Boxer name"
+          },
+          "firstName": {
+            "type": "string",
+            "description": "Boxer first name"
+          },
+          "birthDate": {
+            "type": "string",
+            "description": "Boxer birth date (YYYY-MM-DD)"
+          },
+          "club": {
+            "type": "string",
+            "description": "Boxer club"
+          },
+          "weight": {
+            "type": "number",
+            "description": "Boxer weight"
+          },
+          "gender": {
+            "type": "string",
+            "description": "Boxer gender",
+            "enum": [
+              "female",
+              "male"
+            ]
+          },
+          "license": {
+            "type": "string",
+            "description": "Boxer license"
+          },
+          "fightRecord": {
+            "type": "number",
+            "description": "Boxer fight record"
+          }
+        },
+        "required": [
+          "lastName",
+          "firstName",
+          "birthDate",
+          "club",
+          "weight",
+          "license",
+          "fightRecord"
+        ]
       },
       "ImportBoxersDto": {
         "type": "object",
-        "properties": {}
+        "properties": {
+          "dry": {
+            "type": "boolean",
+            "description": "Whether this is a dry run"
+          },
+          "boxers": {
+            "description": "Array of boxers to import",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ImportBoxerDto"
+            }
+          },
+          "tournamentId": {
+            "type": "string",
+            "description": "Tournament ID"
+          }
+        },
+        "required": [
+          "dry",
+          "boxers",
+          "tournamentId"
+        ]
       },
       "PreviewBoxersCsvDto": {
         "type": "object",
-        "properties": {}
+        "properties": {
+          "payload": {
+            "type": "string",
+            "description": "CSV payload"
+          }
+        },
+        "required": [
+          "payload"
+        ]
       },
       "PreviewBoxersApiDto": {
         "type": "object",
-        "properties": {}
+        "properties": {
+          "payload": {
+            "type": "string",
+            "description": "Payload containing boxer IDs"
+          }
+        },
+        "required": [
+          "payload"
+        ]
       },
       "GenerateFightCardTokenDto": {
         "type": "object",
-        "properties": {}
+        "properties": {
+          "tournamentId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "tournamentId"
+        ]
       },
       "FightCardTokenDto": {
         "type": "object",
-        "properties": {}
+        "properties": {
+          "fightCardToken": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "fightCardToken"
+        ]
       }
     }
   },
