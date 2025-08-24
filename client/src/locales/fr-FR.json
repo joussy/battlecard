@@ -24,7 +24,7 @@
     },
     "authentication": {
         "welcome": "Bienvenue sur BattleCard",
-        "tagline": "Votre ring numérique pour les tournois de boxe, statistiques et plus.",
+        "tagline": "Générez facilement des cartes de combat pour vos tournois de boxe.",
         "signIn": "Se connecter",
         "signInWithGoogle": "Se connecter avec Google",
         "signOut": "Se déconnecter",
