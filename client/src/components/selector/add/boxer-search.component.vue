@@ -47,42 +47,35 @@
     </div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
+import { ref } from "vue"
 import { Boxer } from "@/types/boxing"
-import { defineComponent } from "vue"
 
-export default defineComponent({
-    data() {
-        let ret = {
-            license: null as string | null,
-            timeout: null as ReturnType<typeof setTimeout> | null,
-            filteredResults: [] as Boxer[],
-        }
-        return ret
-    },
-    methods: {
-        handleInput() {
-            if (this.timeout) clearTimeout(this.timeout)
+const license = ref<string | null>(null)
+const timeout = ref<ReturnType<typeof setTimeout> | null>(null)
+const filteredResults = ref<Boxer[]>([])
 
-            this.timeout = setTimeout(() => {
-                this.search()
-            }, 400)
-        },
-        search() {
-            const term = this.license?.toLowerCase().trim() || ""
-            if (!term) {
-                this.filteredResults = []
-                return
-            }
-            //TODO: Implement the search logic to fetch boxers based on the term
-            // const boxers = await fightService.getAllBoxerAttributes()
-            // this.filteredResults = boxers.filter(
-            //     (item) =>
-            //         item.firstName.toLowerCase().includes(term) ||
-            //         item.lastName.toLowerCase().includes(term) ||
-            //         item.license.toLowerCase().includes(term)
-            // )
-        },
-    },
-})
+const handleInput = () => {
+    if (timeout.value) clearTimeout(timeout.value)
+
+    timeout.value = setTimeout(() => {
+        search()
+    }, 400)
+}
+
+const search = () => {
+    const term = license.value?.toLowerCase().trim() || ""
+    if (!term) {
+        filteredResults.value = []
+        return
+    }
+    //TODO: Implement the search logic to fetch boxers based on the term
+    // const boxers = await fightService.getAllBoxerAttributes()
+    // filteredResults.value = boxers.filter(
+    //     (item) =>
+    //         item.firstName.toLowerCase().includes(term) ||
+    //         item.lastName.toLowerCase().includes(term) ||
+    //         item.license.toLowerCase().includes(term)
+    // )
+}
 </script>

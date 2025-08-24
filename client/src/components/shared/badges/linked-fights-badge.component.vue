@@ -14,33 +14,20 @@
     </span>
 </template>
 
-<script lang="ts">
-import { PropType, defineComponent } from "vue"
-
+<script setup lang="ts">
 import { Boxer } from "@/types/boxing"
 import { ModalityErrorDao } from "@/api"
 import IconComponent from "@/components/shared/core/icon.component.vue"
 import { useBoxerStore } from "@/stores/boxer.store"
 
-export default defineComponent({
-    components: {
-        Icon: IconComponent,
-    },
-    props: {
-        boxer: {
-            type: Object as PropType<Boxer>,
-            required: true,
-        },
-        modalityErrors: {
-            type: Object as PropType<ModalityErrorDao[]>,
-            required: false,
-            default: null,
-        },
-    },
-    data() {
-        return {
-            boxerStore: useBoxerStore(),
-        }
-    },
+interface Props {
+    boxer: Boxer
+    modalityErrors?: ModalityErrorDao[] | null
+}
+
+const props = withDefaults(defineProps<Props>(), {
+    modalityErrors: null,
 })
+
+const boxerStore = useBoxerStore()
 </script>

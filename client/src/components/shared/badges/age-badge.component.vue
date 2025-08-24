@@ -7,41 +7,31 @@
         }"
     >
         <Icon name="birthday-cake" />
-        <span class="number-text">{{ getBoxerAge() }}</span>
+        <span class="number-text">{{ boxerAge }}</span>
     </span>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
+import { computed } from "vue"
 import { Boxer } from "@/types/boxing"
 import { ModalityErrorDao, ModalityErrorType } from "@/api"
-import { PropType, defineComponent } from "vue"
 import Icon from "@/components/shared/core/icon.component.vue"
 import { getBoxerAge } from "@/utils/string.utils"
 
-export default defineComponent({
-    components: {
-        Icon: Icon,
-    },
-    props: {
-        boxer: {
-            type: Object as PropType<Boxer>,
-            required: true,
-        },
-        modalityErrors: {
-            type: Object as PropType<ModalityErrorDao[] | null>,
-            required: false,
-            default: null,
-        },
-    },
-    computed: {
-        modalityError() {
-            return this.modalityErrors?.some((error) => error.type == ModalityErrorType.AGE)
-        },
-    },
-    methods: {
-        getBoxerAge(): number {
-            return getBoxerAge(this.boxer.birthDate)
-        },
-    },
+interface Props {
+    boxer: Boxer
+    modalityErrors?: ModalityErrorDao[] | null
+}
+
+const props = withDefaults(defineProps<Props>(), {
+    modalityErrors: null,
+})
+
+const modalityError = computed(() => {
+    return props.modalityErrors?.some((error) => error.type == ModalityErrorType.AGE)
+})
+
+const boxerAge = computed(() => {
+    return getBoxerAge(props.boxer.birthDate)
 })
 </script>

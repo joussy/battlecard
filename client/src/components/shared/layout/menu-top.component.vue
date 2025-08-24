@@ -73,37 +73,30 @@
         </div>
     </nav>
 </template>
-<script lang="ts">
+<script setup lang="ts">
+import { computed } from "vue"
+import { useRouter } from "vue-router"
 import Icon from "@/components/shared/core/icon.component.vue"
 import { useFightStore } from "@/stores/fight.store"
 import { useTournamentStore } from "@/stores/tournament.store"
 import { useUiStore } from "@/stores/ui.store"
 
-export default {
-    components: {
-        Icon: Icon,
-    },
-    data() {
-        return {
-            uiStore: useUiStore(),
-            tournamentStore: useTournamentStore(),
-            fightStore: useFightStore(),
-        }
-    },
-    computed: {
-        nbFights() {
-            return this.fightStore.fights.length
-        },
-        isTournamentSelected(): boolean {
-            return !!this.tournamentStore.currentTournamentId
-        },
-    },
-    methods: {
-        logout() {
-            this.uiStore.logout()
-            this.$router.push("settings")
-        },
-    },
+const router = useRouter()
+const uiStore = useUiStore()
+const tournamentStore = useTournamentStore()
+const fightStore = useFightStore()
+
+const nbFights = computed(() => {
+    return fightStore.fights.length
+})
+
+const isTournamentSelected = computed((): boolean => {
+    return !!tournamentStore.currentTournamentId
+})
+
+const logout = () => {
+    uiStore.logout()
+    router.push("settings")
 }
 </script>
 <style scoped>

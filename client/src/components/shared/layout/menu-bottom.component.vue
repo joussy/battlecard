@@ -63,34 +63,27 @@
         </router-link>
     </nav>
 </template>
-<script lang="ts">
+<script setup lang="ts">
+import { useRouter } from "vue-router"
 import Icon from "@/components/shared/core/icon.component.vue"
 import { useBoxerStore } from "@/stores/boxer.store"
 import { useFightStore } from "@/stores/fight.store"
 import { useTournamentStore } from "@/stores/tournament.store"
 import { useUiStore } from "@/stores/ui.store"
 
-export default {
-    components: {
-        Icon,
-    },
-    data() {
-        return {
-            uiStore: useUiStore(),
-            boxerStore: useBoxerStore(),
-            fightStore: useFightStore(),
-            tournamentStore: useTournamentStore(),
-        }
-    },
-    methods: {
-        getNbFights() {
-            return this.fightStore.fights.length
-        },
-        logout() {
-            this.uiStore.logout()
-            this.$router.push("settings")
-        },
-    },
+const router = useRouter()
+const uiStore = useUiStore()
+const boxerStore = useBoxerStore()
+const fightStore = useFightStore()
+const tournamentStore = useTournamentStore()
+
+const getNbFights = () => {
+    return fightStore.fights.length
+}
+
+const logout = () => {
+    uiStore.logout()
+    router.push("settings")
 }
 </script>
 <style>
