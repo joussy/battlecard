@@ -1,8 +1,5 @@
-import {
-  BoxerGetDto,
-  ImportBoxerResponseDto,
-  OpponentGetDto,
-} from '@/dto/response.dto';
+import { BoxerDto, OpponentDto } from '@/dto/boxer.dto';
+import { ImportBoxerResponseDto } from '@/dto/import.dto';
 import { Boxer } from '../entities/boxer.entity';
 import { IModality } from '@/modality/IModality';
 import { Gender, ModalityError } from '@/interfaces/modality.interface';
@@ -13,7 +10,7 @@ import { format } from 'date-fns/format';
 import { CreateBoxerDto } from '@/dto/boxer.dto';
 
 export function toBoxer(
-  boxer: BoxerGetDto | CreateBoxerDto,
+  boxer: BoxerDto | CreateBoxerDto,
   userId: string,
 ): Boxer {
   const entity = new Boxer();
@@ -29,12 +26,12 @@ export function toBoxer(
   return entity;
 }
 
-export function toBoxerGetDto(
+export function toBoxerDto(
   boxer: Boxer,
   modality: IModality,
   selectedFights?: number,
   eligibleFights?: number,
-): BoxerGetDto {
+): BoxerDto {
   return {
     id: boxer.id,
     lastName: boxer.lastName,
@@ -55,15 +52,15 @@ export function toBoxerGetDto(
   };
 }
 
-export function toOpponentGetDto(
+export function toOpponentDto(
   boxer: Boxer,
   modality: IModality,
   selectedFights: number,
   modalityErrors: ModalityError[],
   fightId?: string,
-): OpponentGetDto {
+): OpponentDto {
   return {
-    ...toBoxerGetDto(boxer, modality),
+    ...toBoxerDto(boxer, modality),
     // modalityErrors: [], // Assuming modalityErrors is not available in Boxer entity
     weightDifference: 0, // Placeholder value, adjust as needed
     isEligible: true, // Placeholder value, adjust as needed

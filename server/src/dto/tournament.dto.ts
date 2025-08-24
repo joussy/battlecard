@@ -4,7 +4,11 @@ import {
   IsDateString,
   IsOptional,
   MaxLength,
+  IsArray,
+  ValidateNested,
 } from 'class-validator';
+import { Type } from 'class-transformer';
+import { FightDto } from './fight.dto';
 
 export class CreateTournamentDto {
   /** Tournament name */
@@ -39,10 +43,7 @@ export class CreateTournamentDto {
 
 export class UpdateTournamentDto extends CreateTournamentDto {}
 
-/**
- * Tournament object returned from the API.
- */
-export class GetTournamentDto {
+export class TournamentDto {
   /** Unique tournament ID */
   id: string;
   /** Tournament name */
@@ -59,4 +60,21 @@ export class GetTournamentDto {
   city?: string;
   /** Formatted address combining street, city, and zipCode */
   formattedAddress?: string;
+}
+
+export class SharedFightCardDto {
+  /** Tournament name */
+  @IsString()
+  tournamentName: string;
+
+  /** Array of fights */
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => FightDto)
+  fights: FightDto[];
+
+  /** Tournament date (optional) */
+  @IsOptional()
+  @IsString()
+  tournamentDate?: string;
 }

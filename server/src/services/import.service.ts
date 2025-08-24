@@ -6,7 +6,7 @@ import {
   ImportBoxersResponseDto,
   PreviewBoxersResponseDto,
   ImportBoxerResponseDto,
-} from '@/dto/response.dto';
+} from '@/dto/import.dto';
 import { TournamentService } from './tournament.service';
 import { Repository } from 'typeorm';
 import { Boxer } from '@/entities/boxer.entity';

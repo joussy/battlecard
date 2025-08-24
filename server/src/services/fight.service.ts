@@ -3,12 +3,12 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
 import { Fight } from '../entities/fight.entity';
 import { Boxer } from '../entities/boxer.entity';
-import { FightGetDto } from '@/dto/response.dto';
-import { toFightGetDto, toFightFromCreateDto } from '../adapters/fight.adapter';
+import { FightDto } from '@/dto/fight.dto';
+import { toFightDto, toFightFromCreateDto } from '../adapters/fight.adapter';
 import { ModalityService } from '../modality/modality.service';
 import { AuthenticatedUser } from '@/interfaces/auth.interface';
 import { TournamentService } from './tournament.service';
-import { toBoxerGetDto } from '@/adapters/boxer.adapter';
+import { toBoxerDto } from '@/adapters/boxer.adapter';
 import { TournamentBoxer } from '@/entities/tournament_boxer.entity';
 import { CreateFightDto } from '@/dto/fight.dto';
 
@@ -28,22 +28,22 @@ export class FightService {
   async findByTournamentId(
     tournamentId: string,
     user: AuthenticatedUser,
-  ): Promise<FightGetDto[]> {
+  ): Promise<FightDto[]> {
     const dbFights = await this.fightRepository.find({
       where: { tournament: { userId: user.id }, tournamentId },
       order: { order: 'ASC' },
       relations: ['boxer1', 'boxer2', 'tournament'],
     });
     const modality = this.modalityService.getModality();
-    return dbFights.map((fight) => toFightGetDto(fight, modality));
+    return dbFights.map((fight) => toFightDto(fight, modality));
   }
-  async findById(id: string, user: AuthenticatedUser): Promise<FightGetDto> {
+  async findById(id: string, user: AuthenticatedUser): Promise<FightDto> {
     const fight = await this.fightRepository.findOneOrFail({
       where: { id, tournament: { userId: user.id } },
       relations: ['boxer1', 'boxer2'],
     });
     const modality = this.modalityService.getModality();
-    return toFightGetDto(fight, modality);
+    return toFightDto(fight, modality);
   }
 
   async create(fight: CreateFightDto, user: AuthenticatedUser): Promise<Fight> {
@@ -169,7 +169,7 @@ export class FightService {
   async getMatchups(
     tournamentId: string,
     user: AuthenticatedUser,
-  ): Promise<FightGetDto[]> {
+  ): Promise<FightDto[]> {
     await this.tournamentService.validateTournamentAccess(
       tournamentId,
       user.id,
@@ -191,7 +191,7 @@ export class FightService {
     );
 
     const modality = this.modalityService.getModality();
-    const validMatchups: FightGetDto[] = [];
+    const validMatchups: FightDto[] = [];
 
     // Generate all possible boxer pairs
     for (let i = 0; i < boxers.length; i++) {
@@ -214,13 +214,13 @@ export class FightService {
             // Create a virtual fight for this valid matchup
             const virtualFight = {
               id: `virtual-${boxer1.id}-${boxer2.id}`,
-              boxer1: toBoxerGetDto(boxer1, modality),
-              boxer2: toBoxerGetDto(boxer2, modality),
+              boxer1: toBoxerDto(boxer1, modality),
+              boxer2: toBoxerDto(boxer2, modality),
               tournamentId,
               order: validMatchups.length + 1,
               rounds: fightDuration.rounds,
               roundDurationAsSeconds: fightDuration.roundDurationAsSeconds,
-            } as FightGetDto;
+            } as FightDto;
 
             validMatchups.push(virtualFight);
           }

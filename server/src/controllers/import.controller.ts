@@ -17,7 +17,7 @@ import { ImportService } from '@/services/import.service';
 import {
   ImportBoxersResponseDto,
   PreviewBoxersResponseDto,
-} from '@/dto/response.dto';
+} from '@/dto/import.dto';
 import { Express } from 'express';
 import { FileInterceptor } from '@nestjs/platform-express';
 import {

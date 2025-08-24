@@ -36,3 +36,17 @@ export class SimpleTournamentDto {
   @IsNotEmpty()
   tournamentId: string;
 }
+
+export class GeneratedTokenDto {
+  /** Token string */
+  @IsString()
+  token: string;
+
+  /** QR code image data */
+  @IsString()
+  qrcode: string;
+
+  /** Shareable URL */
+  @IsString()
+  url: string;
+}

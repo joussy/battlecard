@@ -25,7 +25,7 @@
 </template>
 
 <script lang="ts">
-import { PlacesOpenApi, AddressAutocompleteGetDto } from "@/api"
+import { PlacesOpenApi, AddressAutocompleteDto } from "@/api"
 import { PropType } from "vue"
 
 export default {
@@ -40,7 +40,7 @@ export default {
     data() {
         return {
             inputValue: this.modelValue as string,
-            suggestions: [] as AddressAutocompleteGetDto[],
+            suggestions: [] as AddressAutocompleteDto[],
             showDropdown: false,
             debounceTimeout: null as ReturnType<typeof setTimeout> | null,
         }
@@ -72,7 +72,7 @@ export default {
                 }
             }, 300)
         },
-        selectSuggestion(suggestion: AddressAutocompleteGetDto): void {
+        selectSuggestion(suggestion: AddressAutocompleteDto): void {
             this.inputValue = suggestion.street
             this.$emit("update:modelValue", this.inputValue)
             this.$emit("select", suggestion)
