@@ -160,7 +160,7 @@ defineRule("required", (value: string) => {
 })
 
 const props = defineProps<{ tournament?: Tournament | null }>()
-const emit = defineEmits<{ (e: "tournament-saved", payload: unknown): void }>()
+const emit = defineEmits<{ (e: "tournament-saved", tournamentId: string): void }>()
 
 // Create the form
 const { defineField, handleSubmit, errors, resetForm } = useForm({
@@ -201,17 +201,21 @@ const onSubmit = handleSubmit(async (form: GenericObject) => {
         zipCode: form.zipCode || undefined,
         city: form.city || undefined,
     }
+    let tournamentId = ""
     if (props.tournament) {
         await TournamentOpenApi.update({
             path: { id: props.tournament.id },
             body: formTournament as UpdateTournamentDto,
         })
+        tournamentId = props.tournament.id
     } else {
-        await TournamentOpenApi.create({
+        const res = await TournamentOpenApi.create({
             body: formTournament as CreateTournamentDto,
         })
+        if (!res) return
+        tournamentId = res.id
     }
-    emit("tournament-saved", formTournament)
+    emit("tournament-saved", tournamentId)
     resetForm()
     closeModal("#tournamentAddOffcanvasNavbar")
 })

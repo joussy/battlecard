@@ -108,11 +108,11 @@ const setTournamentToEdit = (tournament: Tournament | null) => {
     tournamentToEdit.value = tournament
 }
 
-const onTournamentSaved = async (tournament: Tournament) => {
+const onTournamentSaved = async (tournamentId: string) => {
     await tournamentStore.fetchTournaments()
     setTournamentToEdit(null)
-    if (selectedTournamentId.value == tournament.id) {
-        tournamentStore.setCurrentTournament(tournament.id)
+    if (selectedTournamentId.value == tournamentId) {
+        tournamentStore.setCurrentTournament(tournamentId)
     }
 }
 </script>
