@@ -7,7 +7,7 @@
             class="spinner-border"
             role="status"
         >
-            <span class="visually-hidden">Loading...</span>
+            <span class="visually-hidden">{{ $t("common.loading") }}</span>
         </div>
     </div>
     <div
@@ -97,11 +97,14 @@
 <script lang="ts" setup>
 import { ref, computed, watch, watchEffect } from "vue"
 import { useRoute, useRouter } from "vue-router"
+import { useI18n } from "vue-i18n"
 import { Boxer, Opponent } from "@/types/boxing.d"
 import { Gender } from "@/api"
 import OpponentTileComponent from "@/components/selector/opponent-tile.component.vue"
 import BoxerEditOffcanvasComponent from "@/components/selector/add/boxer-edit-offcanvas.component.vue"
 import IconComponent from "@/components/shared/core/icon.component.vue"
+
+const { t: $t } = useI18n()
 
 import { useFightStore } from "@/stores/fight.store"
 import { useBoxerStore } from "@/stores/boxer.store"

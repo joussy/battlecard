@@ -11,7 +11,7 @@
                 data-bs-target="#boxerAddOffcanvasNavbar"
             >
                 <i class="bi bi-person-add" />
-                <span class="d-none d-md-inline ms-2">Add Boxer</span>
+                <span class="d-none d-md-inline ms-2">{{ $t("selector.addBoxer") }}</span>
             </button>
             <button
                 :disabled="boxersToDisplay.length == 0"
@@ -21,7 +21,7 @@
                 aria-expanded="false"
             >
                 <i class="bi bi-download" />
-                <span class="d-none d-md-inline ms-2">Export</span>
+                <span class="d-none d-md-inline ms-2">{{ $t("selector.export") }}</span>
             </button>
             <ul class="dropdown-menu">
                 <li>
@@ -60,7 +60,7 @@
                         @click="$router.push({ name: 'import' })"
                     >
                         <i class="bi bi-upload" />
-                        Import boxers
+                        {{ $t("selector.importBoxers") }}
                     </a>
                 </li>
             </ul>
@@ -70,7 +70,7 @@
                 data-bs-target="#filtersOffcanvasNavbar"
             >
                 <span class="bi bi-funnel"></span>
-                Filters
+                {{ $t("selector.filters") }}
             </button>
             <BoxerSelectorFiltersComponent />
             <BoxerAddOffcanvasComponent @boxer-saved="onBoxerSaved" />
@@ -84,7 +84,7 @@
                     v-model="searchQuery"
                     type="text"
                     class="form-control"
-                    placeholder="Type the name of a boxer ..."
+                    :placeholder="$t('selector.searchPlaceholder')"
                 />
                 <span
                     v-if="searchQuery"
@@ -111,8 +111,8 @@
             class="justify-content-center m-4 text-center"
         >
             <div class="mb-4">
-                <div>It feels empty in here !</div>
-                <i> You have no boxers matching your search criteria.</i>
+                <div>{{ $t("selector.noBoxersFound") }}</div>
+                <i>{{ $t("selector.adjustFilters") }}</i>
             </div>
             <div>
                 <button
@@ -120,7 +120,7 @@
                     data-bs-toggle="offcanvas"
                     data-bs-target="#boxerAddOffcanvasNavbar"
                 >
-                    <i class="bi bi-person-add me-2"></i>Import or create a boxer
+                    <i class="bi bi-person-add me-2"></i>{{ $t("selector.addNewBoxer") }}
                 </button>
             </div>
         </div>
@@ -129,6 +129,7 @@
 
 <script lang="ts" setup>
 import { ref, watch } from "vue"
+import { useI18n } from "vue-i18n"
 import { ExportOpenApi } from "@/api"
 import BoxerTileComponent from "@/components/selector/boxer-tile.component.vue"
 import BoxerAddOffcanvasComponent from "@/components/selector/add/boxer-add-offcanvas.component.vue"
@@ -145,6 +146,8 @@ import { FileType } from "@/types/api"
 import { getBoxerAge } from "@/utils/string.utils"
 import TournamentHeaderComponent from "@/components/shared/layout/tournament-header.component.vue"
 import { downloadWithDom } from "@/utils/download.utils"
+
+const { t: $t } = useI18n()
 
 const selectedTournamentId = ref<string | null>(null)
 const tournamentStore = useTournamentStore()

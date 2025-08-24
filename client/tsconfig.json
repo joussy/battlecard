@@ -17,7 +17,7 @@
             "@/*": ["./src/*", "./dist/*"],
         }
     },
-    "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "../server/src/shared/**/*.ts", "../shared/**/*.d.ts"],
+    "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "../server/src/shared/**/*.ts", "../shared/**/*.d.ts", "src/locales/*.json"],
     "exclude": ["src/api/**/*"],
     "references": [{ "path": "./tsconfig.node.json" }]
 }

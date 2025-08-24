@@ -18,7 +18,7 @@
                 @click="setTournamentToEdit(null)"
             >
                 <i class="bi bi-calendar-plus-fill" />
-                New tournament
+                {{ $t("tournaments.addTournament") }}
             </button>
         </div>
         <div
@@ -32,7 +32,9 @@
             <div class="card-body">
                 <div>
                     <span class="tournament-name">{{ tournament.name }}</span>
-                    <span v-if="selectedTournamentId == tournament.id"> - <i>selected</i></span>
+                    <span v-if="selectedTournamentId == tournament.id">
+                        - <i>{{ $t("tournaments.selected") }}</i>
+                    </span>
                 </div>
                 <div>
                     <span>
@@ -53,7 +55,7 @@
                         @click="setCurrentTournament(tournament)"
                     >
                         <i class="bi bi-eye" />
-                        <span class="ms-1">Manage this tournament</span>
+                        <span class="ms-1">{{ $t("tournaments.manage") }}</span>
                     </button>
                     <button
                         class="btn btn-outline-success btn-sm"
@@ -62,11 +64,11 @@
                         @click="setTournamentToEdit(tournament)"
                     >
                         <i class="bi bi-pencil" />
-                        <span class="d-none d-sm-inline ms-1">Edit</span>
+                        <span class="d-sm-inline ms-1">{{ $t("tournaments.edit") }}</span>
                     </button>
                     <button class="btn btn-outline-secondary btn-sm">
                         <i class="bi bi-clipboard" />
-                        <span class="d-none d-sm-inline ms-2">Copy to clipboard</span>
+                        <span class="d-none d-sm-inline ms-2">{{ $t("tournaments.copyClipboard") }}</span>
                     </button>
                 </div>
             </div>

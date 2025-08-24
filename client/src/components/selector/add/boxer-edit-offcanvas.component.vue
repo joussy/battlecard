@@ -12,7 +12,7 @@
                 class="offcanvas-title"
             >
                 <i class="bi bi-pencil-square me-1"></i>
-                Edit a boxer
+                {{ $t("editBoxer.title") }}
             </h5>
             <button
                 type="button"
@@ -33,10 +33,13 @@
 
 <script lang="ts" setup>
 import { ref, watch, onMounted, onBeforeUnmount } from "vue"
+import { useI18n } from "vue-i18n"
 
 import BoxerAddFormComponent from "./boxer-add-form.component.vue"
 import { closeModal, openModal } from "@/utils/ui.utils"
 import { useBoxerStore } from "@/stores/boxer.store"
+
+const { t: $t } = useI18n()
 
 const emit = defineEmits<{ (e: "boxer-saved", payload: unknown): void }>()
 

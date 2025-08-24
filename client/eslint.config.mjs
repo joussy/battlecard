@@ -5,6 +5,8 @@ import tsParser from "@typescript-eslint/parser"
 import vuePlugin from "eslint-plugin-vue"
 import vueParser from "vue-eslint-parser"
 import prettierPlugin from "eslint-plugin-prettier"
+import jsoncPlugin from "eslint-plugin-jsonc"
+import jsoncParser from "jsonc-eslint-parser"
 import globals from "globals"
 
 const __filename = fileURLToPath(import.meta.url)
@@ -15,7 +17,6 @@ export default [
     { ignores: ["src/api/**", "./openapi-ts.config.ts"] },
     // Vue 3 recommended rules
     ...vuePlugin.configs["flat/recommended"],
-
     // Main config for TS + Vue + Prettier
     {
         files: ["**/*.ts", "**/*.vue"],
@@ -58,6 +59,27 @@ export default [
             "vue/html-self-closing": "off",
             "vue/singleline-html-element-content-newline": "off",
             "vue/html-closing-bracket-newline": "off",
+        },
+    },
+    // JSON locales: enforce alphabetical ordering of keys for i18n files
+    {
+        files: ["src/locales/*.json", "src/locales/**/*.json"],
+        languageOptions: {
+            parser: jsoncParser,
+            sourceType: "module",
+        },
+        plugins: {
+            jsonc: jsoncPlugin,
+        },
+        rules: {
+            // Sort object keys in ascending (alphabetical) order for locale files
+            "jsonc/sort-keys": [
+                "warn",
+                {
+                    pathPattern: "^$",
+                    order: { type: "asc" },
+                },
+            ],
         },
     },
 ]

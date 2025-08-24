@@ -29,14 +29,14 @@ jobs:
         run: |
           cd client
           npm ci
-          npm run lint
+          npm run lint:ci
           echo "VITE_SERVER_URL=${{ vars.VITE_SERVER_URL }}" >> .env          
           npm run build
       - name: Build backend
         run: |
           cd server
           npm ci
-          npm run lint
+          npm run lint:ci
           npm run build
 
   publish-docker:

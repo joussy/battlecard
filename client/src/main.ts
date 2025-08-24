@@ -17,6 +17,9 @@ import { createPinia } from "pinia"
 import SharedFightCardComponent from "./components/fight-card/shared-fight-card.component.vue"
 import { client } from "./api/client.gen"
 import { useUiStore } from "./stores/ui.store"
+import { createI18n } from "vue-i18n"
+import enUS from "./locales/en-US.json"
+import frFR from "./locales/fr-FR.json"
 
 declare module "pinia" {
     export interface PiniaCustomProperties {
@@ -66,8 +69,24 @@ client.interceptors.response.use((response) => {
 
 const pinia = createPinia()
 pinia.use(() => ({ router }))
+
+// Initialize i18n with default locale
+type MessageSchema = typeof enUS
+const i18n = createI18n<[MessageSchema], "en" | "fr">({
+    availableLocales: ["en-US", "fr-FR"],
+    locale: "en", // Default, will be updated from store
+    fallbackLocale: "en",
+    legacy: false,
+    messages: {
+        fr: frFR,
+        en: enUS,
+    },
+})
+
 const app = createApp(App)
 app.use(pinia)
 app.use(router)
+app.use(i18n)
+
 app.mount("#app")
 setupAuthRedirect(router)

@@ -8,7 +8,7 @@
         <div class="offcanvas-header">
             <h5 class="offcanvas-title">
                 <i class="bi bi-funnel me-1"></i>
-                Filters
+                {{ $t("selector.filters") }}
             </h5>
             <button
                 type="button"
@@ -25,21 +25,21 @@
                         name="scale"
                         class="me-2"
                     />
-                    Weight Range (kg)
+                    {{ $t("selector.weightRange") }}
                 </label>
                 <div class="d-flex align-items-center">
                     <input
                         v-model.number="facets.filters.weight.min"
                         type="number"
                         class="form-control me-2"
-                        placeholder="Min"
+                        :placeholder="$t('selector.min')"
                     />
                     <span class="mx-1">-</span>
                     <input
                         v-model.number="facets.filters.weight.max"
                         type="number"
                         class="form-control ms-2"
-                        placeholder="Max"
+                        :placeholder="$t('selector.max')"
                     />
                 </div>
             </div>
@@ -51,21 +51,21 @@
                         name="birthday-cake"
                         class="me-2"
                     />
-                    Age Range
+                    {{ $t("selector.ageRange") }}
                 </label>
                 <div class="d-flex align-items-center">
                     <input
                         v-model.number="facets.filters.age.min"
                         type="number"
                         class="form-control me-2"
-                        placeholder="Min"
+                        :placeholder="$t('selector.min')"
                     />
                     <span class="mx-1">-</span>
                     <input
                         v-model.number="facets.filters.age.max"
                         type="number"
                         class="form-control ms-2"
-                        placeholder="Max"
+                        :placeholder="$t('selector.max')"
                     />
                 </div>
             </div>
@@ -77,21 +77,21 @@
                         name="medal"
                         class="me-2"
                     />
-                    Number of Fights Range
+                    {{ $t("selector.fightsRange") }}
                 </label>
                 <div class="d-flex align-items-center">
                     <input
                         v-model.number="facets.filters.nbFights.min"
                         type="number"
                         class="form-control me-2"
-                        placeholder="Min"
+                        :placeholder="$t('selector.min')"
                     />
                     <span class="mx-1">-</span>
                     <input
                         v-model.number="facets.filters.nbFights.max"
                         type="number"
                         class="form-control ms-2"
-                        placeholder="Max"
+                        :placeholder="$t('selector.max')"
                     />
                 </div>
             </div>
@@ -100,7 +100,7 @@
             <div class="mb-3">
                 <label class="form-label">
                     <i class="bi bi-gender-ambiguous me-2"></i>
-                    Gender
+                    {{ $t("selector.genderFilter") }}
                 </label>
                 <div>
                     <div class="form-check form-check-inline">
@@ -115,7 +115,7 @@
                         <label
                             class="form-check-label"
                             for="genderAny"
-                            >Any</label
+                            >{{ $t("selector.all") }}</label
                         >
                     </div>
                     <div class="form-check form-check-inline">
@@ -130,7 +130,7 @@
                         <label
                             class="form-check-label"
                             for="genderMale"
-                            >Male</label
+                            >{{ $t("selector.male") }}</label
                         >
                     </div>
                     <div class="form-check form-check-inline">
@@ -145,7 +145,7 @@
                         <label
                             class="form-check-label"
                             for="genderFemale"
-                            >Female</label
+                            >{{ $t("selector.female") }}</label
                         >
                     </div>
                 </div>
@@ -155,7 +155,7 @@
             <div class="mb-3">
                 <label class="form-label">
                     <i class="bi bi-sort-alpha-down me-2"></i>
-                    Sort By
+                    {{ $t("selector.sortBy") }}
                 </label>
                 <div>
                     <div class="form-check">
@@ -170,7 +170,7 @@
                         <label
                             class="form-check-label"
                             for="sortNameAsc"
-                            >Name</label
+                            >{{ $t("selector.name") }}</label
                         >
                     </div>
                     <div class="form-check">
@@ -185,7 +185,7 @@
                         <label
                             class="form-check-label"
                             for="sortWeight"
-                            >Weight</label
+                            >{{ $t("selector.weight") }}</label
                         >
                     </div>
                     <div class="form-check">
@@ -200,7 +200,7 @@
                         <label
                             class="form-check-label"
                             for="sortAge"
-                            >Age</label
+                            >{{ $t("selector.age") }}</label
                         >
                     </div>
                     <div class="form-check">
@@ -215,7 +215,7 @@
                         <label
                             class="form-check-label"
                             for="sortNbFights"
-                            >Number of fights</label
+                            >{{ $t("import.fights") }}</label
                         >
                     </div>
                     <!-- Direction toggle -->
@@ -238,7 +238,7 @@
                                 for="sortAsc"
                             >
                                 <i class="bi bi-sort-alpha-down"></i>
-                                Ascending
+                                {{ $t("selector.ascending") }}
                             </label>
                             <input
                                 id="sortDesc"
@@ -253,7 +253,7 @@
                                 for="sortDesc"
                             >
                                 <i class="bi bi-sort-alpha-up"></i>
-                                Descending
+                                {{ $t("selector.descending") }}
                             </label>
                         </div>
                     </div>
@@ -265,8 +265,11 @@
 
 <script lang="ts" setup>
 import { watch } from "vue"
+import { useI18n } from "vue-i18n"
 import { useUiStore } from "@/stores/ui.store"
 import IconComponent from "@/components/shared/core/icon.component.vue"
+
+const { t: $t } = useI18n()
 
 const emit = defineEmits<{ (e: "updateFacets"): void }>()
 

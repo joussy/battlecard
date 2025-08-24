@@ -23,7 +23,7 @@
                     <!-- Export Section -->
                     <h6 class="fw-bold mb-3">
                         <i class="bi bi-download me-2"></i>
-                        Download Fight Card
+                        {{ $t("share.downloadFormats") }}
                     </h6>
                     <div
                         v-if="enableShareLink"
@@ -40,7 +40,7 @@
                             for="displayQrCode"
                             class="form-check-label"
                         >
-                            Display a shareable QR Code in the download
+                            {{ $t("share.withQrCode") }}
                         </label>
                     </div>
                     <div class="d-flex flex-wrap justify-content-around">
@@ -78,11 +78,10 @@
 
                         <h6 class="fw-bold mb-3">
                             <i class="bi bi-link-45deg me-2"></i>
-                            Shareable Link
+                            {{ $t("share.shareableLink") }}
                         </h6>
                         <p class="text-muted small mb-3">
-                            Create a read-only link that others can use to view this fight card without needing an
-                            account.
+                            {{ $t("share.shareableLink") }}
                         </p>
 
                         <!-- Generate Link Button -->
@@ -105,7 +104,7 @@
                                     v-else
                                     class="bi bi-link me-2"
                                 ></i>
-                                {{ isGeneratingLink ? "Generating..." : "Generate Share Link" }}
+                                {{ isGeneratingLink ? $t("common.loading") : $t("share.generateLink") }}
                             </button>
                         </div>
 
@@ -118,7 +117,7 @@
                                 for="shareLinkInput"
                                 class="form-label small text-muted"
                             >
-                                Shareable Link:
+                                {{ $t("share.shareableLink") }}:
                             </label>
                             <div class="input-group">
                                 <input
@@ -131,7 +130,7 @@
                                 <button
                                     class="btn btn-outline-secondary no-hover-style"
                                     type="button"
-                                    :title="linkCopied ? 'Copied!' : 'Copy to clipboard'"
+                                    :title="linkCopied ? $t('share.linkCopied') : $t('share.copyLink')"
                                     @click="copyShareLink"
                                 >
                                     <i
@@ -162,7 +161,7 @@
                                     <span :class="`btn btn-outline-danger rounded-circle export-btn-circle`">
                                         <i class="bi bi-download"></i>
                                     </span>
-                                    <div class="mt-2 small fw-medium">QR Code</div>
+                                    <div class="mt-2 small fw-medium">{{ $t("share.downloadQrCode") }}</div>
                                 </button>
                             </div>
                         </div>
@@ -176,10 +175,13 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onBeforeUnmount } from "vue"
 import { onBeforeRouteLeave } from "vue-router"
+import { useI18n } from "vue-i18n"
 import { ShareOpenApi } from "@/api"
 import { useTournamentStore } from "@/stores/tournament.store"
 import bootstrap from "@/utils/bootstrap.singleton"
 import { Modal } from "bootstrap"
+
+const { t: $t } = useI18n()
 
 interface Props {
     downloadCallback: (fileType: string, displayQrCode: boolean) => Promise<void>

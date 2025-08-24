@@ -64,7 +64,7 @@
                         role="status"
                         aria-hidden="true"
                     ></span>
-                    <i class="ms-2">Loading...</i>
+                    <i class="ms-2">{{ $t("common.loading") }}</i>
                 </button>
                 <button
                     v-else-if="!props.opponent.fightId"
@@ -73,7 +73,7 @@
                 >
                     <!-- <i class="bi bi-person-plus-fill" /> -->
                     <IconComponent name="headgear" />
-                    Add to fight card
+                    {{ $t("opponentTile.addToFightCard") }}
                 </button>
                 <button
                     v-else-if="props.opponent.fightId"
@@ -81,21 +81,21 @@
                     @click="removeFromFightCard()"
                 >
                     <IconComponent name="headgear" />
-                    Remove from fight card
+                    {{ $t("opponentTile.removeFromFightCard") }}
                 </button>
                 <button
                     class="btn btn-outline-primary btn-sm"
                     @click="goToOpponentTile()"
                 >
                     <i class="bi bi-eye" />
-                    <span class="d-none d-sm-inline ms-1">Watch Profile</span>
+                    <span class="d-none d-sm-inline ms-1">{{ $t("opponentTile.watchProfile") }}</span>
                 </button>
                 <button
                     class="btn btn-outline-secondary btn-sm"
                     @click="copyToClipboard()"
                 >
                     <i class="bi bi-clipboard" />
-                    <span class="d-none d-sm-inline ms-2">Copy to clipboard</span>
+                    <span class="d-none d-sm-inline ms-2">{{ $t("opponentTile.copyClipboard") }}</span>
                 </button>
             </div>
         </div>
@@ -105,6 +105,7 @@
 <script setup lang="ts">
 import { ref, watch } from "vue"
 import { useRouter } from "vue-router"
+import { useI18n } from "vue-i18n"
 import { Boxer, Opponent } from "@/types/boxing.d"
 import RecordBadgeComponent from "@/components/shared/badges/record-badge.component.vue"
 import LinkedFightsBadgeComponent from "@/components/shared/badges/linked-fights-badge.component.vue"
@@ -114,6 +115,8 @@ import EligibilityDetailsComponent from "@/components/shared/badges/eligibility-
 import { useFightStore } from "@/stores/fight.store"
 import { getBoxerDisplayName, getClipboardText } from "@/utils/labels.utils"
 import IconComponent from "@/components/shared/core/icon.component.vue"
+
+const { t: $t } = useI18n()
 
 interface Props {
     boxer: Boxer
