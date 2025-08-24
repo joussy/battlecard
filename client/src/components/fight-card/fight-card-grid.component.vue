@@ -11,13 +11,13 @@
                     class="cell-red"
                     scope="col"
                 >
-                    Red
+                    {{ $t("fightCard.red") }}
                 </th>
                 <th
                     scope="col"
                     class="cell-blue"
                 >
-                    Blue
+                    {{ $t("fightCard.blue") }}
                 </th>
                 <th
                     class="fight-extra-infos"
@@ -103,6 +103,7 @@
 
 <script setup lang="ts">
 import { ref, watch, onMounted } from "vue"
+import { useI18n } from "vue-i18n"
 import { Boxer, Fight } from "@/types/boxing.d"
 import { getFightDurationAsString } from "@/utils/string.utils"
 import Sortable from "sortablejs"
@@ -110,6 +111,8 @@ import IconComponent from "@/components/shared/core/icon.component.vue"
 import { useFightStore } from "@/stores/fight.store"
 import { getBoxerDisplayName } from "@/utils/labels.utils"
 import { Gender } from "@/api"
+
+const { t: $t } = useI18n()
 
 interface Props {
     fightCard: (Fight & {

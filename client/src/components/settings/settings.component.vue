@@ -1,14 +1,14 @@
 <template>
     <div class="max-width-md">
         <div class="card mb-3">
-            <div class="card-header"><i class="bi bi-person me-2" />Account</div>
+            <div class="card-header"><i class="bi bi-person me-2" />{{ $t("settings.account") }}</div>
             <div class="card-body">
                 <button
                     v-if="!uiStore.account"
                     class="btn btn-warning ms-2"
                     @click="signInWithGoogle()"
                 >
-                    <i class="bi bi-google me-2" />Sign In with Google
+                    <i class="bi bi-google me-2" />{{ $t("settings.signInWithGoogle") }}
                 </button>
                 <div
                     v-else
@@ -36,7 +36,7 @@
                     </div>
                     <button
                         class="btn btn-danger"
-                        alt="Sign out"
+                        :alt="$t('authentication.signOut')"
                         @click="logout()"
                     >
                         <i class="bi bi-box-arrow-right" />
@@ -45,10 +45,10 @@
             </div>
         </div>
         <div class="card mb-3">
-            <div class="card-header"><i class="bi bi-gear me-2" />General</div>
+            <div class="card-header"><i class="bi bi-gear me-2" />{{ $t("settings.general") }}</div>
             <div class="card-body">
                 <div class="mb-3">
-                    <div class="form-label">Theme</div>
+                    <div class="form-label">{{ $t("settings.theme") }}</div>
                     <div
                         class="btn-group"
                         role="group"
@@ -66,7 +66,7 @@
                         <label
                             class="btn btn-outline-primary"
                             for="btnradio1"
-                            >Auto</label
+                            >{{ $t("settings.auto") }}</label
                         >
 
                         <input
@@ -81,7 +81,7 @@
                         <label
                             class="btn btn-outline-primary"
                             for="btnradio2"
-                            >Light</label
+                            >{{ $t("settings.light") }}</label
                         >
 
                         <input
@@ -96,7 +96,7 @@
                         <label
                             class="btn btn-outline-primary"
                             for="btnradio3"
-                            >Dark</label
+                            >{{ $t("settings.dark") }}</label
                         >
                     </div>
                 </div>
@@ -107,8 +107,11 @@
 <script setup lang="ts">
 import { onMounted } from "vue"
 import { useRouter } from "vue-router"
+import { useI18n } from "vue-i18n"
 import { UiTheme } from "@/types/ui"
 import { useUiStore } from "@/stores/ui.store"
+
+const { t: $t } = useI18n()
 
 const router = useRouter()
 const uiStore = useUiStore()

@@ -7,8 +7,8 @@
                     class="ring-icon-auth"
                 />
             </div>
-            <h1 class="mb-1">Welcome to BattleCard</h1>
-            <p class="lead text-muted mb-0">Your digital ring for boxing tournaments, stats, and more.</p>
+            <h1 class="mb-1">{{ $t("authentication.welcome") }}</h1>
+            <p class="lead text-muted mb-0">{{ $t("authentication.tagline") }}</p>
         </div>
         <div
             class="card p-4 shadow w-100"
@@ -19,7 +19,7 @@
                     class="bi bi-person me-2"
                     style="font-size: 2rem"
                 />
-                <span class="h5">Sign In</span>
+                <span class="h5">{{ $t("authentication.signIn") }}</span>
             </div>
             <div class="card-body">
                 <button
@@ -27,7 +27,7 @@
                     class="btn btn-warning w-100 mb-3"
                     @click="signInWithGoogle()"
                 >
-                    <i class="bi bi-google me-2" />Sign In with Google
+                    <i class="bi bi-google me-2" />{{ $t("authentication.signInWithGoogle") }}
                 </button>
                 <div
                     v-else
@@ -53,24 +53,27 @@
                     </div>
                     <button
                         class="btn btn-danger mt-3"
-                        alt="Sign out"
+                        :alt="$t('authentication.signOut')"
                         @click="logout()"
                     >
-                        <i class="bi bi-box-arrow-right" /> Sign out
+                        <i class="bi bi-box-arrow-right" /> {{ $t("authentication.signOut") }}
                     </button>
                 </div>
             </div>
         </div>
         <div class="mt-4 text-center text-muted small">
-            <span>BattleCard is a demo project. All data is for testing purposes only.</span>
+            <span>{{ $t("authentication.demoNotice") }}</span>
         </div>
     </div>
 </template>
 <script setup lang="ts">
 import { onMounted } from "vue"
 import { useRouter } from "vue-router"
+import { useI18n } from "vue-i18n"
 import { useUiStore } from "@/stores/ui.store"
 import IconComponent from "@/components/shared/core/icon.component.vue"
+
+const { t: $t } = useI18n()
 
 // Component registration is handled automatically with <script setup>
 const router = useRouter()

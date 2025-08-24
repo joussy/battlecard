@@ -11,7 +11,7 @@
                 @click="editionMode = !editionMode"
             >
                 <i class="me-1 bi bi-pencil" />
-                Edit
+                {{ $t("fightCard.edit") }}
             </button>
             <button
                 type="button"
@@ -20,7 +20,7 @@
                 data-bs-target="#matchupModal"
             >
                 <i class="me-1 bi bi-magic" />
-                Matchmaker
+                {{ $t("fightCard.matchmaker") }}
             </button>
             <button
                 type="button"
@@ -30,7 +30,7 @@
                 data-bs-target="#shareModal"
             >
                 <i class="me-1 bi bi-share" />
-                Share
+                {{ $t("fightCard.share") }}
             </button>
             <div
                 v-if="editionMode"
@@ -42,7 +42,7 @@
                     class="toast-body text-center"
                     @click="editionMode = false"
                 >
-                    I'm Done editing
+                    {{ $t("fightCard.doneEditing") }}
                 </div>
             </div>
         </div>
@@ -57,14 +57,16 @@
                 v-if="fightCard.length == 0"
                 class="justify-content-center m-4 text-center"
             >
-                <div class="mb-4"><i>Your fight card is empty</i></div>
+                <div class="mb-4">
+                    <i>{{ $t("fightCard.emptyCard") }}</i>
+                </div>
                 <div>
-                    Setup the first fight using the
+                    {{ $t("fightCard.setupFirstFight") }}
                     <router-link
                         :to="{ name: 'selector' }"
                         :class="{ active: $route.path.startsWith('/selector') }"
                     >
-                        Selector
+                        {{ $t("fightCard.selector") }}
                     </router-link>
                 </div>
             </div>
@@ -79,6 +81,7 @@
 
 <script setup lang="ts">
 import { ref, computed, watch, onMounted } from "vue"
+import { useI18n } from "vue-i18n"
 import { Fight } from "@/types/boxing.d"
 import FightCardGridComponent from "@/components/fight-card/fight-card-grid.component.vue"
 import { useFightStore } from "@/stores/fight.store"
@@ -88,6 +91,8 @@ import MatchupModalComponent from "@/components/tournament/matchup-modal.compone
 import TournamentHeaderComponent from "@/components/shared/layout/tournament-header.component.vue"
 import { downloadWithDom } from "@/utils/download.utils"
 import { ExportOpenApi } from "@/api"
+
+const { t: $t } = useI18n()
 
 const fightStore = useFightStore()
 const tournamentStore = useTournamentStore()

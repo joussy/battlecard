@@ -26,7 +26,7 @@
                             name="medal"
                             class="me-1"
                         ></IconComponent
-                        >{{ boxer.nbFights }} fights
+                        >{{ boxer.nbFights }} {{ $t("matchupDetails.fights") }}
                     </div>
                     <div>
                         <i class="bi bi-person-vcard"></i> {{ boxer.license }} -
@@ -37,16 +37,17 @@
             <div class="row pt-1 pb-1">
                 <div>
                     <i class="bi bi-stopwatch me-1"></i>
-                    Fight Duration: {{ getFightDuration(props.fight) }}
+                    {{ $t("matchupDetails.fightDuration") }}: {{ getFightDuration(props.fight) }}
                 </div>
-                <div>Weight difference: {{ getWeightDifference(props.fight) }}</div>
-                <div>Age difference: {{ getAgeDifferenceLocal(props.fight) }}</div>
-                <div>Fight count difference: {{ getNbFightsDifference(props.fight) }}</div>
+                <div>{{ $t("matchupDetails.weightDifference") }}: {{ getWeightDifference(props.fight) }}</div>
+                <div>{{ $t("matchupDetails.ageDifference") }}: {{ getAgeDifferenceLocal(props.fight) }}</div>
+                <div>{{ $t("matchupDetails.fightCountDifference") }}: {{ getNbFightsDifference(props.fight) }}</div>
             </div>
         </div>
     </div>
 </template>
 <script setup lang="ts">
+import { useI18n } from "vue-i18n"
 import { Boxer, Fight } from "@/types/boxing"
 import {
     getAgeDifference,
@@ -55,6 +56,8 @@ import {
 } from "@/utils/string.utils"
 import { Gender } from "@/api"
 import IconComponent from "@/components/shared/core/icon.component.vue"
+
+const { t: $t } = useI18n()
 
 interface Props {
     fight: Fight
@@ -83,7 +86,7 @@ const getAgeDifferenceLocal = (fight: Fight): string => {
 const getNbFightsDifference = (fight: Fight): string => {
     const nbFights1 = fight.boxer1.nbFights
     const nbFights2 = fight.boxer2.nbFights
-    return `${Math.abs(nbFights1 - nbFights2)} fights`
+    return `${Math.abs(nbFights1 - nbFights2)} ${$t("matchupDetails.fights")}`
 }
 </script>
 <style lang="scss">

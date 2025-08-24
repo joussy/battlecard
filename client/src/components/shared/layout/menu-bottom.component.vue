@@ -12,7 +12,7 @@
                 name="tournament"
                 :style="{ height: '38px' }"
             ></IconComponent>
-            <div>Tournament</div>
+            <div>{{ $t("layout.events") }}</div>
         </router-link>
         <router-link
             v-if="uiStore.account && tournamentStore.currentTournamentId"
@@ -24,7 +24,7 @@
                 name="group-of-people"
                 :style="{ height: '38px' }"
             ></IconComponent>
-            <div>Selector</div>
+            <div>{{ $t("layout.selector") }}</div>
         </router-link>
         <router-link
             v-if="uiStore.account && tournamentStore.currentTournamentId"
@@ -39,7 +39,7 @@
                 name="headgear"
                 class="svg-2 mt-1"
             ></IconComponent>
-            <div>Card</div>
+            <div>{{ $t("layout.card") }}</div>
         </router-link>
         <router-link
             :to="{ name: 'settings' }"
@@ -59,15 +59,18 @@
                 :src="uiStore.account.picture"
                 class="rounded-circle icon-img-2 align-text-bottom"
             />
-            <div>Settings</div>
+            <div>{{ $t("layout.settings") }}</div>
         </router-link>
     </nav>
 </template>
 <script setup lang="ts">
+import { useI18n } from "vue-i18n"
 import IconComponent from "@/components/shared/core/icon.component.vue"
 import { useFightStore } from "@/stores/fight.store"
 import { useTournamentStore } from "@/stores/tournament.store"
 import { useUiStore } from "@/stores/ui.store"
+
+const { t: $t } = useI18n()
 
 const uiStore = useUiStore()
 const fightStore = useFightStore()

@@ -1,10 +1,10 @@
 <template>
-    <h3>Import boxers</h3>
+    <h3>{{ $t("import.title") }}</h3>
     <div class="stepper">
         <fieldset class="mb-3">
             <legend class="col-form-label pt-0">
-                <span class="badge rounded-pill bg-primary me-2"><span class="step-badge"></span></span>How do you want
-                to import the boxers ?
+                <span class="badge rounded-pill bg-primary me-2"><span class="step-badge"></span></span
+                >{{ $t("import.howToImport") }}
             </legend>
             <input
                 id="csvfile"
@@ -17,7 +17,7 @@
             <label
                 for="csvfile"
                 class="btn btn-outline-secondary"
-                >CSV File</label
+                >{{ $t("import.csvFile") }}</label
             >
             <input
                 id="csvclipboard"
@@ -30,7 +30,7 @@
             <label
                 for="csvclipboard"
                 class="btn btn-outline-secondary"
-                >CSV from clipboard</label
+                >{{ $t("import.csvClipboard") }}</label
             >
             <input
                 id="api"
@@ -44,7 +44,7 @@
             <label
                 for="api"
                 class="btn btn-outline-secondary"
-                >API</label
+                >{{ $t("import.api") }}</label
             >
             <input
                 id="ffboxe"
@@ -57,7 +57,7 @@
             <label
                 for="ffboxe"
                 class="btn btn-outline-secondary"
-                >FFBoxe</label
+                >{{ $t("import.ffboxe") }}</label
             >
         </fieldset>
         <div
@@ -65,7 +65,8 @@
             class="mb-3"
         >
             <div class="w-100 justify-content-center mb-3">
-                <span class="badge rounded-pill bg-primary me-2"><span class="step-badge"></span></span>Connect to your
+                <span class="badge rounded-pill bg-primary me-2"><span class="step-badge"></span></span
+                >{{ $t("import.connectTo") }}
                 <button class="btn btn-sm btn-outline-primary">
                     <a
                         target="_blank"
@@ -75,21 +76,21 @@
                             name="ffboxe-without-text"
                             class="me-1"
                         ></IconComponent
-                        >FFBoxe account</a
+                        >{{ $t("import.ffboxeAccount") }}</a
                     >
                 </button>
             </div>
             <div>
-                <span class="badge rounded-pill bg-primary me-2 mb-3"><span class="step-badge"></span></span>Extract
-                your licences as CSV
+                <span class="badge rounded-pill bg-primary me-2 mb-3"><span class="step-badge"></span></span
+                >{{ $t("import.extractLicences") }}
                 <img
                     src="@/assets/images/ffboxe-screenshot.png"
                     alt="FFBoxe export"
                     class="mb-3 img-fluid d-block"
                 />
             </div>
-            <span class="badge rounded-pill bg-primary me-2 mb-3"><span class="step-badge"></span></span>Import the CSV
-            file
+            <span class="badge rounded-pill bg-primary me-2 mb-3"><span class="step-badge"></span></span
+            >{{ $t("import.importCsvFile") }}
             <div class="mb-3">
                 <input
                     id="formFileDisabled"
@@ -102,7 +103,7 @@
                     class="btn btn-primary"
                     @click="previewFfboxeFile"
                 >
-                    Preview
+                    {{ $t("import.preview") }}
                 </button>
             </div>
         </div>
@@ -110,8 +111,8 @@
         <div v-if="importMode == 'csv-file' || importMode == 'csv-clipboard'">
             <div v-if="importMode == 'csv-clipboard'">
                 <legend class="col-form-label pt-0">
-                    <span class="badge rounded-pill bg-primary me-2"><span class="step-badge"></span></span>Insert CSV
-                    text from clipboard
+                    <span class="badge rounded-pill bg-primary me-2"><span class="step-badge"></span></span
+                    >{{ $t("import.insertCsvText") }}
                 </legend>
                 <textarea
                     v-model="clipboard"
@@ -120,8 +121,8 @@
             </div>
             <div v-if="importMode == 'csv-file'">
                 <legend class="col-form-label pt-0">
-                    <span class="badge rounded-pill bg-primary me-2"><span class="step-badge"></span></span>Import a CSV
-                    file
+                    <span class="badge rounded-pill bg-primary me-2"><span class="step-badge"></span></span
+                    >{{ $t("import.importCsvFileStep") }}
                 </legend>
                 <div class="mb-3">
                     <input
@@ -140,13 +141,13 @@
                     aria-expanded="false"
                     aria-controls="requiredColumns"
                 >
-                    <i class="bi bi-book me-2"></i><i>Show Columns Mapping</i>
+                    <i class="bi bi-book me-2"></i><i>{{ $t("import.showColumnsMapping") }}</i>
                 </button>
                 <button
                     class="btn btn-primary"
                     @click="importMode == 'csv-file' ? previewCsvFile() : previewCsvText()"
                 >
-                    Preview
+                    {{ $t("import.preview") }}
                 </button>
             </div>
             <!-- List (always shown on md and up, collapsible on small screens) -->
@@ -154,23 +155,23 @@
                 id="requiredColumns"
                 class="collapse mb-3"
             >
-                CSV fields separated by semicolon (;)
+                {{ $t("import.csvFieldsInfo") }}
                 <ul class="">
-                    <li class="">Last Name</li>
-                    <li class="">First Name</li>
-                    <li class="">Birth Date (YYYY-MM-dd)</li>
-                    <li class="">Club</li>
-                    <li class="">Weight</li>
-                    <li class="">Gender (male or female)</li>
-                    <li class="">License</li>
-                    <li class="">Fight Record</li>
+                    <li class="">{{ $t("import.lastName") }}</li>
+                    <li class="">{{ $t("import.firstName") }}</li>
+                    <li class="">{{ $t("import.birthDate") }}</li>
+                    <li class="">{{ $t("import.club") }}</li>
+                    <li class="">{{ $t("import.weight") }}</li>
+                    <li class="">{{ $t("import.gender") }}</li>
+                    <li class="">{{ $t("import.license") }}</li>
+                    <li class="">{{ $t("import.fightRecord") }}</li>
                 </ul>
             </div>
         </div>
         <div v-if="importMode == 'api'">
             <legend class="col-form-label pt-0">
-                <span class="badge rounded-pill bg-primary me-2"><span class="step-badge"></span></span>Query the API
-                (one id per line)
+                <span class="badge rounded-pill bg-primary me-2"><span class="step-badge"></span></span
+                >{{ $t("import.queryApi") }}
             </legend>
             <textarea
                 v-model="apiClipboard"
@@ -181,13 +182,13 @@
                     class="btn btn-primary"
                     @click="previewApiText()"
                 >
-                    Preview
+                    {{ $t("import.preview") }}
                 </button>
             </div>
         </div>
         <div v-if="showImportTable">
-            <span class="badge rounded-pill bg-primary me-2 mb-3"><span class="step-badge"></span></span>Preview the
-            data and finalize import
+            <span class="badge rounded-pill bg-primary me-2 mb-3"><span class="step-badge"></span></span
+            >{{ $t("import.previewData") }}
             <ImportTableComponent
                 :input-boxers="rows"
                 :add-row-allowed="false"
@@ -197,10 +198,13 @@
 </template>
 <script setup lang="ts">
 import { ref, watch, onMounted } from "vue"
+import { useI18n } from "vue-i18n"
 import ImportTableComponent from "@/components/import/import-table.component.vue"
 import IconComponent from "@/components/shared/core/icon.component.vue"
 import { useUiStore } from "@/stores/ui.store"
 import { ImportBoxerDto, ImportOpenApi } from "@/api"
+
+const { t: $t } = useI18n()
 
 const uiStore = useUiStore()
 
