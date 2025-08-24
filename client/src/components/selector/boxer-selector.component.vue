@@ -129,7 +129,7 @@
 
 <script lang="ts">
 import { defineComponent, watch } from "vue"
-import { ExternalServicesOpenApi, Gender } from "@/api"
+import { ExportOpenApi, Gender } from "@/api"
 import { ModalityErrorType } from "@/api"
 import BoxerTileComponent from "@/components/selector/boxer-tile.component.vue"
 import BoxerAddOffcanvasComponent from "@/components/selector/add/boxer-add-offcanvas.component.vue"
@@ -287,7 +287,7 @@ export default defineComponent({
             let res: Blob | File | undefined
 
             if (fileType === "xlsx") {
-                res = await ExternalServicesOpenApi.getSelectorXlsx({
+                res = await ExportOpenApi.getSelectorXlsx({
                     body: {
                         tournamentId: this.tournamentStore.currentTournamentId,
                         boxerIds: boxerIds,
@@ -295,7 +295,7 @@ export default defineComponent({
                 })
             }
             if (fileType === "battlecard") {
-                res = await ExternalServicesOpenApi.getBattlecard({
+                res = await ExportOpenApi.getBattlecard({
                     body: {
                         tournamentId: this.tournamentStore.currentTournamentId,
                         boxerIds: boxerIds,
@@ -303,7 +303,7 @@ export default defineComponent({
                 })
             }
             if (fileType === "csv") {
-                res = await ExternalServicesOpenApi.getSelectorCsv({
+                res = await ExportOpenApi.getSelectorCsv({
                     body: {
                         tournamentId: this.tournamentStore.currentTournamentId,
                         boxerIds: boxerIds,
@@ -311,7 +311,7 @@ export default defineComponent({
                 })
             }
             if (fileType === "png") {
-                res = await ExternalServicesOpenApi.getSelectorPng({
+                res = await ExportOpenApi.getSelectorPng({
                     body: {
                         tournamentId: this.tournamentStore.currentTournamentId,
                         boxerIds: boxerIds,
@@ -319,7 +319,7 @@ export default defineComponent({
                 })
             }
             if (fileType === "pdf") {
-                res = await ExternalServicesOpenApi.getSelectorPdf({
+                res = await ExportOpenApi.getSelectorPdf({
                     body: {
                         tournamentId: this.tournamentStore.currentTournamentId,
                         boxerIds: boxerIds,

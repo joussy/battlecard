@@ -88,7 +88,7 @@ import ShareComponent from "@/components/shared/core/share.component.vue"
 import MatchupModalComponent from "@/components/tournament/matchup-modal.component.vue"
 import TournamentHeaderComponent from "@/components/shared/layout/tournament-header.component.vue"
 import { downloadWithDom } from "@/utils/download.utils"
-import { ExternalServicesOpenApi } from "@/api"
+import { ExportOpenApi } from "@/api"
 
 export default {
     components: {
@@ -155,19 +155,19 @@ export default {
         async downloadCallback(fileType: string, displayQrCode: boolean): Promise<void> {
             let res: Blob | File | undefined
             if (fileType === "xlsx") {
-                res = await ExternalServicesOpenApi.getFightCardXlsx({
+                res = await ExportOpenApi.getFightCardXlsx({
                     body: { tournamentId: this.tournamentId },
                 })
             } else if (fileType === "csv") {
-                res = await ExternalServicesOpenApi.getFightCardCsv({
+                res = await ExportOpenApi.getFightCardCsv({
                     body: { tournamentId: this.tournamentId },
                 })
             } else if (fileType === "pdf") {
-                res = await ExternalServicesOpenApi.getFightCardPdf({
+                res = await ExportOpenApi.getFightCardPdf({
                     body: { tournamentId: this.tournamentId, displayQrCode },
                 })
             } else if (fileType === "png") {
-                res = await ExternalServicesOpenApi.getFightCardPng({
+                res = await ExportOpenApi.getFightCardPng({
                     body: { tournamentId: this.tournamentId, displayQrCode },
                 })
             } else {

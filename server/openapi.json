@@ -561,7 +561,7 @@
     },
     "/api/export/fightcard/pdf": {
       "post": {
-        "operationId": "ExternalServicesController_getFightCardPdf",
+        "operationId": "ExportController_getFightCardPdf",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -590,13 +590,13 @@
           }
         },
         "tags": [
-          "ExternalServices"
+          "Export"
         ]
       }
     },
     "/api/export/fightcard/png": {
       "post": {
-        "operationId": "ExternalServicesController_getFightCardPng",
+        "operationId": "ExportController_getFightCardPng",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -625,13 +625,13 @@
           }
         },
         "tags": [
-          "ExternalServices"
+          "Export"
         ]
       }
     },
     "/api/export/selector/battlecard": {
       "post": {
-        "operationId": "ExternalServicesController_getBattlecard",
+        "operationId": "ExportController_getBattlecard",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -660,13 +660,13 @@
           }
         },
         "tags": [
-          "ExternalServices"
+          "Export"
         ]
       }
     },
     "/api/export/fightcard/csv": {
       "post": {
-        "operationId": "ExternalServicesController_getFightCardCsv",
+        "operationId": "ExportController_getFightCardCsv",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -695,13 +695,13 @@
           }
         },
         "tags": [
-          "ExternalServices"
+          "Export"
         ]
       }
     },
     "/api/export/fightcard/xlsx": {
       "post": {
-        "operationId": "ExternalServicesController_getFightCardXlsx",
+        "operationId": "ExportController_getFightCardXlsx",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -730,13 +730,13 @@
           }
         },
         "tags": [
-          "ExternalServices"
+          "Export"
         ]
       }
     },
     "/api/export/fightcard/html": {
       "get": {
-        "operationId": "ExternalServicesController_getTemplateHtml",
+        "operationId": "ExportController_getTemplateHtml",
         "parameters": [
           {
             "name": "tournamentId",
@@ -756,13 +756,13 @@
           {}
         ],
         "tags": [
-          "ExternalServices"
+          "Export"
         ]
       }
     },
     "/api/export/selector/pdf": {
       "post": {
-        "operationId": "ExternalServicesController_getSelectorPdf",
+        "operationId": "ExportController_getSelectorPdf",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -791,13 +791,13 @@
           }
         },
         "tags": [
-          "ExternalServices"
+          "Export"
         ]
       }
     },
     "/api/export/selector/png": {
       "post": {
-        "operationId": "ExternalServicesController_getSelectorPng",
+        "operationId": "ExportController_getSelectorPng",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -826,13 +826,13 @@
           }
         },
         "tags": [
-          "ExternalServices"
+          "Export"
         ]
       }
     },
     "/api/export/selector/csv": {
       "post": {
-        "operationId": "ExternalServicesController_getSelectorCsv",
+        "operationId": "ExportController_getSelectorCsv",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -861,13 +861,13 @@
           }
         },
         "tags": [
-          "ExternalServices"
+          "Export"
         ]
       }
     },
     "/api/export/selector/xlsx": {
       "post": {
-        "operationId": "ExternalServicesController_getSelectorXlsx",
+        "operationId": "ExportController_getSelectorXlsx",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -896,7 +896,7 @@
           }
         },
         "tags": [
-          "ExternalServices"
+          "Export"
         ]
       }
     },

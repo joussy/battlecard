@@ -24,7 +24,7 @@ import { TournamentIdQueryDto } from '@/dto/query.dto';
 import { NoAuthRequired, User } from '@/decorators/auth.decorator';
 
 @Controller('export')
-export class ExternalServicesController {
+export class ExportController {
   constructor(
     private readonly fightExportService: FightExportService,
     private readonly tournamentService: TournamentService,
