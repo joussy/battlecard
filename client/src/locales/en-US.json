@@ -106,7 +106,12 @@
         "round": "Round",
         "category": "Category",
         "removeFight": "Remove fight",
-        "switchBoxers": "Switch boxers"
+        "switchBoxers": "Switch boxers",
+        "red": "Red",
+        "blue": "Blue",
+        "noMatchesAvailable": "No matches available 😔",
+        "addMoreBoxers": "Add more boxers to the selector to find suitable pairings.",
+        "addFight": "Add fight"
     },
     "authentication": {
         "welcome": "Welcome to BattleCard",

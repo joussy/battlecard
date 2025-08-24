@@ -14,7 +14,7 @@
                         class="modal-title"
                     >
                         <i class="bi bi-magic"></i>
-                        Matchmaker
+                        {{ $t("fightCard.matchmaker") }}
                     </h5>
                     <button
                         type="button"
@@ -24,8 +24,8 @@
                 </div>
                 <div class="modal-body p-3">
                     <div v-if="!fight">
-                        <h3>No matches available 😔</h3>
-                        Add more boxers to the selector to find suitable pairings.
+                        <h3>{{ $t("fightCard.noMatchesAvailable") }}</h3>
+                        {{ $t("fightCard.addMoreBoxers") }}
                     </div>
                     <div v-else>
                         <div>
@@ -46,7 +46,7 @@
                                         name="headgear"
                                         class="me-1"
                                     ></IconComponent
-                                    >Add fight
+                                    >{{ $t("fightCard.addFight") }}
                                 </div>
                                 <div
                                     v-if="fight && getRealFightId(fight) != null"
@@ -87,12 +87,15 @@
 <script lang="ts" setup>
 import { ref, computed, onMounted, onBeforeUnmount } from "vue"
 import { onBeforeRouteLeave } from "vue-router"
+import { useI18n } from "vue-i18n"
 import { useFightStore } from "@/stores/fight.store"
 import { Fight } from "@/types/boxing"
 import { Modal } from "bootstrap"
 import IconComponent from "@/components/shared/core/icon.component.vue"
 import MatchupDetailsComponent from "@/components/tournament/matchup-details.component.vue"
 import { useTournamentStore } from "@/stores/tournament.store"
+
+const { t: $t } = useI18n()
 import { FightOpenApi } from "@/api"
 import ApiAdapter from "@/adapters/api.adapter"
 

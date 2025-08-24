@@ -106,7 +106,12 @@
         "round": "Round",
         "category": "Catégorie",
         "removeFight": "Supprimer le combat",
-        "switchBoxers": "Inverser les boxeurs"
+        "switchBoxers": "Inverser les boxeurs",
+        "red": "Rouge",
+        "blue": "Bleu",
+        "noMatchesAvailable": "Aucun match disponible 😔",
+        "addMoreBoxers": "Ajoutez plus de boxeurs au sélecteur pour trouver des appariements appropriés.",
+        "addFight": "Ajouter le combat"
     },
     "authentication": {
         "welcome": "Bienvenue sur BattleCard",
