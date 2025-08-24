@@ -8,7 +8,8 @@ import {
   ForbiddenException,
 } from '@nestjs/common';
 import { ShareService } from '@/services/share.service';
-import { GeneratedTokenDto, SharedFightCardGetDto } from '@/dto/response.dto';
+import { GeneratedTokenDto } from '@/dto/share.dto';
+import { SharedFightCardDto } from '@/dto/tournament.dto';
 import { Response as ExpressResponse } from 'express';
 import { User } from '@/decorators/auth.decorator';
 import { AuthenticatedUser } from '@/interfaces/auth.interface';
@@ -35,11 +36,11 @@ export class ShareController {
 
   @NoAuthRequired()
   @Get('fightcard/:fightCardToken')
-  @ApiOkResponse({ type: SharedFightCardGetDto })
+  @ApiOkResponse({ type: SharedFightCardDto })
   @ApiForbiddenResponse({ description: 'Forbidden' })
   async getFightsByFightCardToken(
     @Param() params: FightCardTokenParamsDto,
-  ): Promise<SharedFightCardGetDto> {
+  ): Promise<SharedFightCardDto> {
     try {
       const data = await this.shareService.getTournamentByFightCardToken(
         params.fightCardToken,

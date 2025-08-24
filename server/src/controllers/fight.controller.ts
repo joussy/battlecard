@@ -12,7 +12,7 @@ import { Response } from 'express';
 import { ModalityService } from '../modality/modality.service';
 import { AuthenticatedUser } from '@/interfaces/auth.interface';
 import { FightService } from '../services/fight.service';
-import { FightGetDto } from '@/dto/response.dto';
+import { FightDto } from '@/dto/fight.dto';
 import {
   CreateFightDto,
   ReorderFightDto,
@@ -21,7 +21,7 @@ import {
 } from '@/dto/fight.dto';
 import { TournamentIdParamsDto } from '@/dto/params.dto';
 import { User } from '@/decorators/auth.decorator';
-import { toFightGetDto } from '@/adapters/fight.adapter';
+import { toFightDto } from '@/adapters/fight.adapter';
 
 @Controller('fights')
 export class FightController {
@@ -50,7 +50,7 @@ export class FightController {
         return res.status(404).json({ error: 'Fight not found' });
       }
       const modality = this.modalityService.getModality();
-      return res.json(toFightGetDto(dbFight, modality));
+      return res.json(toFightDto(dbFight, modality));
     } catch (err) {
       if (err instanceof Error && err.message.includes('already exists')) {
         return res.status(409).json({ error: err.message });
@@ -81,16 +81,16 @@ export class FightController {
   async switch(
     @Body() body: SwitchFightDto,
     @User() user: AuthenticatedUser,
-  ): Promise<FightGetDto> {
+  ): Promise<FightDto> {
     const updated = await this.fightService.switch(body.fightId, user);
-    return toFightGetDto(updated, this.modalityService.getModality());
+    return toFightDto(updated, this.modalityService.getModality());
   }
 
   @Get('matchups/:tournamentId')
   async getMatchups(
     @User() user: AuthenticatedUser,
     @Param() params: TournamentIdParamsDto,
-  ): Promise<FightGetDto[]> {
+  ): Promise<FightDto[]> {
     const fights = await this.fightService.getMatchups(
       params.tournamentId,
       user,

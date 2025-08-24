@@ -1,5 +1,8 @@
-import { TournamentDto } from '@/dto/response.dto';
-import { CreateTournamentDto, UpdateTournamentDto } from '@/dto/tournament.dto';
+import {
+  TournamentDto,
+  CreateTournamentDto,
+  UpdateTournamentDto,
+} from '@/dto/tournament.dto';
 import { Tournament } from '../entities/tournament.entity';
 import { formatAddress } from '@/utils/addressUtils';
 

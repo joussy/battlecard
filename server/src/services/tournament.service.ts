@@ -10,8 +10,9 @@ import {
   toTournamentFromCreateDto,
   toTournamentFromUpdateDto,
 } from '../adapters/tournament.adapter';
-import { toBoxerGetDto, toOpponentGetDto } from '../adapters/boxer.adapter';
-import { TournamentDto, BoxerGetDto, OpponentGetDto } from '@/dto/response.dto';
+import { toBoxerDto, toOpponentDto } from '../adapters/boxer.adapter';
+import { TournamentDto } from '@/dto/tournament.dto';
+import { BoxerDto, OpponentDto } from '@/dto/boxer.dto';
 import { ModalityService } from '../modality/modality.service';
 import { AuthenticatedUser } from '@/interfaces/auth.interface';
 import { CreateTournamentDto, UpdateTournamentDto } from '@/dto/tournament.dto';
@@ -70,7 +71,7 @@ export class TournamentService {
   async getBoxersForTournament(
     tournamentId: string,
     user: AuthenticatedUser,
-  ): Promise<BoxerGetDto[]> {
+  ): Promise<BoxerDto[]> {
     await this.tournamentRepository.findOneOrFail({
       where: { id: tournamentId, userId: user.id },
     });
@@ -87,11 +88,7 @@ export class TournamentService {
       const selectedFights = fights.filter(
         (f) => f.boxer1Id === b.id || f.boxer2Id === b.id,
       ).length;
-      return toBoxerGetDto(
-        b,
-        this.modalityService.getModality(),
-        selectedFights,
-      );
+      return toBoxerDto(b, this.modalityService.getModality(), selectedFights);
     });
   }
 
@@ -99,7 +96,7 @@ export class TournamentService {
     boxerId: string,
     tournamentId: string,
     user: AuthenticatedUser,
-  ): Promise<OpponentGetDto[]> {
+  ): Promise<OpponentDto[]> {
     if (!boxerId || !tournamentId) {
       return [];
     }
@@ -137,7 +134,7 @@ export class TournamentService {
       )?.length;
       const modality = this.modalityService.getModality();
       const modalityErrors = modality.getModalityErrors(mainBoxer, o);
-      return toOpponentGetDto(
+      return toOpponentDto(
         o,
         modality,
         selectedFights,

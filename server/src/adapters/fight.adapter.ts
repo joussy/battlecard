@@ -1,22 +1,22 @@
-import { FightGetDto } from '@/dto/response.dto';
+import { FightDto } from '@/dto/fight.dto';
 import { Fight } from '../entities/fight.entity';
 
 import { FightCardTemplate } from '@/interfaces/template.interface';
 import { IModality } from '@/modality/IModality';
 import { Tournament } from '@/entities/tournament.entity';
 import { format } from 'date-fns';
-import { toBoxerGetDto } from './boxer.adapter';
+import { toBoxerDto } from './boxer.adapter';
 import { formatAddress } from '@/utils/addressUtils';
 import { CreateFightDto } from '@/dto/fight.dto';
 import { Gender } from '@/interfaces/modality.interface';
 
-export function toFightGetDto(fight: Fight, modality: IModality): FightGetDto {
+export function toFightDto(fight: Fight, modality: IModality): FightDto {
   const fightDuration = modality.getFightDuration(fight.boxer1, fight.boxer2);
   return {
     id: fight.id,
     order: fight.order,
-    boxer1: toBoxerGetDto(fight.boxer1, modality),
-    boxer2: toBoxerGetDto(fight.boxer2, modality),
+    boxer1: toBoxerDto(fight.boxer1, modality),
+    boxer2: toBoxerDto(fight.boxer2, modality),
     tournamentId: fight.tournamentId,
     roundDurationAsSeconds: fightDuration.roundDurationAsSeconds,
     rounds: fightDuration.rounds,
@@ -72,7 +72,7 @@ export function toFightCardExportData(fights: Fight[]) {
   }));
 }
 
-export function toFight(fight: FightGetDto): Fight {
+export function toFight(fight: FightDto): Fight {
   const entity = new Fight();
   entity.id = fight.id;
   entity.order = fight.order;

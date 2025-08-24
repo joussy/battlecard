@@ -11,12 +11,9 @@ import { ModalityService } from '../modality/modality.service';
 import { User } from '@/decorators/auth.decorator';
 import { AuthenticatedUser } from '@/interfaces/auth.interface';
 import { TournamentService } from '../services/tournament.service';
-import {
-  BoxerGetDto,
-  OpponentGetDto,
-  FightGetDto,
-  TournamentDto,
-} from '@/dto/response.dto';
+import { BoxerDto, OpponentDto } from '@/dto/boxer.dto';
+import { FightDto } from '@/dto/fight.dto';
+import { TournamentDto } from '@/dto/tournament.dto';
 import { FightService } from '@/services/fight.service';
 import { CreateTournamentDto, UpdateTournamentDto } from '@/dto/tournament.dto';
 import {
@@ -72,7 +69,7 @@ export class TournamentController {
   async getBoxersForTournament(
     @Param() params: TournamentIdParamsDto,
     @User() user: AuthenticatedUser,
-  ): Promise<BoxerGetDto[]> {
+  ): Promise<BoxerDto[]> {
     await this.tournamentService.validateTournamentAccess(
       params.tournamentId,
       user.id,
@@ -88,7 +85,7 @@ export class TournamentController {
   async getPossibleOpponents(
     @Param() params: TournamentBoxerParamsDto,
     @User() user: AuthenticatedUser,
-  ): Promise<OpponentGetDto[]> {
+  ): Promise<OpponentDto[]> {
     await this.tournamentService.validateTournamentAccess(
       params.tournamentId,
       user.id,
@@ -104,7 +101,7 @@ export class TournamentController {
   async getFightsByTournamentId(
     @Param() params: TournamentIdParamsDto,
     @User() user: AuthenticatedUser,
-  ): Promise<FightGetDto[]> {
+  ): Promise<FightDto[]> {
     await this.tournamentService.validateTournamentAccess(
       params.tournamentId,
       user.id,

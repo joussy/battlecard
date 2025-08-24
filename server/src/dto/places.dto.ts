@@ -1,2 +1,19 @@
-// This file is intentionally empty as single-parameter DTOs were removed
-// per feedback to use @Query('paramName') instead of DTO for single parameters
+import { IsString } from 'class-validator';
+
+export class AddressAutocompleteDto {
+  /** City name */
+  @IsString()
+  city: string;
+
+  /** Street address */
+  @IsString()
+  street: string;
+
+  /** ZIP code */
+  @IsString()
+  zipCode: string;
+
+  /** Formatted address string */
+  @IsString()
+  formatted: string;
+}
