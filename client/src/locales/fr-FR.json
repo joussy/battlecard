@@ -25,7 +25,7 @@
     "authentication": {
         "welcome": "Bienvenue sur BattleCard",
         "tagline": "Générez facilement des cartes de combat pour vos tournois de boxe.",
-        "signIn": "Se connecter",
+        "signIn": "Connectez-vous pour créer votre carte des combats",
         "signInWithGoogle": "Se connecter avec Google",
         "signOut": "Se déconnecter",
         "demoNotice": "BattleCard est un projet de démonstration. Toutes les données sont à des fins de test uniquement."
@@ -216,7 +216,7 @@
         "light": "Clair",
         "dark": "Sombre",
         "language": "Langue",
-        "english": "Anglais",
+        "english": "English",
         "french": "Français",
         "hideNonMatchable": "Masquer les adversaires non compatibles",
         "hideFightersNoMatch": "Masquer les combattants sans adversaire",
