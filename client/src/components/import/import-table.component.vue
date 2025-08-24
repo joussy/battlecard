@@ -1,7 +1,7 @@
 <template>
     <div>
         <button
-            v-if="addRowAllowed"
+            v-if="props.addRowAllowed"
             class="btn btn-success mb-2"
             type="button"
             @click="addRow"
@@ -156,183 +156,182 @@
     </div>
 </template>
 
-<script lang="ts">
-import { nextTick, PropType, watch } from "vue"
+<script setup lang="ts">
+import { nextTick, type PropType, watch, ref, computed, onMounted } from "vue"
 import bootstrapInstance from "@/utils/bootstrap.singleton"
 import { Gender, ImportBoxerDto, ImportOpenApi } from "@/api"
 import { useTournamentStore } from "@/stores/tournament.store"
 
-export default {
-    props: {
-        inputBoxers: {
-            type: Array as PropType<ImportBoxerDto[]>,
-            required: true,
-        },
-        addRowAllowed: {
-            type: Boolean,
-            required: true,
-        },
-    },
-    data() {
-        return {
-            columns: [
-                { key: "lastName", label: "Last Name", type: "text" },
-                { key: "firstName", label: "First Name", type: "text" },
-                { key: "fightRecord", label: "Fights", type: "number" },
-                {
-                    key: "gender",
-                    label: "Gender",
-                    type: "select",
-                    options: [
-                        { value: Gender.MALE, label: "M" },
-                        { value: Gender.FEMALE, label: "F" },
-                    ],
-                },
-                { key: "weight", label: "Weight (kg)", type: "number" },
-                { key: "club", label: "Club", type: "text" },
-                { key: "birthDate", label: "Birth Date", type: "date" },
-                { key: "license", label: "License", type: "text" },
-            ],
-            rows: this.inputBoxers as ImportBoxerDto[],
-            editIdx: null as number | null,
-            editRow: {
-                lastName: "",
-                firstName: "",
-                fights: 0,
-                gender: Gender.MALE,
-                weight: "",
-                club: "",
-                birthDate: "",
-                license: "",
-            } as Record<string, string | number>,
-            dirty: true,
-            importMessage: "",
-            errors: [] as Array<{ row: number; field: string; message: string }>,
-            tournamentStore: useTournamentStore(),
-        }
-    },
-    computed: {
-        canImport(): boolean {
-            // Check if there are any rows with errors
-            return this.errors.length === 0 && this.rows.length > 0 && !this.dirty
-        },
-        canVerify(): boolean {
-            // Check if there are any rows with errors
-            return !this.canImport && this.rows.length > 0
-        },
-    },
-    mounted() {
-        this.enableTooltips()
-        watch(
-            () => this.dirty,
-            (newValue) => {
-                if (newValue) {
-                    this.importMessage = ""
-                }
-            }
-        )
-        watch(
-            () => this.inputBoxers,
-            (newValue) => {
-                this.rows = [...newValue] as ImportBoxerDto[]
-                this.errors = []
-                this.dirty = true
-                nextTick(() => this.enableTooltips())
-            },
-            { immediate: true }
-        )
-    },
-    methods: {
-        startEdit(idx: number) {
-            this.editIdx = idx
-            this.editRow = { ...this.rows[idx] }
-        },
-        saveEdit(idx: number) {
-            this.rows[idx] = { ...this.rows[idx], ...this.editRow }
-            this.editIdx = null
-            this.dirty = true
-            nextTick(() => this.enableTooltips())
-        },
-        cancelEdit() {
-            this.editIdx = null
-        },
-        addRow() {
-            this.rows.push({
-                lastName: "",
-                firstName: "",
-                weight: 0,
-                club: "",
-                birthDate: "",
-                license: "",
-                fightRecord: 0,
-            })
-            this.editIdx = this.rows.length - 1
-            this.editRow = { ...this.rows[this.rows.length - 1] }
-            this.dirty = true
-            nextTick(() => this.enableTooltips())
-        },
-        deleteRow(idx: number) {
-            this.rows.splice(idx, 1)
-            this.dirty = true
-            nextTick(() => this.enableTooltips())
-        },
-        enableTooltips() {
-            const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-            tooltipTriggerList.forEach((el: Element) => {
-                if (bootstrapInstance?.bootstrap?.Tooltip) {
-                    new bootstrapInstance.bootstrap.Tooltip(el)
-                }
-            })
-        },
-        async importBoxers(verifyOnly: boolean) {
-            if (!this.tournamentStore.currentTournamentId) {
-                this.importMessage = "Please select a tournament first."
-                return
-            }
-            if (this.editIdx !== null) {
-                this.saveEdit(this.editIdx)
-            }
-            const boxers = this.rows.map((row: Record<string, string | number>) => {
-                return {
-                    lastName: row.lastName as string,
-                    firstName: row.firstName as string,
-                    birthDate: row.birthDate as string,
-                    club: row.club as string,
-                    gender: row.gender as Gender,
-                    weight: row.weight as number,
-                    license: row.license as string,
-                    fightRecord: row.fightRecord as number,
-                } as ImportBoxerDto
-            })
+interface Props {
+    inputBoxers: ImportBoxerDto[]
+    addRowAllowed: boolean
+}
 
-            const importResult = await ImportOpenApi.importBoxers({
-                body: {
-                    boxers,
-                    tournamentId: this.tournamentStore.currentTournamentId,
-                    dry: verifyOnly,
-                },
-            })
-            this.importMessage = ""
-            if (!importResult) {
-                this.importMessage = "Error during import. Please try again."
-                return
-            }
-            if (importResult.message) this.importMessage = importResult.message
-            else if (importResult.errors.length > 0) {
-                this.importMessage = `Found ${importResult.errors.length} errors. Fix them before importing.`
-            } else if (importResult.success) {
-                this.importMessage = "Verification successful, no errors found. You can import now."
-            }
-            this.errors = importResult.errors
-            console.log("Verification result:", importResult)
-            this.dirty = false
-            nextTick(() => this.enableTooltips())
-        },
-        getErrorMessage(lineIndex: number, colKey: string): string | undefined {
-            const error = this.errors.find((e) => e.row === lineIndex && e.field === colKey)
-            return error ? error.message : undefined
-        },
+const props = defineProps<Props>()
+
+const columns = [
+    { key: "lastName", label: "Last Name", type: "text" },
+    { key: "firstName", label: "First Name", type: "text" },
+    { key: "fightRecord", label: "Fights", type: "number" },
+    {
+        key: "gender",
+        label: "Gender",
+        type: "select",
+        options: [
+            { value: Gender.MALE, label: "M" },
+            { value: Gender.FEMALE, label: "F" },
+        ],
     },
+    { key: "weight", label: "Weight (kg)", type: "number" },
+    { key: "club", label: "Club", type: "text" },
+    { key: "birthDate", label: "Birth Date", type: "date" },
+    { key: "license", label: "License", type: "text" },
+]
+
+const rows = ref<ImportBoxerDto[]>(props.inputBoxers)
+const editIdx = ref<number | null>(null)
+const editRow = ref<Record<string, string | number>>({
+    lastName: "",
+    firstName: "",
+    fights: 0,
+    gender: Gender.MALE,
+    weight: "",
+    club: "",
+    birthDate: "",
+    license: "",
+})
+const dirty = ref(true)
+const importMessage = ref("")
+const errors = ref<Array<{ row: number; field: string; message: string }>>([])
+const tournamentStore = useTournamentStore()
+
+const canImport = computed((): boolean => {
+    // Check if there are any rows with errors
+    return errors.value.length === 0 && rows.value.length > 0 && !dirty.value
+})
+
+const canVerify = computed((): boolean => {
+    // Check if there are any rows with errors
+    return !canImport.value && rows.value.length > 0
+})
+
+onMounted(() => {
+    enableTooltips()
+    watch(
+        () => dirty.value,
+        (newValue) => {
+            if (newValue) {
+                importMessage.value = ""
+            }
+        }
+    )
+    watch(
+        () => props.inputBoxers,
+        (newValue) => {
+            rows.value = [...newValue] as ImportBoxerDto[]
+            errors.value = []
+            dirty.value = true
+            nextTick(() => enableTooltips())
+        },
+        { immediate: true }
+    )
+})
+
+const startEdit = (idx: number) => {
+    editIdx.value = idx
+    editRow.value = { ...rows.value[idx] }
+}
+
+const saveEdit = (idx: number) => {
+    rows.value[idx] = { ...rows.value[idx], ...editRow.value }
+    editIdx.value = null
+    dirty.value = true
+    nextTick(() => enableTooltips())
+}
+
+const cancelEdit = () => {
+    editIdx.value = null
+}
+
+const addRow = () => {
+    rows.value.push({
+        lastName: "",
+        firstName: "",
+        weight: 0,
+        club: "",
+        birthDate: "",
+        license: "",
+        fightRecord: 0,
+    })
+    editIdx.value = rows.value.length - 1
+    editRow.value = { ...rows.value[rows.value.length - 1] }
+    dirty.value = true
+    nextTick(() => enableTooltips())
+}
+
+const deleteRow = (idx: number) => {
+    rows.value.splice(idx, 1)
+    dirty.value = true
+    nextTick(() => enableTooltips())
+}
+
+const enableTooltips = () => {
+    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    tooltipTriggerList.forEach((el: Element) => {
+        if (bootstrapInstance?.bootstrap?.Tooltip) {
+            new bootstrapInstance.bootstrap.Tooltip(el)
+        }
+    })
+}
+
+const importBoxers = async (verifyOnly: boolean) => {
+    if (!tournamentStore.currentTournamentId) {
+        importMessage.value = "Please select a tournament first."
+        return
+    }
+    if (editIdx.value !== null) {
+        saveEdit(editIdx.value)
+    }
+    const boxers = rows.value.map((row: Record<string, string | number>) => {
+        return {
+            lastName: row.lastName as string,
+            firstName: row.firstName as string,
+            birthDate: row.birthDate as string,
+            club: row.club as string,
+            gender: row.gender as Gender,
+            weight: row.weight as number,
+            license: row.license as string,
+            fightRecord: row.fightRecord as number,
+        } as ImportBoxerDto
+    })
+
+    const importResult = await ImportOpenApi.importBoxers({
+        body: {
+            boxers,
+            tournamentId: tournamentStore.currentTournamentId,
+            dry: verifyOnly,
+        },
+    })
+    importMessage.value = ""
+    if (!importResult) {
+        importMessage.value = "Error during import. Please try again."
+        return
+    }
+    if (importResult.message) importMessage.value = importResult.message
+    else if (importResult.errors.length > 0) {
+        importMessage.value = `Found ${importResult.errors.length} errors. Fix them before importing.`
+    } else if (importResult.success) {
+        importMessage.value = "Verification successful, no errors found. You can import now."
+    }
+    errors.value = importResult.errors
+    console.log("Verification result:", importResult)
+    dirty.value = false
+    nextTick(() => enableTooltips())
+}
+
+const getErrorMessage = (lineIndex: number, colKey: string): string | undefined => {
+    const error = errors.value.find((e) => e.row === lineIndex && e.field === colKey)
+    return error ? error.message : undefined
 }
 </script>
 
