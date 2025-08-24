@@ -100,6 +100,44 @@
                         >
                     </div>
                 </div>
+                <div class="mb-3">
+                    <div class="form-label">{{ $t("settings.language") }}</div>
+                    <div
+                        class="btn-group"
+                        role="group"
+                        aria-label="Language selection radio toggle button group"
+                    >
+                        <input
+                            id="btnlang1"
+                            type="radio"
+                            class="btn-check"
+                            name="btnlang"
+                            autocomplete="off"
+                            :checked="uiStore.language == 'en'"
+                            @click="setLanguage('en')"
+                        />
+                        <label
+                            class="btn btn-outline-primary"
+                            for="btnlang1"
+                            >{{ $t("settings.english") }}</label
+                        >
+
+                        <input
+                            id="btnlang2"
+                            type="radio"
+                            class="btn-check"
+                            name="btnlang"
+                            autocomplete="off"
+                            :checked="uiStore.language == 'fr'"
+                            @click="setLanguage('fr')"
+                        />
+                        <label
+                            class="btn btn-outline-primary"
+                            for="btnlang2"
+                            >{{ $t("settings.french") }}</label
+                        >
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -108,16 +146,21 @@
 import { onMounted } from "vue"
 import { useRouter } from "vue-router"
 import { useI18n } from "vue-i18n"
-import { UiTheme } from "@/types/ui"
+import { UiTheme, UiLanguage } from "@/types/ui"
 import { useUiStore } from "@/stores/ui.store"
 
-const { t: $t } = useI18n()
+const { t: $t, locale } = useI18n()
 
 const router = useRouter()
 const uiStore = useUiStore()
 
 const setTheme = (mode: UiTheme) => {
     uiStore.setTheme(mode)
+}
+
+const setLanguage = (language: UiLanguage) => {
+    uiStore.setLanguage(language)
+    locale.value = language
 }
 
 const signInWithGoogle = () => {

@@ -68,10 +68,13 @@ client.interceptors.response.use((response) => {
 })
 
 const pinia = createPinia()
+pinia.use(() => ({ router }))
+
+// Initialize i18n with default locale
 type MessageSchema = typeof enUS
 const i18n = createI18n<[MessageSchema], "en" | "fr">({
     availableLocales: ["en-US", "fr-FR"],
-    locale: navigator.language.split("-")[0],
+    locale: "en", // Default, will be updated from store
     fallbackLocale: "en",
     legacy: false,
     messages: {
@@ -79,10 +82,18 @@ const i18n = createI18n<[MessageSchema], "en" | "fr">({
         en: enUS,
     },
 })
-pinia.use(() => ({ router }))
+
 const app = createApp(App)
 app.use(pinia)
 app.use(router)
 app.use(i18n)
+
+// Load UI store and update locale
+const uiStore = useUiStore()
+uiStore.loadUiStore().then(() => {
+    // Update i18n locale based on store
+    (i18n.global.locale as any).value = uiStore.language
+})
+
 app.mount("#app")
 setupAuthRedirect(router)

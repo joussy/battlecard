@@ -1,5 +1,5 @@
 import { defineStore } from "pinia"
-import type { UiTheme, UiStorage, Facets } from "@/types/ui"
+import type { UiTheme, UiLanguage, UiStorage, Facets } from "@/types/ui"
 import type { UserAccount } from "@/types/user"
 import { useTournamentStore } from "./tournament.store"
 import { User, UserOpenApi } from "@/api"
@@ -9,6 +9,7 @@ export const useUiStore = defineStore("ui", {
         restored: false as boolean,
         account: null as UserAccount | null,
         theme: "auto" as UiTheme,
+        language: "en" as UiLanguage,
         hideNonMatchableOpponents: false,
         hideFightersWithNoMatch: false,
         jwtToken: undefined as string | undefined,
@@ -102,6 +103,7 @@ export const useUiStore = defineStore("ui", {
             }
             if (localStorageData) {
                 this.theme = localStorageData.theme
+                this.language = localStorageData.language || "en"
                 this.hideNonMatchableOpponents = localStorageData.hideNonMatchableOpponents
                 this.hideFightersWithNoMatch = localStorageData.hideFightersWithNoMatch
                 this.jwtToken = localStorageData.jwtToken
@@ -115,6 +117,13 @@ export const useUiStore = defineStore("ui", {
                 console.debug("store loaded")
             } else {
                 console.debug("no store available ... ")
+                // Set default language based on browser language
+                const browserLang = navigator.language.split("-")[0] as UiLanguage
+                if (browserLang === "fr" || browserLang === "en") {
+                    this.language = browserLang
+                } else {
+                    this.language = "en"
+                }
             }
             this.listenWindowThemeChanges()
             this.setTheme(this.theme)
@@ -134,6 +143,7 @@ export const useUiStore = defineStore("ui", {
             const tournamentStore = useTournamentStore()
             const localStorageData: UiStorage = {
                 theme: this.theme,
+                language: this.language,
                 hideNonMatchableOpponents: this.hideNonMatchableOpponents,
                 hideFightersWithNoMatch: this.hideFightersWithNoMatch,
                 currentTournamentId: tournamentStore.currentTournamentId || null,
@@ -149,6 +159,10 @@ export const useUiStore = defineStore("ui", {
                 appliedTheme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"
             }
             document.documentElement.setAttribute("data-bs-theme", appliedTheme)
+        },
+        setLanguage(language: UiLanguage) {
+            this.language = language
+            // Update i18n locale - this will be handled by the component that calls this
         },
     },
 })
