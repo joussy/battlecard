@@ -173,7 +173,7 @@ watch(
         }
         searchTimeout.value = window.setTimeout(() => {
             setBoxersToDisplay()
-        }, 300) as unknown as number
+        }, 300)
     },
     { deep: true }
 )
