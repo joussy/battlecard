@@ -64,7 +64,7 @@
                         @click="setTournamentToEdit(tournament)"
                     >
                         <i class="bi bi-pencil" />
-                        <span class="d-none d-sm-inline ms-1">{{ $t("tournaments.edit") }}</span>
+                        <span class="d-sm-inline ms-1">{{ $t("tournaments.edit") }}</span>
                     </button>
                     <button class="btn btn-outline-secondary btn-sm">
                         <i class="bi bi-clipboard" />

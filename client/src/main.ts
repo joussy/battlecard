@@ -88,12 +88,5 @@ app.use(pinia)
 app.use(router)
 app.use(i18n)
 
-// Load UI store and update locale
-const uiStore = useUiStore()
-uiStore.loadUiStore().then(() => {
-    // Update i18n locale based on store
-    (i18n.global.locale as any).value = uiStore.language
-})
-
 app.mount("#app")
 setupAuthRedirect(router)

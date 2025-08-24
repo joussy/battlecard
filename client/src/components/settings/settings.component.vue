@@ -48,7 +48,7 @@
             <div class="card-header"><i class="bi bi-gear me-2" />{{ $t("settings.general") }}</div>
             <div class="card-body">
                 <div class="mb-3">
-                    <div class="form-label">{{ $t("settings.theme") }}</div>
+                    <div class="form-label"><i class="bi bi-palette me-1" />{{ $t("settings.theme") }}</div>
                     <div
                         class="btn-group"
                         role="group"
@@ -66,7 +66,7 @@
                         <label
                             class="btn btn-outline-primary"
                             for="btnradio1"
-                            >{{ $t("settings.auto") }}</label
+                            ><i class="bi bi-circle-half me-1" />{{ $t("settings.auto") }}</label
                         >
 
                         <input
@@ -81,7 +81,7 @@
                         <label
                             class="btn btn-outline-primary"
                             for="btnradio2"
-                            >{{ $t("settings.light") }}</label
+                            ><i class="bi bi-sun me-1" />{{ $t("settings.light") }}</label
                         >
 
                         <input
@@ -96,12 +96,12 @@
                         <label
                             class="btn btn-outline-primary"
                             for="btnradio3"
-                            >{{ $t("settings.dark") }}</label
+                            ><i class="bi bi-moon me-1" />{{ $t("settings.dark") }}</label
                         >
                     </div>
                 </div>
                 <div class="mb-3">
-                    <div class="form-label">{{ $t("settings.language") }}</div>
+                    <div class="form-label"><i class="bi bi-translate me-1" />{{ $t("settings.language") }}</div>
                     <div
                         class="btn-group"
                         role="group"
@@ -145,11 +145,8 @@
 <script setup lang="ts">
 import { onMounted } from "vue"
 import { useRouter } from "vue-router"
-import { useI18n } from "vue-i18n"
 import { UiTheme, UiLanguage } from "@/types/ui"
 import { useUiStore } from "@/stores/ui.store"
-
-const { t: $t, locale } = useI18n()
 
 const router = useRouter()
 const uiStore = useUiStore()
@@ -160,7 +157,6 @@ const setTheme = (mode: UiTheme) => {
 
 const setLanguage = (language: UiLanguage) => {
     uiStore.setLanguage(language)
-    locale.value = language
 }
 
 const signInWithGoogle = () => {
