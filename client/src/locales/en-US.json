@@ -1,0 +1,9 @@
+{
+    "tournaments": {
+        "addTournament": "Add tournament",
+        "selected": "selected",
+        "manage": "Manage this tournament",
+        "edit": "Edit",
+        "copyClipboard": "Copy to clipboard"
+    }
+}

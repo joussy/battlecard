@@ -1,0 +1,9 @@
+{
+    "tournaments": {
+        "addTournament": "Ajouter un tournoi",
+        "selected": "sélectionné",
+        "manage": "Gérer ce tournoi",
+        "edit": "Modifier",
+        "copyClipboard": "Copier dans le presse-papiers"
+    }
+}

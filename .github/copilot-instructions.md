@@ -6,6 +6,7 @@ Guidelines
 
 - Never fix the formatting of the code.
 - Frontend: Vue 3 + Bootstrap 5 (TypeScript), with composition API.
+  - i18n support using vue-i18n. Locale files are in `client/src/locales/`. Support English and French. Nested JSON files.
 - Backend: NestJS + TypeORM (TypeScript).
 - Use openapi-ts to generate types from the OpenAPI spec.
 - Build commands:
