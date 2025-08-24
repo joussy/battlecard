@@ -218,7 +218,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/BoxerGetDto"
+                    "$ref": "#/components/schemas/BoxerDto"
                   }
                 }
               }
@@ -264,7 +264,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/OpponentGetDto"
+                    "$ref": "#/components/schemas/OpponentDto"
                   }
                 }
               }
@@ -302,7 +302,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/FightGetDto"
+                    "$ref": "#/components/schemas/FightDto"
                   }
                 }
               }
@@ -339,7 +339,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/BoxerGetDto"
+                  "$ref": "#/components/schemas/BoxerDto"
                 }
               }
             }
@@ -369,7 +369,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/BoxerGetDto"
+                  "$ref": "#/components/schemas/BoxerDto"
                 }
               }
             }
@@ -407,7 +407,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/BoxerGetDto"
+                  "$ref": "#/components/schemas/BoxerDto"
                 }
               }
             }
@@ -515,7 +515,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/FightGetDto"
+                  "$ref": "#/components/schemas/FightDto"
                 }
               }
             }
@@ -547,7 +547,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/FightGetDto"
+                    "$ref": "#/components/schemas/FightDto"
                   }
                 }
               }
@@ -1074,7 +1074,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/SharedFightCardGetDto"
+                  "$ref": "#/components/schemas/SharedFightCardDto"
                 }
               }
             }
@@ -1087,7 +1087,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/SharedFightCardGetDto"
+                  "$ref": "#/components/schemas/SharedFightCardDto"
                 }
               }
             }
@@ -1305,7 +1305,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/AddressAutocompleteGetDto"
+                    "$ref": "#/components/schemas/AddressAutocompleteDto"
                   }
                 }
               }
@@ -1480,7 +1480,7 @@
         ],
         "description": "Gender"
       },
-      "BoxerGetDto": {
+      "BoxerDto": {
         "type": "object",
         "properties": {
           "gender": {
@@ -1591,7 +1591,7 @@
           "type"
         ]
       },
-      "OpponentGetDto": {
+      "OpponentDto": {
         "type": "object",
         "properties": {
           "gender": {
@@ -1697,7 +1697,7 @@
           "isEligible"
         ]
       },
-      "FightGetDto": {
+      "FightDto": {
         "type": "object",
         "properties": {
           "order": {
@@ -1712,7 +1712,7 @@
             "description": "Red corner boxer",
             "allOf": [
               {
-                "$ref": "#/components/schemas/BoxerGetDto"
+                "$ref": "#/components/schemas/BoxerDto"
               }
             ]
           },
@@ -1720,7 +1720,7 @@
             "description": "Blue corner boxer",
             "allOf": [
               {
-                "$ref": "#/components/schemas/BoxerGetDto"
+                "$ref": "#/components/schemas/BoxerDto"
               }
             ]
           },
@@ -2203,7 +2203,7 @@
           "payload"
         ]
       },
-      "SharedFightCardGetDto": {
+      "SharedFightCardDto": {
         "type": "object",
         "properties": {
           "tournamentName": {
@@ -2214,7 +2214,7 @@
             "description": "Array of fights",
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/FightGetDto"
+              "$ref": "#/components/schemas/FightDto"
             }
           },
           "tournamentDate": {
@@ -2271,7 +2271,7 @@
           "fightCardToken"
         ]
       },
-      "AddressAutocompleteGetDto": {
+      "AddressAutocompleteDto": {
         "type": "object",
         "properties": {
           "city": {

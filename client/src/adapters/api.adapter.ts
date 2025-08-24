@@ -1,12 +1,12 @@
 import {
-    BoxerGetDto,
+    BoxerDto,
     Gender,
     TournamentDto,
-    FightGetDto,
-    OpponentGetDto,
+    FightDto,
+    OpponentDto,
     CreateBoxerDto,
     CreateTournamentDto,
-    SharedFightCardGetDto,
+    SharedFightCardDto,
 } from "@/api/types.gen"
 import { Boxer, Fight, Opponent, SharedFightCard, Tournament } from "@/types/boxing.d"
 
@@ -25,7 +25,7 @@ export default class ApiAdapter {
         }
     }
 
-    static toOpponent(opponent: OpponentGetDto): Opponent {
+    static toOpponent(opponent: OpponentDto): Opponent {
         return {
             ...ApiAdapter.toBoxer(opponent),
             weightDifference: opponent.weightDifference,
@@ -35,7 +35,7 @@ export default class ApiAdapter {
         }
     }
 
-    static toBoxer(boxer: BoxerGetDto): Boxer {
+    static toBoxer(boxer: BoxerDto): Boxer {
         return {
             birthDate: new Date(boxer.birthDate),
             club: boxer.club,
@@ -90,7 +90,7 @@ export default class ApiAdapter {
         }
     }
 
-    static toFight(fight: FightGetDto): Fight {
+    static toFight(fight: FightDto): Fight {
         return {
             boxer1: ApiAdapter.toBoxer(fight.boxer1),
             boxer2: ApiAdapter.toBoxer(fight.boxer2),
@@ -103,7 +103,7 @@ export default class ApiAdapter {
         }
     }
 
-    static toSharedFightCard(sharedFightCardApi: SharedFightCardGetDto): SharedFightCard {
+    static toSharedFightCard(sharedFightCardApi: SharedFightCardDto): SharedFightCard {
         return {
             tournamentName: sharedFightCardApi.tournamentName,
             fights: sharedFightCardApi.fights.map(ApiAdapter.toFight),

@@ -148,7 +148,7 @@ import { configure, defineRule, GenericObject, useForm } from "vee-validate"
 import { Tournament } from "@/types/boxing.d"
 import { closeModal } from "@/utils/ui.utils"
 import AddressAutocompleteFieldComponent from "@/components/shared/core/address-autocomplete-field.component.vue"
-import { TournamentOpenApi, CreateTournamentDto, UpdateTournamentDto, AddressAutocompleteGetDto } from "@/api"
+import { TournamentOpenApi, CreateTournamentDto, UpdateTournamentDto, AddressAutocompleteDto } from "@/api"
 
 configure({
     validateOnInput: true,
@@ -246,7 +246,7 @@ export default defineComponent({
         })
     },
     methods: {
-        onAddressSelect(suggestion: AddressAutocompleteGetDto) {
+        onAddressSelect(suggestion: AddressAutocompleteDto) {
             if (suggestion.zipCode) this.zipCode = suggestion.zipCode
             if (suggestion.city) this.city = suggestion.city
         },
