@@ -10,6 +10,8 @@ FROM node:${NODE_VERSION}-alpine AS client-builder
 
 # Copy client source code
 COPY client/ /app/client
+# Copy OpenAPI spec for client classes generation
+COPY server/openapi.json /app/server/
 # Copy shared types for client usage
 COPY server/src/shared/ /app/server/src/shared
 
