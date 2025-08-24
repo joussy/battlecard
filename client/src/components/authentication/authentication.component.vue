@@ -14,12 +14,8 @@
             class="card p-4 shadow w-100"
             style="max-width: 400px"
         >
-            <div class="card-header text-center">
-                <i
-                    class="bi bi-person me-2"
-                    style="font-size: 2rem"
-                />
-                <span class="h5">{{ $t("authentication.signIn") }}</span>
+            <div class="text-center">
+                <span class="h6">{{ $t("authentication.signIn") }}</span>
             </div>
             <div class="card-body">
                 <button
@@ -61,6 +57,36 @@
                 </div>
             </div>
         </div>
+        <div class="mt-5 d-flex justify-content-center">
+            <div>
+                <div class="form-label mb-3 text-center h5">
+                    <i class="bi bi-translate me-1" />
+                    {{ $t("settings.language") }}
+                </div>
+                <div
+                    class="btn-group"
+                    role="group"
+                    aria-label="Language selection"
+                >
+                    <button
+                        type="button"
+                        class="btn btn-outline-primary"
+                        :class="{ active: uiStore.language === 'en' }"
+                        @click="setLanguage('en')"
+                    >
+                        <IconComponent name="glove" />{{ $t("settings.english") }}
+                    </button>
+                    <button
+                        type="button"
+                        class="btn btn-outline-primary"
+                        :class="{ active: uiStore.language === 'fr' }"
+                        @click="setLanguage('fr')"
+                    >
+                        <IconComponent name="glove" />{{ $t("settings.french") }}
+                    </button>
+                </div>
+            </div>
+        </div>
         <div class="mt-4 text-center text-muted small">
             <span>{{ $t("authentication.demoNotice") }}</span>
         </div>
@@ -72,8 +98,9 @@ import { useRouter } from "vue-router"
 import { useI18n } from "vue-i18n"
 import { useUiStore } from "@/stores/ui.store"
 import IconComponent from "@/components/shared/core/icon.component.vue"
+import { UiLanguage } from "@/types/ui"
 
-const { t: $t } = useI18n()
+const { t: $t, locale } = useI18n()
 
 // Component registration is handled automatically with <script setup>
 const router = useRouter()
@@ -85,6 +112,10 @@ const signInWithGoogle = () => {
 
 const logout = () => {
     uiStore.logout()
+}
+
+const setLanguage = (language: UiLanguage) => {
+    uiStore.setLanguage(language)
 }
 
 onMounted(async () => {

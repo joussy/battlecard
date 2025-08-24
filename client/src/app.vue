@@ -54,6 +54,7 @@ onMounted(async () => {
             uiStore.hideNonMatchableOpponents,
             uiStore.hideFightersWithNoMatch,
             uiStore.jwtToken,
+            uiStore.language,
         ],
         () => uiStore.saveUiStore(),
         { deep: true }

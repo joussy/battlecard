@@ -1,6 +1,7 @@
 export interface UiStorage {
     jwtToken: string | undefined
     theme: UiTheme
+    language: UiLanguage
     hideNonMatchableOpponents: boolean
     hideFightersWithNoMatch: boolean
     currentTournamentId: string | null
@@ -24,3 +25,4 @@ export interface Facets {
 }
 
 type UiTheme = "dark" | "light" | "auto"
+type UiLanguage = "en" | "fr"

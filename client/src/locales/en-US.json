@@ -25,7 +25,7 @@
     "authentication": {
         "welcome": "Welcome to BattleCard",
         "tagline": "Your digital ring for boxing tournaments, stats, and more.",
-        "signIn": "Sign In",
+        "signIn": "Sign in to create your fight cards",
         "signInWithGoogle": "Sign In with Google",
         "signOut": "Sign out",
         "demoNotice": "BattleCard is a demo project. All data is for testing purposes only."
@@ -215,6 +215,9 @@
         "auto": "Auto",
         "light": "Light",
         "dark": "Dark",
+        "language": "Language",
+        "english": "English",
+        "french": "Français",
         "hideNonMatchable": "Hide non-matchable opponents",
         "hideFightersNoMatch": "Hide fighters with no match",
         "dangerZone": "Danger Zone",
