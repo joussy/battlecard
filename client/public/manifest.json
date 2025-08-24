@@ -41,20 +41,23 @@
       "purpose": "maskable"
     }
   ],
-  "categories": ["sports", "utilities", "productivity"],
-  "shortcuts": [
+  "categories": [
+    "sports",
+    "utilities",
+    "productivity"
+  ],
+  "screenshots": [
     {
-      "name": "New Tournament",
-      "short_name": "New",
-      "description": "Create a new tournament",
-      "url": "/tournaments/new",
-      "icons": [
-        {
-          "src": "/ring.svg",
-          "sizes": "any",
-          "type": "image/svg+xml"
-        }
-      ]
+      "src": "/pwa_app_screenshot_selector_mobile.png",
+      "sizes": "1440x2960",
+      "type": "image/png",
+      "form_factor": "narrow"
+    },
+    {
+      "src": "/pwa_app_screenshot_card_mobile.png",
+      "sizes": "1440x2960",
+      "type": "image/png",
+      "form_factor": "wide"
     }
   ]
 }
