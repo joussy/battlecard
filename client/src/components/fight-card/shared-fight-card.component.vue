@@ -34,7 +34,9 @@
                 v-if="tournament?.fights.length == 0"
                 class="justify-content-center m-4 text-center"
             >
-                <div class="mb-4"><i>{{ $t("sharedFightCard.emptyCard") }}</i></div>
+                <div class="mb-4">
+                    <i>{{ $t("sharedFightCard.emptyCard") }}</i>
+                </div>
                 <div>{{ $t("sharedFightCard.waitForFights") }}</div>
             </div>
         </div>

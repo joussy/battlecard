@@ -1,20 +1,115 @@
 {
-    "tournaments": {
-        "addTournament": "Ajouter un tournoi",
-        "selected": "sélectionné",
-        "manage": "Gérer ce tournoi",
+    "addBoxer": {
+        "title": "Ajouter un boxeur",
+        "search": "Rechercher",
+        "create": "Créer",
+        "import": "Importer",
+        "cannotFind": "Vous ne trouvez pas ce que vous voulez ?",
+        "createOne": "En créer un",
+        "license": "Licence",
+        "lastName": "Nom",
+        "firstName": "Prénom",
+        "gender": "Genre",
+        "female": "Femme",
+        "male": "Homme",
+        "birthDate": "Date de naissance",
+        "weight": "Poids",
+        "club": "Club",
+        "saveBoxer": "Sauvegarder le boxeur",
+        "validation": {
+            "required": "Ce champ est requis",
+            "weightRequired": "Ce champ est requis et doit être un nombre supérieur ou égal à 1",
+            "validNumber": "Veuillez saisir un nombre valide (chiffres uniquement, avec virgule ou point optionnel)"
+        }
+    },
+    "authentication": {
+        "welcome": "Bienvenue sur BattleCard",
+        "tagline": "Votre ring numérique pour les tournois de boxe, statistiques et plus.",
+        "signIn": "Se connecter",
+        "signInWithGoogle": "Se connecter avec Google",
+        "signOut": "Se déconnecter",
+        "demoNotice": "BattleCard est un projet de démonstration. Toutes les données sont à des fins de test uniquement."
+    },
+    "badges": {
+        "age": "Âge",
+        "weight": "Poids",
+        "record": "Palmarès",
+        "fights": "Combats",
+        "linkedFights": "Combats liés",
+        "valid": "Valide",
+        "invalid": "Invalide",
+        "possible": "Possible",
+        "eligibility": "Éligibilité"
+    },
+    "boxerImport": {
+        "manyBoxers": "Beaucoup de boxeurs à importer ?",
+        "favoriteFormat": "Importez-les en utilisant votre format préféré !",
+        "importBoxers": "Importer des boxeurs"
+    },
+    "boxerSearch": {
+        "enterLicense": "Entrez un numéro de licence ou un nom",
+        "name": "Nom",
+        "license": "Licence",
+        "noResults": "Aucun résultat trouvé."
+    },
+    "common": {
+        "loading": "Chargement...",
+        "error": "Erreur",
+        "success": "Succès",
+        "warning": "Avertissement",
+        "info": "Info",
+        "close": "Fermer",
+        "save": "Enregistrer",
+        "cancel": "Annuler",
+        "delete": "Supprimer",
         "edit": "Modifier",
-        "copyClipboard": "Copier dans le presse-papiers",
-        "welcome": "Bienvenue !",
-        "noTournamentsYet": "Vous n'avez pas encore de tournois. Créez votre premier tournoi pour commencer.",
-        "howToGenerateFightCard": "Comment générer une carte de combat",
-        "createTournament": "Créer un tournoi",
-        "createTournamentDescription": "C'est le conteneur pour votre événement et vos combats.",
-        "openSelector": "Ouvrir le sélecteur",
-        "openSelectorDescription": "Ajoutez des boxeurs au tournoi pour qu'ils deviennent participants.",
-        "buildFightCard": "Construire la carte de combat",
-        "buildFightCardDescription": "Utilisez la vue de la carte de combat pour créer des confrontations et programmer des combats entre les boxeurs ajoutés.",
-        "createFirstTournament": "Créez votre premier tournoi"
+        "add": "Ajouter",
+        "remove": "Supprimer",
+        "search": "Rechercher",
+        "filter": "Filtrer",
+        "clear": "Effacer",
+        "select": "Sélectionner",
+        "none": "Aucun",
+        "all": "Tous",
+        "yes": "Oui",
+        "no": "Non"
+    },
+    "editBoxer": {
+        "title": "Modifier un boxeur"
+    },
+    "eligibilityDetails": {
+        "linkedFights": "Lié à {count} combats",
+        "ageYears": "{age} ans",
+        "foughtTimes": "A déjà combattu {fights} fois",
+        "weighsKg": "Pèse {weight} kg",
+        "alreadyScheduled": "Ce boxeur est déjà programmé pour des combats, ce qui peut affecter son éligibilité.",
+        "notScheduled": "Ce boxeur n'est programmé pour aucun combat.",
+        "ageTooHigh": "La différence d'âge est trop élevée. Le boxeur doit être dans les 2 ans de l'âge de l'adversaire.",
+        "ageMeetsRequirements": "Ce boxeur répond aux exigences d'âge, étant dans les 2 ans de l'âge de l'adversaire.",
+        "recordTooHigh": "La différence de palmarès est trop élevée. Le boxeur doit avoir moins de 3 combats de différence avec l'adversaire.",
+        "recordMeetsRequirements": "Ce boxeur répond aux exigences de palmarès.",
+        "weightTooHigh": "La différence de poids est trop élevée. Le boxeur doit être dans les 3 kg du poids de l'adversaire.",
+        "weightMeetsRequirements": "Ce boxeur répond aux exigences de poids, étant dans les 3 kg du poids de l'adversaire."
+    },
+    "fightCard": {
+        "edit": "Modifier",
+        "matchmaker": "Générateur",
+        "share": "Partager",
+        "doneEditing": "J'ai fini de modifier",
+        "emptyCard": "Votre carte de combat est vide",
+        "setupFirstFight": "Configurez le premier combat en utilisant le",
+        "selector": "Sélecteur",
+        "fight": "Combat",
+        "vs": "vs",
+        "round": "Round",
+        "category": "Catégorie",
+        "removeFight": "Supprimer le combat",
+        "switchBoxers": "Inverser les boxeurs",
+        "red": "Rouge",
+        "blue": "Bleu",
+        "noMatchesAvailable": "Aucun match disponible 😔",
+        "addMoreBoxers": "Ajoutez plus de boxeurs au sélecteur pour trouver des appariements appropriés.",
+        "addFight": "Ajouter le combat"
     },
     "import": {
         "title": "Importer des boxeurs",
@@ -50,6 +145,25 @@
         "edit": "Modifier",
         "save": "Enregistrer",
         "cancel": "Annuler"
+    },
+    "layout": {
+        "events": "Événements",
+        "selector": "Sélecteur",
+        "card": "Carte",
+        "settings": "Paramètres"
+    },
+    "matchupDetails": {
+        "fights": "combats",
+        "fightDuration": "Durée du combat",
+        "weightDifference": "Différence de poids",
+        "ageDifference": "Différence d'âge",
+        "fightCountDifference": "Différence de nombre de combats"
+    },
+    "opponentTile": {
+        "addToFightCard": "Ajouter à la carte de combat",
+        "removeFromFightCard": "Retirer de la carte de combat",
+        "watchProfile": "Voir le profil",
+        "copyClipboard": "Copier dans le presse-papier"
     },
     "selector": {
         "addBoxer": "Ajouter un boxeur",
@@ -93,34 +207,6 @@
         "invalidDate": "Format de date invalide",
         "invalidWeight": "Le poids doit être un nombre positif"
     },
-    "fightCard": {
-        "edit": "Modifier",
-        "matchmaker": "Générateur",
-        "share": "Partager",
-        "doneEditing": "J'ai fini de modifier",
-        "emptyCard": "Votre carte de combat est vide",
-        "setupFirstFight": "Configurez le premier combat en utilisant le",
-        "selector": "Sélecteur",
-        "fight": "Combat",
-        "vs": "vs",
-        "round": "Round",
-        "category": "Catégorie",
-        "removeFight": "Supprimer le combat",
-        "switchBoxers": "Inverser les boxeurs",
-        "red": "Rouge",
-        "blue": "Bleu",
-        "noMatchesAvailable": "Aucun match disponible 😔",
-        "addMoreBoxers": "Ajoutez plus de boxeurs au sélecteur pour trouver des appariements appropriés.",
-        "addFight": "Ajouter le combat"
-    },
-    "authentication": {
-        "welcome": "Bienvenue sur BattleCard",
-        "tagline": "Votre ring numérique pour les tournois de boxe, statistiques et plus.",
-        "signIn": "Se connecter",
-        "signInWithGoogle": "Se connecter avec Google",
-        "signOut": "Se déconnecter",
-        "demoNotice": "BattleCard est un projet de démonstration. Toutes les données sont à des fins de test uniquement."
-    },
     "settings": {
         "account": "Compte",
         "signInWithGoogle": "Se connecter avec Google",
@@ -136,23 +222,6 @@
         "clearLocalDataWarning": "Cela supprimera toutes les données stockées localement, y compris les préférences.",
         "clearData": "Effacer les données",
         "resetFilters": "Réinitialiser tous les filtres"
-    },
-    "layout": {
-        "events": "Événements",
-        "selector": "Sélecteur",
-        "card": "Carte",
-        "settings": "Paramètres"
-    },
-    "badges": {
-        "age": "Âge",
-        "weight": "Poids",
-        "record": "Palmarès",
-        "fights": "Combats",
-        "linkedFights": "Combats liés",
-        "valid": "Valide",
-        "invalid": "Invalide",
-        "possible": "Possible",
-        "eligibility": "Éligibilité"
     },
     "share": {
         "downloadFormats": "Formats de téléchargement",
@@ -174,70 +243,6 @@
         "noPermission": "Vous n'avez pas la permission de voir cette carte de combat.",
         "checkLink": "Veuillez vérifier le lien ou contacter le propriétaire de la carte de combat."
     },
-    "addBoxer": {
-        "title": "Ajouter un boxeur",
-        "search": "Rechercher",
-        "create": "Créer",
-        "import": "Importer",
-        "cannotFind": "Vous ne trouvez pas ce que vous voulez ?",
-        "createOne": "En créer un",
-        "license": "Licence",
-        "lastName": "Nom",
-        "firstName": "Prénom",
-        "gender": "Genre",
-        "female": "Femme",
-        "male": "Homme",
-        "birthDate": "Date de naissance",
-        "weight": "Poids",
-        "club": "Club",
-        "saveBoxer": "Sauvegarder le boxeur",
-        "validation": {
-            "required": "Ce champ est requis",
-            "weightRequired": "Ce champ est requis et doit être un nombre supérieur ou égal à 1",
-            "validNumber": "Veuillez saisir un nombre valide (chiffres uniquement, avec virgule ou point optionnel)"
-        }
-    },
-    "editBoxer": {
-        "title": "Modifier un boxeur"
-    },
-    "boxerImport": {
-        "manyBoxers": "Beaucoup de boxeurs à importer ?",
-        "favoriteFormat": "Importez-les en utilisant votre format préféré !",
-        "importBoxers": "Importer des boxeurs"
-    },
-    "boxerSearch": {
-        "enterLicense": "Entrez un numéro de licence ou un nom",
-        "name": "Nom",
-        "license": "Licence",
-        "noResults": "Aucun résultat trouvé."
-    },
-    "opponentTile": {
-        "addToFightCard": "Ajouter à la carte de combat",
-        "removeFromFightCard": "Retirer de la carte de combat",
-        "watchProfile": "Voir le profil",
-        "copyClipboard": "Copier dans le presse-papier"
-    },
-    "eligibilityDetails": {
-        "linkedFights": "Lié à {count} combats",
-        "ageYears": "{age} ans",
-        "foughtTimes": "A déjà combattu {fights} fois",
-        "weighsKg": "Pèse {weight} kg",
-        "alreadyScheduled": "Ce boxeur est déjà programmé pour des combats, ce qui peut affecter son éligibilité.",
-        "notScheduled": "Ce boxeur n'est programmé pour aucun combat.",
-        "ageTooHigh": "La différence d'âge est trop élevée. Le boxeur doit être dans les 2 ans de l'âge de l'adversaire.",
-        "ageMeetsRequirements": "Ce boxeur répond aux exigences d'âge, étant dans les 2 ans de l'âge de l'adversaire.",
-        "recordTooHigh": "La différence de palmarès est trop élevée. Le boxeur doit avoir moins de 3 combats de différence avec l'adversaire.",
-        "recordMeetsRequirements": "Ce boxeur répond aux exigences de palmarès.",
-        "weightTooHigh": "La différence de poids est trop élevée. Le boxeur doit être dans les 3 kg du poids de l'adversaire.",
-        "weightMeetsRequirements": "Ce boxeur répond aux exigences de poids, étant dans les 3 kg du poids de l'adversaire."
-    },
-    "matchupDetails": {
-        "fights": "combats",
-        "fightDuration": "Durée du combat",
-        "weightDifference": "Différence de poids",
-        "ageDifference": "Différence d'âge",
-        "fightCountDifference": "Différence de nombre de combats"
-    },
     "tournamentAdd": {
         "addEvent": "Ajouter un nouvel événement",
         "editEvent": "Modifier l'événement",
@@ -253,26 +258,21 @@
             "required": "Ce champ est requis"
         }
     },
-    "common": {
-        "loading": "Chargement...",
-        "error": "Erreur",
-        "success": "Succès",
-        "warning": "Avertissement",
-        "info": "Info",
-        "close": "Fermer",
-        "save": "Enregistrer",
-        "cancel": "Annuler",
-        "delete": "Supprimer",
+    "tournaments": {
+        "addTournament": "Ajouter un tournoi",
+        "selected": "sélectionné",
+        "manage": "Gérer ce tournoi",
         "edit": "Modifier",
-        "add": "Ajouter",
-        "remove": "Supprimer",
-        "search": "Rechercher",
-        "filter": "Filtrer",
-        "clear": "Effacer",
-        "select": "Sélectionner",
-        "none": "Aucun",
-        "all": "Tous",
-        "yes": "Oui",
-        "no": "Non"
+        "copyClipboard": "Copier dans le presse-papiers",
+        "welcome": "Bienvenue !",
+        "noTournamentsYet": "Vous n'avez pas encore de tournois. Créez votre premier tournoi pour commencer.",
+        "howToGenerateFightCard": "Comment générer une carte de combat",
+        "createTournament": "Créer un tournoi",
+        "createTournamentDescription": "C'est le conteneur pour votre événement et vos combats.",
+        "openSelector": "Ouvrir le sélecteur",
+        "openSelectorDescription": "Ajoutez des boxeurs au tournoi pour qu'ils deviennent participants.",
+        "buildFightCard": "Construire la carte de combat",
+        "buildFightCardDescription": "Utilisez la vue de la carte de combat pour créer des confrontations et programmer des combats entre les boxeurs ajoutés.",
+        "createFirstTournament": "Créez votre premier tournoi"
     }
 }

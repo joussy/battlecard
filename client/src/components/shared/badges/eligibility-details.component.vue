@@ -5,7 +5,9 @@
                 :boxer="boxer"
                 class="me-2"
             />
-            <span class="eligibility-title">{{ $t("eligibilityDetails.linkedFights", { count: boxer.selectedFights }) }}</span>
+            <span class="eligibility-title">{{
+                $t("eligibilityDetails.linkedFights", { count: boxer.selectedFights })
+            }}</span>
             <!-- <i class="bi bi-check-circle-fill text-success ms-1"></i> -->
         </div>
         <div class="eligibility-explanations">
@@ -19,7 +21,9 @@
                 :boxer="boxer"
                 :modality-errors="modalityErrors"
             />
-            <span class="eligibility-title">{{ $t("eligibilityDetails.ageYears", { age: getBoxerAgeValue(boxer.birthDate) }) }}</span>
+            <span class="eligibility-title">{{
+                $t("eligibilityDetails.ageYears", { age: getBoxerAgeValue(boxer.birthDate) })
+            }}</span>
         </div>
         <div class="eligibility-explanations">
             {{ getAgeExplanation }}
@@ -32,7 +36,9 @@
                 :boxer="boxer"
                 :modality-errors="modalityErrors"
             />
-            <span class="eligibility-title">{{ $t("eligibilityDetails.foughtTimes", { fights: boxer.nbFights }) }}</span>
+            <span class="eligibility-title">{{
+                $t("eligibilityDetails.foughtTimes", { fights: boxer.nbFights })
+            }}</span>
         </div>
         <div class="eligibility-explanations">{{ getRecordExplanation }}</div>
     </div>

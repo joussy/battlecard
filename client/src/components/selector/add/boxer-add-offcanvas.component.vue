@@ -58,7 +58,9 @@
             <div v-if="displayMode == 'search'">
                 <BoxerSearchComponent @boxer-saved="onBoxerSaved()"></BoxerSearchComponent>
                 <div class="mt-2 text-center">
-                    <div class="mb-2"><i> {{ $t("addBoxer.cannotFind") }} </i></div>
+                    <div class="mb-2">
+                        <i> {{ $t("addBoxer.cannotFind") }} </i>
+                    </div>
                     <button
                         class="btn btn-sm btn-light"
                         @click="displayMode = 'create'"

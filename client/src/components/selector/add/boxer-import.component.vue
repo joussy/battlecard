@@ -1,7 +1,11 @@
 <template>
     <div class="justify-content-center m-4 text-center">
-        <div class="mb-4"><i>{{ $t("boxerImport.manyBoxers") }}</i></div>
-        <div class="mb-4"><i>{{ $t("boxerImport.favoriteFormat") }}</i></div>
+        <div class="mb-4">
+            <i>{{ $t("boxerImport.manyBoxers") }}</i>
+        </div>
+        <div class="mb-4">
+            <i>{{ $t("boxerImport.favoriteFormat") }}</i>
+        </div>
         <div>
             <button
                 class="btn btn-outline-success"

@@ -57,7 +57,9 @@
                 v-if="fightCard.length == 0"
                 class="justify-content-center m-4 text-center"
             >
-                <div class="mb-4"><i>{{ $t("fightCard.emptyCard") }}</i></div>
+                <div class="mb-4">
+                    <i>{{ $t("fightCard.emptyCard") }}</i>
+                </div>
                 <div>
                     {{ $t("fightCard.setupFirstFight") }}
                     <router-link

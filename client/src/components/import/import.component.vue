@@ -3,7 +3,8 @@
     <div class="stepper">
         <fieldset class="mb-3">
             <legend class="col-form-label pt-0">
-                <span class="badge rounded-pill bg-primary me-2"><span class="step-badge"></span></span>{{ $t("import.howToImport") }}
+                <span class="badge rounded-pill bg-primary me-2"><span class="step-badge"></span></span
+                >{{ $t("import.howToImport") }}
             </legend>
             <input
                 id="csvfile"
@@ -64,7 +65,8 @@
             class="mb-3"
         >
             <div class="w-100 justify-content-center mb-3">
-                <span class="badge rounded-pill bg-primary me-2"><span class="step-badge"></span></span>{{ $t("import.connectTo") }}
+                <span class="badge rounded-pill bg-primary me-2"><span class="step-badge"></span></span
+                >{{ $t("import.connectTo") }}
                 <button class="btn btn-sm btn-outline-primary">
                     <a
                         target="_blank"
@@ -79,14 +81,16 @@
                 </button>
             </div>
             <div>
-                <span class="badge rounded-pill bg-primary me-2 mb-3"><span class="step-badge"></span></span>{{ $t("import.extractLicences") }}
+                <span class="badge rounded-pill bg-primary me-2 mb-3"><span class="step-badge"></span></span
+                >{{ $t("import.extractLicences") }}
                 <img
                     src="@/assets/images/ffboxe-screenshot.png"
                     alt="FFBoxe export"
                     class="mb-3 img-fluid d-block"
                 />
             </div>
-            <span class="badge rounded-pill bg-primary me-2 mb-3"><span class="step-badge"></span></span>{{ $t("import.importCsvFile") }}
+            <span class="badge rounded-pill bg-primary me-2 mb-3"><span class="step-badge"></span></span
+            >{{ $t("import.importCsvFile") }}
             <div class="mb-3">
                 <input
                     id="formFileDisabled"
@@ -107,7 +111,8 @@
         <div v-if="importMode == 'csv-file' || importMode == 'csv-clipboard'">
             <div v-if="importMode == 'csv-clipboard'">
                 <legend class="col-form-label pt-0">
-                    <span class="badge rounded-pill bg-primary me-2"><span class="step-badge"></span></span>{{ $t("import.insertCsvText") }}
+                    <span class="badge rounded-pill bg-primary me-2"><span class="step-badge"></span></span
+                    >{{ $t("import.insertCsvText") }}
                 </legend>
                 <textarea
                     v-model="clipboard"
@@ -116,7 +121,8 @@
             </div>
             <div v-if="importMode == 'csv-file'">
                 <legend class="col-form-label pt-0">
-                    <span class="badge rounded-pill bg-primary me-2"><span class="step-badge"></span></span>{{ $t("import.importCsvFileStep") }}
+                    <span class="badge rounded-pill bg-primary me-2"><span class="step-badge"></span></span
+                    >{{ $t("import.importCsvFileStep") }}
                 </legend>
                 <div class="mb-3">
                     <input
@@ -164,7 +170,8 @@
         </div>
         <div v-if="importMode == 'api'">
             <legend class="col-form-label pt-0">
-                <span class="badge rounded-pill bg-primary me-2"><span class="step-badge"></span></span>{{ $t("import.queryApi") }}
+                <span class="badge rounded-pill bg-primary me-2"><span class="step-badge"></span></span
+                >{{ $t("import.queryApi") }}
             </legend>
             <textarea
                 v-model="apiClipboard"
@@ -180,7 +187,8 @@
             </div>
         </div>
         <div v-if="showImportTable">
-            <span class="badge rounded-pill bg-primary me-2 mb-3"><span class="step-badge"></span></span>{{ $t("import.previewData") }}
+            <span class="badge rounded-pill bg-primary me-2 mb-3"><span class="step-badge"></span></span
+            >{{ $t("import.previewData") }}
             <ImportTableComponent
                 :input-boxers="rows"
                 :add-row-allowed="false"

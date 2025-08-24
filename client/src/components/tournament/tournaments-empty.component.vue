@@ -6,7 +6,9 @@
         </p>
 
         <div class="mx-auto text-center text-md-start mb-4 px-2 px-md-0 welcome-list">
-            <p class="text-muted mb-2"><strong>{{ $t("tournaments.howToGenerateFightCard") }}</strong></p>
+            <p class="text-muted mb-2">
+                <strong>{{ $t("tournaments.howToGenerateFightCard") }}</strong>
+            </p>
             <ol class="list-group list-group-numbered mb-0">
                 <li class="list-group-item">
                     <span class="fw-bold text-center text-md-start">{{ $t("tournaments.createTournament") }}</span>
