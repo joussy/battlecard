@@ -39,7 +39,7 @@ COPY server/ ./
 # Build backend
 RUN npm run build
 # Remove source and test files after build to reduce image size
-RUN rm -R /app/src /app/test
+RUN rm -R /app/src
 
 # Copy built frontend into backend public folder
 COPY --from=client-builder /app/client/dist /app/public
