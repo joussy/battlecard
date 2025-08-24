@@ -16,7 +16,7 @@
                 active-class="active"
             >
                 <i class="bi bi-calendar"></i>
-                Events
+                {{ $t("layout.events") }}
             </router-link>
         </div>
         <div
@@ -32,7 +32,7 @@
                     name="group-of-people"
                     class="user-logo"
                 />
-                Selector
+                {{ $t("layout.selector") }}
             </router-link>
         </div>
         <div
@@ -48,7 +48,7 @@
                     name="headgear"
                     class="user-logo"
                 />
-                Card
+                {{ $t("layout.card") }}
                 <span class="badge rounded-pill bg-primary">{{ nbFights }}</span>
             </router-link>
         </div>
@@ -59,7 +59,7 @@
                 class="nav-link link-secondary"
                 active-class="active"
             >
-                <span class="me-3">Settings</span>
+                <span class="me-3">{{ $t("layout.settings") }}</span>
                 <i
                     v-if="!uiStore.account?.picture"
                     class="bi bi-person-circle user-logo"
@@ -75,10 +75,13 @@
 </template>
 <script setup lang="ts">
 import { computed } from "vue"
+import { useI18n } from "vue-i18n"
 import IconComponent from "@/components/shared/core/icon.component.vue"
 import { useFightStore } from "@/stores/fight.store"
 import { useTournamentStore } from "@/stores/tournament.store"
 import { useUiStore } from "@/stores/ui.store"
+
+const { t: $t } = useI18n()
 
 const uiStore = useUiStore()
 const tournamentStore = useTournamentStore()
