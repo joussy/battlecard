@@ -95,14 +95,10 @@
 <script setup lang="ts">
 import { onMounted } from "vue"
 import { useRouter } from "vue-router"
-import { useI18n } from "vue-i18n"
 import { useUiStore } from "@/stores/ui.store"
 import IconComponent from "@/components/shared/core/icon.component.vue"
 import { UiLanguage } from "@/types/ui"
 
-const { t: $t, locale } = useI18n()
-
-// Component registration is handled automatically with <script setup>
 const router = useRouter()
 const uiStore = useUiStore()
 
