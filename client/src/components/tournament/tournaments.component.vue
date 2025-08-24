@@ -77,51 +77,44 @@
         @tournament-saved="onTournamentSaved"
     />
 </template>
-<script lang="ts">
+<script setup lang="ts">
+import { ref, computed, onMounted } from "vue"
+import { useRouter } from "vue-router"
 import { Tournament } from "@/types/boxing"
-import { defineComponent } from "vue"
 import TournamentAddOffcanvasComponent from "@/components/tournament/tournament-add-offcanvas.component.vue"
 import TournamentsEmptyComponent from "@/components/tournament/tournaments-empty.component.vue"
 import { useTournamentStore } from "@/stores/tournament.store"
 import { format } from "date-fns"
 
-export default defineComponent({
-    components: {
-        TournamentAddOffcanvasComponent: TournamentAddOffcanvasComponent,
-        TournamentsEmptyComponent: TournamentsEmptyComponent,
-    },
-    data() {
-        return {
-            tournamentStore: useTournamentStore(),
-            tournamentToEdit: null as Tournament | null,
-            format,
-        }
-    },
-    computed: {
-        selectedTournamentId(): string | null {
-            return this.tournamentStore.currentTournamentId || null
-        },
-    },
-    mounted() {
-        this.tournamentStore.fetchTournaments()
-    },
-    methods: {
-        setCurrentTournament(tournament: Tournament) {
-            this.tournamentStore.setCurrentTournament(tournament.id)
-            this.$router.push("selector")
-        },
-        setTournamentToEdit(tournament: Tournament | null) {
-            this.tournamentToEdit = tournament
-        },
-        async onTournamentSaved(tournament: Tournament) {
-            await this.tournamentStore.fetchTournaments()
-            this.setTournamentToEdit(null)
-            if (this.selectedTournamentId == tournament.id) {
-                this.tournamentStore.setCurrentTournament(tournament.id)
-            }
-        },
-    },
+const router = useRouter()
+const tournamentStore = useTournamentStore()
+
+const tournamentToEdit = ref<Tournament | null>(null)
+
+const selectedTournamentId = computed((): string | null => {
+    return tournamentStore.currentTournamentId || null
 })
+
+onMounted(() => {
+    tournamentStore.fetchTournaments()
+})
+
+const setCurrentTournament = (tournament: Tournament) => {
+    tournamentStore.setCurrentTournament(tournament.id)
+    router.push("selector")
+}
+
+const setTournamentToEdit = (tournament: Tournament | null) => {
+    tournamentToEdit.value = tournament
+}
+
+const onTournamentSaved = async (tournament: Tournament) => {
+    await tournamentStore.fetchTournaments()
+    setTournamentToEdit(null)
+    if (selectedTournamentId.value == tournament.id) {
+        tournamentStore.setCurrentTournament(tournament.id)
+    }
+}
 </script>
 <style scoped>
 .selected-card-border {
