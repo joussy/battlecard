@@ -25,26 +25,19 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Run linters
-        run: |
-          echo "Running frontend linter"
-          cd client
-          npm ci
-          npm run lint
-          echo "Running backend linter"
-          cd ../server
-          npm ci
-          npm run lint
       - name: Build frontend
         run: |
           cd client
           npm ci
+          npm run lint
           echo "VITE_SERVER_URL=${{ vars.VITE_SERVER_URL }}" >> .env          
           npm run build
       - name: Build backend
         run: |
           cd server
           npm ci
+          npm run lint
+          npm run build
 
   publish-docker:
     name: Publish Docker image
