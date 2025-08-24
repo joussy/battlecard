@@ -38,21 +38,21 @@
                     @click="$router.push({ name: 'selector-tile', params: { id: props.boxer.id } })"
                 >
                     <i class="bi bi-eye" />
-                    <span class="ms-1">Select opponents</span>
+                    <span class="ms-1">{{ $t("selector.selectOpponents") }}</span>
                 </button>
                 <button
                     class="btn btn-outline-success btn-sm"
                     @click="editBoxer()"
                 >
                     <i class="bi bi-pencil" />
-                    <span class="ms-2">Edit</span>
+                    <span class="ms-2">{{ $t("common.edit") }}</span>
                 </button>
                 <button
                     class="btn btn-outline-secondary btn-sm"
                     @click="copyToClipboard()"
                 >
                     <i class="bi bi-clipboard" />
-                    <span class="d-none d-sm-inline ms-2">Copy to clipboard</span>
+                    <span class="d-none d-sm-inline ms-2">{{ $t("tournaments.copyClipboard") }}</span>
                 </button>
             </div>
         </div>
@@ -60,6 +60,7 @@
 </template>
 
 <script setup lang="ts">
+import { useI18n } from "vue-i18n"
 import { Boxer } from "@/types/boxing.d"
 import { Gender } from "@/api"
 import RecordBadgeComponent from "@/components/shared/badges/record-badge.component.vue"
@@ -71,6 +72,8 @@ import PossibleBadgeComponent from "@/components/shared/badges/possible-badge.co
 import IconComponent from "@/components/shared/core/icon.component.vue"
 import { useBoxerStore } from "@/stores/boxer.store"
 import { getBoxerDisplayName, getClipboardText } from "@/utils/labels.utils"
+
+const { t: $t } = useI18n()
 
 interface Props {
     boxer: Boxer

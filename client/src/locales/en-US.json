@@ -4,7 +4,17 @@
         "selected": "selected",
         "manage": "Manage this tournament",
         "edit": "Edit",
-        "copyClipboard": "Copy to clipboard"
+        "copyClipboard": "Copy to clipboard",
+        "welcome": "Welcome!",
+        "noTournamentsYet": "You don't have any tournaments yet. Create your first tournament to get started.",
+        "howToGenerateFightCard": "How to generate a fight card",
+        "createTournament": "Create a tournament",
+        "createTournamentDescription": "This is the container for your event and fights.",
+        "openSelector": "Open the selector",
+        "openSelectorDescription": "Add boxers to the tournament so they become participants.",
+        "buildFightCard": "Build the fight card",
+        "buildFightCardDescription": "Use the fight card view to create matchups and schedule fights between added boxers.",
+        "createFirstTournament": "Create your first tournament"
     },
     "import": {
         "title": "Import boxers",
@@ -75,6 +85,7 @@
         "fightsPossible": "fights possible",
         "searchBoxers": "Search boxers",
         "addNewBoxer": "Add new boxer",
+        "selectOpponents": "Select opponents",
         "editBoxer": "Edit boxer",
         "saveChanges": "Save changes",
         "cancel": "Cancel",

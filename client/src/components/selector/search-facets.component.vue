@@ -29,12 +29,15 @@
 
 <script setup lang="ts">
 import { computed } from "vue"
+import { useI18n } from "vue-i18n"
 import { useUiStore } from "@/stores/ui.store"
 import { Facets } from "@/types/ui"
 
+const { t: $t } = useI18n()
+
 function displayRange(min: number | null | undefined, max: number | null | undefined) {
-    const minDisplay = min !== null && min !== undefined ? min : "Any"
-    const maxDisplay = max !== null && max !== undefined ? max : "Any"
+    const minDisplay = min !== null && min !== undefined ? min : $t("selector.all")
+    const maxDisplay = max !== null && max !== undefined ? max : $t("selector.all")
     return `${minDisplay} - ${maxDisplay}`
 }
 
@@ -52,7 +55,7 @@ const facetButtons = computed(() => {
     return [
         {
             facetKey: "weight",
-            label: "Weight",
+            label: $t("selector.weight"),
             displayValue: displayRange(facets.value.filters.weight.min, facets.value.filters.weight.max),
             active:
                 (facets.value.filters.weight.min !== null && facets.value.filters.weight.min !== undefined) ||
@@ -60,7 +63,7 @@ const facetButtons = computed(() => {
         },
         {
             facetKey: "age",
-            label: "Age",
+            label: $t("selector.age"),
             displayValue: displayRange(facets.value.filters.age.min, facets.value.filters.age.max),
             active:
                 (facets.value.filters.age.min !== null && facets.value.filters.age.min !== undefined) ||
@@ -68,7 +71,7 @@ const facetButtons = computed(() => {
         },
         {
             facetKey: "record",
-            label: "Victories",
+            label: $t("import.fights"),
             displayValue: displayRange(facets.value.filters.nbFights.min, facets.value.filters.nbFights.max),
             active:
                 (facets.value.filters.nbFights.min !== null && facets.value.filters.nbFights.min !== undefined) ||
@@ -76,7 +79,7 @@ const facetButtons = computed(() => {
         },
         {
             facetKey: "gender",
-            label: "Gender",
+            label: $t("selector.genderFilter"),
             displayValue: facets.value.filters.gender
                 ? facets.value.filters.gender.charAt(0).toUpperCase() + facets.value.filters.gender.slice(1)
                 : undefined,
@@ -84,7 +87,7 @@ const facetButtons = computed(() => {
         },
         {
             facetKey: "sort",
-            label: "Sort",
+            label: $t("selector.sortBy"),
             displayValue: `${facets.value.sort.by} (${facets.value.sort.direction})`,
             active: !!facets.value.sort.by,
         },

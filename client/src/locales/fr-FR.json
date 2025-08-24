@@ -4,7 +4,17 @@
         "selected": "sélectionné",
         "manage": "Gérer ce tournoi",
         "edit": "Modifier",
-        "copyClipboard": "Copier dans le presse-papiers"
+        "copyClipboard": "Copier dans le presse-papiers",
+        "welcome": "Bienvenue !",
+        "noTournamentsYet": "Vous n'avez pas encore de tournois. Créez votre premier tournoi pour commencer.",
+        "howToGenerateFightCard": "Comment générer une carte de combat",
+        "createTournament": "Créer un tournoi",
+        "createTournamentDescription": "C'est le conteneur pour votre événement et vos combats.",
+        "openSelector": "Ouvrir le sélecteur",
+        "openSelectorDescription": "Ajoutez des boxeurs au tournoi pour qu'ils deviennent participants.",
+        "buildFightCard": "Construire la carte de combat",
+        "buildFightCardDescription": "Utilisez la vue de la carte de combat pour créer des confrontations et programmer des combats entre les boxeurs ajoutés.",
+        "createFirstTournament": "Créez votre premier tournoi"
     },
     "import": {
         "title": "Importer des boxeurs",
@@ -75,6 +85,7 @@
         "fightsPossible": "combats possibles",
         "searchBoxers": "Rechercher des boxeurs",
         "addNewBoxer": "Ajouter un nouveau boxeur",
+        "selectOpponents": "Sélectionner les adversaires",
         "editBoxer": "Modifier le boxeur",
         "saveChanges": "Enregistrer les modifications",
         "cancel": "Annuler",
