@@ -116,8 +116,6 @@ const logout = () => {
 
 const setLanguage = (language: UiLanguage) => {
     uiStore.setLanguage(language)
-    // also update i18n locale immediately for this component
-    locale.value = language
 }
 
 onMounted(async () => {
