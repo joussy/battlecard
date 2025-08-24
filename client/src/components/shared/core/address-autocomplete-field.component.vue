@@ -50,9 +50,12 @@ const suggestions = ref<AddressAutocompleteDto[]>([])
 const showDropdown = ref(false)
 const debounceTimeout = ref<ReturnType<typeof setTimeout> | null>(null)
 
-watch(() => props.modelValue, (val: string) => {
-    inputValue.value = val
-})
+watch(
+    () => props.modelValue,
+    (val: string) => {
+        inputValue.value = val
+    }
+)
 
 const onInput = (): void => {
     emit("update:modelValue", inputValue.value)

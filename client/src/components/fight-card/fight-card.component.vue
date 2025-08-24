@@ -82,7 +82,6 @@ import { ref, computed, watch, onMounted } from "vue"
 import { Fight } from "@/types/boxing.d"
 import FightCardGridComponent from "@/components/fight-card/fight-card-grid.component.vue"
 import { useFightStore } from "@/stores/fight.store"
-import { useUiStore } from "@/stores/ui.store"
 import { useTournamentStore } from "@/stores/tournament.store"
 import ShareComponent from "@/components/shared/core/share.component.vue"
 import MatchupModalComponent from "@/components/tournament/matchup-modal.component.vue"
@@ -91,7 +90,6 @@ import { downloadWithDom } from "@/utils/download.utils"
 import { ExportOpenApi } from "@/api"
 
 const fightStore = useFightStore()
-const uiStore = useUiStore()
 const tournamentStore = useTournamentStore()
 
 const editionMode = ref(false)

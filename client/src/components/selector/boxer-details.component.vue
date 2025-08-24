@@ -31,7 +31,7 @@
                 <div class="card-body p-3 p-md-3">
                     <div class="row">
                         <p class="col-md-6 mb-1">
-                            <Icon :name="boxer.gender == Gender.MALE ? 'male' : 'female'"></Icon>
+                            <IconComponent :name="boxer.gender == Gender.MALE ? 'male' : 'female'"></IconComponent>
                             {{ getBirthDateAndAge(boxer) }}
                         </p>
                         <p class="col-md-6 mb-1">
@@ -40,15 +40,15 @@
                         </p>
                         <p class="col-md-6 mb-1"><i class="bi bi-house-fill me-1"></i>{{ boxer?.club }}</p>
                         <p class="col-md-6 mb-1">
-                            <Icon
+                            <IconComponent
                                 name="scale"
                                 class="me-1"
-                            ></Icon
+                            ></IconComponent
                             >{{ boxer.weight }} kg
-                            <Icon
+                            <IconComponent
                                 name="medal"
                                 class="me-1"
-                            ></Icon
+                            ></IconComponent
                             >{{ boxer.nbFights }}
                         </p>
                         <p class="col-md-6 mb-1">
@@ -101,8 +101,6 @@ import { Gender, ModalityErrorType } from "@/api"
 import OpponentTileComponent from "@/components/selector/opponent-tile.component.vue"
 import BoxerEditOffcanvasComponent from "@/components/selector/add/boxer-edit-offcanvas.component.vue"
 
-import IconComponent from "@/components/shared/core/icon.component.vue"
-
 import { useFightStore } from "@/stores/fight.store"
 import { useBoxerStore } from "@/stores/boxer.store"
 import { useUiStore } from "@/stores/ui.store"
@@ -110,12 +108,13 @@ import { useTournamentStore } from "@/stores/tournament.store"
 import { useTournamentBoxerStore } from "@/stores/tournamentBoxer.store"
 import { getBoxerDisplayName, getClipboardText } from "@/utils/labels.utils"
 import { getBirthDateAndAge } from "@/utils/string.utils"
+import IconComponent from "@/components/shared/core/icon.component.vue"
 
 export default defineComponent({
     components: {
         OpponentTileComponent: OpponentTileComponent,
         BoxerEditOffcanvasComponent: BoxerEditOffcanvasComponent,
-        Icon: IconComponent,
+        IconComponent: IconComponent,
     },
     setup() {},
     data() {

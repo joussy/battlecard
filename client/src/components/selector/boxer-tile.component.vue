@@ -60,9 +60,7 @@
 </template>
 
 <script setup lang="ts">
-import { type PropType } from "vue"
 import { Boxer } from "@/types/boxing.d"
-import { ModalityErrorType } from "@/api"
 import { Gender } from "@/api"
 import RecordBadgeComponent from "@/components/shared/badges/record-badge.component.vue"
 import AgeBadgeComponent from "@/components/shared/badges/age-badge.component.vue"
@@ -71,10 +69,7 @@ import LinkedFightsBadgeComponent from "@/components/shared/badges/linked-fights
 import PossibleBadgeComponent from "@/components/shared/badges/possible-badge.component.vue"
 
 import IconComponent from "@/components/shared/core/icon.component.vue"
-import { useUiStore } from "@/stores/ui.store"
 import { useBoxerStore } from "@/stores/boxer.store"
-import { useTournamentBoxerStore } from "@/stores/tournamentBoxer.store"
-import { useTournamentStore } from "@/stores/tournament.store"
 import { getBoxerDisplayName, getClipboardText } from "@/utils/labels.utils"
 
 interface Props {
@@ -86,18 +81,7 @@ const props = withDefaults(defineProps<Props>(), {
     nbOpponents: undefined,
 })
 
-const emit = defineEmits<{
-    'boxer-edit': []
-}>()
-
-const uiStore = useUiStore()
 const boxerStore = useBoxerStore()
-const tournamentBoxerStore = useTournamentBoxerStore()
-const tournamentStore = useTournamentStore()
-
-const boxerEdit = (): void => {
-    emit("boxer-edit")
-}
 
 const copyToClipboard = () => {
     const text = getClipboardText(props.boxer)

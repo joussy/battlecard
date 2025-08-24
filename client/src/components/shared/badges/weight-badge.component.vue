@@ -6,7 +6,7 @@
             'text-bg-light': !modalityError,
         }"
     >
-        <Icon name="scale" />
+        <IconComponent name="scale" />
         <span class="ms-1 number-text">{{ displayWeight }}</span>
     </span>
 </template>

@@ -109,7 +109,6 @@ import { onMounted } from "vue"
 import { useRouter } from "vue-router"
 import { UiTheme } from "@/types/ui"
 import { useUiStore } from "@/stores/ui.store"
-import { Gender } from "@/api"
 
 const router = useRouter()
 const uiStore = useUiStore()

@@ -103,9 +103,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, type PropType } from "vue"
+import { ref, watch } from "vue"
 import { useRouter } from "vue-router"
-import { ModalityErrorType } from "@/api"
 import { Boxer, Opponent } from "@/types/boxing.d"
 import RecordBadgeComponent from "@/components/shared/badges/record-badge.component.vue"
 import LinkedFightsBadgeComponent from "@/components/shared/badges/linked-fights-badge.component.vue"
@@ -113,9 +112,7 @@ import WeightBadgeComponent from "@/components/shared/badges/weight-badge.compon
 import AgeBadgeComponent from "@/components/shared/badges/age-badge.component.vue"
 import EligibilityDetailsComponent from "@/components/shared/badges/eligibility-details.component.vue"
 import { useFightStore } from "@/stores/fight.store"
-import { useBoxerStore } from "@/stores/boxer.store"
 import { getBoxerDisplayName, getClipboardText } from "@/utils/labels.utils"
-import { useTournamentBoxerStore } from "@/stores/tournamentBoxer.store"
 import IconComponent from "@/components/shared/core/icon.component.vue"
 
 interface Props {
@@ -127,8 +124,6 @@ const props = defineProps<Props>()
 
 const router = useRouter()
 const fightStore = useFightStore()
-const boxerStore = useBoxerStore()
-const boxerTournamentStore = useTournamentBoxerStore()
 
 const loading = ref(false)
 const expandDetails = ref(false)

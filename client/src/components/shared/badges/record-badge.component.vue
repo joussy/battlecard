@@ -6,7 +6,7 @@
             'text-bg-light': !modalityError,
         }"
     >
-        <Icon name="medal" />
+        <IconComponent name="medal" />
         <span class="number-text">{{ boxer.nbFights }}</span>
     </span>
 </template>

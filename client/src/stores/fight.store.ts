@@ -43,14 +43,14 @@ export const useFightStore = defineStore("fight", {
             this.loading = true
 
             try {
-                const created = (await FightOpenApi.create({
+                await FightOpenApi.create({
                     body: {
                         boxer1Id: boxer1.id,
                         boxer2Id: boxer2.id,
                         order: this.fights.length + 1,
                         tournamentId: tournamentStore.currentTournamentId,
                     },
-                })) as any // The API returns a generic object, but we'll re-fetch to get the proper data
+                })
 
                 // Re-fetch fights to get the updated list with proper typing
                 await this.fetchFights()

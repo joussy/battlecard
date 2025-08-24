@@ -47,9 +47,12 @@
     </div>
 </template>
 <script setup lang="ts">
-import { type PropType } from "vue"
 import { Boxer, Fight } from "@/types/boxing"
-import { getAgeDifference, getBirthDateAndAge as utilGetBirthDateAndAge, getFightDurationAsString } from "@/utils/string.utils"
+import {
+    getAgeDifference,
+    getBirthDateAndAge as utilGetBirthDateAndAge,
+    getFightDurationAsString,
+} from "@/utils/string.utils"
 import { Gender } from "@/api"
 import IconComponent from "@/components/shared/core/icon.component.vue"
 

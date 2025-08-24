@@ -157,7 +157,7 @@
 </template>
 
 <script setup lang="ts">
-import { nextTick, type PropType, watch, ref, computed, onMounted } from "vue"
+import { nextTick, watch, ref, computed, onMounted } from "vue"
 import bootstrapInstance from "@/utils/bootstrap.singleton"
 import { Gender, ImportBoxerDto, ImportOpenApi } from "@/api"
 import { useTournamentStore } from "@/stores/tournament.store"

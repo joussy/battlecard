@@ -5,7 +5,7 @@
                 :to="{ path: '/' }"
                 class="d-flex align-items-center text-decoration-none"
             >
-                <Icon
+                <IconComponent
                     name="ring"
                     class="me-2 svg-2"
                 />
@@ -90,7 +90,6 @@ import { downloadWithDom } from "@/utils/download.utils"
 
 const route = useRoute()
 
-const editionMode = ref(false)
 const roToken = ref<string | null>(null)
 const tournament = ref<SharedFightCard | null>(null)
 const accessDenied = ref(false)

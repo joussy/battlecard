@@ -200,10 +200,8 @@ import { ref, watch, onMounted } from "vue"
 import ImportTableComponent from "@/components/import/import-table.component.vue"
 import IconComponent from "@/components/shared/core/icon.component.vue"
 import { useUiStore } from "@/stores/ui.store"
-import { useTournamentStore } from "@/stores/tournament.store"
 import { ImportBoxerDto, ImportOpenApi } from "@/api"
 
-const tournamentStore = useTournamentStore()
 const uiStore = useUiStore()
 
 const importMode = ref<"" | "csv-file" | "csv-clipboard" | "api" | "ffboxe">("")

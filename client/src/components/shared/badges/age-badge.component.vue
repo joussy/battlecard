@@ -6,7 +6,7 @@
             'text-bg-light': !modalityError,
         }"
     >
-        <Icon name="birthday-cake" />
+        <IconComponent name="birthday-cake" />
         <span class="number-text">{{ boxerAge }}</span>
     </span>
 </template>
@@ -15,7 +15,7 @@
 import { computed } from "vue"
 import { Boxer } from "@/types/boxing"
 import { ModalityErrorDao, ModalityErrorType } from "@/api"
-import Icon from "@/components/shared/core/icon.component.vue"
+import IconComponent from "@/components/shared/core/icon.component.vue"
 import { getBoxerAge } from "@/utils/string.utils"
 
 interface Props {

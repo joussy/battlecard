@@ -8,10 +8,10 @@
             class="nav-link text-center"
             :class="{ active: $route.path.startsWith('/tournaments') }"
         >
-            <Icon
+            <IconComponent
                 name="tournament"
                 :style="{ height: '38px' }"
-            ></Icon>
+            ></IconComponent>
             <div>Tournament</div>
         </router-link>
         <router-link
@@ -20,10 +20,10 @@
             class="nav-link text-center"
             :class="{ active: $route.path.startsWith('/selector') }"
         >
-            <Icon
+            <IconComponent
                 name="group-of-people"
                 :style="{ height: '38px' }"
-            ></Icon>
+            ></IconComponent>
             <div>Selector</div>
         </router-link>
         <router-link
@@ -35,10 +35,10 @@
             <span class="position-absolute top-50 start-100 translate-middle badge rounded-pill bg-primary">
                 {{ getNbFights() }}
             </span>
-            <Icon
+            <IconComponent
                 name="headgear"
                 class="svg-2 mt-1"
-            ></Icon>
+            ></IconComponent>
             <div>Card</div>
         </router-link>
         <router-link
@@ -64,26 +64,17 @@
     </nav>
 </template>
 <script setup lang="ts">
-import { useRouter } from "vue-router"
-import Icon from "@/components/shared/core/icon.component.vue"
-import { useBoxerStore } from "@/stores/boxer.store"
+import IconComponent from "@/components/shared/core/icon.component.vue"
 import { useFightStore } from "@/stores/fight.store"
 import { useTournamentStore } from "@/stores/tournament.store"
 import { useUiStore } from "@/stores/ui.store"
 
-const router = useRouter()
 const uiStore = useUiStore()
-const boxerStore = useBoxerStore()
 const fightStore = useFightStore()
 const tournamentStore = useTournamentStore()
 
 const getNbFights = () => {
     return fightStore.fights.length
-}
-
-const logout = () => {
-    uiStore.logout()
-    router.push("settings")
 }
 </script>
 <style>

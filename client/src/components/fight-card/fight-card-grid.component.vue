@@ -102,7 +102,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, onMounted, type PropType } from "vue"
+import { ref, watch, onMounted } from "vue"
 import { Boxer, Fight } from "@/types/boxing.d"
 import { getFightDurationAsString } from "@/utils/string.utils"
 import Sortable from "sortablejs"

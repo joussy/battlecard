@@ -1,6 +1,6 @@
 <template>
     <span class="badge text-bg-light">
-        <Icon name="group-of-people" />
+        <IconComponent name="group-of-people" />
         <span class="number-text">{{ selected }}</span>
     </span>
 </template>

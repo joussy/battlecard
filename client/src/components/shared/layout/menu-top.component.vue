@@ -1,7 +1,7 @@
 <template>
     <nav class="nav nav-underline fixed-top bg-light-subtle d-none d-md-flex">
         <div class="navbar-brand pt-2 ps-3">
-            <Icon
+            <IconComponent
                 name="ring"
                 class="svg-2"
             />
@@ -28,7 +28,7 @@
                 class="nav-link link-secondary"
                 active-class="active"
             >
-                <Icon
+                <IconComponent
                     name="group-of-people"
                     class="user-logo"
                 />
@@ -44,7 +44,7 @@
                 class="nav-link link-secondary"
                 active-class="active"
             >
-                <Icon
+                <IconComponent
                     name="headgear"
                     class="user-logo"
                 />
@@ -75,13 +75,11 @@
 </template>
 <script setup lang="ts">
 import { computed } from "vue"
-import { useRouter } from "vue-router"
-import Icon from "@/components/shared/core/icon.component.vue"
+import IconComponent from "@/components/shared/core/icon.component.vue"
 import { useFightStore } from "@/stores/fight.store"
 import { useTournamentStore } from "@/stores/tournament.store"
 import { useUiStore } from "@/stores/ui.store"
 
-const router = useRouter()
 const uiStore = useUiStore()
 const tournamentStore = useTournamentStore()
 const fightStore = useFightStore()
@@ -93,11 +91,6 @@ const nbFights = computed(() => {
 const isTournamentSelected = computed((): boolean => {
     return !!tournamentStore.currentTournamentId
 })
-
-const logout = () => {
-    uiStore.logout()
-    router.push("settings")
-}
 </script>
 <style scoped>
 .user-logo {
