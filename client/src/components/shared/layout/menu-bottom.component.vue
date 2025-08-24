@@ -3,26 +3,6 @@
         class="bottom-menu d-md-none d-flex justify-content-around z-2 fixed-bottom border-top shadow-sm bg-light-subtle pb-2"
     >
         <router-link
-            :to="{ name: 'settings' }"
-            class="nav-link text-center"
-            active-class="active"
-        >
-            <i
-                v-if="!uiStore.account"
-                class="bi bi-gear-fill fs-2"
-            ></i>
-            <i
-                v-else-if="!uiStore.account.picture"
-                class="bi bi-person-circle fs-2"
-            ></i>
-            <img
-                v-else
-                :src="uiStore.account.picture"
-                class="rounded-circle icon-img-2 align-text-bottom"
-            />
-            <div>Settings</div>
-        </router-link>
-        <router-link
             v-if="uiStore.account != null"
             :to="{ name: 'tournaments' }"
             class="nav-link text-center"
@@ -60,6 +40,26 @@
                 class="svg-2 mt-1"
             ></Icon>
             <div>Card</div>
+        </router-link>
+        <router-link
+            :to="{ name: 'settings' }"
+            class="nav-link text-center"
+            active-class="active"
+        >
+            <i
+                v-if="!uiStore.account"
+                class="bi bi-gear-fill fs-2"
+            ></i>
+            <i
+                v-else-if="!uiStore.account.picture"
+                class="bi bi-person-circle fs-2"
+            ></i>
+            <img
+                v-else
+                :src="uiStore.account.picture"
+                class="rounded-circle icon-img-2 align-text-bottom"
+            />
+            <div>Settings</div>
         </router-link>
     </nav>
 </template>

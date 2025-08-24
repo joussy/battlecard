@@ -1,5 +1,14 @@
 <template>
-    <div class="max-width-md">
+    <div
+        v-if="tournamentStore.tournaments.length == 0 && !tournamentStore.loading"
+        class="max-width-md"
+    >
+        <TournamentsEmptyComponent @create="setTournamentToEdit(null)" />
+    </div>
+    <div
+        v-else
+        class="max-width-md"
+    >
         <div class="d-flex">
             <h3 class="flex-grow-1"></h3>
             <button
@@ -11,10 +20,6 @@
                 <i class="bi bi-calendar-plus-fill" />
                 New tournament
             </button>
-            <TournamentAddOffcanvasComponent
-                :tournament="tournamentToEdit"
-                @tournament-saved="onTournamentSaved"
-            />
         </div>
         <div
             v-for="tournament in tournamentStore.tournaments"
@@ -67,17 +72,23 @@
             </div>
         </div>
     </div>
+    <TournamentAddOffcanvasComponent
+        :tournament="tournamentToEdit"
+        @tournament-saved="onTournamentSaved"
+    />
 </template>
 <script lang="ts">
 import { Tournament } from "@/types/boxing"
 import { defineComponent } from "vue"
 import TournamentAddOffcanvasComponent from "@/components/tournament/tournament-add-offcanvas.component.vue"
+import TournamentsEmptyComponent from "@/components/tournament/tournaments-empty.component.vue"
 import { useTournamentStore } from "@/stores/tournament.store"
 import { format } from "date-fns"
 
 export default defineComponent({
     components: {
         TournamentAddOffcanvasComponent: TournamentAddOffcanvasComponent,
+        TournamentsEmptyComponent: TournamentsEmptyComponent,
     },
     data() {
         return {
