@@ -27,8 +27,8 @@
     </template>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue"
+<script setup lang="ts">
+import { computed } from "vue"
 import { useUiStore } from "@/stores/ui.store"
 import { Facets } from "@/types/ui"
 
@@ -38,68 +38,60 @@ function displayRange(min: number | null | undefined, max: number | null | undef
     return `${minDisplay} - ${maxDisplay}`
 }
 
-export default defineComponent({
-    name: "SearchFacetsComponent",
-    data() {
-        return {
-            uiStore: useUiStore(),
-        }
-    },
-    computed: {
-        facets(): Facets | null {
-            return this.uiStore.facets
-        },
-        facetButtons() {
-            if (!this.facets) {
-                return []
-            }
+const uiStore = useUiStore()
 
-            return [
-                {
-                    facetKey: "weight",
-                    label: "Weight",
-                    displayValue: displayRange(this.facets.filters.weight.min, this.facets.filters.weight.max),
-                    active:
-                        (this.facets.filters.weight.min !== null && this.facets.filters.weight.min !== undefined) ||
-                        (this.facets.filters.weight.max !== null && this.facets.filters.weight.max !== undefined),
-                },
-                {
-                    facetKey: "age",
-                    label: "Age",
-                    displayValue: displayRange(this.facets.filters.age.min, this.facets.filters.age.max),
-                    active:
-                        (this.facets.filters.age.min !== null && this.facets.filters.age.min !== undefined) ||
-                        (this.facets.filters.age.max !== null && this.facets.filters.age.max !== undefined),
-                },
-                {
-                    facetKey: "record",
-                    label: "Victories",
-                    displayValue: displayRange(this.facets.filters.nbFights.min, this.facets.filters.nbFights.max),
-                    active:
-                        (this.facets.filters.nbFights.min !== null && this.facets.filters.nbFights.min !== undefined) ||
-                        (this.facets.filters.nbFights.max !== null && this.facets.filters.nbFights.max !== undefined),
-                },
-                {
-                    facetKey: "gender",
-                    label: "Gender",
-                    displayValue: this.facets.filters.gender
-                        ? this.facets.filters.gender.charAt(0).toUpperCase() + this.facets.filters.gender.slice(1)
-                        : undefined,
-                    active: !!this.facets.filters.gender,
-                },
-                {
-                    facetKey: "sort",
-                    label: "Sort",
-                    displayValue: `${this.facets.sort.by} (${this.facets.sort.direction})`,
-                    active: !!this.facets.sort.by,
-                },
-            ]
-        },
-    },
-    methods: {
-        clearFacet(facet: string) {
-            this.uiStore.clearFacet(facet)
-        },
-    },
+const facets = computed((): Facets | null => {
+    return uiStore.facets
 })
+
+const facetButtons = computed(() => {
+    if (!facets.value) {
+        return []
+    }
+
+    return [
+        {
+            facetKey: "weight",
+            label: "Weight",
+            displayValue: displayRange(facets.value.filters.weight.min, facets.value.filters.weight.max),
+            active:
+                (facets.value.filters.weight.min !== null && facets.value.filters.weight.min !== undefined) ||
+                (facets.value.filters.weight.max !== null && facets.value.filters.weight.max !== undefined),
+        },
+        {
+            facetKey: "age",
+            label: "Age",
+            displayValue: displayRange(facets.value.filters.age.min, facets.value.filters.age.max),
+            active:
+                (facets.value.filters.age.min !== null && facets.value.filters.age.min !== undefined) ||
+                (facets.value.filters.age.max !== null && facets.value.filters.age.max !== undefined),
+        },
+        {
+            facetKey: "record",
+            label: "Victories",
+            displayValue: displayRange(facets.value.filters.nbFights.min, facets.value.filters.nbFights.max),
+            active:
+                (facets.value.filters.nbFights.min !== null && facets.value.filters.nbFights.min !== undefined) ||
+                (facets.value.filters.nbFights.max !== null && facets.value.filters.nbFights.max !== undefined),
+        },
+        {
+            facetKey: "gender",
+            label: "Gender",
+            displayValue: facets.value.filters.gender
+                ? facets.value.filters.gender.charAt(0).toUpperCase() + facets.value.filters.gender.slice(1)
+                : undefined,
+            active: !!facets.value.filters.gender,
+        },
+        {
+            facetKey: "sort",
+            label: "Sort",
+            displayValue: `${facets.value.sort.by} (${facets.value.sort.direction})`,
+            active: !!facets.value.sort.by,
+        },
+    ]
+})
+
+const clearFacet = (facet: string) => {
+    uiStore.clearFacet(facet)
+}
 </script>
