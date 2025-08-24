@@ -6,7 +6,7 @@
             type="button"
             @click="addRow"
         >
-            <i class="bi bi-plus-lg"></i> Add Row
+            <i class="bi bi-plus-lg"></i> {{ $t("import.addRow") }}
         </button>
         <div class="overflow-auto">
             <table class="table table-bordered">
@@ -94,7 +94,7 @@
                                 <button
                                     v-if="editIdx !== idx"
                                     class="btn btn-sm btn-primary"
-                                    title="Edit"
+                                    :title="$t('common.edit')"
                                     @click="startEdit(idx)"
                                 >
                                     <i class="bi bi-pencil"></i>
@@ -102,7 +102,7 @@
                                 <button
                                     v-if="editIdx !== idx"
                                     class="btn btn-sm btn-danger"
-                                    title="Edit"
+                                    :title="$t('common.delete')"
                                     @click="deleteRow(idx)"
                                 >
                                     <i class="bi bi-trash"></i>
@@ -110,14 +110,14 @@
                                 <template v-else>
                                     <button
                                         class="btn btn-sm btn-success"
-                                        title="Save"
+                                        :title="$t('common.save')"
                                         @click="saveEdit(idx)"
                                     >
                                         <i class="bi bi-check-lg"></i>
                                     </button>
                                     <button
                                         class="btn btn-sm btn-secondary"
-                                        title="Cancel"
+                                        :title="$t('common.cancel')"
                                         @click="cancelEdit"
                                     >
                                         <i class="bi bi-x-lg"></i>
@@ -136,7 +136,7 @@
             @click="importBoxers(true)"
         >
             <i class="bi bi-check2-circle"></i>
-            Verify
+            {{ $t("import.verify") }}
         </button>
         <button
             class="btn btn-primary mt-3 ms-2"
@@ -145,7 +145,7 @@
             @click="importBoxers(false)"
         >
             <i class="bi bi-cloud-arrow-up"></i>
-            Import
+            {{ $t("import.import") }}
         </button>
         <div
             v-if="importMessage?.length > 0"
@@ -158,9 +158,12 @@
 
 <script setup lang="ts">
 import { nextTick, watch, ref, computed, onMounted } from "vue"
+import { useI18n } from "vue-i18n"
 import bootstrapInstance from "@/utils/bootstrap.singleton"
 import { Gender, ImportBoxerDto, ImportOpenApi } from "@/api"
 import { useTournamentStore } from "@/stores/tournament.store"
+
+const { t: $t } = useI18n()
 
 interface Props {
     inputBoxers: ImportBoxerDto[]
@@ -170,22 +173,22 @@ interface Props {
 const props = defineProps<Props>()
 
 const columns = [
-    { key: "lastName", label: "Last Name", type: "text" },
-    { key: "firstName", label: "First Name", type: "text" },
-    { key: "fightRecord", label: "Fights", type: "number" },
+    { key: "lastName", label: computed(() => $t("import.lastName")), type: "text" },
+    { key: "firstName", label: computed(() => $t("import.firstName")), type: "text" },
+    { key: "fightRecord", label: computed(() => $t("import.fights")), type: "number" },
     {
         key: "gender",
-        label: "Gender",
+        label: computed(() => $t("selector.genderFilter")),
         type: "select",
         options: [
             { value: Gender.MALE, label: "M" },
             { value: Gender.FEMALE, label: "F" },
         ],
     },
-    { key: "weight", label: "Weight (kg)", type: "number" },
-    { key: "club", label: "Club", type: "text" },
-    { key: "birthDate", label: "Birth Date", type: "date" },
-    { key: "license", label: "License", type: "text" },
+    { key: "weight", label: computed(() => $t("import.weightKg")), type: "number" },
+    { key: "club", label: computed(() => $t("import.club")), type: "text" },
+    { key: "birthDate", label: computed(() => $t("import.birthDate")), type: "date" },
+    { key: "license", label: computed(() => $t("import.license")), type: "text" },
 ]
 
 const rows = ref<ImportBoxerDto[]>(props.inputBoxers)
