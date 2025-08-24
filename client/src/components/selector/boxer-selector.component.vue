@@ -127,17 +127,15 @@
     </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, watch } from "vue"
-import { ExportOpenApi, Gender } from "@/api"
-import { ModalityErrorType } from "@/api"
+<script lang="ts" setup>
+import { ref, watch } from "vue"
+import { ExportOpenApi } from "@/api"
 import BoxerTileComponent from "@/components/selector/boxer-tile.component.vue"
 import BoxerAddOffcanvasComponent from "@/components/selector/add/boxer-add-offcanvas.component.vue"
 import BoxerEditOffcanvasComponent from "@/components/selector/add/boxer-edit-offcanvas.component.vue"
 
 import BoxerSelectorFiltersComponent from "@/components/selector/boxer-selector-filters.component.vue"
 import { useTournamentStore } from "@/stores/tournament.store"
-import { useTournamentBoxerStore } from "@/stores/tournamentBoxer.store"
 import { useUiStore } from "@/stores/ui.store"
 import { useBoxerStore } from "@/stores/boxer.store"
 import SearchFacetsComponent from "@/components/selector/search-facets.component.vue"
@@ -148,194 +146,165 @@ import { getBoxerAge } from "@/utils/string.utils"
 import TournamentHeaderComponent from "@/components/shared/layout/tournament-header.component.vue"
 import { downloadWithDom } from "@/utils/download.utils"
 
-export default defineComponent({
-    components: {
-        BoxerTileComponent: BoxerTileComponent,
-        BoxerAddOffcanvasComponent: BoxerAddOffcanvasComponent,
-        BoxerSelectorFiltersComponent: BoxerSelectorFiltersComponent,
-        SearchFacetsComponent: SearchFacetsComponent,
-        TournamentHeaderComponent: TournamentHeaderComponent,
-        BoxerEditOffcanvasComponent: BoxerEditOffcanvasComponent,
+const selectedTournamentId = ref<string | null>(null)
+const tournamentStore = useTournamentStore()
+const uiStore = useUiStore()
+const boxersStore = useBoxerStore()
+
+const searchQuery = ref("")
+const boxersToDisplay = ref<Boxer[]>([])
+const searchTimeout = ref<number | null>(null)
+
+watch(
+    () => tournamentStore.currentTournamentId,
+    async () => {
+        selectedTournamentId.value = tournamentStore.currentTournamentId ?? null
+        await boxersStore.fetchBoxers()
+        setBoxersToDisplay()
     },
-    data() {
-        return {
-            Gender: Gender,
-            ModalityErrorType: ModalityErrorType,
-            selectedTournamentId: null as string | null,
-            tournamentStore: useTournamentStore(),
-            tournamentBoxerStore: useTournamentBoxerStore(),
-            uiStore: useUiStore(),
-            boxersStore: useBoxerStore(),
-            facets: useUiStore().facets,
-            searchQuery: "", // Added for search bar binding
-            boxersToDisplay: [] as Boxer[],
-            searchTimeout: null as number | null,
-            boxerToEdit: null as Boxer | null,
+    { immediate: true }
+)
+
+watch(
+    () => [searchQuery.value, uiStore.facets],
+    () => {
+        if (searchTimeout.value) {
+            clearTimeout(searchTimeout.value)
         }
+        searchTimeout.value = window.setTimeout(() => {
+            setBoxersToDisplay()
+        }, 300) as unknown as number
     },
-    computed: {
-        nbBoxers() {
-            return this.boxersToDisplay.length
-        },
-    },
-    mounted() {
-        watch(
-            () => [this.tournamentStore.currentTournamentId],
-            async () => {
-                this.selectedTournamentId = this.tournamentStore.currentTournamentId ?? null
-                await this.boxersStore.fetchBoxers()
-                this.setBoxersToDisplay()
-            },
-            { immediate: true }
-        )
-        watch(
-            () => [this.searchQuery, this.uiStore.facets],
-            () => {
-                // Clear existing timeout
-                if (this.searchTimeout) {
-                    clearTimeout(this.searchTimeout)
-                }
-                // Set new timeout
-                this.searchTimeout = setTimeout(() => {
-                    this.setBoxersToDisplay()
-                }, 300) as unknown as number
-            },
-            { deep: true }
-        )
-    },
-    methods: {
-        filterWithFacets(boxers: Boxer[]) {
-            let filteredBoxers = boxers
-            const facets = this.uiStore.facets
-            filteredBoxers = boxers.filter((boxer) => {
-                const filters = facets?.filters
-                if (!filters) return true // If no filters, return all boxers
+    { deep: true }
+)
 
-                if (filters.weight.min !== null && boxer.weight < filters.weight.min) return false
-                if (filters.weight.max !== null && boxer.weight > filters.weight.max) return false
-                const age = getBoxerAge(boxer.birthDate)
-                if (filters.age.min !== null && age < filters.age.min) return false
-                if (filters.age.max !== null && age > filters.age.max) return false
-                if (filters.nbFights.min !== null && age < filters.nbFights.min) return false
-                if (filters.nbFights.max !== null && age > filters.nbFights.max) return false
-                if (filters.gender && boxer.gender !== filters.gender) return false
+function filterWithFacets(boxers: Boxer[]) {
+    let filteredBoxers = boxers
+    const facets = uiStore.facets
+    filteredBoxers = boxers.filter((boxer) => {
+        const filters = facets?.filters
+        if (!filters) return true
 
-                // If all filters pass, return true
-                return true
+        if (filters.weight.min !== null && boxer.weight < filters.weight.min) return false
+        if (filters.weight.max !== null && boxer.weight > filters.weight.max) return false
+        const age = getBoxerAge(boxer.birthDate)
+        if (filters.age.min !== null && age < filters.age.min) return false
+        if (filters.age.max !== null && age > filters.age.max) return false
+        if (filters.nbFights.min !== null && age < filters.nbFights.min) return false
+        if (filters.nbFights.max !== null && age > filters.nbFights.max) return false
+        if (filters.gender && boxer.gender !== filters.gender) return false
+
+        return true
+    })
+    if (facets?.sort) {
+        const { by } = facets.sort
+        if (by === "name") {
+            filteredBoxers.sort((a, b) => {
+                const nameA = `${a.firstName} ${a.lastName}`.toLowerCase()
+                const nameB = `${b.firstName} ${b.lastName}`.toLowerCase()
+                return nameA.localeCompare(nameB)
             })
-            if (facets?.sort) {
-                const { by } = facets.sort
-                if (by === "name") {
-                    filteredBoxers.sort((a, b) => {
-                        const nameA = `${a.firstName} ${a.lastName}`.toLowerCase()
-                        const nameB = `${b.firstName} ${b.lastName}`.toLowerCase()
-                        return nameA.localeCompare(nameB)
-                    })
-                } else if (by === "weight") {
-                    filteredBoxers.sort((a, b) => a.weight - b.weight)
-                } else if (by === "age") {
-                    filteredBoxers.sort((a, b) => {
-                        return b.birthDate.getTime() - a.birthDate.getTime()
-                    })
-                } else if (by === "nbFights") {
-                    filteredBoxers.sort((a, b) => a.nbFights - b.nbFights)
-                }
-                if (facets.sort.direction === "desc") {
-                    filteredBoxers.reverse()
-                }
-
-                return filteredBoxers
-            }
-
-            return filteredBoxers
-        },
-        setBoxersToDisplay() {
-            console.debug("Setting boxers to display with search query:", this.boxersStore.boxers)
-            // 1. Filter by facets first
-            let filteredBoxers = this.filterWithFacets(this.boxersStore.boxers)
-            if (!this.searchQuery) {
-                this.boxersToDisplay = [...filteredBoxers]
-                return
-            }
-
-            // 2. Then filter by search query using Fuse.js
-            const boxersWithFullName = filteredBoxers.map((boxer) => ({
-                ...boxer,
-                fullName: `${boxer.firstName} ${boxer.lastName}`,
-            }))
-            const fuse = new Fuse(boxersWithFullName, {
-                keys: [
-                    { name: "firstName", weight: 0.4 },
-                    { name: "lastName", weight: 0.4 },
-                    { name: "fullName", weight: 1.0 },
-                ],
-                threshold: 0.3,
-                ignoreLocation: true,
-                distance: 100,
+        } else if (by === "weight") {
+            filteredBoxers.sort((a, b) => a.weight - b.weight)
+        } else if (by === "age") {
+            filteredBoxers.sort((a, b) => {
+                return b.birthDate.getTime() - a.birthDate.getTime()
             })
-            this.boxersToDisplay = [...fuse.search(this.searchQuery).map((result) => result.item)]
-        },
-        clearSearch() {
-            this.searchQuery = ""
-        },
-        async downloadFile(fileType: FileType) {
-            if (!this.tournamentStore.currentTournamentId) {
-                return
-            }
+        } else if (by === "nbFights") {
+            filteredBoxers.sort((a, b) => a.nbFights - b.nbFights)
+        }
+        if (facets.sort.direction === "desc") {
+            filteredBoxers.reverse()
+        }
 
-            const boxerIds = this.boxersToDisplay.map((boxer) => boxer.id)
-            let res: Blob | File | undefined
+        return filteredBoxers
+    }
 
-            if (fileType === "xlsx") {
-                res = await ExportOpenApi.getSelectorXlsx({
-                    body: {
-                        tournamentId: this.tournamentStore.currentTournamentId,
-                        boxerIds: boxerIds,
-                    },
-                })
-            }
-            if (fileType === "battlecard") {
-                res = await ExportOpenApi.getBattlecard({
-                    body: {
-                        tournamentId: this.tournamentStore.currentTournamentId,
-                        boxerIds: boxerIds,
-                    },
-                })
-            }
-            if (fileType === "csv") {
-                res = await ExportOpenApi.getSelectorCsv({
-                    body: {
-                        tournamentId: this.tournamentStore.currentTournamentId,
-                        boxerIds: boxerIds,
-                    },
-                })
-            }
-            if (fileType === "png") {
-                res = await ExportOpenApi.getSelectorPng({
-                    body: {
-                        tournamentId: this.tournamentStore.currentTournamentId,
-                        boxerIds: boxerIds,
-                    },
-                })
-            }
-            if (fileType === "pdf") {
-                res = await ExportOpenApi.getSelectorPdf({
-                    body: {
-                        tournamentId: this.tournamentStore.currentTournamentId,
-                        boxerIds: boxerIds,
-                    },
-                })
-            }
-            downloadWithDom(res, `selector.${fileType}`)
-        },
-        async onBoxerSaved() {
-            // Refresh the boxers list after a boxer is saved
-            await this.boxersStore.fetchBoxers()
-            this.setBoxersToDisplay()
-        },
-        onFacetUpdated() {
-            this.setBoxersToDisplay()
-        },
-    },
-})
+    return filteredBoxers
+}
+
+function setBoxersToDisplay() {
+    console.debug("Setting boxers to display with search query:", boxersStore.boxers)
+    let filteredBoxers = filterWithFacets(boxersStore.boxers)
+    if (!searchQuery.value) {
+        boxersToDisplay.value = [...filteredBoxers]
+        return
+    }
+
+    const boxersWithFullName = filteredBoxers.map((boxer) => ({
+        ...boxer,
+        fullName: `${boxer.firstName} ${boxer.lastName}`,
+    }))
+    const fuse = new Fuse(boxersWithFullName, {
+        keys: [
+            { name: "firstName", weight: 0.4 },
+            { name: "lastName", weight: 0.4 },
+            { name: "fullName", weight: 1.0 },
+        ],
+        threshold: 0.3,
+        ignoreLocation: true,
+        distance: 100,
+    })
+    boxersToDisplay.value = [...fuse.search(searchQuery.value).map((result) => result.item)]
+}
+
+function clearSearch() {
+    searchQuery.value = ""
+}
+
+async function downloadFile(fileType: FileType) {
+    if (!tournamentStore.currentTournamentId) return
+
+    const boxerIds = boxersToDisplay.value.map((boxer) => boxer.id)
+    let res: Blob | File | undefined
+
+    if (fileType === "xlsx") {
+        res = await ExportOpenApi.getSelectorXlsx({
+            body: {
+                tournamentId: tournamentStore.currentTournamentId,
+                boxerIds: boxerIds,
+            },
+        })
+    }
+    if (fileType === "battlecard") {
+        res = await ExportOpenApi.getBattlecard({
+            body: {
+                tournamentId: tournamentStore.currentTournamentId,
+                boxerIds: boxerIds,
+            },
+        })
+    }
+    if (fileType === "csv") {
+        res = await ExportOpenApi.getSelectorCsv({
+            body: {
+                tournamentId: tournamentStore.currentTournamentId,
+                boxerIds: boxerIds,
+            },
+        })
+    }
+    if (fileType === "png") {
+        res = await ExportOpenApi.getSelectorPng({
+            body: {
+                tournamentId: tournamentStore.currentTournamentId,
+                boxerIds: boxerIds,
+            },
+        })
+    }
+    if (fileType === "pdf") {
+        res = await ExportOpenApi.getSelectorPdf({
+            body: {
+                tournamentId: tournamentStore.currentTournamentId,
+                boxerIds: boxerIds,
+            },
+        })
+    }
+    downloadWithDom(res, `selector.${fileType}`)
+}
+
+async function onBoxerSaved() {
+    await boxersStore.fetchBoxers()
+    setBoxersToDisplay()
+}
+
+// facet updates are handled by watches that call setBoxersToDisplay
 </script>

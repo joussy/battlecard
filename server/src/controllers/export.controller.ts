@@ -7,7 +7,7 @@ import {
   Res,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiResponse } from '@nestjs/swagger';
 import { Response as ExpressResponse } from 'express';
 import { AuthenticatedUser } from '@/interfaces/auth.interface';
 import { FightExportService } from '@/services/fight-export.service';

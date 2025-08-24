@@ -31,49 +31,46 @@
     </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue"
+<script lang="ts" setup>
+import { ref, watch, onMounted, onBeforeUnmount } from "vue"
 
 import BoxerAddFormComponent from "./boxer-add-form.component.vue"
 import { closeModal, openModal } from "@/utils/ui.utils"
-import { useUiStore } from "@/stores/ui.store"
 import { useBoxerStore } from "@/stores/boxer.store"
-import { Boxer } from "@/types/boxing"
 
-export default defineComponent({
-    components: {
-        BoxerAddFormComponent,
-    },
-    emits: ["boxer-saved"],
-    data() {
-        return {
-            uiStore: useUiStore(),
-            boxerStore: useBoxerStore(),
+const emit = defineEmits<{ (e: "boxer-saved", payload: unknown): void }>()
+
+const boxerStore = useBoxerStore()
+
+// watch store boxerToEdit to open/close modal
+watch(
+    () => boxerStore.boxerToEdit,
+    (newBoxer) => {
+        if (!newBoxer) closeModal("#boxerEditOffcanvasNavbar")
+        else openModal("#boxerEditOffcanvasNavbar")
+    }
+)
+
+const offcanvas = ref<HTMLElement | null>(null)
+let hiddenHandler: (() => void) | null = null
+
+onMounted(() => {
+    if (offcanvas.value) {
+        hiddenHandler = () => {
+            boxerStore.boxerToEdit = null
         }
-    },
-    watch: {
-        "boxerStore.boxerToEdit": function (newBoxer: Boxer | null) {
-            if (!newBoxer) {
-                closeModal("#boxerEditOffcanvasNavbar")
-            } else {
-                openModal("#boxerEditOffcanvasNavbar")
-            }
-        },
-    },
-    mounted() {
-        const offcanvasRef = this.$refs.offcanvas as HTMLElement
-        offcanvasRef.addEventListener("hidden.bs.offcanvas", () => {
-            this.clear()
-        })
-    },
-    methods: {
-        onBoxerSaved() {
-            this.$emit("boxer-saved", this.boxerStore.boxerToEdit)
-            this.clear()
-        },
-        clear() {
-            this.boxerStore.boxerToEdit = null
-        },
-    },
+        offcanvas.value.addEventListener("hidden.bs.offcanvas", hiddenHandler)
+    }
 })
+
+onBeforeUnmount(() => {
+    if (offcanvas.value && hiddenHandler) {
+        offcanvas.value.removeEventListener("hidden.bs.offcanvas", hiddenHandler)
+    }
+})
+
+function onBoxerSaved() {
+    emit("boxer-saved", boxerStore.boxerToEdit)
+    boxerStore.boxerToEdit = null
+}
 </script>
