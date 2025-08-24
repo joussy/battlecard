@@ -163,6 +163,96 @@
         "downloadQrCode": "QR Code",
         "withQrCode": "Include QR Code"
     },
+    "sharedFightCard": {
+        "download": "Download",
+        "emptyCard": "The fight card is empty",
+        "waitForFights": "Wait for fights to be added by the owner of the tournament",
+        "organizeTournaments": "Want to organize your own tournaments?",
+        "createAccountDescription": "Create a free account to manage events, fight cards, and more!",
+        "createAccount": "Create your BattleCard account",
+        "accessDenied": "Access Denied",
+        "noPermission": "You do not have permission to view this fight card.",
+        "checkLink": "Please check the link or contact the owner of the fight card."
+    },
+    "addBoxer": {
+        "title": "Add a boxer",
+        "search": "Search",
+        "create": "Create",
+        "import": "Import",
+        "cannotFind": "Cannot find what you want ?",
+        "createOne": "Create one",
+        "license": "License",
+        "lastName": "Last Name",
+        "firstName": "First Name",
+        "gender": "Gender",
+        "female": "Female",
+        "male": "Male",
+        "birthDate": "Birth Date",
+        "weight": "Weight",
+        "club": "Club",
+        "saveBoxer": "Save Boxer",
+        "validation": {
+            "required": "This field is required",
+            "weightRequired": "This field is required and must be a number greater than or equal to 1",
+            "validNumber": "Please enter a valid number (digits only, with optional comma or dot)"
+        }
+    },
+    "editBoxer": {
+        "title": "Edit a boxer"
+    },
+    "boxerImport": {
+        "manyBoxers": "Many boxers to import ?",
+        "favoriteFormat": "Import them using your favorite format !",
+        "importBoxers": "Import boxers"
+    },
+    "boxerSearch": {
+        "enterLicense": "Enter a license number or a name",
+        "name": "Name",
+        "license": "License",
+        "noResults": "No results found."
+    },
+    "opponentTile": {
+        "addToFightCard": "Add to fight card",
+        "removeFromFightCard": "Remove from fight card",
+        "watchProfile": "Watch Profile",
+        "copyClipboard": "Copy to clipboard"
+    },
+    "eligibilityDetails": {
+        "linkedFights": "Linked to {count} fights",
+        "ageYears": "{age} years old",
+        "foughtTimes": "Has already fought {fights} times",
+        "weighsKg": "Weighs {weight} kg",
+        "alreadyScheduled": "This boxer is already scheduled for fights, which may affect their eligibility.",
+        "notScheduled": "This boxer is not scheduled for any fights.",
+        "ageTooHigh": "Age difference is too high. Boxer must be within 2 years of the opponent's age.",
+        "ageMeetsRequirements": "This boxer meets the age requirements, being within 2 years of the opponent's age.",
+        "recordTooHigh": "Fight record difference is too high. Boxer must have fewer than 3 fights difference with the opponent.",
+        "recordMeetsRequirements": "This boxer meets the record requirements.",
+        "weightTooHigh": "Weight difference is too high. Boxer must be within 3 kg of the opponent's weight.",
+        "weightMeetsRequirements": "This boxer meets the weight requirements, being within 3 kg of the opponent's weight."
+    },
+    "matchupDetails": {
+        "fights": "fights",
+        "fightDuration": "Fight Duration",
+        "weightDifference": "Weight difference",
+        "ageDifference": "Age difference",
+        "fightCountDifference": "Fight count difference"
+    },
+    "tournamentAdd": {
+        "addEvent": "Add new event",
+        "editEvent": "Edit event",
+        "name": "Name",
+        "date": "Date",
+        "address": "Address",
+        "addressPlaceholder": "Start typing address...",
+        "zipCode": "ZIP Code",
+        "city": "City",
+        "createEvent": "Create event",
+        "updateEvent": "Update event",
+        "validation": {
+            "required": "This field is required"
+        }
+    },
     "common": {
         "loading": "Loading...",
         "error": "Error",

@@ -4,7 +4,7 @@
             for="license"
             class="form-label"
         >
-            Enter a license number or a name
+            {{ $t("boxerSearch.enterLicense") }}
         </label>
         <input
             v-model="license"
@@ -21,8 +21,8 @@
         <thead>
             <tr>
                 <th></th>
-                <th>Name</th>
-                <th>License</th>
+                <th>{{ $t("boxerSearch.name") }}</th>
+                <th>{{ $t("boxerSearch.license") }}</th>
             </tr>
         </thead>
         <tbody>
@@ -43,13 +43,16 @@
         v-else
         class="text-muted"
     >
-        <div>No results found.</div>
+        <div>{{ $t("boxerSearch.noResults") }}</div>
     </div>
 </template>
 
 <script setup lang="ts">
 import { ref } from "vue"
+import { useI18n } from "vue-i18n"
 import { Boxer } from "@/types/boxing"
+
+const { t: $t } = useI18n()
 
 const license = ref<string | null>(null)
 const timeout = ref<ReturnType<typeof setTimeout> | null>(null)

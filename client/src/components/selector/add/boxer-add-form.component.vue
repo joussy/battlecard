@@ -8,7 +8,7 @@
                 for="license"
                 class="form-label"
             >
-                <i class="bi bi-person-vcard me-2"></i>License
+                <i class="bi bi-person-vcard me-2"></i>{{ $t("addBoxer.license") }}
             </label>
             <input
                 v-model="license"
@@ -29,7 +29,7 @@
                 for="lastname"
                 class="form-label"
             >
-                Last Name
+                {{ $t("addBoxer.lastName") }}
             </label>
             <input
                 v-model="lastname"
@@ -50,7 +50,7 @@
                 for="firstname"
                 class="form-label"
             >
-                First Name
+                {{ $t("addBoxer.firstName") }}
             </label>
             <input
                 v-model="firstname"
@@ -72,7 +72,7 @@
                     for="gender"
                     class="form-label"
                 >
-                    Gender
+                    {{ $t("addBoxer.gender") }}
                 </label>
             </div>
             <div
@@ -91,7 +91,7 @@
                 <label
                     class="btn btn-outline-danger"
                     for="gender_1"
-                    ><i class="bi bi-gender-female me-2"></i>Female</label
+                    ><i class="bi bi-gender-female me-2"></i>{{ $t("addBoxer.female") }}</label
                 >
 
                 <input
@@ -106,7 +106,7 @@
                 <label
                     class="btn btn-outline-primary"
                     for="gender_2"
-                    ><i class="bi bi-gender-male me-2"></i> Male</label
+                    ><i class="bi bi-gender-male me-2"></i> {{ $t("addBoxer.male") }}</label
                 >
             </div>
             <div
@@ -126,7 +126,7 @@
                 <IconComponent
                     name="birthday-cake"
                     class="me-1"
-                />Birth Date
+                />{{ $t("addBoxer.birthDate") }}
             </label>
             <input
                 v-model="birthdate"
@@ -151,7 +151,7 @@
                 <IconComponent
                     name="scale"
                     class="me-2"
-                />Weight
+                />{{ $t("addBoxer.weight") }}
             </label>
             <input
                 v-model="weight"
@@ -172,7 +172,7 @@
                 for="club"
                 class="form-label"
             >
-                <i class="bi bi-house-fill me-2"></i>Club
+                <i class="bi bi-house-fill me-2"></i>{{ $t("addBoxer.club") }}
             </label>
             <input
                 v-model="club"
@@ -201,7 +201,7 @@
             class="btn btn-success"
         >
             <i class="bi bi-save me-2"></i>
-            Save Boxer
+            {{ $t("addBoxer.saveBoxer") }}
         </button>
     </form>
 </template>
@@ -209,6 +209,7 @@
 <script lang="ts" setup>
 import { ref, watch, onMounted } from "vue"
 import { configure, defineRule, GenericObject, useForm } from "vee-validate"
+import { useI18n } from "vue-i18n"
 import { Boxer } from "@/types/boxing.d"
 import { isValid, format } from "date-fns"
 import IconComponent from "@/components/shared/core/icon.component.vue"
@@ -217,31 +218,33 @@ import { Gender } from "@/api"
 import { BoxerOpenApi, CreateBoxerDto, UpdateBoxerDto } from "@/api"
 import { useTournamentStore } from "@/stores/tournament.store"
 
+const { t: $t } = useI18n()
+
 configure({
     validateOnInput: true,
 })
 defineRule("required", (value: string) => {
     if (!value || !value.length) {
-        return "This field is required"
+        return $t("addBoxer.validation.required")
     }
     return true
 })
 defineRule("weightRequired", (value: string) => {
     if (!value) {
-        return "This field is required and must be a number greater than or equal to 1"
+        return $t("addBoxer.validation.weightRequired")
     }
 
     // Check for invalid characters
     const validFormat = /^-?\d+([.,]\d+)?$/
     if (!validFormat.test(value)) {
-        return "Please enter a valid number (digits only, with optional comma or dot)"
+        return $t("addBoxer.validation.validNumber")
     }
 
     return true
 })
 defineRule("genderRequired", (value: string) => {
     if (!value || value == "none") {
-        return "This field is required"
+        return $t("addBoxer.validation.required")
     }
     return true
 })

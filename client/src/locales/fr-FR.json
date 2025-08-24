@@ -163,6 +163,96 @@
         "downloadQrCode": "QR Code",
         "withQrCode": "Inclure le QR Code"
     },
+    "sharedFightCard": {
+        "download": "Télécharger",
+        "emptyCard": "La carte de combat est vide",
+        "waitForFights": "Attendez que des combats soient ajoutés par le propriétaire du tournoi",
+        "organizeTournaments": "Vous voulez organiser vos propres tournois ?",
+        "createAccountDescription": "Créez un compte gratuit pour gérer des événements, des cartes de combat et plus encore !",
+        "createAccount": "Créez votre compte BattleCard",
+        "accessDenied": "Accès refusé",
+        "noPermission": "Vous n'avez pas la permission de voir cette carte de combat.",
+        "checkLink": "Veuillez vérifier le lien ou contacter le propriétaire de la carte de combat."
+    },
+    "addBoxer": {
+        "title": "Ajouter un boxeur",
+        "search": "Rechercher",
+        "create": "Créer",
+        "import": "Importer",
+        "cannotFind": "Vous ne trouvez pas ce que vous voulez ?",
+        "createOne": "En créer un",
+        "license": "Licence",
+        "lastName": "Nom",
+        "firstName": "Prénom",
+        "gender": "Genre",
+        "female": "Femme",
+        "male": "Homme",
+        "birthDate": "Date de naissance",
+        "weight": "Poids",
+        "club": "Club",
+        "saveBoxer": "Sauvegarder le boxeur",
+        "validation": {
+            "required": "Ce champ est requis",
+            "weightRequired": "Ce champ est requis et doit être un nombre supérieur ou égal à 1",
+            "validNumber": "Veuillez saisir un nombre valide (chiffres uniquement, avec virgule ou point optionnel)"
+        }
+    },
+    "editBoxer": {
+        "title": "Modifier un boxeur"
+    },
+    "boxerImport": {
+        "manyBoxers": "Beaucoup de boxeurs à importer ?",
+        "favoriteFormat": "Importez-les en utilisant votre format préféré !",
+        "importBoxers": "Importer des boxeurs"
+    },
+    "boxerSearch": {
+        "enterLicense": "Entrez un numéro de licence ou un nom",
+        "name": "Nom",
+        "license": "Licence",
+        "noResults": "Aucun résultat trouvé."
+    },
+    "opponentTile": {
+        "addToFightCard": "Ajouter à la carte de combat",
+        "removeFromFightCard": "Retirer de la carte de combat",
+        "watchProfile": "Voir le profil",
+        "copyClipboard": "Copier dans le presse-papier"
+    },
+    "eligibilityDetails": {
+        "linkedFights": "Lié à {count} combats",
+        "ageYears": "{age} ans",
+        "foughtTimes": "A déjà combattu {fights} fois",
+        "weighsKg": "Pèse {weight} kg",
+        "alreadyScheduled": "Ce boxeur est déjà programmé pour des combats, ce qui peut affecter son éligibilité.",
+        "notScheduled": "Ce boxeur n'est programmé pour aucun combat.",
+        "ageTooHigh": "La différence d'âge est trop élevée. Le boxeur doit être dans les 2 ans de l'âge de l'adversaire.",
+        "ageMeetsRequirements": "Ce boxeur répond aux exigences d'âge, étant dans les 2 ans de l'âge de l'adversaire.",
+        "recordTooHigh": "La différence de palmarès est trop élevée. Le boxeur doit avoir moins de 3 combats de différence avec l'adversaire.",
+        "recordMeetsRequirements": "Ce boxeur répond aux exigences de palmarès.",
+        "weightTooHigh": "La différence de poids est trop élevée. Le boxeur doit être dans les 3 kg du poids de l'adversaire.",
+        "weightMeetsRequirements": "Ce boxeur répond aux exigences de poids, étant dans les 3 kg du poids de l'adversaire."
+    },
+    "matchupDetails": {
+        "fights": "combats",
+        "fightDuration": "Durée du combat",
+        "weightDifference": "Différence de poids",
+        "ageDifference": "Différence d'âge",
+        "fightCountDifference": "Différence de nombre de combats"
+    },
+    "tournamentAdd": {
+        "addEvent": "Ajouter un nouvel événement",
+        "editEvent": "Modifier l'événement",
+        "name": "Nom",
+        "date": "Date",
+        "address": "Adresse",
+        "addressPlaceholder": "Commencez à taper l'adresse...",
+        "zipCode": "Code postal",
+        "city": "Ville",
+        "createEvent": "Créer l'événement",
+        "updateEvent": "Mettre à jour l'événement",
+        "validation": {
+            "required": "Ce champ est requis"
+        }
+    },
     "common": {
         "loading": "Chargement...",
         "error": "Erreur",
