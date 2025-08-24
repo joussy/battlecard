@@ -77,43 +77,41 @@
     </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue"
+<script lang="ts" setup>
+import { ref, onMounted, onBeforeUnmount } from "vue"
 
 import BoxerAddFormComponent from "./boxer-add-form.component.vue"
 import BoxerImportComponent from "./boxer-import.component.vue"
 import { closeModal } from "@/utils/ui.utils"
 import BoxerSearchComponent from "./boxer-search.component.vue"
-import { useUiStore } from "@/stores/ui.store"
 
-export default defineComponent({
-    components: {
-        BoxerAddFormComponent,
-        BoxerSearchComponent,
-        BoxerImportComponent,
-    },
-    emits: ["boxer-saved"],
-    data() {
-        return {
-            uiStore: useUiStore(),
-            displayMode: "create" as "search" | "create" | "import",
-        }
-    },
-    mounted() {
-        const offcanvasRef = this.$refs.offcanvas as HTMLElement
-        offcanvasRef.addEventListener("hidden.bs.offcanvas", () => {
-            this.clear()
-        })
-        this.clear()
-    },
-    methods: {
-        onBoxerSaved() {
-            closeModal("#boxerAddOffcanvasNavbar")
-            this.$emit("boxer-saved")
-        },
-        clear() {
-            this.displayMode = "create"
-        },
-    },
+const emit = defineEmits<{ (e: "boxer-saved"): void }>()
+
+const offcanvas = ref<HTMLElement | null>(null)
+const displayMode = ref<"search" | "create" | "import">("create")
+
+function clear() {
+    displayMode.value = "create"
+}
+
+function onBoxerSaved() {
+    closeModal("#boxerAddOffcanvasNavbar")
+    emit("boxer-saved")
+}
+
+let hiddenHandler: (() => void) | null = null
+
+onMounted(() => {
+    if (offcanvas.value) {
+        hiddenHandler = () => clear()
+        offcanvas.value.addEventListener("hidden.bs.offcanvas", hiddenHandler)
+    }
+    clear()
+})
+
+onBeforeUnmount(() => {
+    if (offcanvas.value && hiddenHandler) {
+        offcanvas.value.removeEventListener("hidden.bs.offcanvas", hiddenHandler)
+    }
 })
 </script>

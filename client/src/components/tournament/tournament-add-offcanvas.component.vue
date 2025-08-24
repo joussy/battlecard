@@ -141,13 +141,12 @@
     </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue"
-
+<script lang="ts" setup>
+import { watch, computed } from "vue"
 import { configure, defineRule, GenericObject, useForm } from "vee-validate"
 import { Tournament } from "@/types/boxing.d"
 import { closeModal } from "@/utils/ui.utils"
-import AddressAutocompleteFieldComponent from "@/components/shared/core/address-autocomplete-field.component.vue"
+import AddressAutocompleteField from "@/components/shared/core/address-autocomplete-field.component.vue"
 import { TournamentOpenApi, CreateTournamentDto, UpdateTournamentDto, AddressAutocompleteDto } from "@/api"
 
 configure({
@@ -160,96 +159,69 @@ defineRule("required", (value: string) => {
     return true
 })
 
-export default defineComponent({
-    components: {
-        AddressAutocompleteField: AddressAutocompleteFieldComponent,
-    },
-    props: {
-        tournament: {
-            type: Object as () => Tournament | null,
-            default: null,
-        },
-    },
-    emits: ["tournament-saved"],
-    setup() {
-        // Create the form
-        const { defineField, handleSubmit, errors, resetForm } = useForm({
-            validationSchema: {
-                name: "required",
-                date: "required",
-            },
-        })
+const props = defineProps<{ tournament?: Tournament | null }>()
+const emit = defineEmits<{ (e: "tournament-saved", tournamentId: string): void }>()
 
-        // Define fields
-        const [name] = defineField("name")
-        const [date] = defineField("date")
-        const [address] = defineField("address")
-        const [zipCode] = defineField("zipCode")
-        const [city] = defineField("city")
-
-        // Handle form submission
-        return {
-            errors,
-            name,
-            date,
-            address,
-            zipCode,
-            city,
-            resetForm,
-            handleSubmit,
-        }
-    },
-    data() {
-        return {
-            onSubmit: (() => {}) as (e: Event) => void,
-        }
-    },
-    computed: {
-        mode(): "create" | "edit" {
-            return this.tournament ? "edit" : "create"
-        },
-    },
-
-    watch: {
-        tournament() {
-            // Reset the form when tournament changes
-            this.resetForm()
-            this.name = this.tournament?.name || ""
-            this.date = this.tournament?.date || ""
-            this.address = this.tournament?.address || ""
-            this.zipCode = this.tournament?.zipCode || ""
-            this.city = this.tournament?.city || ""
-        },
-    },
-    created() {
-        this.onSubmit = this.handleSubmit(async (form: GenericObject) => {
-            const formTournament = {
-                name: form.name,
-                date: form.date,
-                address: form.address || undefined,
-                zipCode: form.zipCode || undefined,
-                city: form.city || undefined,
-            }
-            if (this.tournament) {
-                await TournamentOpenApi.update({
-                    path: { id: this.tournament.id },
-                    body: formTournament as UpdateTournamentDto,
-                })
-            } else {
-                await TournamentOpenApi.create({
-                    body: formTournament as CreateTournamentDto,
-                })
-            }
-            this.$emit("tournament-saved", formTournament)
-            this.resetForm()
-            closeModal("#tournamentAddOffcanvasNavbar")
-        })
-    },
-    methods: {
-        onAddressSelect(suggestion: AddressAutocompleteDto) {
-            if (suggestion.zipCode) this.zipCode = suggestion.zipCode
-            if (suggestion.city) this.city = suggestion.city
-        },
+// Create the form
+const { defineField, handleSubmit, errors, resetForm } = useForm({
+    validationSchema: {
+        name: "required",
+        date: "required",
     },
 })
+
+// Define fields
+const [name] = defineField("name")
+const [date] = defineField("date")
+const [address] = defineField("address")
+const [zipCode] = defineField("zipCode")
+const [city] = defineField("city")
+
+const mode = computed<"create" | "edit">(() => (props.tournament ? "edit" : "create"))
+
+// Sync prop into fields
+watch(
+    () => props.tournament,
+    (t) => {
+        resetForm()
+        name.value = t?.name || ""
+        date.value = t?.date || ""
+        address.value = t?.address || ""
+        zipCode.value = t?.zipCode || ""
+        city.value = t?.city || ""
+    },
+    { immediate: true }
+)
+
+const onSubmit = handleSubmit(async (form: GenericObject) => {
+    const formTournament = {
+        name: form.name,
+        date: form.date,
+        address: form.address || undefined,
+        zipCode: form.zipCode || undefined,
+        city: form.city || undefined,
+    }
+    let tournamentId = ""
+    if (props.tournament) {
+        await TournamentOpenApi.update({
+            path: { id: props.tournament.id },
+            body: formTournament as UpdateTournamentDto,
+        })
+        tournamentId = props.tournament.id
+    } else {
+        const res = await TournamentOpenApi.create({
+            body: formTournament as CreateTournamentDto,
+        })
+        if (!res) return
+        tournamentId = res.id
+    }
+    emit("tournament-saved", tournamentId)
+    resetForm()
+    closeModal("#tournamentAddOffcanvasNavbar")
+})
+
+function onAddressSelect(suggestion: AddressAutocompleteDto) {
+    if (suggestion.zipCode) zipCode.value = suggestion.zipCode
+    if (suggestion.city) city.value = suggestion.city
+}
 </script>

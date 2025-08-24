@@ -43,13 +43,10 @@
     </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue"
-
-export default defineComponent({
-    name: "TournamentsEmptyComponent",
-    emits: ["create"],
-})
+<script setup lang="ts">
+defineEmits<{
+    create: []
+}>()
 </script>
 
 <style scoped>

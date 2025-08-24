@@ -5,26 +5,20 @@
     />
 </template>
 
-<script lang="ts">
-import { defineAsyncComponent, defineComponent } from "vue"
+<script setup lang="ts">
+import { computed, defineAsyncComponent } from "vue"
 
-export default defineComponent({
-    props: {
-        name: {
-            type: String,
-            required: true,
-        },
-        size: {
-            type: Number,
-            required: false,
-            default: 1,
-        },
-    },
-    computed: {
-        icon() {
-            return defineAsyncComponent(() => import(`@/assets/icons/${this.name}.svg?component`))
-        },
-    },
+interface Props {
+    name: string
+    size?: number
+}
+
+const props = withDefaults(defineProps<Props>(), {
+    size: 1,
+})
+
+const icon = computed(() => {
+    return defineAsyncComponent(() => import(`@/assets/icons/${props.name}.svg?component`))
 })
 </script>
 <style lang="scss">

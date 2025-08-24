@@ -6,42 +6,32 @@
             'text-bg-light': !modalityError,
         }"
     >
-        <Icon name="scale" />
-        <span class="ms-1 number-text">{{ displayWeight() }}</span>
+        <IconComponent name="scale" />
+        <span class="ms-1 number-text">{{ displayWeight }}</span>
     </span>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
+import { computed } from "vue"
 import { Boxer } from "@/types/boxing"
 import { ModalityErrorDao, ModalityErrorType } from "@/api"
-import { PropType, defineComponent } from "vue"
 import IconComponent from "@/components/shared/core/icon.component.vue"
 
-export default defineComponent({
-    components: {
-        Icon: IconComponent,
-    },
-    props: {
-        boxer: {
-            type: Object as PropType<Boxer>,
-            required: true,
-        },
-        modalityErrors: {
-            type: Object as PropType<ModalityErrorDao[] | null>,
-            required: false,
-            default: null,
-        },
-    },
-    computed: {
-        modalityError() {
-            return this.modalityErrors?.some((error) => error.type == ModalityErrorType.WEIGHT)
-        },
-    },
-    methods: {
-        displayWeight() {
-            const weight = this.boxer.weight
-            return weight % 1 === 0 ? weight.toFixed(0) : weight.toFixed(1)
-        },
-    },
+interface Props {
+    boxer: Boxer
+    modalityErrors?: ModalityErrorDao[] | null
+}
+
+const props = withDefaults(defineProps<Props>(), {
+    modalityErrors: null,
+})
+
+const modalityError = computed(() => {
+    return props.modalityErrors?.some((error) => error.type == ModalityErrorType.WEIGHT)
+})
+
+const displayWeight = computed(() => {
+    const weight = props.boxer.weight
+    return weight % 1 === 0 ? weight.toFixed(0) : weight.toFixed(1)
 })
 </script>

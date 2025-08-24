@@ -5,7 +5,7 @@
                 :to="{ path: '/' }"
                 class="d-flex align-items-center text-decoration-none"
             >
-                <Icon
+                <IconComponent
                     name="ring"
                     class="me-2 svg-2"
                 />
@@ -56,7 +56,7 @@
                 :to="{ path: '/' }"
                 class="btn btn-outline-primary"
             >
-                <Icon
+                <IconComponent
                     name="ring"
                     class="svg-2 me-2"
                 />
@@ -77,7 +77,9 @@
     </div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
+import { ref, computed, onMounted } from "vue"
+import { useRoute } from "vue-router"
 import { SharedFightCard } from "@/types/boxing.d"
 import FightCardGridComponent from "@/components/fight-card/fight-card-grid.component.vue"
 import { ShareOpenApi } from "@/api"
@@ -86,78 +88,67 @@ import ShareComponent from "@/components/shared/core/share.component.vue"
 import IconComponent from "@/components/shared/core/icon.component.vue"
 import { downloadWithDom } from "@/utils/download.utils"
 
-export default {
-    components: {
-        FightCardGridComponent,
-        ShareComponent,
-        Icon: IconComponent,
-    },
-    data() {
-        return {
-            editionMode: false,
-            roToken: null as string | null,
-            tournament: null as SharedFightCard | null,
-            accessDenied: false,
+const route = useRoute()
+
+const roToken = ref<string | null>(null)
+const tournament = ref<SharedFightCard | null>(null)
+const accessDenied = ref(false)
+
+const tournamentDate = computed(() => {
+    //with date-fns
+    return tournament.value?.tournamentDate
+        ? new Date(tournament.value.tournamentDate).toLocaleDateString("en-US", {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+          })
+        : "Unknown Date"
+})
+
+onMounted(async () => {
+    roToken.value = route.params.roToken as string
+    try {
+        const apiSharedFightCardGet = await ShareOpenApi.getFightsByFightCardToken({
+            path: { fightCardToken: roToken.value },
+        })
+        if (apiSharedFightCardGet) {
+            tournament.value = ApiAdapter.toSharedFightCard(apiSharedFightCardGet)
+        } else {
+            throw new Error("No data received")
         }
-    },
-    computed: {
-        tournamentDate() {
-            //with date-fns
-            return this.tournament?.tournamentDate
-                ? new Date(this.tournament.tournamentDate).toLocaleDateString("en-US", {
-                      year: "numeric",
-                      month: "long",
-                      day: "numeric",
-                  })
-                : "Unknown Date"
-        },
-    },
-    async mounted() {
-        this.roToken = this.$route.params.roToken as string
-        try {
-            const apiSharedFightCardGet = await ShareOpenApi.getFightsByFightCardToken({
-                path: { fightCardToken: this.roToken },
-            })
-            if (apiSharedFightCardGet) {
-                this.tournament = ApiAdapter.toSharedFightCard(apiSharedFightCardGet)
-            } else {
-                throw new Error("No data received")
-            }
-        } catch (error) {
-            console.error("Error fetching shared fight card:", error)
-            this.tournament = null
-            this.accessDenied = true
-            return
-        }
-    },
-    methods: {
-        async downloadCallback(fileType: string): Promise<void> {
-            if (!this.roToken) {
-                return Promise.reject(new Error("RO Token is not set"))
-            }
-            let res: Blob | File | undefined
-            if (fileType === "xlsx") {
-                res = await ShareOpenApi.downloadSharedFightCardXlsx({
-                    body: { fightCardToken: this.roToken },
-                })
-            } else if (fileType === "csv") {
-                res = await ShareOpenApi.downloadSharedFightCardCsv({
-                    body: { fightCardToken: this.roToken },
-                })
-            } else if (fileType === "pdf") {
-                res = await ShareOpenApi.downloadSharedFightCardPdf({
-                    body: { fightCardToken: this.roToken },
-                })
-            } else if (fileType === "png") {
-                res = await ShareOpenApi.downloadSharedFightCardPng({
-                    body: { fightCardToken: this.roToken },
-                })
-            } else {
-                return Promise.reject(new Error("Unsupported file type"))
-            }
-            console.log("Downloaded file:", res)
-            downloadWithDom(res, `fight-card.${fileType}`)
-        },
-    },
+    } catch (error) {
+        console.error("Error fetching shared fight card:", error)
+        tournament.value = null
+        accessDenied.value = true
+        return
+    }
+})
+
+const downloadCallback = async (fileType: string): Promise<void> => {
+    if (!roToken.value) {
+        return Promise.reject(new Error("RO Token is not set"))
+    }
+    let res: Blob | File | undefined
+    if (fileType === "xlsx") {
+        res = await ShareOpenApi.downloadSharedFightCardXlsx({
+            body: { fightCardToken: roToken.value },
+        })
+    } else if (fileType === "csv") {
+        res = await ShareOpenApi.downloadSharedFightCardCsv({
+            body: { fightCardToken: roToken.value },
+        })
+    } else if (fileType === "pdf") {
+        res = await ShareOpenApi.downloadSharedFightCardPdf({
+            body: { fightCardToken: roToken.value },
+        })
+    } else if (fileType === "png") {
+        res = await ShareOpenApi.downloadSharedFightCardPng({
+            body: { fightCardToken: roToken.value },
+        })
+    } else {
+        return Promise.reject(new Error("Unsupported file type"))
+    }
+    console.log("Downloaded file:", res)
+    downloadWithDom(res, `fight-card.${fileType}`)
 }
 </script>

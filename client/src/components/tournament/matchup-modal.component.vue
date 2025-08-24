@@ -84,7 +84,9 @@
     </div>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
+import { ref, computed, onMounted, onBeforeUnmount } from "vue"
+import { onBeforeRouteLeave } from "vue-router"
 import { useFightStore } from "@/stores/fight.store"
 import { Fight } from "@/types/boxing"
 import { Modal } from "bootstrap"
@@ -94,107 +96,98 @@ import { useTournamentStore } from "@/stores/tournament.store"
 import { FightOpenApi } from "@/api"
 import ApiAdapter from "@/adapters/api.adapter"
 
-export default {
-    components: {
-        IconComponent,
-        MatchupDetailsComponent,
-    },
-    beforeRouteLeave(to, from, next) {
-        // If you're using Vue Router
-        if (this.modal) {
-            this.modal.hide()
-        }
-        next()
-    },
-    props: {},
-    data() {
-        return {
-            modal: null as Modal | null,
-            fightStore: useFightStore(),
-            tournamentStore: useTournamentStore(),
-            fights: [] as Fight[],
-            fight: null as Fight | null,
-            currentFightIndex: 0,
-        }
-    },
-    computed: {
-        canGoPrevious(): boolean {
-            return this.currentFightIndex > 0
-        },
-        canGoNext(): boolean {
-            return this.currentFightIndex < this.fights.length - 1
-        },
-    },
-    mounted() {
-        const modalElement = this.$refs.matchupModal as HTMLElement
-        // Keep a reference to the modal instance
-        this.modal = Modal.getOrCreateInstance(modalElement as HTMLElement)
-        modalElement.addEventListener("show.bs.modal", async () => {
-            await this.loadMatchups()
+const modal = ref<Modal | null>(null)
+const matchupModal = ref<HTMLElement | null>(null)
+
+const fightStore = useFightStore()
+const tournamentStore = useTournamentStore()
+const fights = ref<Fight[]>([])
+const fight = ref<Fight | null>(null)
+const currentFightIndex = ref(0)
+
+const canGoPrevious = computed(() => currentFightIndex.value > 0)
+const canGoNext = computed(() => currentFightIndex.value < fights.value.length - 1)
+
+let showHandler: EventListener | null = null
+
+onMounted(() => {
+    const modalElement = matchupModal.value as HTMLElement
+    modal.value = Modal.getOrCreateInstance(modalElement as HTMLElement)
+    showHandler = async () => {
+        await loadMatchups()
+    }
+    modalElement.addEventListener("show.bs.modal", showHandler)
+})
+
+onBeforeUnmount(() => {
+    if (modal.value) modal.value.hide()
+    const modalElement = matchupModal.value as HTMLElement
+    if (modalElement && showHandler) modalElement.removeEventListener("show.bs.modal", showHandler)
+})
+
+onBeforeRouteLeave((to, from, next) => {
+    if (modal.value) modal.value.hide()
+    next()
+})
+
+async function loadMatchups() {
+    if (!tournamentStore.currentTournamentId) {
+        console.error("No tournament selected")
+        return
+    }
+    try {
+        const apiFights = await FightOpenApi.getMatchups({
+            path: { tournamentId: tournamentStore.currentTournamentId },
         })
-    },
-    beforeUnmount() {
-        // Close modal when component is destroyed
-        if (this.modal) {
-            this.modal.hide()
+        if (apiFights) {
+            fights.value = apiFights.map(ApiAdapter.toFight)
+        } else {
+            fights.value = []
         }
-    },
-    methods: {
-        async loadMatchups() {
-            if (!this.tournamentStore.currentTournamentId) {
-                console.error("No tournament selected")
-                return
-            }
-            try {
-                const apiFights = await FightOpenApi.getMatchups({
-                    path: { tournamentId: this.tournamentStore.currentTournamentId },
-                })
-                if (apiFights) {
-                    this.fights = apiFights.map(ApiAdapter.toFight)
-                } else {
-                    this.fights = []
-                }
-                this.currentFightIndex = 0
-                this.fight = this.fights.length > 0 ? this.fights[0] : null
-            } catch (error) {
-                console.error("Error loading matchups:", error)
-                this.fights = []
-                this.fight = null
-            }
-        },
-        goToPrevious() {
-            if (this.canGoPrevious) {
-                this.currentFightIndex--
-                this.fight = this.fights[this.currentFightIndex]
-            }
-        },
-        goToNext() {
-            if (this.canGoNext) {
-                this.currentFightIndex++
-                this.fight = this.fights[this.currentFightIndex]
-            }
-        },
-        addToFightCard(fight: Fight) {
-            this.fightStore.addToFightCard(fight.boxer1, fight.boxer2)
-        },
-        removeFromFightCard(fight: Fight) {
-            const realFightId = this.getRealFightId(fight)
-            if (!realFightId) {
-                console.error("No real fight ID found for the fight")
-                return
-            }
-            this.fightStore.removeFromFightCard([realFightId])
-        },
-        getRealFightId(fight: Fight): string | null {
-            return (
-                this.fightStore.fights?.find(
-                    (f) =>
-                        (f.boxer1.id === fight.boxer1.id && f.boxer2.id === fight.boxer2.id) ||
-                        (f.boxer1.id === fight.boxer2.id && f.boxer2.id === fight.boxer1.id)
-                )?.id || null
-            )
-        },
-    },
+        currentFightIndex.value = 0
+        fight.value = fights.value.length > 0 ? fights.value[0] : null
+    } catch (error) {
+        console.error("Error loading matchups:", error)
+        fights.value = []
+        fight.value = null
+    }
+}
+
+function goToPrevious() {
+    if (canGoPrevious.value) {
+        currentFightIndex.value--
+        fight.value = fights.value[currentFightIndex.value]
+    }
+}
+
+function goToNext() {
+    if (canGoNext.value) {
+        currentFightIndex.value++
+        fight.value = fights.value[currentFightIndex.value]
+    }
+}
+
+function addToFightCard(f: Fight) {
+    fightStore.addToFightCard(f.boxer1, f.boxer2)
+}
+
+function removeFromFightCard(f: Fight) {
+    const realFightId = getRealFightId(f)
+    if (!realFightId) {
+        console.error("No real fight ID found for the fight")
+        return
+    }
+    fightStore.removeFromFightCard([realFightId])
+}
+
+function getRealFightId(f: Fight): string | null {
+    return (
+        fightStore.fights?.find(
+            (ff) =>
+                (ff.boxer1.id === f.boxer1.id && ff.boxer2.id === f.boxer2.id) ||
+                (ff.boxer1.id === f.boxer2.id && ff.boxer2.id === f.boxer1.id)
+        )?.id || null
+    )
 }
 </script>
 

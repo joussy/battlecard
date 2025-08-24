@@ -8,10 +8,10 @@
             class="nav-link text-center"
             :class="{ active: $route.path.startsWith('/tournaments') }"
         >
-            <Icon
+            <IconComponent
                 name="tournament"
                 :style="{ height: '38px' }"
-            ></Icon>
+            ></IconComponent>
             <div>Tournament</div>
         </router-link>
         <router-link
@@ -20,10 +20,10 @@
             class="nav-link text-center"
             :class="{ active: $route.path.startsWith('/selector') }"
         >
-            <Icon
+            <IconComponent
                 name="group-of-people"
                 :style="{ height: '38px' }"
-            ></Icon>
+            ></IconComponent>
             <div>Selector</div>
         </router-link>
         <router-link
@@ -35,10 +35,10 @@
             <span class="position-absolute top-50 start-100 translate-middle badge rounded-pill bg-primary">
                 {{ getNbFights() }}
             </span>
-            <Icon
+            <IconComponent
                 name="headgear"
                 class="svg-2 mt-1"
-            ></Icon>
+            ></IconComponent>
             <div>Card</div>
         </router-link>
         <router-link
@@ -63,34 +63,18 @@
         </router-link>
     </nav>
 </template>
-<script lang="ts">
-import Icon from "@/components/shared/core/icon.component.vue"
-import { useBoxerStore } from "@/stores/boxer.store"
+<script setup lang="ts">
+import IconComponent from "@/components/shared/core/icon.component.vue"
 import { useFightStore } from "@/stores/fight.store"
 import { useTournamentStore } from "@/stores/tournament.store"
 import { useUiStore } from "@/stores/ui.store"
 
-export default {
-    components: {
-        Icon,
-    },
-    data() {
-        return {
-            uiStore: useUiStore(),
-            boxerStore: useBoxerStore(),
-            fightStore: useFightStore(),
-            tournamentStore: useTournamentStore(),
-        }
-    },
-    methods: {
-        getNbFights() {
-            return this.fightStore.fights.length
-        },
-        logout() {
-            this.uiStore.logout()
-            this.$router.push("settings")
-        },
-    },
+const uiStore = useUiStore()
+const fightStore = useFightStore()
+const tournamentStore = useTournamentStore()
+
+const getNbFights = () => {
+    return fightStore.fights.length
 }
 </script>
 <style>

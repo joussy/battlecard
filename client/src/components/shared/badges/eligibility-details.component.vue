@@ -9,7 +9,7 @@
             <!-- <i class="bi bi-check-circle-fill text-success ms-1"></i> -->
         </div>
         <div class="eligibility-explanations">
-            {{ getSelectedFightsExplanation() }}
+            {{ getSelectedFightsExplanation }}
         </div>
     </div>
     <div class="eligibility-details-card">
@@ -19,10 +19,10 @@
                 :boxer="boxer"
                 :modality-errors="modalityErrors"
             />
-            <span class="eligibility-title">{{ getBoxerAge(boxer.birthDate) }} years old</span>
+            <span class="eligibility-title">{{ getBoxerAgeValue(boxer.birthDate) }} years old</span>
         </div>
         <div class="eligibility-explanations">
-            {{ getAgeExplanation() }}
+            {{ getAgeExplanation }}
         </div>
     </div>
     <div class="eligibility-details-card">
@@ -34,7 +34,7 @@
             />
             <span class="eligibility-title">Has already fought {{ boxer.nbFights }} times</span>
         </div>
-        <div class="eligibility-explanations">{{ getRecordExplanation() }}</div>
+        <div class="eligibility-explanations">{{ getRecordExplanation }}</div>
     </div>
     <div class="eligibility-details-card">
         <div class="d-flex align-items-start">
@@ -45,11 +45,11 @@
             />
             <span class="eligibility-title">Weighs {{ boxer.weight }} kg</span>
         </div>
-        <div class="eligibility-explanations">{{ getWeightExplanation() }}</div>
+        <div class="eligibility-explanations">{{ getWeightExplanation }}</div>
     </div>
 </template>
-<script lang="ts">
-import { PropType, defineComponent } from "vue"
+<script setup lang="ts">
+import { computed } from "vue"
 import LinkedFightsBadgeComponent from "@/components/shared/badges/linked-fights-badge.component.vue"
 import AgeBadgeComponent from "@/components/shared/badges/age-badge.component.vue"
 import RecordBadgeComponent from "@/components/shared/badges/record-badge.component.vue"
@@ -58,57 +58,49 @@ import { Boxer } from "@/types/boxing"
 import { ModalityErrorDao, ModalityErrorType } from "@/api"
 import { getBoxerAge } from "@/utils/string.utils"
 
-export default defineComponent({
-    components: {
-        LinkedFightsBadgeComponent: LinkedFightsBadgeComponent,
-        AgeBadgeComponent: AgeBadgeComponent,
-        RecordBadgeComponent: RecordBadgeComponent,
-        WeightBadgeComponent: WeightBadgeComponent,
-    },
-    props: {
-        boxer: {
-            type: Object as PropType<Boxer>,
-            required: true,
-        },
-        modalityErrors: {
-            type: Object as PropType<ModalityErrorDao[] | null>,
-            required: false,
-            default: null,
-        },
-    },
-    methods: {
-        getBoxerAge(birthDate: Date): number {
-            return getBoxerAge(birthDate)
-        },
-        getSelectedFightsExplanation(): string {
-            if (this.boxer.selectedFights ?? 0 > 0) {
-                return "This boxer is already scheduled for fights, which may affect their eligibility."
-            } else {
-                return "This boxer is not scheduled for any fights."
-            }
-        },
-        getAgeExplanation(): string {
-            if (this.modalityErrors?.some((error) => error.type == ModalityErrorType.AGE)) {
-                return "Age difference is too high. Boxer must be within 2 years of the opponent's age."
-            } else {
-                return "This boxer meets the age requirements, being within 2 years of the opponent's age."
-            }
-        },
-        getRecordExplanation(): string {
-            if (this.modalityErrors?.some((error) => error.type == ModalityErrorType.PRIZE_LIST)) {
-                return "Fight record difference is too high. Boxer must have fewer than 3 fights difference with the opponent."
-            } else {
-                return "This boxer meets the record requirements."
-            }
-        },
-        getWeightExplanation(): string {
-            if (this.modalityErrors?.find((error) => error.type == ModalityErrorType.WEIGHT)) {
-                return "Weight difference is too high. Boxer must be within 3 kg of the opponent's weight."
-            } else {
-                return "This boxer meets the weight requirements, being within 3 kg of the opponent's weight."
-            }
-        },
-    },
+interface Props {
+    boxer: Boxer
+    modalityErrors?: ModalityErrorDao[] | null
+}
+
+const props = withDefaults(defineProps<Props>(), {
+    modalityErrors: null,
+})
+
+const getBoxerAgeValue = (birthDate: Date): number => {
+    return getBoxerAge(birthDate)
+}
+
+const getSelectedFightsExplanation = computed((): string => {
+    if ((props.boxer.selectedFights ?? 0) > 0) {
+        return "This boxer is already scheduled for fights, which may affect their eligibility."
+    } else {
+        return "This boxer is not scheduled for any fights."
+    }
+})
+
+const getAgeExplanation = computed((): string => {
+    if (props.modalityErrors?.some((error) => error.type == ModalityErrorType.AGE)) {
+        return "Age difference is too high. Boxer must be within 2 years of the opponent's age."
+    } else {
+        return "This boxer meets the age requirements, being within 2 years of the opponent's age."
+    }
+})
+
+const getRecordExplanation = computed((): string => {
+    if (props.modalityErrors?.some((error) => error.type == ModalityErrorType.PRIZE_LIST)) {
+        return "Fight record difference is too high. Boxer must have fewer than 3 fights difference with the opponent."
+    } else {
+        return "This boxer meets the record requirements."
+    }
+})
+
+const getWeightExplanation = computed((): string => {
+    if (props.modalityErrors?.find((error) => error.type == ModalityErrorType.WEIGHT)) {
+        return "Weight difference is too high. Boxer must be within 3 kg of the opponent's weight."
+    } else {
+        return "This boxer meets the weight requirements, being within 3 kg of the opponent's weight."
+    }
 })
 </script>
 <style scoped lang="scss">

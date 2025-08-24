@@ -2,7 +2,7 @@
     <div class="border container">
         <div class="row">
             <div
-                v-for="(boxer, index) in [fight.boxer1, fight.boxer2]"
+                v-for="(boxer, index) in [props.fight.boxer1, props.fight.boxer2]"
                 :key="boxer.id"
                 class="col-sm-6"
                 :class="`matchup-boxer-${index + 1}`"
@@ -37,57 +37,54 @@
             <div class="row pt-1 pb-1">
                 <div>
                     <i class="bi bi-stopwatch me-1"></i>
-                    Fight Duration: {{ getFightDuration(fight) }}
+                    Fight Duration: {{ getFightDuration(props.fight) }}
                 </div>
-                <div>Weight difference: {{ getWeightDifference(fight) }}</div>
-                <div>Age difference: {{ getAgeDifference(fight) }}</div>
-                <div>Fight count difference: {{ getNbFightsDifference(fight) }}</div>
+                <div>Weight difference: {{ getWeightDifference(props.fight) }}</div>
+                <div>Age difference: {{ getAgeDifferenceLocal(props.fight) }}</div>
+                <div>Fight count difference: {{ getNbFightsDifference(props.fight) }}</div>
             </div>
         </div>
     </div>
 </template>
-<script lang="ts">
+<script setup lang="ts">
 import { Boxer, Fight } from "@/types/boxing"
-import { defineComponent, PropType } from "vue"
-import { getAgeDifference, getBirthDateAndAge, getFightDurationAsString } from "@/utils/string.utils"
+import {
+    getAgeDifference,
+    getBirthDateAndAge as utilGetBirthDateAndAge,
+    getFightDurationAsString,
+} from "@/utils/string.utils"
 import { Gender } from "@/api"
 import IconComponent from "@/components/shared/core/icon.component.vue"
 
-export default defineComponent({
-    components: {
-        IconComponent: IconComponent,
-    },
-    props: {
-        fight: {
-            type: Object as PropType<Fight>,
-            required: true,
-        },
-    },
-    data() {
-        return { Gender }
-    },
-    methods: {
-        getBirthDateAndAge(boxer: Boxer) {
-            return getBirthDateAndAge(boxer.birthDate)
-        },
-        getFightDuration(fight: Fight): string {
-            return getFightDurationAsString(fight.rounds, fight.roundDurationSeconds)
-        },
-        getWeightDifference(fight: Fight): string {
-            const weight1 = fight.boxer1.weight
-            const weight2 = fight.boxer2.weight
-            return `${Math.abs(weight1 - weight2)} kg`
-        },
-        getAgeDifference(fight: Fight): string {
-            return getAgeDifference(fight.boxer1.birthDate, fight.boxer2.birthDate)
-        },
-        getNbFightsDifference(fight: Fight): string {
-            const nbFights1 = fight.boxer1.nbFights
-            const nbFights2 = fight.boxer2.nbFights
-            return `${Math.abs(nbFights1 - nbFights2)} fights`
-        },
-    },
-})
+interface Props {
+    fight: Fight
+}
+
+const props = defineProps<Props>()
+
+const getBirthDateAndAge = (boxer: Boxer) => {
+    return utilGetBirthDateAndAge(boxer.birthDate)
+}
+
+const getFightDuration = (fight: Fight): string => {
+    return getFightDurationAsString(fight.rounds, fight.roundDurationSeconds)
+}
+
+const getWeightDifference = (fight: Fight): string => {
+    const weight1 = fight.boxer1.weight
+    const weight2 = fight.boxer2.weight
+    return `${Math.abs(weight1 - weight2)} kg`
+}
+
+const getAgeDifferenceLocal = (fight: Fight): string => {
+    return getAgeDifference(fight.boxer1.birthDate, fight.boxer2.birthDate)
+}
+
+const getNbFightsDifference = (fight: Fight): string => {
+    const nbFights1 = fight.boxer1.nbFights
+    const nbFights2 = fight.boxer2.nbFights
+    return `${Math.abs(nbFights1 - nbFights2)} fights`
+}
 </script>
 <style lang="scss">
 .matchup-boxer-1 {

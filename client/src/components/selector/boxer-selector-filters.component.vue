@@ -263,31 +263,21 @@
     </div>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
+import { watch } from "vue"
 import { useUiStore } from "@/stores/ui.store"
-import { defineComponent } from "vue"
 import IconComponent from "@/components/shared/core/icon.component.vue"
 
-export default defineComponent({
-    components: {
-        IconComponent: IconComponent,
+const emit = defineEmits<{ (e: "updateFacets"): void }>()
+
+const facets = useUiStore().facets
+
+// Emit updateFacets whenever facets change (deep watch)
+watch(
+    () => facets,
+    () => {
+        emit("updateFacets")
     },
-    emits: ["updateFacets"],
-    data() {
-        return {
-            facets: useUiStore().facets,
-        }
-    },
-    watch: {
-        sortRadio: {
-            immediate: true,
-            handler(val) {
-                if (!val || !this.facets) return
-                // Map radio value to facets.sort.by and direction
-                this.facets.sort.by = val
-                // Keep direction as selected
-            },
-        },
-    },
-})
+    { deep: true }
+)
 </script>

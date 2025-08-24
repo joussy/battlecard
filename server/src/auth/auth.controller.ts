@@ -1,11 +1,4 @@
-import {
-  Controller,
-  Get,
-  Logger,
-  Req,
-  SetMetadata,
-  UseGuards,
-} from '@nestjs/common';
+import { Controller, Get, Logger, Req, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';

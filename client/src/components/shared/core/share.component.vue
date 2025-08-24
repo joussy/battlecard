@@ -173,135 +173,141 @@
     </div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
+import { ref, computed, onMounted, onBeforeUnmount } from "vue"
+import { onBeforeRouteLeave } from "vue-router"
 import { ShareOpenApi } from "@/api"
 import { useTournamentStore } from "@/stores/tournament.store"
 import bootstrap from "@/utils/bootstrap.singleton"
 import { Modal } from "bootstrap"
-import { PropType } from "vue"
 
-export default {
-    name: "ShareComponent",
-    beforeRouteLeave(to, from, next) {
-        // If you're using Vue Router
-        if (this.modal) {
-            this.modal.hide()
-        }
-        next()
-    },
-    props: {
-        downloadCallback: {
-            type: Function as PropType<(fileType: string, displayQrCode: boolean) => Promise<void>>,
-            required: true,
-        },
-        enableShareLink: {
-            type: Boolean,
-            required: true,
-        },
-    },
-    data() {
-        return {
-            loadingFormat: null as string | null,
-            displayQrCode: false,
-            isGeneratingLink: false,
-            shareLink: "",
-            qrCodeSvg: "",
-            qrCodePng: "",
-            linkCopied: false,
-            tournamentStore: useTournamentStore(),
-            exportFormats: [
-                { type: "pdf", icon: "bi-file-earmark-pdf", label: "PDF", color: "danger" },
-                { type: "xlsx", icon: "bi-file-earmark-spreadsheet", label: "Excel", color: "success" },
-                { type: "csv", icon: "bi-file-earmark-text", label: "CSV", color: "info" },
-                { type: "png", icon: "bi-file-image", label: "PNG", color: "warning" },
-            ],
-            modal: null as Modal | null,
-        }
-    },
-    computed: {
-        tournamentId() {
-            if (!this.tournamentStore.currentTournamentId) {
-                throw new Error("No tournament selected")
+interface Props {
+    downloadCallback: (fileType: string, displayQrCode: boolean) => Promise<void>
+    enableShareLink: boolean
+}
+
+const props = defineProps<Props>()
+
+// Template refs
+const shareModal = ref<HTMLElement>()
+
+// Reactive data
+const loadingFormat = ref<string | null>(null)
+const displayQrCode = ref(false)
+const isGeneratingLink = ref(false)
+const shareLink = ref("")
+const qrCodePng = ref("")
+const linkCopied = ref(false)
+const modal = ref<Modal | null>(null)
+
+// Store
+const tournamentStore = useTournamentStore()
+
+// Static data
+const exportFormats = [
+    { type: "pdf", icon: "bi-file-earmark-pdf", label: "PDF", color: "danger" },
+    { type: "xlsx", icon: "bi-file-earmark-spreadsheet", label: "Excel", color: "success" },
+    { type: "csv", icon: "bi-file-earmark-text", label: "CSV", color: "info" },
+    { type: "png", icon: "bi-file-image", label: "PNG", color: "warning" },
+]
+
+// Computed
+const tournamentId = computed(() => {
+    if (!tournamentStore.currentTournamentId) {
+        throw new Error("No tournament selected")
+    }
+    return tournamentStore.currentTournamentId
+})
+
+// Navigation guard
+onBeforeRouteLeave(() => {
+    if (modal.value) {
+        modal.value.hide()
+    }
+})
+
+// Lifecycle
+onMounted(() => {
+    // Keep a reference to the modal instance
+    if (shareModal.value) {
+        modal.value = Modal.getOrCreateInstance(shareModal.value)
+    }
+})
+
+onBeforeUnmount(() => {
+    // Close modal when component is destroyed
+    if (modal.value) {
+        modal.value.hide()
+    }
+})
+
+// Methods
+const exportFile = (fileType: string) => {
+    console.log(`Exporting as ${fileType}`)
+    loadingFormat.value = fileType
+
+    const promise: Promise<void> = props.downloadCallback(fileType, displayQrCode.value)
+
+    promise
+        .then(() => {
+            console.log(`Download completed for ${fileType}`)
+            loadingFormat.value = null
+            //close the modal after download
+            const modalElement = document.getElementById("shareModal")
+            if (modalElement) {
+                const bsModal = bootstrap.getInstance().Modal.getInstance(modalElement)
+                if (bsModal) {
+                    //wait for 1 second before hiding
+                    setTimeout(() => {
+                        bsModal.hide()
+                    }, 700)
+                }
             }
-            return this.tournamentStore.currentTournamentId
-        },
-    },
-    mounted() {
-        // Keep a reference to the modal instance
-        this.modal = Modal.getOrCreateInstance(this.$refs.shareModal as HTMLElement)
-    },
-    beforeUnmount() {
-        // Close modal when component is destroyed
-        if (this.modal) {
-            this.modal.hide()
-        }
-    },
-    methods: {
-        exportFile(fileType: string) {
-            console.log(`Exporting as ${fileType}`)
-            this.loadingFormat = fileType
+        })
+        .catch((error: unknown) => {
+            console.error(`Error downloading ${fileType}:`, error)
+            loadingFormat.value = null
+        })
+}
 
-            const promise: Promise<void> = this.downloadCallback(fileType, this.displayQrCode)
+const generateShareLink = async () => {
+    isGeneratingLink.value = true
+    const shared = await ShareOpenApi.generateFightCardToken({
+        body: { tournamentId: tournamentId.value },
+    })
 
-            promise
-                .then(() => {
-                    console.log(`Download completed for ${fileType}`)
-                    this.loadingFormat = null
-                    //close the modal after download
-                    const modal = document.getElementById("shareModal")
-                    if (modal) {
-                        const bsModal = bootstrap.getInstance().Modal.getInstance(modal)
-                        if (bsModal) {
-                            //wait for 1 second before hiding
-                            setTimeout(() => {
-                                bsModal.hide()
-                            }, 700)
-                        }
-                    }
-                })
-                .catch((error: unknown) => {
-                    console.error(`Error downloading ${fileType}:`, error)
-                    this.loadingFormat = null
-                })
-        },
-        async generateShareLink() {
-            this.isGeneratingLink = true
-            const shared = await ShareOpenApi.generateFightCardToken({
-                body: { tournamentId: this.tournamentId },
-            })
+    if (!shared) {
+        console.error("Failed to generate share link")
+        isGeneratingLink.value = false
+        return
+    }
 
-            if (!shared) {
-                console.error("Failed to generate share link")
-                this.isGeneratingLink = false
-                return
-            }
+    shareLink.value = shared.url
+    qrCodePng.value = shared.qrcode
+    isGeneratingLink.value = false
+}
 
-            this.shareLink = shared.url
-            this.qrCodePng = shared.qrcode
-            this.isGeneratingLink = false
-        },
-        async copyShareLink() {
-            console.log("Copying share link")
-            await navigator.clipboard.writeText(this.shareLink)
-            this.linkCopied = true
+const copyShareLink = async () => {
+    console.log("Copying share link")
+    await navigator.clipboard.writeText(shareLink.value)
+    linkCopied.value = true
 
-            // Reset the copied state after 2 seconds
-            setTimeout(() => {
-                this.linkCopied = false
-            }, 2000)
-        },
-        downloadQrCode() {
-            if (!this.qrCodePng) return
+    // Reset the copied state after 2 seconds
+    setTimeout(() => {
+        linkCopied.value = false
+    }, 2000)
+}
 
-            // Create a temporary link element to trigger download
-            const link = document.createElement("a")
-            link.href = this.qrCodePng
-            link.download = `qr-code-${this.tournamentId}.png`
-            document.body.appendChild(link)
-            link.click()
-            document.body.removeChild(link)
-        },
-    },
+const downloadQrCode = () => {
+    if (!qrCodePng.value) return
+
+    // Create a temporary link element to trigger download
+    const link = document.createElement("a")
+    link.href = qrCodePng.value
+    link.download = `qr-code-${tournamentId.value}.png`
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
 }
 </script>
 

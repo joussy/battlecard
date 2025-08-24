@@ -2,7 +2,7 @@
     <div class="d-flex flex-column align-items-center justify-content-center min-vh-100">
         <div class="welcome-section text-center mb-4">
             <div class="d-flex align-items-center justify-content-center mb-2">
-                <Icon
+                <IconComponent
                     name="ring"
                     class="ring-icon-auth"
                 />
@@ -66,42 +66,38 @@
         </div>
     </div>
 </template>
-<script lang="ts">
-import { defineComponent } from "vue"
+<script setup lang="ts">
+import { onMounted } from "vue"
+import { useRouter } from "vue-router"
 import { useUiStore } from "@/stores/ui.store"
 import IconComponent from "@/components/shared/core/icon.component.vue"
-export default defineComponent({
-    components: {
-        Icon: IconComponent,
-    },
-    data() {
-        return {
-            uiStore: useUiStore(),
+
+// Component registration is handled automatically with <script setup>
+const router = useRouter()
+const uiStore = useUiStore()
+
+const signInWithGoogle = () => {
+    uiStore.authenticate()
+}
+
+const logout = () => {
+    uiStore.logout()
+}
+
+onMounted(async () => {
+    window.addEventListener("message", async (event) => {
+        if (event.data && event.data.token) {
+            uiStore.jwtToken = event.data.token
+            await uiStore.setTokenAndFetchUser()
+            router.push({ name: "tournaments" })
         }
-    },
-    async mounted() {
-        window.addEventListener("message", async (event) => {
-            if (event.data && event.data.token) {
-                this.uiStore.jwtToken = event.data.token
-                await this.uiStore.setTokenAndFetchUser()
-                this.$router.push({ name: "tournaments" })
-            }
-        })
-        const urlParams = new URLSearchParams(window.location.search)
-        const token = urlParams.get("token")
-        if (token) {
-            await this.uiStore.setTokenAndFetchUser()
-            this.$router.push({ name: "tournaments" })
-        }
-    },
-    methods: {
-        signInWithGoogle() {
-            this.uiStore.authenticate()
-        },
-        logout() {
-            this.uiStore.logout()
-        },
-    },
+    })
+    const urlParams = new URLSearchParams(window.location.search)
+    const token = urlParams.get("token")
+    if (token) {
+        await uiStore.setTokenAndFetchUser()
+        router.push({ name: "tournaments" })
+    }
 })
 </script>
 <style lang="scss">

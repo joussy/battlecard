@@ -77,105 +77,94 @@
     <MatchupModalComponent />
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
+import { ref, computed, watch, onMounted } from "vue"
 import { Fight } from "@/types/boxing.d"
 import FightCardGridComponent from "@/components/fight-card/fight-card-grid.component.vue"
 import { useFightStore } from "@/stores/fight.store"
-import { useUiStore } from "@/stores/ui.store"
 import { useTournamentStore } from "@/stores/tournament.store"
-import { watch } from "vue"
 import ShareComponent from "@/components/shared/core/share.component.vue"
 import MatchupModalComponent from "@/components/tournament/matchup-modal.component.vue"
 import TournamentHeaderComponent from "@/components/shared/layout/tournament-header.component.vue"
 import { downloadWithDom } from "@/utils/download.utils"
 import { ExportOpenApi } from "@/api"
 
-export default {
-    components: {
-        FightCardGridComponent,
-        ShareComponent,
-        TournamentHeaderComponent,
-        MatchupModalComponent,
-    },
-    data() {
-        return {
-            fightStore: useFightStore(),
-            uiStore: useUiStore(),
-            tournamentStore: useTournamentStore(),
-            editionMode: false,
-            fightCard: [] as Fight[],
+const fightStore = useFightStore()
+const tournamentStore = useTournamentStore()
+
+const editionMode = ref(false)
+const fightCard = ref<Fight[]>([])
+
+const tournamentId = computed(() => {
+    if (!tournamentStore.currentTournamentId) {
+        throw new Error("No tournament selected")
+    }
+    return tournamentStore.currentTournamentId
+})
+
+onMounted(() => {
+    watch(
+        () => [tournamentStore.currentTournamentId],
+        async () => {
+            await fightStore.fetchFights()
+        },
+        { immediate: true }
+    )
+    watch(
+        () => fightStore.fights,
+        () => {
+            if (!fightStore.restored) return
+            fightCard.value = fightStore.fights.map((fight: Fight) => {
+                return {
+                    ...fight,
+                }
+            })
+        },
+        { immediate: true, deep: true }
+    )
+    watch(
+        () => editionMode.value,
+        () => {
+            // Sortable initialization is now handled in the grid component
         }
-    },
-    computed: {
-        tournamentId() {
-            if (!this.tournamentStore.currentTournamentId) {
-                throw new Error("No tournament selected")
-            }
-            return this.tournamentStore.currentTournamentId
-        },
-    },
-    mounted() {
-        watch(
-            () => [this.tournamentStore.currentTournamentId],
-            async () => {
-                await this.fightStore.fetchFights()
-            },
-            { immediate: true }
-        )
-        watch(
-            () => this.fightStore.fights,
-            () => {
-                if (!this.fightStore.restored) return
-                this.fightCard = this.fightStore.fights.map((fight: Fight) => {
-                    return {
-                        ...fight,
-                    }
-                })
-            },
-            { immediate: true, deep: true }
-        )
-        watch(
-            () => this.editionMode,
-            () => {
-                // Sortable initialization is now handled in the grid component
-            }
-        )
-    },
-    methods: {
-        handleSwitchFight(fightId: string) {
-            this.fightStore.switchFight(fightId)
-        },
-        async handleRemoveFromFightCard(fightId: string) {
-            await this.fightStore.removeFromFightCard([fightId])
-            await this.fightStore.fetchFights()
-        },
-        getNbFights() {
-            return this.fightCard.length
-        },
-        async downloadCallback(fileType: string, displayQrCode: boolean): Promise<void> {
-            let res: Blob | File | undefined
-            if (fileType === "xlsx") {
-                res = await ExportOpenApi.getFightCardXlsx({
-                    body: { tournamentId: this.tournamentId },
-                })
-            } else if (fileType === "csv") {
-                res = await ExportOpenApi.getFightCardCsv({
-                    body: { tournamentId: this.tournamentId },
-                })
-            } else if (fileType === "pdf") {
-                res = await ExportOpenApi.getFightCardPdf({
-                    body: { tournamentId: this.tournamentId, displayQrCode },
-                })
-            } else if (fileType === "png") {
-                res = await ExportOpenApi.getFightCardPng({
-                    body: { tournamentId: this.tournamentId, displayQrCode },
-                })
-            } else {
-                return Promise.reject(new Error("Unsupported file type"))
-            }
-            console.log("Downloaded file:", res)
-            downloadWithDom(res, `fight-card.${fileType}`)
-        },
-    },
+    )
+})
+
+const handleSwitchFight = (fightId: string) => {
+    fightStore.switchFight(fightId)
+}
+
+const handleRemoveFromFightCard = async (fightId: string) => {
+    await fightStore.removeFromFightCard([fightId])
+    await fightStore.fetchFights()
+}
+
+const getNbFights = () => {
+    return fightCard.value.length
+}
+
+const downloadCallback = async (fileType: string, displayQrCode: boolean): Promise<void> => {
+    let res: Blob | File | undefined
+    if (fileType === "xlsx") {
+        res = await ExportOpenApi.getFightCardXlsx({
+            body: { tournamentId: tournamentId.value },
+        })
+    } else if (fileType === "csv") {
+        res = await ExportOpenApi.getFightCardCsv({
+            body: { tournamentId: tournamentId.value },
+        })
+    } else if (fileType === "pdf") {
+        res = await ExportOpenApi.getFightCardPdf({
+            body: { tournamentId: tournamentId.value, displayQrCode },
+        })
+    } else if (fileType === "png") {
+        res = await ExportOpenApi.getFightCardPng({
+            body: { tournamentId: tournamentId.value, displayQrCode },
+        })
+    } else {
+        return Promise.reject(new Error("Unsupported file type"))
+    }
+    console.log("Downloaded file:", res)
+    downloadWithDom(res, `fight-card.${fileType}`)
 }
 </script>

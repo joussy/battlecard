@@ -195,121 +195,111 @@
         </div>
     </div>
 </template>
-<script lang="ts">
+<script setup lang="ts">
+import { ref, watch, onMounted } from "vue"
 import ImportTableComponent from "@/components/import/import-table.component.vue"
 import IconComponent from "@/components/shared/core/icon.component.vue"
-import { defineComponent } from "vue"
 import { useUiStore } from "@/stores/ui.store"
-import { useTournamentStore } from "@/stores/tournament.store"
 import { ImportBoxerDto, ImportOpenApi } from "@/api"
 
-export default defineComponent({
-    name: "ImportComponent",
-    components: {
-        ImportTableComponent: ImportTableComponent,
-        IconComponent,
-    },
-    data() {
-        return {
-            tournamentStore: useTournamentStore(),
-            uiStore: useUiStore(),
-            importMode: "" as "" | "csv-file" | "csv-clipboard" | "api" | "ffboxe",
-            showImportTable: false,
-            clipboard: "",
-            csvClipboardSample: `
+const uiStore = useUiStore()
+
+const importMode = ref<"" | "csv-file" | "csv-clipboard" | "api" | "ffboxe">("")
+const showImportTable = ref(false)
+const clipboard = ref("")
+const csvClipboardSample = `
 lastName;firstName;birthDate;club;weight;gender;license;fightRecord
 Shields;Claressa;2007-03-17;Salita Promotions;75;female;SHI006;14
 Taylor;Katie;2006-07-02;Bray Boxing Club;60;female;TAY007;23
 Ali;Muhammad;2012-01-17;Louisville Boxing Club;107;male;ALI001;61
 Tyson;Mike;2011-06-30;Catskill Boxing Club;100;male;TYS002;58
-                  `.trim(),
-            apiClipboard: `279687
+                  `.trim()
+const apiClipboard = ref(`279687
 279688
 279689
-`,
-            rows: [] as ImportBoxerDto[],
-        }
-    },
-    watch: {
-        importMode() {
-            this.showImportTable = false
-        },
-    },
-    mounted() {
-        this.clipboard = this.csvClipboardSample
-    },
-    methods: {
-        async previewApiText() {
-            const res = await ImportOpenApi.previewFromApi({
-                body: {
-                    payload: this.apiClipboard,
-                },
-            })
-            if (!res || !res.success) {
-                console.error("Error previewing boxers:", res?.message)
-                return
-            }
-            console.log("Preview result:", res.boxers)
-            this.rows = [...res.boxers]
-            console.log("this.rows:", this.rows)
-            this.showImportTable = true
-        },
-        async previewCsvText() {
-            const res = await ImportOpenApi.previewBoxersFromCsvText({
-                body: {
-                    payload: this.clipboard,
-                },
-            })
-            if (!res || !res.success) {
-                console.error("Error previewing boxers:", res?.message)
-                return
-            }
-            this.rows = [...res.boxers]
-            console.log("this.rows:", this.rows)
-            this.showImportTable = true
-        },
-        async previewCsvFile() {
-            const fileInput = document.getElementById("formFileCsv") as HTMLInputElement
-            if (!fileInput.files || fileInput.files.length === 0) {
-                console.error("No file selected")
-                return
-            }
-            console.warn("Import functionality temporarily disabled - needs to be migrated to generated SDK")
-            const file = fileInput.files[0]
-            const res = await ImportOpenApi.previewBoxersFromCsvFile({
-                body: {
-                    file: file,
-                },
-            })
-            if (!res || !res.success) {
-                console.error("Error previewing FFBoxe file:", res?.message)
-                return
-            }
-            this.rows = [...res.boxers]
-            this.showImportTable = true
-        },
+`)
+const rows = ref<ImportBoxerDto[]>([])
 
-        async previewFfboxeFile() {
-            const fileInput = document.getElementById("formFileDisabled") as HTMLInputElement
-            if (!fileInput.files || fileInput.files.length === 0) {
-                console.error("No file selected")
-                return
-            }
-            const file = fileInput.files[0]
-            const res = await ImportOpenApi.previewBoxersFromFfboxeFile({
-                body: {
-                    file: file,
-                },
-            })
-            if (!res || !res.success) {
-                console.error("Error previewing FFBoxe file:", res?.message)
-                return
-            }
-            this.rows = [...res.boxers]
-            this.showImportTable = true
-        },
-    },
+// Watch for import mode changes
+watch(importMode, () => {
+    showImportTable.value = false
 })
+
+onMounted(() => {
+    clipboard.value = csvClipboardSample
+})
+
+const previewApiText = async () => {
+    const res = await ImportOpenApi.previewFromApi({
+        body: {
+            payload: apiClipboard.value,
+        },
+    })
+    if (!res || !res.success) {
+        console.error("Error previewing boxers:", res?.message)
+        return
+    }
+    console.log("Preview result:", res.boxers)
+    rows.value = [...res.boxers]
+    console.log("rows:", rows.value)
+    showImportTable.value = true
+}
+
+const previewCsvText = async () => {
+    const res = await ImportOpenApi.previewBoxersFromCsvText({
+        body: {
+            payload: clipboard.value,
+        },
+    })
+    if (!res || !res.success) {
+        console.error("Error previewing boxers:", res?.message)
+        return
+    }
+    rows.value = [...res.boxers]
+    console.log("rows:", rows.value)
+    showImportTable.value = true
+}
+
+const previewCsvFile = async () => {
+    const fileInput = document.getElementById("formFileCsv") as HTMLInputElement
+    if (!fileInput.files || fileInput.files.length === 0) {
+        console.error("No file selected")
+        return
+    }
+    console.warn("Import functionality temporarily disabled - needs to be migrated to generated SDK")
+    const file = fileInput.files[0]
+    const res = await ImportOpenApi.previewBoxersFromCsvFile({
+        body: {
+            file: file,
+        },
+    })
+    if (!res || !res.success) {
+        console.error("Error previewing FFBoxe file:", res?.message)
+        return
+    }
+    rows.value = [...res.boxers]
+    showImportTable.value = true
+}
+
+const previewFfboxeFile = async () => {
+    const fileInput = document.getElementById("formFileDisabled") as HTMLInputElement
+    if (!fileInput.files || fileInput.files.length === 0) {
+        console.error("No file selected")
+        return
+    }
+    const file = fileInput.files[0]
+    const res = await ImportOpenApi.previewBoxersFromFfboxeFile({
+        body: {
+            file: file,
+        },
+    })
+    if (!res || !res.success) {
+        console.error("Error previewing FFBoxe file:", res?.message)
+        return
+    }
+    rows.value = [...res.boxers]
+    showImportTable.value = true
+}
 </script>
 <style scoped>
 .stepper {

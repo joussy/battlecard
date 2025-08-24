@@ -1,7 +1,7 @@
 <template>
     <nav class="nav nav-underline fixed-top bg-light-subtle d-none d-md-flex">
         <div class="navbar-brand pt-2 ps-3">
-            <Icon
+            <IconComponent
                 name="ring"
                 class="svg-2"
             />
@@ -28,7 +28,7 @@
                 class="nav-link link-secondary"
                 active-class="active"
             >
-                <Icon
+                <IconComponent
                     name="group-of-people"
                     class="user-logo"
                 />
@@ -44,7 +44,7 @@
                 class="nav-link link-secondary"
                 active-class="active"
             >
-                <Icon
+                <IconComponent
                     name="headgear"
                     class="user-logo"
                 />
@@ -73,38 +73,24 @@
         </div>
     </nav>
 </template>
-<script lang="ts">
-import Icon from "@/components/shared/core/icon.component.vue"
+<script setup lang="ts">
+import { computed } from "vue"
+import IconComponent from "@/components/shared/core/icon.component.vue"
 import { useFightStore } from "@/stores/fight.store"
 import { useTournamentStore } from "@/stores/tournament.store"
 import { useUiStore } from "@/stores/ui.store"
 
-export default {
-    components: {
-        Icon: Icon,
-    },
-    data() {
-        return {
-            uiStore: useUiStore(),
-            tournamentStore: useTournamentStore(),
-            fightStore: useFightStore(),
-        }
-    },
-    computed: {
-        nbFights() {
-            return this.fightStore.fights.length
-        },
-        isTournamentSelected(): boolean {
-            return !!this.tournamentStore.currentTournamentId
-        },
-    },
-    methods: {
-        logout() {
-            this.uiStore.logout()
-            this.$router.push("settings")
-        },
-    },
-}
+const uiStore = useUiStore()
+const tournamentStore = useTournamentStore()
+const fightStore = useFightStore()
+
+const nbFights = computed(() => {
+    return fightStore.fights.length
+})
+
+const isTournamentSelected = computed((): boolean => {
+    return !!tournamentStore.currentTournamentId
+})
 </script>
 <style scoped>
 .user-logo {

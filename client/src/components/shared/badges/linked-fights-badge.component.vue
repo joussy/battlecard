@@ -9,38 +9,22 @@
             invisible: boxer.selectedFights < 1,
         }"
     >
-        <Icon name="link" />
+        <IconComponent name="link" />
         <span class="number-text">{{ boxer.selectedFights }}</span>
     </span>
 </template>
 
-<script lang="ts">
-import { PropType, defineComponent } from "vue"
-
+<script setup lang="ts">
 import { Boxer } from "@/types/boxing"
 import { ModalityErrorDao } from "@/api"
 import IconComponent from "@/components/shared/core/icon.component.vue"
-import { useBoxerStore } from "@/stores/boxer.store"
 
-export default defineComponent({
-    components: {
-        Icon: IconComponent,
-    },
-    props: {
-        boxer: {
-            type: Object as PropType<Boxer>,
-            required: true,
-        },
-        modalityErrors: {
-            type: Object as PropType<ModalityErrorDao[]>,
-            required: false,
-            default: null,
-        },
-    },
-    data() {
-        return {
-            boxerStore: useBoxerStore(),
-        }
-    },
+interface Props {
+    boxer: Boxer
+    modalityErrors?: ModalityErrorDao[] | null
+}
+
+withDefaults(defineProps<Props>(), {
+    modalityErrors: null,
 })
 </script>

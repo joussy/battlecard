@@ -24,66 +24,72 @@
     </div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
+import { ref, watch } from "vue"
 import { PlacesOpenApi, AddressAutocompleteDto } from "@/api"
-import { PropType } from "vue"
 
-export default {
-    name: "AddressAutocompleteField",
-    props: {
-        id: { type: String as PropType<string>, required: true },
-        label: { type: String as PropType<string>, required: true },
-        placeholder: { type: String as PropType<string>, default: "Start typing address..." },
-        modelValue: { type: String as PropType<string>, default: "" },
-    },
-    emits: ["update:modelValue", "select"],
-    data() {
-        return {
-            inputValue: this.modelValue as string,
-            suggestions: [] as AddressAutocompleteDto[],
-            showDropdown: false,
-            debounceTimeout: null as ReturnType<typeof setTimeout> | null,
+interface Props {
+    id: string
+    label: string
+    placeholder?: string
+    modelValue?: string
+}
+
+const props = withDefaults(defineProps<Props>(), {
+    placeholder: "Start typing address...",
+    modelValue: "",
+})
+
+const emit = defineEmits<{
+    "update:modelValue": [value: string]
+    select: [suggestion: AddressAutocompleteDto]
+}>()
+
+const inputValue = ref(props.modelValue)
+const suggestions = ref<AddressAutocompleteDto[]>([])
+const showDropdown = ref(false)
+const debounceTimeout = ref<ReturnType<typeof setTimeout> | null>(null)
+
+watch(
+    () => props.modelValue,
+    (val: string) => {
+        inputValue.value = val
+    }
+)
+
+const onInput = (): void => {
+    emit("update:modelValue", inputValue.value)
+    if (debounceTimeout.value) clearTimeout(debounceTimeout.value)
+    debounceTimeout.value = setTimeout(async () => {
+        if (inputValue.value.length < 3) {
+            suggestions.value = []
+            return
         }
-    },
-    watch: {
-        modelValue(val: string) {
-            this.inputValue = val
-        },
-    },
-    methods: {
-        onInput(): void {
-            this.$emit("update:modelValue", this.inputValue)
-            if (this.debounceTimeout) clearTimeout(this.debounceTimeout)
-            this.debounceTimeout = setTimeout(async () => {
-                if (this.inputValue.length < 3) {
-                    this.suggestions = []
-                    return
-                }
-                try {
-                    const result = await PlacesOpenApi.autocomplete({
-                        query: { q: this.inputValue },
-                    })
-                    if (result) {
-                        this.suggestions = result
-                    }
-                } catch (error) {
-                    console.error("Error fetching address suggestions:", error)
-                    this.suggestions = []
-                }
-            }, 300)
-        },
-        selectSuggestion(suggestion: AddressAutocompleteDto): void {
-            this.inputValue = suggestion.street
-            this.$emit("update:modelValue", this.inputValue)
-            this.$emit("select", suggestion)
-            this.showDropdown = false
-        },
-        hideDropdown(): void {
-            setTimeout(() => {
-                this.showDropdown = false
-            }, 200)
-        },
-    },
+        try {
+            const result = await PlacesOpenApi.autocomplete({
+                query: { q: inputValue.value },
+            })
+            if (result) {
+                suggestions.value = result
+            }
+        } catch (error) {
+            console.error("Error fetching address suggestions:", error)
+            suggestions.value = []
+        }
+    }, 300)
+}
+
+const selectSuggestion = (suggestion: AddressAutocompleteDto): void => {
+    inputValue.value = suggestion.street
+    emit("update:modelValue", inputValue.value)
+    emit("select", suggestion)
+    showDropdown.value = false
+}
+
+const hideDropdown = (): void => {
+    setTimeout(() => {
+        showDropdown.value = false
+    }, 200)
 }
 </script>
 <style scoped>

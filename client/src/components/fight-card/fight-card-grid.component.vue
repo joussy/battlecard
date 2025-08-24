@@ -1,6 +1,6 @@
 <template>
     <table
-        v-if="fightCard.length > 0"
+        v-if="props.fightCard.length > 0"
         ref="sortableTable"
         class="table table-striped table-borderless mb-0"
     >
@@ -24,38 +24,38 @@
                     scope="col"
                 />
                 <th
-                    v-if="editionMode"
+                    v-if="props.editionMode"
                     scope="col"
                 />
             </tr>
         </thead>
         <tbody class="table-group-divider">
             <tr
-                v-for="fight in fightCard"
+                v-for="fight in props.fightCard"
                 :key="fight.id"
             >
                 <th
                     scope="row"
-                    :class="{ handle: editionMode }"
+                    :class="{ handle: props.editionMode }"
                 >
                     <div class="d-flex justify-content-center">
                         {{ fight.order }}
                     </div>
                     <div
-                        v-if="editionMode"
+                        v-if="props.editionMode"
                         class="btn ms-0 p-0 d-flex justify-content-center"
                     >
-                        <Icon name="drag-vertical" />
+                        <IconComponent name="drag-vertical" />
                     </div>
                 </th>
                 <td
-                    :ref="`fights-tr-red-${fight.id}`"
+                    :id="`fights-tr-red-${fight.id}`"
                     class="cell-red word-break-all"
                 >
                     {{ getBoxerDisplayName(fight.boxer1) }}
                 </td>
                 <td
-                    :ref="`fights-tr-blue-${fight.id}`"
+                    :id="`fights-tr-blue-${fight.id}`"
                     class="cell-blue word-break-all"
                 >
                     {{ getBoxerDisplayName(fight.boxer2) }}
@@ -80,7 +80,7 @@
                     </div>
                 </td>
                 <td
-                    v-if="editionMode"
+                    v-if="props.editionMode"
                     class="text-end"
                 >
                     <button
@@ -93,7 +93,7 @@
                         class="btn btn-outline-danger btn-sm m-1"
                         @click="removeFromFightCard(fight.id)"
                     >
-                        <Icon name="headgear" />
+                        <IconComponent name="headgear" />
                     </button>
                 </td>
             </tr>
@@ -101,104 +101,99 @@
     </table>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
+import { ref, watch, onMounted } from "vue"
 import { Boxer, Fight } from "@/types/boxing.d"
 import { getFightDurationAsString } from "@/utils/string.utils"
 import Sortable from "sortablejs"
 import IconComponent from "@/components/shared/core/icon.component.vue"
 import { useFightStore } from "@/stores/fight.store"
-import { watch, PropType } from "vue"
 import { getBoxerDisplayName } from "@/utils/labels.utils"
 import { Gender } from "@/api"
 
-export default {
-    components: {
-        Icon: IconComponent,
-    },
-    props: {
-        fightCard: {
-            type: Array as PropType<
-                (Fight & {
-                    boxer1: Boxer
-                    boxer2: Boxer
-                })[]
-            >,
-            required: true,
-        },
-        editionMode: {
-            type: Boolean,
-            default: false,
-        },
-    },
-    emits: ["switchFight", "removeFromFightCard"],
-    data() {
-        return {
-            getBoxerDisplayName,
-            getFightDurationAsString,
-            Gender: Gender,
-            fightStore: useFightStore(),
+interface Props {
+    fightCard: (Fight & {
+        boxer1: Boxer
+        boxer2: Boxer
+    })[]
+    editionMode?: boolean
+}
+
+const props = withDefaults(defineProps<Props>(), {
+    editionMode: false,
+})
+
+const emit = defineEmits<{
+    switchFight: [fightId: string]
+    removeFromFightCard: [fightId: string]
+}>()
+
+const fightStore = useFightStore()
+const sortableTable = ref<HTMLElement>()
+
+onMounted(() => {
+    watch(
+        () => props.editionMode,
+        () => {
+            if (props.editionMode) {
+                initSortable()
+            } else {
+                destroySortable()
+            }
         }
-    },
-    mounted() {
-        watch(
-            () => this.editionMode,
-            () => {
-                if (this.editionMode) {
-                    this.initSortable()
-                } else {
-                    this.destroySortable()
-                }
+    )
+})
+
+const switchFight = (fightId: string) => {
+    emit("switchFight", fightId)
+    const divRed = document.querySelector(`#fights-tr-red-${fightId}`) as HTMLElement
+    const divBlue = document.querySelector(`#fights-tr-blue-${fightId}`) as HTMLElement
+
+    if (divRed && divBlue) {
+        divRed.classList.add("halo")
+        divBlue.classList.add("halo")
+        setTimeout(() => {
+            divRed.classList.remove("halo")
+            divBlue.classList.remove("halo")
+        }, 1000)
+    }
+}
+
+const initSortable = () => {
+    const table = sortableTable.value
+    const tbody = table?.querySelector("tbody")
+
+    if (!tbody) {
+        return
+    }
+
+    Sortable.create(tbody, {
+        animation: 150,
+        onEnd: async (evt: { oldIndex?: number; newIndex?: number }) => {
+            if (evt?.oldIndex !== undefined && evt?.newIndex !== undefined) {
+                await fightStore.updateFightOrder(props.fightCard[evt.oldIndex].id, evt.newIndex)
+                await fightStore.fetchFights()
             }
-        )
-    },
-    methods: {
-        switchFight(fightId: string) {
-            this.$emit("switchFight", fightId)
-            const divRed = (this.$refs[`fights-tr-red-${fightId}`] as HTMLElement[])[0]
-            const divBlue = (this.$refs[`fights-tr-blue-${fightId}`] as HTMLElement[])[0]
-
-            divRed.classList.add("halo")
-            divBlue.classList.add("halo")
-            setTimeout(() => {
-                divRed.classList.remove("halo")
-                return divBlue.classList.remove("halo")
-            }, 1000)
         },
-        initSortable() {
-            const table = this.$refs.sortableTable as HTMLElement
-            const tbody = table?.querySelector("tbody")
+        handle: ".handle",
+        scroll: true,
+        direction: "horizontal",
+    })
+}
 
-            if (!tbody) {
-                return
-            }
+const destroySortable = () => {
+    const table = sortableTable.value
+    const tbody = table?.querySelector("tbody")
 
-            Sortable.create(tbody, {
-                animation: 150,
-                onEnd: async (evt: { oldIndex?: number; newIndex?: number }) => {
-                    if (evt?.oldIndex !== undefined && evt?.newIndex !== undefined) {
-                        await this.fightStore.updateFightOrder(this.fightCard[evt.oldIndex].id, evt.newIndex)
-                        await this.fightStore.fetchFights()
-                    }
-                },
-                handle: ".handle",
-                scroll: true,
-                direction: "horizontal",
-            })
-        },
-        destroySortable() {
-            const table = this.$refs.sortableTable as HTMLElement
-            const tbody = table?.querySelector("tbody")
+    if (!tbody) {
+        return
+    }
 
-            if (!tbody) {
-                return
-            }
+    Sortable.get(tbody)?.destroy()
+}
 
-            Sortable.get(tbody)?.destroy()
-        },
-        removeFromFightCard(fightId: string) {
-            this.$emit("removeFromFightCard", fightId)
-        },
-    },
+const removeFromFightCard = (fightId: string) => {
+    emit("removeFromFightCard", fightId)
 }
 </script>
 

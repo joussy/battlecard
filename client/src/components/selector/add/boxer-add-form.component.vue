@@ -206,9 +206,8 @@
     </form>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType } from "vue"
-
+<script lang="ts" setup>
+import { ref, watch, onMounted } from "vue"
 import { configure, defineRule, GenericObject, useForm } from "vee-validate"
 import { Boxer } from "@/types/boxing.d"
 import { isValid, format } from "date-fns"
@@ -246,100 +245,78 @@ defineRule("genderRequired", (value: string) => {
     }
     return true
 })
-export default defineComponent({
-    components: { IconComponent },
-    props: {
-        boxer: {
-            type: Object as PropType<Boxer | null>,
-            required: false,
-            default: null,
-        },
-    },
-    emits: ["boxer-saved"],
-    setup() {
-        const { defineField, handleSubmit, errors, resetForm } = useForm({
-            validationSchema: {
-                lastname: "required",
-                firstname: "required",
-                weight: "weightRequired",
-                license: "required",
-                club: "required",
-                birthdate: "required",
-                gender: "genderRequired",
-            },
-        })
 
-        // Define fields
-        const [lastname] = defineField("lastname")
-        const [firstname] = defineField("firstname")
-        const [weight] = defineField("weight")
-        const [license] = defineField("license")
-        const [club] = defineField("club")
-        const [gender] = defineField("gender")
-        const [birthdate] = defineField("birthdate")
-        return {
-            handleSubmit,
-            lastname,
-            errors,
-            firstname,
-            weight,
-            license,
-            club,
-            resetForm,
-            gender,
-            birthdate,
-            clubsAutoCompleteList: [] as string[],
-            Gender,
-        }
+const props = defineProps<{ boxer?: Boxer | null }>()
+const emit = defineEmits<{ (e: "boxer-saved", payload: unknown): void }>()
+
+const tournamentStore = useTournamentStore()
+
+const { defineField, handleSubmit, errors } = useForm({
+    validationSchema: {
+        lastname: "required",
+        firstname: "required",
+        weight: "weightRequired",
+        license: "required",
+        club: "required",
+        birthdate: "required",
+        gender: "genderRequired",
     },
-    data() {
-        return {
-            onSubmit: (() => {}) as (e: Event) => void,
-            tournamentStore: useTournamentStore(),
-        }
+})
+
+// Define fields
+const [lastname] = defineField("lastname")
+const [firstname] = defineField("firstname")
+const [weight] = defineField("weight")
+const [license] = defineField("license")
+const [club] = defineField("club")
+const [gender] = defineField("gender")
+const [birthdate] = defineField("birthdate")
+
+const clubsAutoCompleteList = ref<string[]>([])
+
+// sync prop boxer into fields
+watch(
+    () => props.boxer,
+    (b) => {
+        lastname.value = b?.lastName ?? ""
+        firstname.value = b?.firstName ?? ""
+        weight.value = b?.weight ?? ""
+        license.value = b?.license ?? ""
+        club.value = b?.club ?? ""
+        birthdate.value = isValid(b?.birthDate) ? format(b!.birthDate, "yyyy-MM-dd") : ""
+        gender.value = b ? b.gender : ""
     },
-    watch: {
-        boxer: {
-            handler() {
-                this.lastname = this.boxer?.lastName ?? ""
-                this.firstname = this.boxer?.firstName ?? ""
-                this.weight = this.boxer?.weight ?? ""
-                this.license = this.boxer?.license ?? ""
-                this.club = this.boxer?.club ?? ""
-                this.birthdate = isValid(this.boxer?.birthDate) ? format(this.boxer!.birthDate, "yyyy-MM-dd") : ""
-                this.gender = this.boxer ? this.boxer.gender : ""
-            },
-            immediate: true,
-        },
-    },
-    mounted() {
-        this.clubsAutoCompleteList = []
-    },
-    created() {
-        this.onSubmit = this.handleSubmit(async (form: GenericObject) => {
-            let boxerData = {
-                birthDate: form.birthdate,
-                club: form.club,
-                firstName: form.firstname,
-                lastName: form.lastname,
-                gender: form.gender == Gender.FEMALE ? Gender.FEMALE : Gender.MALE,
-                weight: parseInt(form.weight),
-                license: form.license,
-                nbFights: 0,
-                tournamentId: this.tournamentStore.currentTournamentId,
-            }
-            if (this.boxer?.id) {
-                await BoxerOpenApi.update({
-                    path: { id: this.boxer.id },
-                    body: boxerData as UpdateBoxerDto,
-                })
-            } else {
-                await BoxerOpenApi.create({
-                    body: boxerData as CreateBoxerDto,
-                })
-            }
-            this.$emit("boxer-saved", boxerData)
+    { immediate: true }
+)
+
+onMounted(() => {
+    clubsAutoCompleteList.value = []
+})
+
+const onSubmit = handleSubmit(async (form: GenericObject) => {
+    const boxerData = {
+        birthDate: form.birthdate,
+        club: form.club,
+        firstName: form.firstname,
+        lastName: form.lastname,
+        gender: form.gender == Gender.FEMALE ? Gender.FEMALE : Gender.MALE,
+        weight: parseInt(form.weight),
+        license: form.license,
+        nbFights: 0,
+        tournamentId: tournamentStore.currentTournamentId,
+    }
+
+    if (props.boxer?.id) {
+        await BoxerOpenApi.update({
+            path: { id: props.boxer.id },
+            body: boxerData as UpdateBoxerDto,
         })
-    },
+    } else {
+        await BoxerOpenApi.create({
+            body: boxerData as CreateBoxerDto,
+        })
+    }
+
+    emit("boxer-saved", boxerData)
 })
 </script>

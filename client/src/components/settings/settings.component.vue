@@ -104,48 +104,44 @@
         </div>
     </div>
 </template>
-<script lang="ts">
-import { defineComponent } from "vue"
+<script setup lang="ts">
+import { onMounted } from "vue"
+import { useRouter } from "vue-router"
 import { UiTheme } from "@/types/ui"
 import { useUiStore } from "@/stores/ui.store"
-import { Gender } from "@/api"
 
-export default defineComponent({
-    data() {
-        return {
-            uiStore: useUiStore(),
-            Gender: Gender,
+const router = useRouter()
+const uiStore = useUiStore()
+
+const setTheme = (mode: UiTheme) => {
+    uiStore.setTheme(mode)
+}
+
+const signInWithGoogle = () => {
+    uiStore.authenticate()
+}
+
+const logout = () => {
+    uiStore.logout()
+    // Redirect to authentication page
+    router.push({ name: "auth" })
+}
+
+onMounted(async () => {
+    // Listen for token from popup
+    window.addEventListener("message", async (event) => {
+        if (event.data && event.data.token) {
+            uiStore.jwtToken = event.data.token
+            await uiStore.setTokenAndFetchUser()
         }
-    },
-    async mounted() {
-        // Listen for token from popup
-        window.addEventListener("message", async (event) => {
-            if (event.data && event.data.token) {
-                this.uiStore.jwtToken = event.data.token
-                await this.uiStore.setTokenAndFetchUser()
-            }
-        })
-        // (Optional: handle token in URL for fallback)
-        const urlParams = new URLSearchParams(window.location.search)
-        const token = urlParams.get("token")
-        if (token) {
-            await this.uiStore.setTokenAndFetchUser()
-            window.history.replaceState({}, document.title, window.location.pathname)
-        }
-    },
-    methods: {
-        setTheme(mode: UiTheme) {
-            this.uiStore.setTheme(mode)
-        },
-        signInWithGoogle() {
-            this.uiStore.authenticate()
-        },
-        logout() {
-            this.uiStore.logout()
-            // Redirect to authentication page
-            this.$router.push({ name: "auth" })
-        },
-    },
+    })
+    // (Optional: handle token in URL for fallback)
+    const urlParams = new URLSearchParams(window.location.search)
+    const token = urlParams.get("token")
+    if (token) {
+        await uiStore.setTokenAndFetchUser()
+        window.history.replaceState({}, document.title, window.location.pathname)
+    }
 })
 </script>
 <style lang="scss">

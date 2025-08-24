@@ -5,7 +5,7 @@ applyTo: '\*\*'
 Guidelines
 
 - Never fix the formatting of the code.
-- Frontend: Vue 3 + Bootstrap 5 (TypeScript).
+- Frontend: Vue 3 + Bootstrap 5 (TypeScript), with composition API.
 - Backend: NestJS + TypeORM (TypeScript).
 - Use openapi-ts to generate types from the OpenAPI spec.
 - Build commands:

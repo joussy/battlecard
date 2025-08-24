@@ -2,44 +2,44 @@
     <div
         class="card mb-2"
         :class="{
-            'border-success': opponent.fightId,
+            'border-success': props.opponent.fightId,
         }"
     >
         <div class="card-body pt-1 pb-1">
             <div class="d-flex justify-content-between">
                 <div>
                     <span>
-                        {{ getBoxerDisplayName(opponent) }}
+                        {{ getBoxerDisplayName(props.opponent) }}
                     </span>
                 </div>
                 <div
                     class="font-italic text-right"
                     style="font-size: 14px"
                 >
-                    {{ opponent.categoryShortText }}
+                    {{ props.opponent.categoryShortText }}
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-6 pb-1">
-                    <i>{{ opponent.club }}</i>
+                    <i>{{ props.opponent.club }}</i>
                 </div>
                 <div
                     v-if="!expandDetails"
                     class="col-md-6 d-flex align-items-end justify-content-end flex-wrap gap-1"
                     @click="expandDetails = !expandDetails"
                 >
-                    <LinkedFightsBadgeComponent :boxer="opponent" />
+                    <LinkedFightsBadgeComponent :boxer="props.opponent" />
                     <AgeBadgeComponent
-                        :boxer="opponent"
-                        :modality-errors="opponent.modalityErrors"
+                        :boxer="props.opponent"
+                        :modality-errors="props.opponent.modalityErrors"
                     />
                     <RecordBadgeComponent
-                        :boxer="opponent"
-                        :modality-errors="opponent.modalityErrors"
+                        :boxer="props.opponent"
+                        :modality-errors="props.opponent.modalityErrors"
                     />
                     <WeightBadgeComponent
-                        :boxer="opponent"
-                        :modality-errors="opponent.modalityErrors"
+                        :boxer="props.opponent"
+                        :modality-errors="props.opponent.modalityErrors"
                     />
                 </div>
             </div>
@@ -49,8 +49,8 @@
                 @click="expandDetails = !expandDetails"
             >
                 <EligibilityDetailsComponent
-                    :boxer="opponent"
-                    :modality-errors="opponent.modalityErrors"
+                    :boxer="props.opponent"
+                    :modality-errors="props.opponent.modalityErrors"
                 />
             </div>
             <div class="border-top mt-2 pt-2 gap-2 d-flex justify-content-end">
@@ -67,20 +67,20 @@
                     <i class="ms-2">Loading...</i>
                 </button>
                 <button
-                    v-else-if="!opponent.fightId"
+                    v-else-if="!props.opponent.fightId"
                     class="btn btn-outline-success btn-sm"
                     @click="addToFightCard()"
                 >
                     <!-- <i class="bi bi-person-plus-fill" /> -->
-                    <Icon name="headgear" />
+                    <IconComponent name="headgear" />
                     Add to fight card
                 </button>
                 <button
-                    v-else-if="opponent.fightId"
+                    v-else-if="props.opponent.fightId"
                     class="btn btn-outline-danger btn-sm"
                     @click="removeFromFightCard()"
                 >
-                    <Icon name="headgear" />
+                    <IconComponent name="headgear" />
                     Remove from fight card
                 </button>
                 <button
@@ -102,9 +102,9 @@
     </div>
 </template>
 
-<script lang="ts">
-import { PropType, defineComponent } from "vue"
-import { ModalityErrorType } from "@/api"
+<script setup lang="ts">
+import { ref, watch } from "vue"
+import { useRouter } from "vue-router"
 import { Boxer, Opponent } from "@/types/boxing.d"
 import RecordBadgeComponent from "@/components/shared/badges/record-badge.component.vue"
 import LinkedFightsBadgeComponent from "@/components/shared/badges/linked-fights-badge.component.vue"
@@ -112,72 +112,50 @@ import WeightBadgeComponent from "@/components/shared/badges/weight-badge.compon
 import AgeBadgeComponent from "@/components/shared/badges/age-badge.component.vue"
 import EligibilityDetailsComponent from "@/components/shared/badges/eligibility-details.component.vue"
 import { useFightStore } from "@/stores/fight.store"
-import { useBoxerStore } from "@/stores/boxer.store"
 import { getBoxerDisplayName, getClipboardText } from "@/utils/labels.utils"
-import { useTournamentBoxerStore } from "@/stores/tournamentBoxer.store"
 import IconComponent from "@/components/shared/core/icon.component.vue"
 
-export default defineComponent({
-    components: {
-        RecordBadgeComponent: RecordBadgeComponent,
-        LinkedFightsBadgeComponent: LinkedFightsBadgeComponent,
-        EligibilityDetailsComponent: EligibilityDetailsComponent,
-        WeightBadgeComponent: WeightBadgeComponent,
-        AgeBadgeComponent: AgeBadgeComponent,
-        Icon: IconComponent,
-    },
-    props: {
-        boxer: {
-            type: Object as PropType<Boxer>,
-            required: true,
-        },
-        opponent: {
-            type: Object as PropType<Opponent>,
-            required: true,
-        },
-    },
-    data() {
-        let ret = {
-            getBoxerDisplayName,
-            ModalityErrorType: ModalityErrorType,
-            fightStore: useFightStore(),
-            boxerStore: useBoxerStore(),
-            boxerTournamentStore: useTournamentBoxerStore(),
-            loading: false,
-            expandDetails: false,
-        }
+interface Props {
+    boxer: Boxer
+    opponent: Opponent
+}
 
-        return ret
-    },
-    watch: {
-        opponent: {
-            handler() {
-                this.loading = false
-            },
-        },
-    },
-    methods: {
-        addToFightCard() {
-            this.loading = true
-            this.fightStore.addToFightCard(this.boxer, this.opponent)
-        },
-        removeFromFightCard() {
-            if (!this.opponent.fightId) {
-                return
-            }
-            this.loading = true
-            this.fightStore.removeFromFightCard([this.opponent.fightId])
-        },
-        goToOpponentTile() {
-            // this.$router.push({ name: "selector" })
-            this.$router.push({ name: "selector-tile", params: { id: this.opponent.id } })
-        },
-        copyToClipboard() {
-            const text = getClipboardText(this.opponent)
-            navigator.clipboard.writeText(text)
-        },
-    },
-})
+const props = defineProps<Props>()
+
+const router = useRouter()
+const fightStore = useFightStore()
+
+const loading = ref(false)
+const expandDetails = ref(false)
+
+watch(
+    () => props.opponent,
+    () => {
+        loading.value = false
+    }
+)
+
+const addToFightCard = () => {
+    loading.value = true
+    fightStore.addToFightCard(props.boxer, props.opponent)
+}
+
+const removeFromFightCard = () => {
+    if (!props.opponent.fightId) {
+        return
+    }
+    loading.value = true
+    fightStore.removeFromFightCard([props.opponent.fightId])
+}
+
+const goToOpponentTile = () => {
+    router.push({ name: "selector-tile", params: { id: props.opponent.id } })
+}
+
+const copyToClipboard = () => {
+    const text = getClipboardText(props.opponent)
+    navigator.clipboard.writeText(text)
+}
 </script>
 <style lang="scss">
 .expanded-details {

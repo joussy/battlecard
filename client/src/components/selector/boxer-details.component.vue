@@ -31,8 +31,8 @@
                 <div class="card-body p-3 p-md-3">
                     <div class="row">
                         <p class="col-md-6 mb-1">
-                            <Icon :name="boxer.gender == Gender.MALE ? 'male' : 'female'"></Icon>
-                            {{ getBirthDateAndAge(boxer) }}
+                            <IconComponent :name="boxer.gender == Gender.MALE ? 'male' : 'female'"></IconComponent>
+                            {{ getBirthDateAndAge(boxer.birthDate) }}
                         </p>
                         <p class="col-md-6 mb-1">
                             <i class="bi bi-person-vcard"></i> {{ boxer.license }} -
@@ -40,15 +40,15 @@
                         </p>
                         <p class="col-md-6 mb-1"><i class="bi bi-house-fill me-1"></i>{{ boxer?.club }}</p>
                         <p class="col-md-6 mb-1">
-                            <Icon
+                            <IconComponent
                                 name="scale"
                                 class="me-1"
-                            ></Icon
+                            ></IconComponent
                             >{{ boxer.weight }} kg
-                            <Icon
+                            <IconComponent
                                 name="medal"
                                 class="me-1"
-                            ></Icon
+                            ></IconComponent
                             >{{ boxer.nbFights }}
                         </p>
                         <p class="col-md-6 mb-1">
@@ -81,7 +81,7 @@
         <div>
             <div class="ps-0 pe-0 pt-0 pb-0">
                 <div
-                    v-for="opponent in getOpponentsToDisplay()"
+                    v-for="opponent in opponentsToDisplay"
                     :key="opponent.id"
                 >
                     <OpponentTileComponent
@@ -94,106 +94,86 @@
     </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, watch } from "vue"
+<script lang="ts" setup>
+import { ref, computed, watch, watchEffect } from "vue"
+import { useRoute, useRouter } from "vue-router"
 import { Boxer, Opponent } from "@/types/boxing.d"
-import { Gender, ModalityErrorType } from "@/api"
+import { Gender } from "@/api"
 import OpponentTileComponent from "@/components/selector/opponent-tile.component.vue"
 import BoxerEditOffcanvasComponent from "@/components/selector/add/boxer-edit-offcanvas.component.vue"
-
 import IconComponent from "@/components/shared/core/icon.component.vue"
 
 import { useFightStore } from "@/stores/fight.store"
 import { useBoxerStore } from "@/stores/boxer.store"
 import { useUiStore } from "@/stores/ui.store"
-import { useTournamentStore } from "@/stores/tournament.store"
 import { useTournamentBoxerStore } from "@/stores/tournamentBoxer.store"
 import { getBoxerDisplayName, getClipboardText } from "@/utils/labels.utils"
 import { getBirthDateAndAge } from "@/utils/string.utils"
 
-export default defineComponent({
-    components: {
-        OpponentTileComponent: OpponentTileComponent,
-        BoxerEditOffcanvasComponent: BoxerEditOffcanvasComponent,
-        Icon: IconComponent,
-    },
-    setup() {},
-    data() {
-        return {
-            getBoxerDisplayName,
-            fightStore: useFightStore(),
-            boxerStore: useBoxerStore(),
-            uiStore: useUiStore(),
-            Gender: Gender,
-            opponents: [] as Opponent[],
-            ModalityErrorType: ModalityErrorType,
-            tournamentStore: useTournamentStore(),
-            tournamentBoxerStore: useTournamentBoxerStore(),
-            boxer: undefined as Boxer | undefined,
-            boxerId: this.$route.params.id as string,
-            loading: false,
-        }
-    },
-    watch: {
-        "$route.params.id": {
-            handler(newId) {
-                this.opponents = []
-                this.boxerId = newId as string
-            },
-        },
-    },
-    created() {
-        watch(
-            () => this.boxerId,
-            () => {
-                this.loading = true
-            }
-        )
-        watch(
-            () => [this.boxerId, this.fightStore.fights],
-            async () => await this.fetchBoxerData(),
-            { immediate: true, deep: true }
-        )
-    },
-    methods: {
-        getOpponentsToDisplay(): Readonly<Opponent[]> {
-            if (!this.opponents) {
-                return []
-            }
-            return this.opponents.filter((o) => {
-                if (this.uiStore.hideNonMatchableOpponents && !o.isEligible) return false
-                return true
-            })
-        },
-        getBirthDateAndAge(boxer: Boxer): string {
-            return getBirthDateAndAge(boxer.birthDate)
-        },
-        async fetchBoxerData() {
-            if (this.boxerId) {
-                console.log("Boxer details for ID:", this.boxerId)
-                this.boxer = await this.boxerStore.fetchBoxerById(this.boxerId)
-                console.log("Boxer:", this.boxer)
-                if (!this.boxer) {
-                    this.$router.push({ name: "selector" })
-                    return
-                }
-                this.opponents = await this.tournamentBoxerStore.fetchBoxerOpponents(this.boxer.id)
-                this.loading = false
-            }
-        },
-        copyToClipboard() {
-            if (!this.boxer) {
-                return
-            }
-            const text = getClipboardText(this.boxer)
-            navigator.clipboard.writeText(text)
-        },
-        editBoxer() {
-            if (!this.boxer) {
-                return
-            }
-            this.boxerStore.boxerToEdit = this.boxer
-        },
-    },
+const route = useRoute()
+const router = useRouter()
+
+const fightStore = useFightStore()
+const boxerStore = useBoxerStore()
+const uiStore = useUiStore()
+const tournamentBoxerStore = useTournamentBoxerStore()
+
+const opponents = ref<Opponent[]>([])
+const boxer = ref<Boxer | undefined>(undefined)
+const boxerId = ref(String(route.params.id ?? ""))
+const loading = ref(false)
+
+const opponentsToDisplay = computed(() => {
+    if (!opponents.value) return [] as Opponent[]
+    return opponents.value.filter((o) => {
+        if (uiStore.hideNonMatchableOpponents && !o.isEligible) return false
+        return true
+    })
 })
+
+watch(
+    () => route.params.id,
+    (id) => {
+        opponents.value = []
+        boxerId.value = String(id ?? "")
+    }
+)
+
+watch(
+    () => boxerId.value,
+    () => {
+        loading.value = true
+    }
+)
+
+watchEffect(async () => {
+    // touch fightStore.fights so watchEffect depends on it (keeps previous behavior)
+    void fightStore.fights
+    await fetchBoxerData()
+})
+
+async function fetchBoxerData() {
+    if (boxerId.value) {
+        console.log("Boxer details for ID:", boxerId.value)
+        boxer.value = await boxerStore.fetchBoxerById(boxerId.value)
+        console.log("Boxer:", boxer.value)
+        if (!boxer.value) {
+            router.push({ name: "selector" })
+            return
+        }
+        opponents.value = await tournamentBoxerStore.fetchBoxerOpponents(boxer.value.id)
+        loading.value = false
+    }
+}
+
+function copyToClipboard() {
+    if (!boxer.value) return
+    const text = getClipboardText(boxer.value)
+    navigator.clipboard.writeText(text)
+}
+
+function editBoxer() {
+    if (!boxer.value) return
+    boxerStore.boxerToEdit = boxer.value
+}
 </script>
