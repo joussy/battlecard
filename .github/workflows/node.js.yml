@@ -25,16 +25,16 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Run linters (check-only, no autofix)
+      - name: Run linters
         run: |
-          echo "Running frontend linter (no --fix)"
+          echo "Running frontend linter"
           cd client
           npm ci
-          npx eslint . --ext .js,.ts,.vue
-          echo "Running backend linter (no --fix)"
+          npm run lint
+          echo "Running backend linter"
           cd ../server
           npm ci
-          npx eslint "src/**/*.ts"
+          npm run lint
       - name: Build frontend
         run: |
           cd client
