@@ -4,7 +4,7 @@ applyTo: '\*\*'
 
 Guidelines
 
-- Never fix the formatting of the code.
+- Never fix the formatting of the code. Ignore jsonc and prettier linting errors.
 - Frontend: Vue 3 + Bootstrap 5 (TypeScript), with composition API.
   - i18n support using vue-i18n. Locale files are in `client/src/locales/`. Support English and French. Nested JSON files.
 - Backend: NestJS + TypeORM (TypeScript).

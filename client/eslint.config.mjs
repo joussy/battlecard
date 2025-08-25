@@ -89,7 +89,7 @@ export default [
         rules: {
             "@intlify/vue-i18n/no-dynamic-keys": "error",
             "@intlify/vue-i18n/no-unused-keys": [
-                "off",
+                "warn",
                 {
                     extensions: [".ts", ".vue"],
                 },
