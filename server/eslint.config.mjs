@@ -49,7 +49,7 @@ export default tseslint.config(
     },
     rules: {
       'jsonc/sort-keys': [
-        'warn',
+        'error',
         {
           pathPattern: '^$',
           order: { type: 'asc' },
