@@ -3,6 +3,10 @@ import { AppModule } from './app.module';
 import { ConsoleLogger, ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { writeFileSync } from 'fs';
+import i18next from 'i18next';
+// Import JSON translation files
+import en from './locales/en-US.json';
+import fr from './locales/fr-FR.json';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -11,6 +15,18 @@ async function bootstrap() {
     }),
   });
   app.setGlobalPrefix('/api');
+
+  await i18next.init({
+    lng: 'en',
+    fallbackLng: 'en',
+    preload: ['en', 'fr'],
+    resources: {
+      en: { translation: en as object },
+      fr: { translation: fr as object },
+    },
+    debug: false,
+  });
+  console.log('i18next hello:', i18next.t('hello', { lng: 'fr' }));
 
   // Enable global validation with class-validator
   app.useGlobalPipes(
