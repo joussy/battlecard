@@ -26,7 +26,11 @@ export class SelectorExportService {
     private readonly templateService: TemplateService,
   ) {}
 
-  async generatePdf(tournamentId: string, boxerIds: string[]): Promise<Buffer> {
+  async generatePdf(
+    tournamentId: string,
+    boxerIds: string[],
+    language: string = 'en',
+  ): Promise<Buffer> {
     const data = await this.getSelectorData(tournamentId, boxerIds);
     if (!data) {
       throw new Error('No boxers found for this tournament');
@@ -36,11 +40,15 @@ export class SelectorExportService {
       data.tournament,
       this.modalityService.getModality(),
     );
-    const html = this.templateService.generateSelectorHtml(template);
+    const html = this.templateService.generateSelectorHtml(template, language);
     return this.gotenbergService.generatePdf(html);
   }
 
-  async generatePng(tournamentId: string, boxerIds: string[]): Promise<Buffer> {
+  async generatePng(
+    tournamentId: string,
+    boxerIds: string[],
+    language: string = 'en',
+  ): Promise<Buffer> {
     const data = await this.getSelectorData(tournamentId, boxerIds);
     if (!data) {
       throw new Error('No boxers found for this tournament');
@@ -50,7 +58,7 @@ export class SelectorExportService {
       data.tournament,
       this.modalityService.getModality(),
     );
-    const html = this.templateService.generateSelectorHtml(template);
+    const html = this.templateService.generateSelectorHtml(template, language);
     return this.gotenbergService.generatePng(html);
   }
 
