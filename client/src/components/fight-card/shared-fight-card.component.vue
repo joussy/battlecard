@@ -9,7 +9,7 @@
                     name="ring"
                     class="me-2 svg-2"
                 />
-                <span class="fw-bold h4 mb-0 text-decoration-none">BattleCard</span>
+                <span class="fw-bold h4 mb-0 text-decoration-none">{{ $t("brand.name") }}</span>
             </router-link>
             <button
                 type="button"

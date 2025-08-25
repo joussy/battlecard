@@ -19,7 +19,7 @@
                             name="scale"
                             class="me-1"
                         ></IconComponent>
-                        {{ boxer.weight }} kg
+                        {{ boxer.weight }} {{ $t("common.kg") }}
                     </div>
                     <div>
                         <IconComponent

@@ -30,28 +30,28 @@
                         @click="downloadFile('battlecard')"
                     >
                         <i class="bi bi-file-earmark-spreadsheet" />
-                        CSV
+                        {{ $t("selector.exportFormats.csv") }}
                     </a>
                     <a
                         class="dropdown-item"
                         @click="downloadFile('xlsx')"
                     >
                         <i class="bi bi-file-earmark-spreadsheet" />
-                        XLSX
+                        {{ $t("selector.exportFormats.xlsx") }}
                     </a>
                     <a
                         class="dropdown-item"
                         @click="downloadFile('png')"
                     >
                         <i class="bi bi-file-image" />
-                        PNG
+                        {{ $t("selector.exportFormats.png") }}
                     </a>
                     <a
                         class="dropdown-item"
                         @click="downloadFile('pdf')"
                     >
                         <i class="bi bi-file-earmark-pdf" />
-                        PDF
+                        {{ $t("selector.exportFormats.pdf") }}
                     </a>
                 </li>
                 <li>
