@@ -52,6 +52,9 @@
         "license": "Licence",
         "noResults": "Aucun résultat trouvé."
     },
+    "brand": {
+        "name": "BattleCard"
+    },
     "common": {
         "loading": "Chargement...",
         "error": "Erreur",
@@ -72,7 +75,9 @@
         "none": "Aucun",
         "all": "Tous",
         "yes": "Oui",
-        "no": "Non"
+        "no": "Non",
+        "kg": "kg",
+        "of": "de"
     },
     "editBoxer": {
         "title": "Modifier un boxeur"
@@ -157,7 +162,8 @@
         "fightDuration": "Durée du combat",
         "weightDifference": "Différence de poids",
         "ageDifference": "Différence d'âge",
-        "fightCountDifference": "Différence de nombre de combats"
+        "fightCountDifference": "Différence de nombre de combats",
+        "matchupCounter": "Confrontation"
     },
     "opponentTile": {
         "addToFightCard": "Ajouter à la carte de combat",
@@ -205,7 +211,15 @@
         "cancel": "Annuler",
         "requiredField": "Ce champ est obligatoire",
         "invalidDate": "Format de date invalide",
-        "invalidWeight": "Le poids doit être un nombre positif"
+        "invalidWeight": "Le poids doit être un nombre positif",
+        "availableOpponents": "Adversaires disponibles",
+        "scheduledFor": "Programmé pour",
+        "exportFormats": {
+            "csv": "CSV",
+            "xlsx": "XLSX",
+            "png": "PNG", 
+            "pdf": "PDF"
+        }
     },
     "settings": {
         "account": "Compte",

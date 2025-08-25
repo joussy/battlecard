@@ -52,6 +52,9 @@
         "license": "License",
         "noResults": "No results found."
     },
+    "brand": {
+        "name": "BattleCard"
+    },
     "common": {
         "loading": "Loading...",
         "error": "Error",
@@ -72,7 +75,9 @@
         "none": "None",
         "all": "All",
         "yes": "Yes",
-        "no": "No"
+        "no": "No",
+        "kg": "kg",
+        "of": "of"
     },
     "editBoxer": {
         "title": "Edit a boxer"
@@ -157,7 +162,8 @@
         "fightDuration": "Fight Duration",
         "weightDifference": "Weight difference",
         "ageDifference": "Age difference",
-        "fightCountDifference": "Fight count difference"
+        "fightCountDifference": "Fight count difference",
+        "matchupCounter": "Matchup"
     },
     "opponentTile": {
         "addToFightCard": "Add to fight card",
@@ -205,7 +211,15 @@
         "cancel": "Cancel",
         "requiredField": "This field is required",
         "invalidDate": "Invalid date format",
-        "invalidWeight": "Weight must be a positive number"
+        "invalidWeight": "Weight must be a positive number",
+        "availableOpponents": "Available opponents",
+        "scheduledFor": "Scheduled for",
+        "exportFormats": {
+            "csv": "CSV",
+            "xlsx": "XLSX", 
+            "png": "PNG",
+            "pdf": "PDF"
+        }
     },
     "settings": {
         "account": "Account",
