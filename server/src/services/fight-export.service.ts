@@ -67,7 +67,6 @@ export class FightExportService {
   async generatePng(
     tournamentId: string,
     fightCardShareUrl?: string,
-    language: string = 'en',
   ): Promise<Buffer> {
     const { fights, tournament, svgQrCode } = await this.getFightCardData(
       tournamentId,
