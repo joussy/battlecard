@@ -23,6 +23,8 @@ import {
 } from '@/dto/params.dto';
 
 import { ApiBearerAuth } from '@nestjs/swagger';
+import { UseGuards } from '@nestjs/common';
+import { DevOnlyGuard } from '@/guards/dev.guard';
 import { BoxerService } from '@/services/boxer.service';
 @ApiBearerAuth()
 @Controller('tournaments')
@@ -42,8 +44,8 @@ export class TournamentController {
   }
 
   @Post('fake')
+  @UseGuards(DevOnlyGuard)
   async createFake(@User() user: AuthenticatedUser): Promise<TournamentDto> {
-    //lol
     const tournament = await this.tournamentService.createFake(user);
     await this.boxerService.createFakeForTournament(tournament, user);
 

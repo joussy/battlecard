@@ -235,6 +235,8 @@
         "openSelectorDescription": "Ajoutez des boxeurs au tournoi pour qu'ils deviennent participants.",
         "buildFightCard": "Construire la carte de combat",
         "buildFightCardDescription": "Utilisez la vue de la carte de combat pour créer des confrontations et programmer des combats entre les boxeurs ajoutés.",
-        "createFirstTournament": "Créez votre premier tournoi"
+        "createFirstTournament": "Créez votre premier tournoi",
+        "discoverApp": "Vous voulez juste découvrir l'application ?",
+        "createFakeTournament": "Créer un faux tournoi"
     }
 }
