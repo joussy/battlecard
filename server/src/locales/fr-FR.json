@@ -1,0 +1,22 @@
+{
+  "template": {
+    "fight_card": {
+      "order": "#",
+      "red_corner": "Coin Rouge",
+      "blue_corner": "Coin Bleu",
+      "duration": "Durée",
+      "gender": "Genre"
+    },
+    "selector": {
+      "license": "Licence",
+      "last_name": "Nom",
+      "first_name": "Prénom",
+      "weight": "Poids",
+      "category": "Catégorie",
+      "birth_date": "Date de naissance",
+      "number_of_fights": "Palmarès",
+      "gym": "Club",
+      "gender": "Genre"
+    }
+  }
+}

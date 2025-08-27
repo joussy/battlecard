@@ -103,8 +103,8 @@ export function toSelectorTemplate(
   boxers: Boxer[],
   tournament: Tournament,
   modality: IModality,
-): SelectorTemplate {
-  const template: SelectorTemplate = {
+): Omit<SelectorTemplate, 'i18n'> {
+  const template: Omit<SelectorTemplate, 'i18n'> = {
     subtitle: format(tournament.date, 'dd/MM/yyyy'),
     title: tournament.name,
     boxers: boxers.map((boxer) => {

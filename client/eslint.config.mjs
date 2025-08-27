@@ -8,15 +8,17 @@ import prettierPlugin from "eslint-plugin-prettier"
 import jsoncPlugin from "eslint-plugin-jsonc"
 import jsoncParser from "jsonc-eslint-parser"
 import globals from "globals"
+import vueI18n from "@intlify/eslint-plugin-vue-i18n"
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
 export default [
     // Ignore generated OpenAPI client files (flat config style)
-    { ignores: ["src/api/**", "./openapi-ts.config.ts"] },
+    { ignores: ["src/api/**", "./openapi-ts.config.ts", "dist/**", "eslint.config.mjs"] },
     // Vue 3 recommended rules
     ...vuePlugin.configs["flat/recommended"],
+    ...vueI18n.configs.recommended,
     // Main config for TS + Vue + Prettier
     {
         files: ["**/*.ts", "**/*.vue"],
@@ -80,6 +82,32 @@ export default [
                     order: { type: "asc" },
                 },
             ],
+        },
+    },
+    {
+        // files: ["src/**/*.{ts,vue}"],
+        rules: {
+            "@intlify/vue-i18n/no-dynamic-keys": "error",
+            "@intlify/vue-i18n/no-unused-keys": [
+                "warn",
+                {
+                    extensions: [".ts", ".vue"],
+                },
+            ],
+            "@intlify/vue-i18n/no-raw-text": [
+                "warn",
+                {
+                    ignorePattern: "^[-#:()&]+$", // Ignore keys that are only punctuation (used as separators in some languages)
+                },
+            ],
+        },
+        settings: {
+            "vue-i18n": {
+                localeDir: "./src/locales/*.json", // extension is glob formatting!
+                // Specify the version of `vue-i18n` you are using.
+                // If not specified, the message will be parsed twice.
+                messageSyntaxVersion: "^11.0.0",
+            },
         },
     },
 ]

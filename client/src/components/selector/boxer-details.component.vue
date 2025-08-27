@@ -44,7 +44,7 @@
                                 name="scale"
                                 class="me-1"
                             ></IconComponent
-                            >{{ boxer.weight }} kg
+                            >{{ boxer.weight }} {{ $t("common.kg") }}
                             <IconComponent
                                 name="medal"
                                 class="me-1"
@@ -52,7 +52,8 @@
                             >{{ boxer.nbFights }}
                         </p>
                         <p class="col-md-6 mb-1">
-                            <i class="bi bi-link me-1"></i>Scheduled for {{ boxer.selectedFights }} fights
+                            <i class="bi bi-link me-1"></i>{{ $t("selector.scheduledFor") }} {{ boxer.selectedFights }}
+                            {{ $t("matchupDetails.fights") }}
                         </p>
                     </div>
                     <div class="d-flex flex- gap-2 align-items-start justify-content-end border-top mt-2 pt-2">
@@ -61,7 +62,7 @@
                             @click="copyToClipboard()"
                         >
                             <i class="bi bi-clipboard"></i>
-                            <span class="ms-2">Copy to clipboard</span>
+                            <span class="ms-2">{{ $t("opponentTile.copyClipboard") }}</span>
                         </button>
                         <div
                             class="btn btn-sm btn-outline-success"
@@ -70,14 +71,14 @@
                             @click="editBoxer()"
                         >
                             <i class="bi bi-pencil"></i>
-                            Edit boxer
+                            {{ $t("selector.editBoxer") }}
                         </div>
                         <BoxerEditOffcanvasComponent @boxer-saved="fetchBoxerData()" />
                     </div>
                 </div>
             </div>
         </div>
-        <h6 class="ps-1">Available opponents</h6>
+        <h6 class="ps-1">{{ $t("selector.availableOpponents") }}</h6>
         <div>
             <div class="ps-0 pe-0 pt-0 pb-0">
                 <div

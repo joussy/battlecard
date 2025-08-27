@@ -57,7 +57,7 @@
                                         name="headgear"
                                         class="me-1"
                                     ></IconComponent
-                                    >Remove fight
+                                    >{{ $t("fightCard.removeFight") }}
                                 </div>
                                 <button
                                     class="btn btn-primary"
@@ -69,7 +69,8 @@
                             </div>
                         </div>
                         <div class="d-flex justify-content-center m-1">
-                            Matchup {{ currentFightIndex + 1 }} of {{ fights.length }}
+                            {{ $t("matchupDetails.matchupCounter") }} {{ currentFightIndex + 1 }} {{ $t("common.of") }}
+                            {{ fights.length }}
                         </div>
                         <div class="matchup-content mt-3">
                             <MatchupDetailsComponent

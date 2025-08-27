@@ -1,5 +1,7 @@
 import {
+  FightCardI18nTemplate,
   FightCardTemplate,
+  SelectI18nTemplate,
   SelectorTemplate,
 } from '@/interfaces/template.interface';
 import { Injectable } from '@nestjs/common';
@@ -7,6 +9,7 @@ import * as fs from 'fs';
 import * as Mustache from 'mustache';
 import * as path from 'path';
 import { ConfigService } from './config.service';
+import i18next from 'i18next';
 
 @Injectable()
 export class TemplateService {
@@ -42,7 +45,20 @@ export class TemplateService {
     if (!template) {
       throw new Error(`Template 'fight-card' not found`);
     }
-    return this.renderMustache(template, fightCardTemplate);
+
+    // Add i18n translations to the template data
+    const i18nTemplate: FightCardI18nTemplate = {
+      order: i18next.t('template.fight_card.order'),
+      red_corner: i18next.t('template.fight_card.red_corner'),
+      blue_corner: i18next.t('template.fight_card.blue_corner'),
+      duration: i18next.t('template.fight_card.duration'),
+      gender: i18next.t('template.fight_card.gender'),
+    };
+
+    return this.renderMustache(template, {
+      ...fightCardTemplate,
+      i18n: i18nTemplate,
+    });
   }
 
   public generateSelectorHtml(selectorTemplate: SelectorTemplate): string {
@@ -50,6 +66,23 @@ export class TemplateService {
     if (!template) {
       throw new Error(`Template 'selector' not found`);
     }
-    return this.renderMustache(template, selectorTemplate);
+
+    // Add i18n translations to the template data
+    const i18nTemplate: SelectI18nTemplate = {
+      license: i18next.t('template.selector.license'),
+      last_name: i18next.t('template.selector.last_name'),
+      first_name: i18next.t('template.selector.first_name'),
+      weight: i18next.t('template.selector.weight'),
+      category: i18next.t('template.selector.category'),
+      birth_date: i18next.t('template.selector.birth_date'),
+      number_of_fights: i18next.t('template.selector.number_of_fights'),
+      gym: i18next.t('template.selector.gym'),
+      gender: i18next.t('template.selector.gender'),
+    };
+
+    return this.renderMustache(template, {
+      ...selectorTemplate,
+      i18n: i18nTemplate,
+    });
   }
 }

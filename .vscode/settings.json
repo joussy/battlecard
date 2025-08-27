@@ -28,14 +28,14 @@
     // TypeScript SDK from node_modules
     "typescript.tsdk": "node_modules/typescript/lib",
     "volar.validation.template": false, // optional: handled by ESLint if you prefer
-    "i18n-ally.keepFulfilled": true,
+    "i18n-ally.keepFulfilled": false,
     "i18n-ally.enabledFrameworks": [
-        "vue"
+        "vue", "i18next"
     ],
     "i18n-ally.localesPaths": [
-        "client/src/locales"
+        "./**/**/src/locales"
     ],
     "i18n-ally.keystyle": "nested",
     "i18n-ally.dirStructure": "file",
-    "i18n-ally.annotations": true
+    "i18n-ally.annotations": true,
 }
