@@ -16,13 +16,14 @@ export interface FightCardTemplate {
   }[];
   qrCodeSvg?: string;
   formattedAddress?: string;
-  i18n: {
-    order: string;
-    red_corner: string;
-    blue_corner: string;
-    duration: string;
-    gender: string;
-  };
+}
+
+export interface FightCardI18nTemplate {
+  order: string;
+  red_corner: string;
+  blue_corner: string;
+  duration: string;
+  gender: string;
 }
 
 export interface SelectorTemplate {
@@ -39,15 +40,16 @@ export interface SelectorTemplate {
     club: string;
     gender: string;
   }[];
-  i18n: {
-    license: string;
-    last_name: string;
-    first_name: string;
-    weight: string;
-    category: string;
-    birth_date: string;
-    number_of_fights: string;
-    gym: string;
-    gender: string;
-  };
+}
+
+export interface SelectI18nTemplate {
+  license: string;
+  last_name: string;
+  first_name: string;
+  weight: string;
+  category: string;
+  birth_date: string;
+  number_of_fights: string;
+  gym: string;
+  gender: string;
 }

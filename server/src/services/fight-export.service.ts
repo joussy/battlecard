@@ -30,7 +30,6 @@ export class FightExportService {
   async generatePdf(
     tournamentId: string,
     fightCardShareUrl?: string,
-    language: string = 'en',
   ): Promise<Buffer> {
     const { fights, tournament, svgQrCode } = await this.getFightCardData(
       tournamentId,
@@ -42,14 +41,13 @@ export class FightExportService {
       this.modalityService.getModality(),
       svgQrCode,
     );
-    const html = this.templateService.generateFightCardHtml(template, language);
+    const html = this.templateService.generateFightCardHtml(template);
 
     return this.gotenbergService.generatePdf(html);
   }
   async generateHtml(
     tournamentId: string,
     fightCardShareUrl?: string,
-    language: string = 'en',
   ): Promise<string> {
     const { fights, tournament, svgQrCode } = await this.getFightCardData(
       tournamentId,
@@ -61,7 +59,7 @@ export class FightExportService {
       this.modalityService.getModality(),
       svgQrCode,
     );
-    const html = this.templateService.generateFightCardHtml(template, language);
+    const html = this.templateService.generateFightCardHtml(template);
 
     return html;
   }
@@ -81,7 +79,7 @@ export class FightExportService {
       this.modalityService.getModality(),
       svgQrCode,
     );
-    const html = this.templateService.generateFightCardHtml(template, language);
+    const html = this.templateService.generateFightCardHtml(template);
 
     return this.gotenbergService.generatePng(html);
   }

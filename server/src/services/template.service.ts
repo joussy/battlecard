@@ -1,5 +1,7 @@
 import {
+  FightCardI18nTemplate,
   FightCardTemplate,
+  SelectI18nTemplate,
   SelectorTemplate,
 } from '@/interfaces/template.interface';
 import { Injectable } from '@nestjs/common';
@@ -38,65 +40,49 @@ export class TemplateService {
     return Mustache.render(template, fightCardTemplate);
   }
 
-  public generateFightCardHtml(
-    fightCardTemplate: Omit<FightCardTemplate, 'i18n'>,
-    language: string = 'en',
-  ): string {
+  public generateFightCardHtml(fightCardTemplate: FightCardTemplate): string {
     const template = this.loadTemplate('fight-card');
     if (!template) {
       throw new Error(`Template 'fight-card' not found`);
     }
 
     // Add i18n translations to the template data
-    const templateWithI18n: FightCardTemplate = {
-      ...fightCardTemplate,
-      i18n: {
-        order: i18next.t('template.fight_card.order', { lng: language }),
-        red_corner: i18next.t('template.fight_card.red_corner', {
-          lng: language,
-        }),
-        blue_corner: i18next.t('template.fight_card.blue_corner', {
-          lng: language,
-        }),
-        duration: i18next.t('template.fight_card.duration', { lng: language }),
-        gender: i18next.t('template.fight_card.gender', { lng: language }),
-      },
+    const i18nTemplate: FightCardI18nTemplate = {
+      order: i18next.t('template.fight_card.order'),
+      red_corner: i18next.t('template.fight_card.red_corner'),
+      blue_corner: i18next.t('template.fight_card.blue_corner'),
+      duration: i18next.t('template.fight_card.duration'),
+      gender: i18next.t('template.fight_card.gender'),
     };
 
-    return this.renderMustache(template, templateWithI18n);
+    return this.renderMustache(template, {
+      ...fightCardTemplate,
+      i18n: i18nTemplate,
+    });
   }
 
-  public generateSelectorHtml(
-    selectorTemplate: Omit<SelectorTemplate, 'i18n'>,
-    language: string = 'en',
-  ): string {
+  public generateSelectorHtml(selectorTemplate: SelectorTemplate): string {
     const template = this.loadTemplate('selector');
     if (!template) {
       throw new Error(`Template 'selector' not found`);
     }
 
     // Add i18n translations to the template data
-    const templateWithI18n: SelectorTemplate = {
-      ...selectorTemplate,
-      i18n: {
-        license: i18next.t('template.selector.license', { lng: language }),
-        last_name: i18next.t('template.selector.last_name', { lng: language }),
-        first_name: i18next.t('template.selector.first_name', {
-          lng: language,
-        }),
-        weight: i18next.t('template.selector.weight', { lng: language }),
-        category: i18next.t('template.selector.category', { lng: language }),
-        birth_date: i18next.t('template.selector.birth_date', {
-          lng: language,
-        }),
-        number_of_fights: i18next.t('template.selector.number_of_fights', {
-          lng: language,
-        }),
-        gym: i18next.t('template.selector.gym', { lng: language }),
-        gender: i18next.t('template.selector.gender', { lng: language }),
-      },
+    const i18nTemplate: SelectI18nTemplate = {
+      license: i18next.t('template.selector.license'),
+      last_name: i18next.t('template.selector.last_name'),
+      first_name: i18next.t('template.selector.first_name'),
+      weight: i18next.t('template.selector.weight'),
+      category: i18next.t('template.selector.category'),
+      birth_date: i18next.t('template.selector.birth_date'),
+      number_of_fights: i18next.t('template.selector.number_of_fights'),
+      gym: i18next.t('template.selector.gym'),
+      gender: i18next.t('template.selector.gender'),
     };
 
-    return this.renderMustache(template, templateWithI18n);
+    return this.renderMustache(template, {
+      ...selectorTemplate,
+      i18n: i18nTemplate,
+    });
   }
 }
