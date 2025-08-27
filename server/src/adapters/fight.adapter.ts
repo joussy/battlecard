@@ -28,8 +28,8 @@ export function toFightCardTemplate(
   tournament: Tournament,
   modality: IModality,
   qrCodeSvg?: string,
-): FightCardTemplate {
-  const template: FightCardTemplate = {
+): Omit<FightCardTemplate, 'i18n'> {
+  const template: Omit<FightCardTemplate, 'i18n'> = {
     subtitle: format(tournament.date, 'dd/MM/yyyy'),
     title: tournament.name,
     formattedAddress: formatAddress({

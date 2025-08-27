@@ -15,7 +15,7 @@ import BoxerTileDetailsComponent from "@/components/selector/boxer-details.compo
 import TournamentsComponent from "@/components/tournament/tournaments.component.vue"
 import { createPinia } from "pinia"
 import SharedFightCardComponent from "./components/fight-card/shared-fight-card.component.vue"
-import { client } from "./api/client.gen"
+import { client as clientOpenApi } from "./api/client.gen"
 import { useUiStore } from "./stores/ui.store"
 import { createI18n } from "vue-i18n"
 import enUS from "./locales/en-US.json"
@@ -56,11 +56,20 @@ const router = createRouter({
     routes,
 })
 
-client.setConfig({
+clientOpenApi.setConfig({
     baseUrl: "/",
     auth: () => useUiStore().jwtToken,
 })
-client.interceptors.response.use((response) => {
+
+clientOpenApi.interceptors.request.use((request) => {
+    const locale = useUiStore().language
+    if (locale) {
+        request.headers.append("Accept-Language", locale)
+    }
+    return request
+})
+
+clientOpenApi.interceptors.response.use((response) => {
     if (response.status >= 400) {
         throw response
     }
@@ -89,4 +98,5 @@ app.use(router)
 app.use(i18n)
 
 app.mount("#app")
+
 setupAuthRedirect(router)

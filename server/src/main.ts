@@ -4,6 +4,7 @@ import { ConsoleLogger, ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { writeFileSync } from 'fs';
 import i18next from 'i18next';
+import i18nMiddleware from './middleware/i18n.middleware';
 // Import JSON translation files
 import en from './locales/en-US.json';
 import fr from './locales/fr-FR.json';
@@ -17,7 +18,6 @@ async function bootstrap() {
   app.setGlobalPrefix('/api');
 
   await i18next.init({
-    lng: 'en',
     fallbackLng: 'en',
     preload: ['en', 'fr'],
     resources: {
@@ -26,7 +26,9 @@ async function bootstrap() {
     },
     debug: false,
   });
-  console.log('i18next hello:', i18next.t('hello', { lng: 'fr' }));
+
+  // Apply middleware to set i18next language from Accept-Language header
+  app.use(i18nMiddleware);
 
   // Enable global validation with class-validator
   app.useGlobalPipes(

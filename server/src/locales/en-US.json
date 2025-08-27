@@ -1,3 +1,23 @@
 {
-  "hello": "Hello"
+  "hello": "Hello",
+  "template": {
+    "fight_card": {
+      "order": "#",
+      "red_corner": "Red Corner",
+      "blue_corner": "Blue Corner",
+      "duration": "Duration",
+      "gender": "Gender"
+    },
+    "selector": {
+      "license": "License",
+      "last_name": "Last Name",
+      "first_name": "First Name",
+      "weight": "Weight",
+      "category": "Category",
+      "birth_date": "Birth Date",
+      "number_of_fights": "Number of fights",
+      "gym": "Gym",
+      "gender": "Gender"
+    }
+  }
 }

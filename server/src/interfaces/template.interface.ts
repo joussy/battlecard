@@ -18,6 +18,14 @@ export interface FightCardTemplate {
   formattedAddress?: string;
 }
 
+export interface FightCardI18nTemplate {
+  order: string;
+  red_corner: string;
+  blue_corner: string;
+  duration: string;
+  gender: string;
+}
+
 export interface SelectorTemplate {
   title: string;
   subtitle: string;
@@ -32,4 +40,16 @@ export interface SelectorTemplate {
     club: string;
     gender: string;
   }[];
+}
+
+export interface SelectI18nTemplate {
+  license: string;
+  last_name: string;
+  first_name: string;
+  weight: string;
+  category: string;
+  birth_date: string;
+  number_of_fights: string;
+  gym: string;
+  gender: string;
 }
