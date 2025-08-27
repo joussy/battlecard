@@ -15,7 +15,7 @@ const __dirname = path.dirname(__filename)
 
 export default [
     // Ignore generated OpenAPI client files (flat config style)
-    { ignores: ["src/api/**", "./openapi-ts.config.ts", "dist/**", "eslint.config.mjs"] },
+    { ignores: ["src/api/**", "./openapi-ts.config.ts", "dist/**", "eslint.config.mjs", "vite.config.d.ts"] },
     // Vue 3 recommended rules
     ...vuePlugin.configs["flat/recommended"],
     ...vueI18n.configs.recommended,

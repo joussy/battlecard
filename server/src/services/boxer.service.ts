@@ -11,7 +11,7 @@ import { ModalityService } from '../modality/modality.service';
 import { AuthenticatedUser } from '../interfaces/auth.interface';
 import { CreateBoxerDto } from '@/dto/boxer.dto';
 import { TournamentDto } from '@/dto/tournament.dto';
-import { Gender } from '@/interfaces/modality.interface';
+import { mockBoxers } from '../mock/boxers.mock';
 
 @Injectable()
 export class BoxerService {
@@ -88,17 +88,20 @@ export class BoxerService {
     tournament: TournamentDto,
     user: AuthenticatedUser,
   ) {
-    const boxer: CreateBoxerDto = {
-      firstName: 'José',
-      lastName: 'Ramirez',
-      weight: 75,
-      birthDate: new Date('1990-01-01').toISOString(),
-      tournamentId: tournament.id,
-      club: 'Boxing Club',
-      gender: Gender.MALE,
-      license: '123456',
-      nbFights: 10,
-    };
-    await this.create(boxer, user);
+    // Create multiple boxers from mock data for the tournament
+    for (const mockBoxer of mockBoxers) {
+      const boxer: CreateBoxerDto = {
+        firstName: mockBoxer.firstName!,
+        lastName: mockBoxer.lastName!,
+        weight: mockBoxer.weight,
+        birthDate: mockBoxer.birthDate!,
+        tournamentId: tournament.id,
+        club: mockBoxer.club!,
+        gender: mockBoxer.gender!,
+        license: mockBoxer.license!,
+        nbFights: mockBoxer.nbFights || 0,
+      };
+      await this.create(boxer, user);
+    }
   }
 }
