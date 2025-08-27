@@ -1,7 +1,4 @@
 {
-  "hello": "Bonjour",
-  "hello1": "Bonjour",
-  "hello2": "Bonjour",
   "template": {
     "fight_card": {
       "order": "#",
