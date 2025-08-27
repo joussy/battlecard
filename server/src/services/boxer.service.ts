@@ -10,6 +10,8 @@ import { BoxerDto } from '@/dto/boxer.dto';
 import { ModalityService } from '../modality/modality.service';
 import { AuthenticatedUser } from '../interfaces/auth.interface';
 import { CreateBoxerDto } from '@/dto/boxer.dto';
+import { TournamentDto } from '@/dto/tournament.dto';
+import { Gender } from '@/interfaces/modality.interface';
 
 @Injectable()
 export class BoxerService {
@@ -80,5 +82,23 @@ export class BoxerService {
     if (!updated) throw new NotFoundException('Boxer not found');
     const modality = this.modalityService.getModality();
     return toBoxerDto(updated, modality);
+  }
+
+  async createFakeForTournament(
+    tournament: TournamentDto,
+    user: AuthenticatedUser,
+  ) {
+    const boxer: CreateBoxerDto = {
+      firstName: 'José',
+      lastName: 'Ramirez',
+      weight: 75,
+      birthDate: new Date('1990-01-01').toISOString(),
+      tournamentId: tournament.id,
+      club: 'Boxing Club',
+      gender: Gender.MALE,
+      license: '123456',
+      nbFights: 10,
+    };
+    await this.create(boxer, user);
   }
 }

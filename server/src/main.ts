@@ -2,7 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ConsoleLogger, ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
-import { writeFileSync } from 'fs';
+import { writeFileSync, readFileSync, existsSync } from 'fs';
 import i18next from 'i18next';
 import i18nMiddleware from './middleware/i18n.middleware';
 // Import JSON translation files
@@ -48,7 +48,25 @@ async function bootstrap() {
       .build();
     const documentFactory = () => SwaggerModule.createDocument(app, config);
     SwaggerModule.setup('api', app, documentFactory);
-    writeFileSync('./openapi.json', JSON.stringify(documentFactory(), null, 2));
+
+    // Write openapi.json only when content changes to avoid noisy file updates
+    try {
+      const outPath = './openapi.json';
+      const doc = documentFactory();
+      const newContent = JSON.stringify(doc, null, 2);
+
+      if (existsSync(outPath)) {
+        const oldContent = readFileSync(outPath, 'utf8');
+        if (oldContent !== newContent) {
+          writeFileSync(outPath, newContent);
+        }
+      } else {
+        writeFileSync(outPath, newContent);
+      }
+    } catch (err) {
+      // Don't fail startup if writing the file fails; log and continue
+      console.error('Failed to write OpenAPI document:', err);
+    }
   }
 
   await app.listen(process.env.PORT ?? 3000);

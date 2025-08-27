@@ -3,7 +3,7 @@
         v-if="tournamentStore.tournaments.length == 0 && !tournamentStore.loading"
         class="max-width-md"
     >
-        <TournamentsEmptyComponent @create="setTournamentToEdit(null)" />
+        <TournamentsEmptyComponent @open-create-tournament="setTournamentToEdit(null)" />
     </div>
     <div
         v-else
