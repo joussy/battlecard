@@ -10,6 +10,8 @@ import { BoxerDto } from '@/dto/boxer.dto';
 import { ModalityService } from '../modality/modality.service';
 import { AuthenticatedUser } from '../interfaces/auth.interface';
 import { CreateBoxerDto } from '@/dto/boxer.dto';
+import { TournamentDto } from '@/dto/tournament.dto';
+import { mockBoxers } from '../mock/boxers.mock';
 
 @Injectable()
 export class BoxerService {
@@ -80,5 +82,26 @@ export class BoxerService {
     if (!updated) throw new NotFoundException('Boxer not found');
     const modality = this.modalityService.getModality();
     return toBoxerDto(updated, modality);
+  }
+
+  async createFakeForTournament(
+    tournament: TournamentDto,
+    user: AuthenticatedUser,
+  ) {
+    // Create multiple boxers from mock data for the tournament
+    for (const mockBoxer of mockBoxers) {
+      const boxer: CreateBoxerDto = {
+        firstName: mockBoxer.firstName!,
+        lastName: mockBoxer.lastName!,
+        weight: mockBoxer.weight,
+        birthDate: mockBoxer.birthDate!,
+        tournamentId: tournament.id,
+        club: mockBoxer.club!,
+        gender: mockBoxer.gender!,
+        license: mockBoxer.license!,
+        nbFights: mockBoxer.nbFights || 0,
+      };
+      await this.create(boxer, user);
+    }
   }
 }

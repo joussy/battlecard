@@ -16,6 +16,7 @@ import { BoxerDto, OpponentDto } from '@/dto/boxer.dto';
 import { ModalityService } from '../modality/modality.service';
 import { AuthenticatedUser } from '@/interfaces/auth.interface';
 import { CreateTournamentDto, UpdateTournamentDto } from '@/dto/tournament.dto';
+import { addDays } from 'date-fns';
 
 @Injectable()
 export class TournamentService {
@@ -156,5 +157,22 @@ export class TournamentService {
     await this.tournamentRepository.findOneOrFail({
       where: { id: tournamentId, userId },
     });
+  }
+
+  async createFake(
+    user: AuthenticatedUser,
+  ): Promise<TournamentDto | PromiseLike<TournamentDto>> {
+    const fakeTournament: CreateTournamentDto = {
+      name: 'Fake Tournament',
+      date: addDays(new Date(), 3).toISOString(),
+      address: 'Gymnase Louis Volcair',
+      zipCode: '35200',
+      city: 'Rennes',
+    };
+    const dbTournament = await this.tournamentRepository.save(
+      toTournamentFromCreateDto(fakeTournament, user.id),
+    );
+
+    return toTournamentDto(dbTournament);
   }
 }

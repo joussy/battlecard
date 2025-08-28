@@ -4,7 +4,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "npm run openapi && vite",
+    "dev": "npm-run-all --parallel dev:openapi dev:vite",
+    "dev:vite": "vite",
+    "dev:openapi": "nodemon --watch ../server/openapi.json --exec \"npm run openapi\"",
     "build": "npm run openapi && run-p type-check \"build-only {@}\" --",
     "preview": "npm run openapi && vite preview",
     "build-only": "vite build",
@@ -50,6 +52,8 @@
     "typescript": "~5.8.0",
     "vite": "^7.0.0",
     "vite-svg-loader": "^5.1.0",
-    "vue-tsc": "^3.0.4"
+    "vue-tsc": "^3.0.4",
+    "nodemon": "^3.0.1",
+    "npm-run-all": "^4.1.5"
   }
 }

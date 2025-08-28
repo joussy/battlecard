@@ -126,6 +126,32 @@
         ]
       }
     },
+    "/api/tournaments/fake": {
+      "post": {
+        "operationId": "TournamentController_createFake",
+        "parameters": [],
+        "responses": {
+          "default": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TournamentDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Tournament"
+        ]
+      }
+    },
     "/api/tournaments/{id}": {
       "put": {
         "operationId": "TournamentController_update",

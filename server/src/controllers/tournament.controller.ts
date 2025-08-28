@@ -23,18 +23,28 @@ import {
 } from '@/dto/params.dto';
 
 import { ApiBearerAuth } from '@nestjs/swagger';
+import { BoxerService } from '@/services/boxer.service';
 @ApiBearerAuth()
 @Controller('tournaments')
 export class TournamentController {
   constructor(
     private readonly tournamentService: TournamentService,
     private readonly fightService: FightService,
+    private readonly boxerService: BoxerService,
     private readonly modalityService: ModalityService,
   ) {}
 
   @Get()
   async findAll(@User() user: AuthenticatedUser): Promise<TournamentDto[]> {
     return this.tournamentService.findAll(user);
+  }
+
+  @Post('fake')
+  async createFake(@User() user: AuthenticatedUser): Promise<TournamentDto> {
+    const tournament = await this.tournamentService.createFake(user);
+    await this.boxerService.createFakeForTournament(tournament, user);
+
+    return tournament;
   }
 
   @Post()

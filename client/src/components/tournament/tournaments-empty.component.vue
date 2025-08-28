@@ -36,10 +36,22 @@
                 class="btn btn-success btn-lg"
                 data-bs-toggle="offcanvas"
                 data-bs-target="#tournamentAddOffcanvasNavbar"
-                @click="$emit('create')"
+                @click="$emit('openCreateTournament')"
             >
                 <i class="bi bi-plus-lg"></i>
                 <span class="ms-2">{{ $t("tournaments.createFirstTournament") }}</span>
+            </button>
+            <div class="m-3">
+                <i>{{ $t("tournaments.discoverPrompt") }}</i>
+            </div>
+            <button class="btn btn-warning btn-lg">
+                <i class="bi bi-plus-lg"></i>
+                <span
+                    class="ms-2"
+                    @click="createFakeTournament"
+                >
+                    {{ $t("tournaments.createFakeTournamentCTA") }}
+                </span>
             </button>
         </div>
     </div>
@@ -47,12 +59,23 @@
 
 <script setup lang="ts">
 import { useI18n } from "vue-i18n"
+import { TournamentOpenApi } from "@/api"
+import { useTournamentStore } from "@/stores/tournament.store"
+import { useRouter } from "vue-router"
 
+const router = useRouter()
 const { t: $t } = useI18n()
+const tournamentStore = useTournamentStore()
 
 defineEmits<{
-    create: []
+    openCreateTournament: void
 }>()
+
+const createFakeTournament = async () => {
+    const tournament = await TournamentOpenApi.createFake()
+    tournamentStore.setCurrentTournament(tournament?.id)
+    router.push("selector")
+}
 </script>
 
 <style scoped>
