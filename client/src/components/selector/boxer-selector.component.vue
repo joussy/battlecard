@@ -13,6 +13,16 @@
                 <i class="bi bi-person-add" />
                 <span class="d-none d-md-inline ms-2">{{ $t("selector.addBoxer") }}</span>
             </button>
+            <!-- Bouton Générateur sous la barre de recherche -->
+            <button
+                type="button"
+                class="btn btn-outline-purple"
+                data-bs-toggle="modal"
+                data-bs-target="#matchupModal"
+            >
+                <i class="me-1 bi bi-magic" />
+                {{ $t("fightCard.matchmaker") }}
+            </button>
             <button
                 :disabled="boxersToDisplay.length == 0"
                 type="button"
@@ -124,6 +134,7 @@
                 </button>
             </div>
         </div>
+        <MatchupModalComponent />
     </div>
 </template>
 
@@ -134,6 +145,7 @@ import { ExportOpenApi } from "@/api"
 import BoxerTileComponent from "@/components/selector/boxer-tile.component.vue"
 import BoxerAddOffcanvasComponent from "@/components/selector/add/boxer-add-offcanvas.component.vue"
 import BoxerEditOffcanvasComponent from "@/components/selector/add/boxer-edit-offcanvas.component.vue"
+import MatchupModalComponent from "@/components/tournament/matchup-modal.component.vue"
 
 import BoxerSelectorFiltersComponent from "@/components/selector/boxer-selector-filters.component.vue"
 import { useTournamentStore } from "@/stores/tournament.store"

@@ -1,75 +1,48 @@
 <template>
-    <nav class="nav nav-underline fixed-top bg-light-subtle d-none d-md-flex">
-        <div class="navbar-brand pt-2 ps-3">
+    <nav class="nav nav-underline fixed-top bg-light-subtle d-none d-md-flex align-items-center">
+        <div class="navbar-brand pt-2 ps-3 d-flex align-items-center">
             <IconComponent
                 name="ring"
                 class="svg-2"
             />
+            <span class="ms-2 fw-bold">NomApplication</span>
         </div>
-        <div
-            v-if="uiStore.account != null"
-            class="nav-item"
-        >
-            <router-link
-                :to="{ name: 'tournaments' }"
-                class="nav-link link-secondary"
-                active-class="active"
+        <div class="d-flex flex-grow-1 justify-content-end align-items-center">
+            <div
+                v-if="uiStore.account != null"
+                class="nav-item me-4"
             >
-                <i class="bi bi-calendar"></i>
-                {{ $t("layout.events") }}
-            </router-link>
-        </div>
-        <div
-            v-if="uiStore.account != null && isTournamentSelected"
-            class="nav-item"
-        >
-            <router-link
-                :to="{ name: 'selector' }"
-                class="nav-link link-secondary"
-                active-class="active"
+                <router-link
+                    :to="{ name: 'tournaments' }"
+                    class="nav-link text-dark"
+                    active-class="active"
+                >
+                    <i class="bi bi-calendar"></i>
+                    {{ $t("layout.events") }}
+                </router-link>
+            </div>
+            <div
+                v-if="uiStore.account != null && isTournamentSelected"
+                class="nav-item"
             >
-                <IconComponent
-                    name="group-of-people"
-                    class="user-logo"
-                />
-                {{ $t("layout.selector") }}
-            </router-link>
-        </div>
-        <div
-            v-if="uiStore.account != null && isTournamentSelected"
-            class="nav-item"
-        >
-            <router-link
-                :to="{ name: 'card' }"
-                class="nav-link link-secondary"
-                active-class="active"
-            >
-                <IconComponent
-                    name="headgear"
-                    class="user-logo"
-                />
-                {{ $t("layout.card") }}
-                <span class="badge rounded-pill bg-primary">{{ nbFights }}</span>
-            </router-link>
-        </div>
-        <div class="flex-grow-1"></div>
-        <div class="nav-item me-3">
-            <router-link
-                :to="{ name: 'settings' }"
-                class="nav-link link-secondary"
-                active-class="active"
-            >
-                <span class="me-3">{{ $t("layout.settings") }}</span>
-                <i
-                    v-if="!uiStore.account?.picture"
-                    class="bi bi-person-circle user-logo"
-                ></i>
-                <img
-                    v-else
-                    :src="uiStore.account.picture"
-                    class="rounded-circle align-text-bottom user-logo"
-                />
-            </router-link>
+            </div>
+            <div class="nav-item me-3">
+                <router-link
+                    :to="{ name: 'settings' }"
+                    class="nav-link link-secondary"
+                    active-class="active"
+                >
+                    <i
+                        v-if="!uiStore.account?.picture"
+                        class="bi bi-person-circle user-logo"
+                    ></i>
+                    <img
+                        v-else
+                        :src="uiStore.account.picture"
+                        class="rounded-circle align-text-bottom user-logo"
+                    />
+                </router-link>
+            </div>
         </div>
     </nav>
 </template>
@@ -98,6 +71,6 @@ const isTournamentSelected = computed((): boolean => {
 <style scoped>
 .user-logo {
     /* width: 30px; */
-    max-height: 18px;
+    max-height: 32px;
 }
 </style>

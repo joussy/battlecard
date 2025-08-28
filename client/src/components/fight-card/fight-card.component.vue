@@ -13,15 +13,7 @@
                 <i class="me-1 bi bi-pencil" />
                 {{ $t("fightCard.edit") }}
             </button>
-            <button
-                type="button"
-                class="btn btn-outline-purple ms-2"
-                data-bs-toggle="modal"
-                data-bs-target="#matchupModal"
-            >
-                <i class="me-1 bi bi-magic" />
-                {{ $t("fightCard.matchmaker") }}
-            </button>
+            <!-- Bouton Générateur supprimé -->
             <button
                 type="button"
                 :disabled="getNbFights() == 0 && !editionMode"
@@ -76,7 +68,6 @@
         :enable-share-link="true"
         :download-callback="downloadCallback"
     />
-    <MatchupModalComponent />
 </template>
 
 <script setup lang="ts">
@@ -87,7 +78,6 @@ import FightCardGridComponent from "@/components/fight-card/fight-card-grid.comp
 import { useFightStore } from "@/stores/fight.store"
 import { useTournamentStore } from "@/stores/tournament.store"
 import ShareComponent from "@/components/shared/core/share.component.vue"
-import MatchupModalComponent from "@/components/tournament/matchup-modal.component.vue"
 import TournamentHeaderComponent from "@/components/shared/layout/tournament-header.component.vue"
 import { downloadWithDom } from "@/utils/download.utils"
 import { ExportOpenApi } from "@/api"
