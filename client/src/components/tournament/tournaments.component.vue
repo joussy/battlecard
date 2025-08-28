@@ -66,6 +66,28 @@
                         <i class="bi bi-pencil" />
                         <span class="d-sm-inline ms-1">{{ $t("tournaments.edit") }}</span>
                     </button>
+                    <router-link
+                        :to="{ name: 'selector' }"
+                        class="btn btn-outline-secondary btn-sm"
+                        v-if="selectedTournamentId == tournament.id"
+                    >
+                        <IconComponent
+                            name="group-of-people"
+                            class="user-logo"
+                        />
+                        <span class="d-none d-sm-inline ms-2">{{ $t("layout.selector") }}</span>
+                    </router-link>
+                    <router-link
+                        :to="{ name: 'card' }"
+                        class="btn btn-outline-primary btn-sm"
+                        v-if="selectedTournamentId == tournament.id"
+                    >
+                        <IconComponent
+                            name="headgear"
+                            class="user-logo"
+                        />
+                        <span class="d-none d-sm-inline ms-2">{{ $t("layout.card") }}</span>
+                    </router-link>
                     <button class="btn btn-outline-secondary btn-sm">
                         <i class="bi bi-clipboard" />
                         <span class="d-none d-sm-inline ms-2">{{ $t("tournaments.copyClipboard") }}</span>
@@ -120,7 +142,7 @@ const onTournamentSaved = async (tournamentId: string) => {
 </script>
 <style scoped>
 .selected-card-border {
-    border-left: 10px solid var(--bs-primary);
+    border-left: 10px solid #6f42c1;
 }
 .card ul:hover {
     border: 1px solid black;
