@@ -41,14 +41,17 @@
                 <i class="bi bi-plus-lg"></i>
                 <span class="ms-2">{{ $t("tournaments.createFirstTournament") }}</span>
             </button>
-            <div class="m-3"><i>You just want to discover the app ?</i></div>
+            <div class="m-3">
+                <i>{{ $t("tournaments.discoverPrompt") }}</i>
+            </div>
             <button class="btn btn-warning btn-lg">
                 <i class="bi bi-plus-lg"></i>
                 <span
                     class="ms-2"
                     @click="createFakeTournament"
-                    >Create a fake tournament</span
                 >
+                    {{ $t("tournaments.createFakeTournamentCTA") }}
+                </span>
             </button>
         </div>
     </div>

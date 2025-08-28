@@ -37,8 +37,6 @@ export class TournamentController {
   @Get()
   async findAll(@User() user: AuthenticatedUser): Promise<TournamentDto[]> {
     return this.tournamentService.findAll(user);
-
-    // return [];
   }
 
   @Post('fake')

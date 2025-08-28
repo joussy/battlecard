@@ -235,6 +235,8 @@
         "openSelectorDescription": "Add boxers to the tournament so they become participants.",
         "buildFightCard": "Build the fight card",
         "buildFightCardDescription": "Use the fight card view to create matchups and schedule fights between added boxers.",
-        "createFirstTournament": "Create your first tournament"
+        "createFirstTournament": "Create your first tournament",
+        "discoverPrompt": "You just want to discover the app ?",
+        "createFakeTournamentCTA": "Create a fake tournament"
     }
 }
