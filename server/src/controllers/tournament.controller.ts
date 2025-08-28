@@ -43,7 +43,6 @@ export class TournamentController {
 
   @Post('fake')
   async createFake(@User() user: AuthenticatedUser): Promise<TournamentDto> {
-    //lol
     const tournament = await this.tournamentService.createFake(user);
     await this.boxerService.createFakeForTournament(tournament, user);
 
