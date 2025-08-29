@@ -191,10 +191,10 @@ function editBoxer() {
     showEditOffcanvas.value = true
 }
 
-function deleteBoxer() {
+async function deleteBoxer() {
     if (!boxer.value) return
-    if (confirm($t("selector.deleteBoxerConfirmation", { name: getBoxerDisplayName(boxer.value) }))) {
-        BoxerOpenApi.delete({
+    if (confirm($t("selector.deleteBoxerConfirmation"))) {
+        await BoxerOpenApi.delete({
             path: {
                 id: boxer.value.id,
             },
