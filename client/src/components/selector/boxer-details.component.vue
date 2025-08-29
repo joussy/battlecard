@@ -75,13 +75,12 @@
                             v-model="showEditOffcanvas"
                             @boxer-saved="fetchBoxerData()"
                         />
-                        <div class="btn btn-sm btn-outline-danger">
+                        <div
+                            class="btn btn-sm btn-outline-danger"
+                            @click="deleteBoxer"
+                        >
                             <i class="bi bi-trash"></i>
-                            <span
-                                class="d-none d-sm-inline ms-1"
-                                @click="deleteBoxer"
-                                >{{ $t("selector.deleteBoxer") }}</span
-                            >
+                            <span class="d-none d-sm-inline ms-1">{{ $t("selector.deleteBoxer") }}</span>
                         </div>
                     </div>
                 </div>
