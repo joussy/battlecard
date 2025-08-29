@@ -54,11 +54,6 @@
         "kg": "kg",
         "of": "de"
     },
-    "confirmModal": {
-        "confirm": "Confirmer",
-        "cancel": "Annuler",
-        "message": "Confirmez-vous l'action ?"
-    },
     "editBoxer": {
         "title": "Modifier un boxeur"
     },
@@ -177,7 +172,8 @@
             "png": "PNG",
             "pdf": "PDF"
         },
-        "deleteBoxer": "Supprimer"
+        "deleteBoxer": "Supprimer",
+        "deleteBoxerConfirmation": "Supprimer le boxeur ?"
     },
     "settings": {
         "account": "Compte",
@@ -229,7 +225,7 @@
     "tournaments": {
         "addTournament": "Ajouter un tournoi",
         "selected": "sélectionné",
-        "manage": "Gérer ce tournoi",
+        "manage": "Gérer",
         "edit": "Modifier",
         "copyClipboard": "Copier dans le presse-papiers",
         "welcome": "Bienvenue !",
@@ -243,6 +239,8 @@
         "buildFightCardDescription": "Utilisez la vue de la carte de combat pour créer des confrontations et programmer des combats entre les boxeurs ajoutés.",
         "createFirstTournament": "Créez votre premier tournoi",
         "discoverPrompt": "Vous voulez juste découvrir l'application ?",
-        "createFakeTournamentCTA": "Créer un tournoi fictif"
+        "createFakeTournamentCTA": "Créer un tournoi fictif",
+        "delete": "Supprimer",
+        "confirmDelete": "Supprimer l'évènement ?"
     }
 }
