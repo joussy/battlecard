@@ -75,6 +75,14 @@
                             v-model="showEditOffcanvas"
                             @boxer-saved="fetchBoxerData()"
                         />
+                        <div class="btn btn-sm btn-outline-danger">
+                            <i class="bi bi-trash"></i>
+                            <span
+                                class="d-none d-sm-inline ms-1"
+                                @click="deleteBoxer"
+                                >{{ $t("selector.deleteBoxer") }}</span
+                            >
+                        </div>
                     </div>
                 </div>
             </div>
@@ -101,7 +109,7 @@ import { ref, computed, watch, watchEffect } from "vue"
 import { useRoute, useRouter } from "vue-router"
 import { useI18n } from "vue-i18n"
 import { Boxer, Opponent } from "@/types/boxing.d"
-import { Gender } from "@/api"
+import { BoxerOpenApi, Gender } from "@/api"
 import OpponentTileComponent from "@/components/selector/opponent-tile.component.vue"
 import BoxerEditOffcanvasComponent from "@/components/selector/add/boxer-edit-offcanvas.component.vue"
 import IconComponent from "@/components/shared/core/icon.component.vue"
@@ -182,5 +190,17 @@ function editBoxer() {
     if (!boxer.value) return
     boxerStore.boxerToEdit = boxer.value
     showEditOffcanvas.value = true
+}
+
+function deleteBoxer() {
+    if (!boxer.value) return
+    if (confirm($t("selector.deleteBoxerConfirmation", { name: getBoxerDisplayName(boxer.value) }))) {
+        BoxerOpenApi.delete({
+            path: {
+                id: boxer.value.id,
+            },
+        })
+        router.push({ name: "selector" })
+    }
 }
 </script>

@@ -176,7 +176,8 @@
             "xlsx": "XLSX",
             "png": "PNG",
             "pdf": "PDF"
-        }
+        },
+        "deleteBoxer": "Supprimer"
     },
     "settings": {
         "account": "Compte",

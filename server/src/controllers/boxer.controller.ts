@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Param, Put } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Put,
+  Delete,
+} from '@nestjs/common';
 import { BoxerService } from '../services/boxer.service';
 import { ModalityService } from '../modality/modality.service';
 import { BoxerDto } from '@/dto/boxer.dto';
@@ -37,5 +45,15 @@ export class BoxerController {
     @User() user: AuthenticatedUser,
   ): Promise<BoxerDto> {
     return this.boxerService.update(params.id, boxer, user);
+  }
+
+  @Delete(':id')
+  async delete(
+    @Param() params: IdParamsDto,
+    @User() user: AuthenticatedUser,
+  ): Promise<void> {
+    //verify boxer exists and belongs to user
+    await this.boxerService.validateTournamentAccess(params.id, user.id);
+    return this.boxerService.delete(params.id, user);
   }
 }

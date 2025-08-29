@@ -27,7 +27,7 @@
                 'selected-card-border': selectedTournamentId == tournament.id,
             }"
         >
-            <div class="card-body">
+            <div class="card-body pb-2">
                 <div>
                     <span class="tournament-name">{{ tournament.name }}</span>
                     <span v-if="selectedTournamentId == tournament.id">
@@ -60,11 +60,18 @@
                         @click="editTournament(tournament)"
                     >
                         <i class="bi bi-pencil" />
-                        <span class="d-sm-inline ms-1">{{ $t("tournaments.edit") }}</span>
+                        <span class="d-none d-sm-inline ms-1">{{ $t("tournaments.edit") }}</span>
+                    </button>
+                    <button
+                        class="btn btn-outline-danger btn-sm"
+                        @click="deleteTournament(tournament.id)"
+                    >
+                        <i class="bi bi-trash" />
+                        <span class="d-none d-sm-inline ms-1">{{ $t("tournaments.delete") }}</span>
                     </button>
                     <button class="btn btn-outline-secondary btn-sm">
                         <i class="bi bi-clipboard" />
-                        <span class="d-none d-sm-inline ms-2">{{ $t("tournaments.copyClipboard") }}</span>
+                        <span class="d-none d-md-inline ms-2">{{ $t("tournaments.copyClipboard") }}</span>
                     </button>
                 </div>
             </div>
@@ -85,8 +92,12 @@ import TournamentsEmptyComponent from "@/components/tournament/tournaments-empty
 import { useTournamentStore } from "@/stores/tournament.store"
 import { format } from "date-fns"
 const showTournamentOffcanvas = ref(false)
+import { TournamentOpenApi } from "@/api"
+import { useI18n } from "vue-i18n"
+
 const router = useRouter()
 const tournamentStore = useTournamentStore()
+const { t: $t } = useI18n()
 
 const tournamentToEdit = ref<Tournament | null>(null)
 
@@ -113,6 +124,15 @@ const onTournamentSaved = async (tournamentId: string) => {
     tournamentToEdit.value = null
     if (selectedTournamentId.value == tournamentId) {
         tournamentStore.setCurrentTournament(tournamentId)
+    }
+}
+const deleteTournament = async (tournamentId: string) => {
+    if (confirm($t("tournaments.confirmDelete"))) {
+        await TournamentOpenApi.delete({ path: { id: tournamentId } })
+        if (selectedTournamentId.value == tournamentId) {
+            tournamentStore.setCurrentTournament()
+            tournamentStore.fetchTournaments()
+        }
     }
 }
 </script>

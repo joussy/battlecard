@@ -176,7 +176,9 @@
             "xlsx": "XLSX",
             "png": "PNG",
             "pdf": "PDF"
-        }
+        },
+        "deleteBoxer": "Delete",
+        "deleteBoxerConfirmation": "Delete boxer ?"
     },
     "settings": {
         "account": "Account",

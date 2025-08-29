@@ -63,6 +63,11 @@ export class TournamentService {
   }
 
   async delete(id: string, user: AuthenticatedUser): Promise<void> {
+    if (!id || !user.id) {
+      throw new Error('Invalid tournament or user ID');
+    }
+    await this.fightRepository.delete({ tournamentId: id });
+    await this.tournamentBoxerRepository.delete({ tournamentId: id });
     await this.tournamentRepository.findOneOrFail({
       where: { id, userId: user.id },
     });

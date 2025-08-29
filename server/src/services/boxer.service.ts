@@ -27,6 +27,35 @@ export class BoxerService {
     private readonly modalityService: ModalityService,
   ) {}
 
+  async validateTournamentAccess(
+    boxerId: string,
+    userId: string,
+  ): Promise<Boxer> {
+    if (!boxerId || !userId) {
+      throw new NotFoundException(
+        'Boxer not found or you do not have permission to access it',
+      );
+    }
+
+    return await this.boxerRepository.findOneOrFail({
+      where: [{ id: boxerId, userId: userId }],
+    });
+  }
+
+  async delete(id: string, user: AuthenticatedUser): Promise<void> {
+    //delete boxer from fights first
+    const fights = await this.fightRepository.find({
+      where: [{ boxer1Id: id }, { boxer2Id: id }],
+    });
+    for (const fight of fights) {
+      await this.fightRepository.delete(fight.id);
+    }
+    //delete boxer from tournament boxers
+    await this.tournamentBoxerRepository.delete({ boxerId: id });
+    //delete boxer
+    await this.boxerRepository.delete({ id, userId: user.id });
+  }
+
   async create(
     boxer: CreateBoxerDto,
     user: AuthenticatedUser,
