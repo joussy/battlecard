@@ -27,7 +27,7 @@
                 'selected-card-border': selectedTournamentId == tournament.id,
             }"
         >
-            <div class="card-body">
+            <div class="card-body pb-2">
                 <div>
                     <span class="tournament-name">{{ tournament.name }}</span>
                     <span v-if="selectedTournamentId == tournament.id">
@@ -60,11 +60,18 @@
                         @click="editTournament(tournament)"
                     >
                         <i class="bi bi-pencil" />
-                        <span class="d-sm-inline ms-1">{{ $t("tournaments.edit") }}</span>
+                        <span class="d-none d-sm-inline ms-1">{{ $t("tournaments.edit") }}</span>
+                    </button>
+                    <button
+                        class="btn btn-outline-danger btn-sm"
+                        @click="deleteTournament(tournament)"
+                    >
+                        <i class="bi bi-trash" />
+                        <span class="d-none d-sm-inline ms-1">{{ $t("tournaments.delete") }}</span>
                     </button>
                     <button class="btn btn-outline-secondary btn-sm">
                         <i class="bi bi-clipboard" />
-                        <span class="d-none d-sm-inline ms-2">{{ $t("tournaments.copyClipboard") }}</span>
+                        <span class="d-none d-md-inline ms-2">{{ $t("tournaments.copyClipboard") }}</span>
                     </button>
                 </div>
             </div>
@@ -74,6 +81,11 @@
         v-model="showTournamentOffcanvas"
         :tournament="tournamentToEdit"
         @tournament-saved="onTournamentSaved"
+    />
+    <ConfirmModalComponent
+        v-model="showDeleteConfirmModal"
+        :message="deleteMessage"
+        @confirm="confirmDeleteTournament"
     />
 </template>
 <script setup lang="ts">
@@ -85,9 +97,15 @@ import TournamentsEmptyComponent from "@/components/tournament/tournaments-empty
 import { useTournamentStore } from "@/stores/tournament.store"
 import { format } from "date-fns"
 const showTournamentOffcanvas = ref(false)
+import { TournamentOpenApi } from "@/api"
+import { useI18n } from "vue-i18n"
+import ConfirmModalComponent from "@/components/shared/core/confirm-modal.component.vue"
+
 const router = useRouter()
 const tournamentStore = useTournamentStore()
-
+const { t: $t } = useI18n()
+const showDeleteConfirmModal = ref(false)
+const tournamentToDelete = ref<Tournament | null>(null)
 const tournamentToEdit = ref<Tournament | null>(null)
 
 const selectedTournamentId = computed((): string | null => {
@@ -115,6 +133,28 @@ const onTournamentSaved = async (tournamentId: string) => {
         tournamentStore.setCurrentTournament(tournamentId)
     }
 }
+const deleteTournament = (tournament: Tournament) => {
+    tournamentToDelete.value = tournament
+    showDeleteConfirmModal.value = true
+}
+
+const confirmDeleteTournament = async () => {
+    if (!tournamentToDelete.value) {
+        return
+    }
+    const id = tournamentToDelete.value.id
+    await TournamentOpenApi.delete({ path: { id } })
+    if (selectedTournamentId.value == id) {
+        tournamentStore.setCurrentTournament()
+    }
+    tournamentStore.fetchTournaments()
+    // clear selection
+    tournamentToDelete.value = null
+}
+
+const deleteMessage = computed(() => {
+    return $t("tournaments.confirmDeleteMessage", { name: tournamentToDelete.value?.name ?? "" })
+})
 </script>
 <style scoped>
 .selected-card-border {

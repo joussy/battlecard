@@ -38,26 +38,28 @@ async function bootstrap() {
       transform: true, // Automatically transform payloads to be objects typed according to their DTO classes
     }),
   );
-  if (process.env.ENABLE_OPENAPI === 'true') {
-    const config = new DocumentBuilder()
-      .setTitle('Battlecard')
-      .setDescription('The Fightmaker App')
-      .setVersion('1.0')
-      .addBearerAuth()
-      .addSecurityRequirements('bearer')
-      .build();
-    const documentFactory = () => SwaggerModule.createDocument(app, config);
-    SwaggerModule.setup('api', app, documentFactory);
 
-    // Write openapi.json only when content changes to avoid noisy file updates
+  await app.listen(process.env.PORT ?? 3000);
+
+  // Once the server is listening, write the OpenAPI document to disk
+  if (process.env.ENABLE_OPENAPI === 'true') {
     try {
       const outPath = './openapi.json';
-      const doc = documentFactory();
+      const config = new DocumentBuilder()
+        .setTitle('Battlecard')
+        .setDescription('The Fightmaker App')
+        .setVersion('1.0')
+        .addBearerAuth()
+        .addSecurityRequirements('bearer')
+        .build();
+
+      const doc = SwaggerModule.createDocument(app, config);
       const newContent = JSON.stringify(doc, null, 2);
 
       if (existsSync(outPath)) {
         const oldContent = readFileSync(outPath, 'utf8');
         if (oldContent !== newContent) {
+          console.log('OpenAPI document has changed; updating', outPath);
           writeFileSync(outPath, newContent);
         }
       } else {
@@ -68,7 +70,5 @@ async function bootstrap() {
       console.error('Failed to write OpenAPI document:', err);
     }
   }
-
-  await app.listen(process.env.PORT ?? 3000);
 }
 void bootstrap();
