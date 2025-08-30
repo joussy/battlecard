@@ -7,7 +7,10 @@
     >
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
-                <div class="modal-header">
+                <div
+                    v-if="slots.header"
+                    class="modal-header"
+                >
                     <slot name="header"></slot>
                     <button
                         type="button"
@@ -26,12 +29,13 @@
 
 <script setup lang="ts">
 import { Modal } from "bootstrap"
-import { ref, watch, onMounted, onBeforeUnmount } from "vue"
+import { ref, watch, onMounted, onBeforeUnmount, useSlots } from "vue"
 import { onBeforeRouteLeave } from "vue-router"
 
 const model = defineModel<boolean>()
 const modal = ref<Modal | null>(null)
 const modalEl = ref<HTMLElement | null>(null)
+const slots = useSlots()
 
 watch(
     () => model.value,

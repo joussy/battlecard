@@ -225,7 +225,7 @@
     "tournaments": {
         "addTournament": "Ajouter un tournoi",
         "selected": "sélectionné",
-        "manage": "Gérer",
+        "manage": "Gérer ce tournoi",
         "edit": "Modifier",
         "copyClipboard": "Copier dans le presse-papiers",
         "welcome": "Bienvenue !",
@@ -240,7 +240,7 @@
         "createFirstTournament": "Créez votre premier tournoi",
         "discoverPrompt": "Vous voulez juste découvrir l'application ?",
         "createFakeTournamentCTA": "Créer un tournoi fictif",
-        "delete": "Supprimer",
-        "confirmDelete": "Supprimer l'évènement ?"
+        "confirmDeleteMessage": "Voulez-vous vraiment supprimer le tournoi '{name}' ?",
+        "delete": "Supprimer"
     }
 }

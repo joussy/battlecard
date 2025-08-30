@@ -64,7 +64,7 @@
                     </button>
                     <button
                         class="btn btn-outline-danger btn-sm"
-                        @click="deleteTournament(tournament.id)"
+                        @click="deleteTournament(tournament)"
                     >
                         <i class="bi bi-trash" />
                         <span class="d-none d-sm-inline ms-1">{{ $t("tournaments.delete") }}</span>
@@ -82,6 +82,11 @@
         :tournament="tournamentToEdit"
         @tournament-saved="onTournamentSaved"
     />
+    <ConfirmModalComponent
+        v-model="showDeleteConfirmModal"
+        :message="deleteMessage"
+        @confirm="confirmDeleteTournament"
+    />
 </template>
 <script setup lang="ts">
 import { ref, computed, onMounted } from "vue"
@@ -94,11 +99,13 @@ import { format } from "date-fns"
 const showTournamentOffcanvas = ref(false)
 import { TournamentOpenApi } from "@/api"
 import { useI18n } from "vue-i18n"
+import ConfirmModalComponent from "@/components/shared/core/confirm-modal.component.vue"
 
 const router = useRouter()
 const tournamentStore = useTournamentStore()
 const { t: $t } = useI18n()
-
+const showDeleteConfirmModal = ref(false)
+const tournamentToDelete = ref<Tournament | null>(null)
 const tournamentToEdit = ref<Tournament | null>(null)
 
 const selectedTournamentId = computed((): string | null => {
@@ -126,15 +133,28 @@ const onTournamentSaved = async (tournamentId: string) => {
         tournamentStore.setCurrentTournament(tournamentId)
     }
 }
-const deleteTournament = async (tournamentId: string) => {
-    if (confirm($t("tournaments.confirmDelete"))) {
-        await TournamentOpenApi.delete({ path: { id: tournamentId } })
-        if (selectedTournamentId.value == tournamentId) {
-            tournamentStore.setCurrentTournament()
-            tournamentStore.fetchTournaments()
-        }
-    }
+const deleteTournament = (tournament: Tournament) => {
+    tournamentToDelete.value = tournament
+    showDeleteConfirmModal.value = true
 }
+
+const confirmDeleteTournament = async () => {
+    if (!tournamentToDelete.value) {
+        return
+    }
+    const id = tournamentToDelete.value.id
+    await TournamentOpenApi.delete({ path: { id } })
+    if (selectedTournamentId.value == id) {
+        tournamentStore.setCurrentTournament()
+    }
+    tournamentStore.fetchTournaments()
+    // clear selection
+    tournamentToDelete.value = null
+}
+
+const deleteMessage = computed(() => {
+    return $t("tournaments.confirmDeleteMessage", { name: tournamentToDelete.value?.name ?? "" })
+})
 </script>
 <style scoped>
 .selected-card-border {
