@@ -1,24 +1,22 @@
 <template>
     <ModalComponent v-model="model">
-        <div class="modal-body p-3">
-            <div>
-                <slot>{{ message }}</slot>
-            </div>
-            <button
-                type="button"
-                class="btn btn-danger"
-                @click="confirm"
-            >
-                {{ confirmText }}
-            </button>
-            <button
-                type="button"
-                class="btn btn-secondary"
-                @click="model = false"
-            >
-                {{ cancelText }}
-            </button>
+        <div>
+            <slot>{{ message }}</slot>
         </div>
+        <button
+            type="button"
+            class="btn btn-danger"
+            @click="confirm"
+        >
+            {{ confirmText }}
+        </button>
+        <button
+            type="button"
+            class="btn btn-secondary"
+            @click="model = false"
+        >
+            {{ cancelText }}
+        </button>
     </ModalComponent>
 </template>
 
