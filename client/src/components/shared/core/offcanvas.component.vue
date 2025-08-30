@@ -70,13 +70,20 @@ onBeforeUnmount(() => {
 })
 
 function showOffcanvas() {
-    if (!offcanvas.value) return
+    console.log("Showing offcanvas, setting model to true")
+    if (!offcanvas.value) {
+        console.log("Was trying to show offcanvas but offcanvas.value is null")
+        return
+    }
     offcanvas.value.show()
     model.value = true
 }
 
 function hideOffcanvas() {
-    if (!offcanvas.value) return
+    if (!offcanvas.value) {
+        console.log("Was trying Hiding offcanvas but offcanvas.value is null")
+        return
+    }
     offcanvas.value.hide()
     model.value = false
 }

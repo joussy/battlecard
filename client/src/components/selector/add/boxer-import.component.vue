@@ -20,17 +20,11 @@
 <script setup lang="ts">
 import { useRouter } from "vue-router"
 import { useI18n } from "vue-i18n"
-import { closeModal } from "@/utils/ui.utils"
 
 const { t: $t } = useI18n()
 const router = useRouter()
 
-const closeModalFn = () => {
-    closeModal("#boxerAddOffcanvasNavbar")
-}
-
 const redirectToImport = () => {
-    closeModalFn()
     router.push({ name: "import" })
 }
 </script>

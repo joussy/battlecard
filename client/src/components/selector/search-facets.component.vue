@@ -9,10 +9,7 @@
             type="button"
             class="btn btn-outline-secondary btn-sm me-2 mb-1"
         >
-            <a
-                data-bs-toggle="offcanvas"
-                data-bs-target="#filtersOffcanvasNavbar"
-            >
+            <a @click="emit('show-facets')">
                 {{ btn.label }}:
                 <template v-if="btn.displayValue !== undefined">
                     {{ btn.displayValue }}
@@ -42,6 +39,9 @@ function displayRange(min: number | null | undefined, max: number | null | undef
 }
 
 const uiStore = useUiStore()
+const emit = defineEmits<{
+    (e: "show-facets"): void
+}>()
 
 const facets = computed((): Facets | null => {
     return uiStore.facets

@@ -1,12 +1,6 @@
 <template>
-    <div
-        id="boxerAddOffcanvasNavbar"
-        ref="offcanvas"
-        class="offcanvas offcanvas-end"
-        tabindex="-1"
-        aria-labelledby="boxerAddOffcanvasNavbarLabel"
-    >
-        <div class="offcanvas-header">
+    <OffcanvasComponent v-model="showOffcanvas">
+        <template #header>
             <h5
                 id="boxerAddOffcanvasNavbarLabel"
                 class="offcanvas-title"
@@ -14,13 +8,7 @@
                 <i class="bi bi-person-plus-fill me-1"></i>
                 {{ $t("addBoxer.title") }}
             </h5>
-            <button
-                type="button"
-                class="btn-close"
-                data-bs-dismiss="offcanvas"
-                aria-label="Close"
-            ></button>
-        </div>
+        </template>
         <div class="offcanvas-body">
             <div class="bg-body-tertiary rounded">
                 <ul class="nav nav-pills nav-fill mb-3">
@@ -76,23 +64,24 @@
                 @boxer-saved="onBoxerSaved()"
             ></BoxerAddFormComponent>
         </div>
-    </div>
+    </OffcanvasComponent>
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted, onBeforeUnmount } from "vue"
+import { ref, watch } from "vue"
 import { useI18n } from "vue-i18n"
 
 import BoxerAddFormComponent from "./boxer-add-form.component.vue"
 import BoxerImportComponent from "./boxer-import.component.vue"
-import { closeModal } from "@/utils/ui.utils"
 import BoxerSearchComponent from "./boxer-search.component.vue"
+import OffcanvasComponent from "@/components/shared/core/offcanvas.component.vue"
+
+const showOffcanvas = defineModel<boolean>()
 
 const { t: $t } = useI18n()
 
 const emit = defineEmits<{ (e: "boxer-saved"): void }>()
 
-const offcanvas = ref<HTMLElement | null>(null)
 const displayMode = ref<"search" | "create" | "import">("create")
 
 function clear() {
@@ -100,23 +89,12 @@ function clear() {
 }
 
 function onBoxerSaved() {
-    closeModal("#boxerAddOffcanvasNavbar")
+    showOffcanvas.value = false
     emit("boxer-saved")
 }
-
-let hiddenHandler: (() => void) | null = null
-
-onMounted(() => {
-    if (offcanvas.value) {
-        hiddenHandler = () => clear()
-        offcanvas.value.addEventListener("hidden.bs.offcanvas", hiddenHandler)
-    }
-    clear()
-})
-
-onBeforeUnmount(() => {
-    if (offcanvas.value && hiddenHandler) {
-        offcanvas.value.removeEventListener("hidden.bs.offcanvas", hiddenHandler)
+watch(showOffcanvas, (newValue) => {
+    if (newValue) {
+        clear()
     }
 })
 </script>
