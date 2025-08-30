@@ -54,6 +54,11 @@
         "kg": "kg",
         "of": "de"
     },
+    "confirmModal": {
+        "confirm": "Supprimer",
+        "cancel": "Annuler",
+        "message": "Souhaitez-vous confirmer l'action ?"
+    },
     "editBoxer": {
         "title": "Modifier un boxeur"
     },
