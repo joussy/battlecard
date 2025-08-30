@@ -52,8 +52,6 @@ export class BoxerController {
     @Param() params: IdParamsDto,
     @User() user: AuthenticatedUser,
   ): Promise<void> {
-    //verify boxer exists and belongs to user
-    await this.boxerService.validateTournamentAccess(params.id, user.id);
     return this.boxerService.delete(params.id, user);
   }
 }
