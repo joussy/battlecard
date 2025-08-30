@@ -7,8 +7,7 @@
             <button
                 class="btn btn-outline-success"
                 type="button"
-                data-bs-toggle="offcanvas"
-                data-bs-target="#boxerAddOffcanvasNavbar"
+                @click="showAddBoxerOffcanvas = true"
             >
                 <i class="bi bi-person-add" />
                 <span class="d-none d-md-inline ms-2">{{ $t("selector.addBoxer") }}</span>
@@ -66,15 +65,20 @@
             </ul>
             <button
                 class="btn btn-outline-secondary"
-                data-bs-toggle="offcanvas"
-                data-bs-target="#filtersOffcanvasNavbar"
+                @click="showFiltersOffcanvas = true"
             >
                 <span class="bi bi-funnel"></span>
                 {{ $t("selector.filters") }}
             </button>
-            <BoxerSelectorFiltersComponent />
-            <BoxerAddOffcanvasComponent @boxer-saved="onBoxerSaved" />
-            <BoxerEditOffcanvasComponent @boxer-saved="onBoxerSaved" />
+            <BoxerSelectorFiltersComponent v-model="showFiltersOffcanvas" />
+            <BoxerAddOffcanvasComponent
+                v-model="showAddBoxerOffcanvas"
+                @boxer-saved="onBoxerSaved"
+            />
+            <BoxerEditOffcanvasComponent
+                v-model="showEditBoxerOffcanvas"
+                @boxer-saved="onBoxerSaved"
+            />
         </div>
         <div class="mb-2 row">
             <!-- Search bar -->
@@ -95,7 +99,7 @@
             </div>
         </div>
         <div class="mb-2">
-            <SearchFacetsComponent />
+            <SearchFacetsComponent @show-facets="showFiltersOffcanvas = true" />
         </div>
         <div
             v-for="boxer in boxersToDisplay"
@@ -104,6 +108,7 @@
             <BoxerTileComponent
                 :boxer="boxer"
                 :nb-opponents="boxer.eligibleFights"
+                @edit-boxer="showEditBoxerOffcanvas = true"
             />
         </div>
         <div
@@ -148,11 +153,13 @@ import TournamentHeaderComponent from "@/components/shared/layout/tournament-hea
 import { downloadWithDom } from "@/utils/download.utils"
 
 const { t: $t } = useI18n()
-
+const showAddBoxerOffcanvas = ref(false)
+const showFiltersOffcanvas = ref(false)
 const selectedTournamentId = ref<string | null>(null)
 const tournamentStore = useTournamentStore()
 const uiStore = useUiStore()
 const boxersStore = useBoxerStore()
+const showEditBoxerOffcanvas = ref(false)
 
 const searchQuery = ref("")
 const boxersToDisplay = ref<Boxer[]>([])
@@ -308,6 +315,4 @@ async function onBoxerSaved() {
     await boxersStore.fetchBoxers()
     setBoxersToDisplay()
 }
-
-// facet updates are handled by watches that call setBoxersToDisplay
 </script>

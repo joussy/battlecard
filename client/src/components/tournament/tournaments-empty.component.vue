@@ -34,8 +34,6 @@
         <div>
             <button
                 class="btn btn-success btn-lg"
-                data-bs-toggle="offcanvas"
-                data-bs-target="#tournamentAddOffcanvasNavbar"
                 @click="$emit('openCreateTournament')"
             >
                 <i class="bi bi-plus-lg"></i>

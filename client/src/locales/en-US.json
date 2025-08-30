@@ -54,6 +54,11 @@
         "kg": "kg",
         "of": "of"
     },
+    "confirmModal": {
+        "confirm": "Confirm",
+        "cancel": "Cancel",
+        "message": "Do you confirm the action ?"
+    },
     "editBoxer": {
         "title": "Edit a boxer"
     },

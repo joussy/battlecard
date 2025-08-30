@@ -14,8 +14,7 @@
             <button
                 type="button"
                 class="btn btn-outline-secondary ms-2"
-                data-bs-toggle="modal"
-                data-bs-target="#shareModal"
+                @click="showShareOffcanvas = true"
             >
                 <i class="me-1 bi bi-download" />
                 {{ $t("sharedFightCard.download") }}
@@ -41,6 +40,7 @@
             </div>
         </div>
         <ShareComponent
+            v-model="showShareOffcanvas"
             :enable-share-link="false"
             :download-callback="downloadCallback"
         />
@@ -94,6 +94,7 @@ import { downloadWithDom } from "@/utils/download.utils"
 const { t: $t } = useI18n()
 
 const route = useRoute()
+const showShareOffcanvas = ref(false)
 
 const roToken = ref<string | null>(null)
 const tournament = ref<SharedFightCard | null>(null)

@@ -16,8 +16,7 @@
             <button
                 type="button"
                 class="btn btn-outline-purple ms-2"
-                data-bs-toggle="modal"
-                data-bs-target="#matchupModal"
+                @click="showMatchupModal = true"
             >
                 <i class="me-1 bi bi-magic" />
                 {{ $t("fightCard.matchmaker") }}
@@ -26,8 +25,7 @@
                 type="button"
                 :disabled="getNbFights() == 0 && !editionMode"
                 class="btn btn-outline-secondary ms-2"
-                data-bs-toggle="modal"
-                data-bs-target="#shareModal"
+                @click="showShareModal = true"
             >
                 <i class="me-1 bi bi-share" />
                 {{ $t("fightCard.share") }}
@@ -73,10 +71,11 @@
         </div>
     </div>
     <ShareComponent
+        v-model="showShareModal"
         :enable-share-link="true"
         :download-callback="downloadCallback"
     />
-    <MatchupModalComponent />
+    <MatchupModalComponent v-model="showMatchupModal" />
 </template>
 
 <script setup lang="ts">
@@ -93,6 +92,8 @@ import { downloadWithDom } from "@/utils/download.utils"
 import { ExportOpenApi } from "@/api"
 
 const { t: $t } = useI18n()
+const showShareModal = ref(false)
+const showMatchupModal = ref(false)
 
 const fightStore = useFightStore()
 const tournamentStore = useTournamentStore()

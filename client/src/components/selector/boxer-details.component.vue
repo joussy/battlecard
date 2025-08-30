@@ -66,14 +66,15 @@
                         </button>
                         <div
                             class="btn btn-sm btn-outline-success"
-                            data-bs-toggle="offcanvas"
-                            data-bs-target="#boxerEditOffcanvasNavbar"
                             @click="editBoxer()"
                         >
                             <i class="bi bi-pencil"></i>
                             {{ $t("selector.editBoxer") }}
                         </div>
-                        <BoxerEditOffcanvasComponent @boxer-saved="fetchBoxerData()" />
+                        <BoxerEditOffcanvasComponent
+                            v-model="showEditOffcanvas"
+                            @boxer-saved="fetchBoxerData()"
+                        />
                     </div>
                 </div>
             </div>
@@ -121,6 +122,7 @@ const fightStore = useFightStore()
 const boxerStore = useBoxerStore()
 const uiStore = useUiStore()
 const tournamentBoxerStore = useTournamentBoxerStore()
+const showEditOffcanvas = ref(false)
 
 const opponents = ref<Opponent[]>([])
 const boxer = ref<Boxer | undefined>(undefined)
@@ -179,5 +181,6 @@ function copyToClipboard() {
 function editBoxer() {
     if (!boxer.value) return
     boxerStore.boxerToEdit = boxer.value
+    showEditOffcanvas.value = true
 }
 </script>

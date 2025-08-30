@@ -3,7 +3,7 @@
         v-if="tournamentStore.tournaments.length == 0 && !tournamentStore.loading"
         class="max-width-md"
     >
-        <TournamentsEmptyComponent @open-create-tournament="setTournamentToEdit(null)" />
+        <TournamentsEmptyComponent @open-create-tournament="editTournament(null)" />
     </div>
     <div
         v-else
@@ -13,9 +13,7 @@
             <h3 class="flex-grow-1"></h3>
             <button
                 class="btn btn-outline-success mb-3 ms-2"
-                data-bs-toggle="offcanvas"
-                data-bs-target="#tournamentAddOffcanvasNavbar"
-                @click="setTournamentToEdit(null)"
+                @click="editTournament(null)"
             >
                 <i class="bi bi-calendar-plus-fill" />
                 {{ $t("tournaments.addTournament") }}
@@ -59,9 +57,7 @@
                     </button>
                     <button
                         class="btn btn-outline-success btn-sm"
-                        data-bs-toggle="offcanvas"
-                        data-bs-target="#tournamentAddOffcanvasNavbar"
-                        @click="setTournamentToEdit(tournament)"
+                        @click="editTournament(tournament)"
                     >
                         <i class="bi bi-pencil" />
                         <span class="d-sm-inline ms-1">{{ $t("tournaments.edit") }}</span>
@@ -75,6 +71,7 @@
         </div>
     </div>
     <TournamentAddOffcanvasComponent
+        v-model="showTournamentOffcanvas"
         :tournament="tournamentToEdit"
         @tournament-saved="onTournamentSaved"
     />
@@ -87,7 +84,7 @@ import TournamentAddOffcanvasComponent from "@/components/tournament/tournament-
 import TournamentsEmptyComponent from "@/components/tournament/tournaments-empty.component.vue"
 import { useTournamentStore } from "@/stores/tournament.store"
 import { format } from "date-fns"
-
+const showTournamentOffcanvas = ref(false)
 const router = useRouter()
 const tournamentStore = useTournamentStore()
 
@@ -106,13 +103,14 @@ const setCurrentTournament = (tournament: Tournament) => {
     router.push("selector")
 }
 
-const setTournamentToEdit = (tournament: Tournament | null) => {
+const editTournament = (tournament: Tournament | null) => {
     tournamentToEdit.value = tournament
+    showTournamentOffcanvas.value = true
 }
 
 const onTournamentSaved = async (tournamentId: string) => {
     await tournamentStore.fetchTournaments()
-    setTournamentToEdit(null)
+    tournamentToEdit.value = null
     if (selectedTournamentId.value == tournamentId) {
         tournamentStore.setCurrentTournament(tournamentId)
     }

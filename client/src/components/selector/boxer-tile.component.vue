@@ -80,6 +80,10 @@ interface Props {
     nbOpponents?: number
 }
 
+const emit = defineEmits<{
+    (e: "edit-boxer", payload: Boxer): void
+}>()
+
 const props = withDefaults(defineProps<Props>(), {
     nbOpponents: undefined,
 })
@@ -96,5 +100,6 @@ const editBoxer = () => {
         return
     }
     boxerStore.boxerToEdit = props.boxer
+    emit("edit-boxer", props.boxer)
 }
 </script>
