@@ -129,7 +129,7 @@
 </template>
 
 <script lang="ts" setup>
-import { watch, computed, ref } from "vue"
+import { watch, computed } from "vue"
 import { configure, defineRule, GenericObject, useForm } from "vee-validate"
 import { useI18n } from "vue-i18n"
 import { Tournament } from "@/types/boxing.d"

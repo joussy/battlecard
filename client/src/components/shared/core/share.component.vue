@@ -6,7 +6,7 @@
                 class="modal-title"
             >
                 <i class="bi bi-share me-2"></i>
-                Share
+                {{ $t("share.generateLink") }}
             </h5>
         </template>
         <!-- Export Section -->
