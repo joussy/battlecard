@@ -164,7 +164,7 @@ import { useI18n } from "vue-i18n"
 import { ShareOpenApi } from "@/api"
 import { useTournamentStore } from "@/stores/tournament.store"
 import ModalComponent from "./modal.component.vue"
-const showModal = ref(false)
+const showModal = defineModel<boolean>()
 const { t: $t } = useI18n()
 
 interface Props {
