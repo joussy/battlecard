@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { Boxer } from '../entities/boxer.entity';
 import { TournamentBoxer } from '../entities/tournament_boxer.entity';
 import { Fight } from '../entities/fight.entity';
@@ -26,6 +26,34 @@ export class BoxerService {
     private readonly tournamentRepository: Repository<Tournament>,
     private readonly modalityService: ModalityService,
   ) {}
+
+  async validateTournamentAccess(
+    boxerId: string,
+    userId: string,
+  ): Promise<Boxer> {
+    if (!boxerId || !userId) {
+      throw new NotFoundException(
+        'Boxer not found or you do not have permission to access it',
+      );
+    }
+
+    return await this.boxerRepository.findOneOrFail({
+      where: [{ id: boxerId, userId: userId }],
+    });
+  }
+
+  async delete(boxerId: string, user: AuthenticatedUser): Promise<void> {
+    await this.validateTournamentAccess(boxerId, user.id);
+    //delete boxer from fights first
+    const fights = await this.fightRepository.find({
+      where: [{ boxer1Id: boxerId }, { boxer2Id: boxerId }],
+    });
+    await this.fightRepository.delete({ id: In(fights.map((f) => f.id)) });
+    //delete boxer from tournament boxers
+    await this.tournamentBoxerRepository.delete({ boxerId: boxerId });
+    //delete boxer
+    await this.boxerRepository.delete({ id: boxerId, userId: user.id });
+  }
 
   async create(
     boxer: CreateBoxerDto,

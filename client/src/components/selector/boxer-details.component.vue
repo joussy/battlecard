@@ -75,10 +75,22 @@
                             v-model="showEditOffcanvas"
                             @boxer-saved="fetchBoxerData()"
                         />
+                        <div
+                            class="btn btn-sm btn-outline-danger"
+                            @click="showDeleteConfirmModal = true"
+                        >
+                            <i class="bi bi-trash"></i>
+                            <span class="d-none d-sm-inline ms-1">{{ $t("selector.deleteBoxer") }}</span>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+        <ConfirmModalComponent
+            v-model="showDeleteConfirmModal"
+            :message="deleteMessage"
+            @confirm="confirmDeleteBoxer"
+        />
         <h6 class="ps-1">{{ $t("selector.availableOpponents") }}</h6>
         <div>
             <div class="ps-0 pe-0 pt-0 pb-0">
@@ -101,10 +113,11 @@ import { ref, computed, watch, watchEffect } from "vue"
 import { useRoute, useRouter } from "vue-router"
 import { useI18n } from "vue-i18n"
 import { Boxer, Opponent } from "@/types/boxing.d"
-import { Gender } from "@/api"
+import { BoxerOpenApi, Gender } from "@/api"
 import OpponentTileComponent from "@/components/selector/opponent-tile.component.vue"
 import BoxerEditOffcanvasComponent from "@/components/selector/add/boxer-edit-offcanvas.component.vue"
 import IconComponent from "@/components/shared/core/icon.component.vue"
+import ConfirmModalComponent from "@/components/shared/core/confirm-modal.component.vue"
 
 const { t: $t } = useI18n()
 
@@ -123,6 +136,7 @@ const boxerStore = useBoxerStore()
 const uiStore = useUiStore()
 const tournamentBoxerStore = useTournamentBoxerStore()
 const showEditOffcanvas = ref(false)
+const showDeleteConfirmModal = ref(false)
 
 const opponents = ref<Opponent[]>([])
 const boxer = ref<Boxer | undefined>(undefined)
@@ -182,5 +196,15 @@ function editBoxer() {
     if (!boxer.value) return
     boxerStore.boxerToEdit = boxer.value
     showEditOffcanvas.value = true
+}
+const deleteMessage = computed(() => {
+    return $t("selector.deleteBoxerConfirmation")
+})
+
+async function confirmDeleteBoxer() {
+    if (!boxer.value) return
+    await BoxerOpenApi.delete({ path: { id: boxer.value.id } })
+    showDeleteConfirmModal.value = false
+    router.push({ name: "selector" })
 }
 </script>
