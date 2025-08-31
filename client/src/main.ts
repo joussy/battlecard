@@ -20,6 +20,7 @@ import { useUiStore } from "./stores/ui.store"
 import { createI18n } from "vue-i18n"
 import enUS from "./locales/en-US.json"
 import frFR from "./locales/fr-FR.json"
+import setupNoSelectedTournamentRedirect from "./router/no-selected-tournament-redirect"
 
 declare module "pinia" {
     export interface PiniaCustomProperties {
@@ -29,12 +30,32 @@ declare module "pinia" {
 
 const routes = [
     { path: "/", redirect: { name: "auth" } },
-    { path: "/tournaments", name: "tournaments", component: TournamentsComponent },
-    { path: "/selector", name: "selector", component: BoxerSelectorComponent },
-    { path: "/selector/tile/:id", name: "selector-tile", component: BoxerTileDetailsComponent },
-    { path: "/settings", name: "settings", component: SettingsComponent },
-    { path: "/card", name: "card", component: FightCardComponent },
-    { path: "/auth", name: "auth", component: AuthComponent, meta: { hideMenu: true, requiresAuth: false } },
+    {
+        path: "/tournaments",
+        name: "tournaments",
+        component: TournamentsComponent,
+        meta: { requiresSelectedTournament: false },
+    },
+    {
+        path: "/selector",
+        name: "selector",
+        component: BoxerSelectorComponent,
+        meta: { requiresSelectedTournament: true },
+    },
+    {
+        path: "/selector/tile/:id",
+        name: "selector-tile",
+        component: BoxerTileDetailsComponent,
+        meta: { requiresSelectedTournament: true },
+    },
+    { path: "/settings", name: "settings", component: SettingsComponent, meta: { requiresSelectedTournament: false } },
+    { path: "/card", name: "card", component: FightCardComponent, meta: { requiresSelectedTournament: true } },
+    {
+        path: "/auth",
+        name: "auth",
+        component: AuthComponent,
+        meta: { hideMenu: true, requiresAuth: false, requiresSelectedTournament: false },
+    },
     {
         path: "/shared-card/:roToken",
         name: "shared-card",
@@ -100,3 +121,4 @@ app.use(i18n)
 app.mount("#app")
 
 setupAuthRedirect(router)
+setupNoSelectedTournamentRedirect(router)
