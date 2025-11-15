@@ -1,7 +1,13 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { ConsoleLogger, ValidationPipe } from '@nestjs/common';
+import {
+  ConsoleLogger,
+  INestApplication,
+  Logger,
+  ValidationPipe,
+} from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import { ConfigService } from './services/config.service';
 import { writeFileSync, readFileSync, existsSync } from 'fs';
 import i18next from 'i18next';
 import i18nMiddleware from './middleware/i18n.middleware';
@@ -17,6 +23,7 @@ async function bootstrap() {
   });
   app.setGlobalPrefix('/api');
 
+  // Initialize i18next for internationalization
   await i18next.init({
     fallbackLng: 'en',
     preload: ['en', 'fr'],
@@ -38,37 +45,49 @@ async function bootstrap() {
       transform: true, // Automatically transform payloads to be objects typed according to their DTO classes
     }),
   );
-
-  await app.listen(process.env.PORT ?? 3000);
-
+  const config = new ConfigService();
+  await app.listen(config.getConfig().port);
+  const logger = new Logger(ConfigService.name);
+  logger.log(`Battlecard Server is running on port ${config.getConfig().port}`);
   // Once the server is listening, write the OpenAPI document to disk
-  if (process.env.ENABLE_OPENAPI === 'true') {
-    try {
-      const outPath = './openapi.json';
-      const config = new DocumentBuilder()
-        .setTitle('Battlecard')
-        .setDescription('The Fightmaker App')
-        .setVersion('1.0')
-        .addBearerAuth()
-        .addSecurityRequirements('bearer')
-        .build();
-
-      const doc = SwaggerModule.createDocument(app, config);
-      const newContent = JSON.stringify(doc, null, 2);
-
-      if (existsSync(outPath)) {
-        const oldContent = readFileSync(outPath, 'utf8');
-        if (oldContent !== newContent) {
-          console.log('OpenAPI document has changed; updating', outPath);
-          writeFileSync(outPath, newContent);
-        }
-      } else {
-        writeFileSync(outPath, newContent);
-      }
-    } catch (err) {
-      // Don't fail startup if writing the file fails; log and continue
-      console.error('Failed to write OpenAPI document:', err);
-    }
+  if (config.getConfig().enableOpenApi) {
+    GenerateOpenApiSchema(app);
+  } else {
+    logger.log('OpenAPI generation is disabled.');
   }
 }
+
+/**
+ * Generates the OpenAPI schema and writes it to a file.
+ * @param app The NestJS application instance.
+ */
+function GenerateOpenApiSchema(app: INestApplication) {
+  try {
+    const outPath = './openapi.json';
+    const config = new DocumentBuilder()
+      .setTitle('Battlecard')
+      .setDescription('The Fightmaker App')
+      .setVersion('1.0')
+      .addBearerAuth()
+      .addSecurityRequirements('bearer')
+      .build();
+
+    const doc = SwaggerModule.createDocument(app, config);
+    const newContent = JSON.stringify(doc, null, 2);
+
+    if (existsSync(outPath)) {
+      const oldContent = readFileSync(outPath, 'utf8');
+      if (oldContent !== newContent) {
+        console.log('OpenAPI document has changed; updating', outPath);
+        writeFileSync(outPath, newContent);
+      }
+    } else {
+      writeFileSync(outPath, newContent);
+    }
+  } catch (err) {
+    // Don't fail startup if writing the file fails; log and continue
+    console.error('Failed to write OpenAPI document:', err);
+  }
+}
+
 void bootstrap();

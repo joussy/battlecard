@@ -5,7 +5,7 @@
     "workspaceFolder": "/workspace/battlecard",
     "customizations": {
         "vscode": {
-            "extensions": [        
+            "extensions": [
                 "Vue.volar",
                 "ms-edgedevtools.vscode-edge-devtools",
                 "Lokalise.i18n-ally"
@@ -17,12 +17,13 @@
         "client": "cd client && npm install"
     },
     "remoteEnv": {
-      "GOOGLE_CALLBACK_URL": "http://localhost:5173/api/auth/google/callback",
-      "DB_HOST": "postgres",
-      "DB_PORT": "5432",
-      "DB_USER": "postgres",
-      "DB_PASS": "postgres",
-      "DB_NAME": "battlecard",
-      "GOTENBERG_URL": "http://gotenberg:3000"
+        "BATTLECARD_googleCallbackUrl": "http://localhost:5173/api/auth/google/callback",
+        "BATTLECARD_dbHost": "postgres",
+        "BATTLECARD_dbPort": "5432",
+        "BATTLECARD_dbUser": "postgres",
+        "BATTLECARD_dbPassword": "postgres",
+        "BATTLECARD_dbName": "battlecard",
+        "BATTLECARD_gotenbergUrl": "http://gotenberg:3000",
+        "BATTLECARD_enableOpenApi": "true"
     }
 }

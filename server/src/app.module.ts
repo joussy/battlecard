@@ -31,6 +31,7 @@ import { GotenbergService } from './services/gotenberg.service';
 import { SelectorExportService } from './services/selector-export.service';
 import { ShareController } from './controllers/share.controller';
 import { ShareService } from './services/share.service';
+import { ConfigSecretService } from './services/config-secret.service';
 import { ConfigService } from './services/config.service';
 import { QrCodeService } from './services/qrcode.service';
 import { TypeOrmConfigService } from './services/typeorm-config.service';
@@ -53,7 +54,7 @@ import { PlacesService } from './services/places.service';
     }),
     TypeOrmModule.forFeature([User, Tournament, Boxer, Fight, TournamentBoxer]),
     JwtModule.register({
-      secret: process.env.JWT_SECRET,
+      secret: new ConfigService().getConfig().jwtSecret,
       signOptions: { expiresIn: '1d' },
     }),
   ],
@@ -70,6 +71,7 @@ import { PlacesService } from './services/places.service';
   ],
   providers: [
     TypeOrmConfigService,
+    ConfigSecretService,
     ConfigService,
     GoogleStrategy,
     FightService,

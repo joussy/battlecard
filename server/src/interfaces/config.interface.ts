@@ -44,4 +44,8 @@ export interface EnvConfig {
   websiteBaseUrl: string;
   /** Environment in which the application is running */
   environment: 'development' | 'production';
+  /** Flag to enable or disable OpenAPI documentation */
+  enableOpenApi: boolean;
+  /** Port on which the application listens */
+  port: number;
 }
