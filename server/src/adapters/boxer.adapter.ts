@@ -8,6 +8,7 @@ import { Tournament } from '@/entities/tournament.entity';
 import { SelectorTemplate } from '@/interfaces/template.interface';
 import { format } from 'date-fns/format';
 import { CreateBoxerDto } from '@/dto/boxer.dto';
+import i18next from 'i18next';
 
 export function toBoxer(
   boxer: BoxerDto | CreateBoxerDto,
@@ -123,8 +124,6 @@ export function toSelectorTemplate(
   };
   return template;
 }
-
-import i18next from 'i18next';
 
 export function toSelectorExportData(boxers: Boxer[], modality: IModality) {
   return boxers.map((boxer) => ({
