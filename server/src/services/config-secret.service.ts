@@ -10,7 +10,6 @@ import { AppConfig as FileConfig } from '../interfaces/config.interface';
 // generating a new configuration if necessary.
 @Injectable()
 export class ConfigSecretService {
-  private fileConfig: FileConfig;
   private readonly configPath: string;
   private readonly logger = new Logger(ConfigSecretService.name);
   private readonly config: FileConfig;
@@ -20,7 +19,7 @@ export class ConfigSecretService {
     // Load the configuration from the file on startup
     this.configDir = join(homedir(), '.config', 'battlecard');
     this.configPath = join(this.configDir, 'secrets.json');
-    this.fileConfig = this.loadFileConfig();
+    this.config = this.loadFileConfig();
   }
 
   private loadFileConfig(): FileConfig {
@@ -36,10 +35,6 @@ export class ConfigSecretService {
         this.logger.log(`Loaded config from ${this.configPath}`);
         return parsedConfig;
       } catch (error) {
-        this.logger.warn(
-          'Failed to parse config file, generating new one:',
-          error,
-        );
         this.logger.warn(
           'Failed to parse config file, generating new one:',
           error,
@@ -80,6 +75,6 @@ export class ConfigSecretService {
   }
 
   getFightCardShareSecret(): string {
-    return this.fileConfig.fightCardShareSecret;
+    return this.config.fightCardShareSecret;
   }
 }

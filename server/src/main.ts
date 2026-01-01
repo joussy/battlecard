@@ -53,7 +53,7 @@ async function bootstrap() {
   );
   // Once the server is listening, write the OpenAPI document to disk
   if (configService.getConfig().enableOpenApi) {
-    GenerateOpenApiSchema(app);
+    generateOpenApiSchema(app);
   } else {
     logger.log('OpenAPI generation is disabled.');
   }
@@ -63,7 +63,7 @@ async function bootstrap() {
  * Generates the OpenAPI schema and writes it to a file.
  * @param app The NestJS application instance.
  */
-function GenerateOpenApiSchema(app: INestApplication) {
+function generateOpenApiSchema(app: INestApplication) {
   try {
     const outPath = './openapi.json';
     const config = new DocumentBuilder()

@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ConfigModule } from '@nestjs/config';
 import { User } from './entities/user.entity';
 import { Tournament } from './entities/tournament.entity';
 import { UserController } from './controllers/user.controller';
