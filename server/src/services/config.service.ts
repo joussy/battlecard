@@ -56,7 +56,7 @@ export class ConfigService {
     return Joi.object<EnvConfig>({
       geoapifyApiKey: Joi.string().optional(),
       dbHost: Joi.string().required(),
-      dbPort: Joi.number().required(),
+      dbPort: Joi.number().port().required(),
       dbUser: Joi.string().required(),
       dbPassword: Joi.string().required(),
       dbName: Joi.string().required(),
