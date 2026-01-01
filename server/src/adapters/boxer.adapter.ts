@@ -124,15 +124,20 @@ export function toSelectorTemplate(
   return template;
 }
 
+import i18next from 'i18next';
+
 export function toSelectorExportData(boxers: Boxer[], modality: IModality) {
   return boxers.map((boxer) => ({
-    License: boxer.license,
-    LastName: boxer.lastName,
-    FirstName: boxer.firstName,
-    Weight: boxer.weight,
-    Category: modality.getCategoryName(boxer, false),
-    BirthDate: boxer.birthDate,
-    NumberOfFights: boxer.nbFights,
-    Club: boxer.club,
+    [i18next.t('template.selector.license')]: boxer.license,
+    [i18next.t('template.selector.last_name')]: boxer.lastName,
+    [i18next.t('template.selector.first_name')]: boxer.firstName,
+    [i18next.t('template.selector.weight')]: boxer.weight,
+    [i18next.t('template.selector.category')]: modality.getCategoryName(
+      boxer,
+      false,
+    ),
+    [i18next.t('template.selector.birth_date')]: boxer.birthDate,
+    [i18next.t('template.selector.number_of_fights')]: boxer.nbFights,
+    [i18next.t('template.selector.gym')]: boxer.club,
   }));
 }

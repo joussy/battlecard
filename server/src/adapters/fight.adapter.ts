@@ -9,6 +9,7 @@ import { toBoxerDto } from './boxer.adapter';
 import { formatAddress } from '@/utils/addressUtils';
 import { CreateFightDto } from '@/dto/fight.dto';
 import { Gender } from '@/interfaces/modality.interface';
+import i18next from 'i18next';
 
 export function toFightDto(fight: Fight, modality: IModality): FightDto {
   const fightDuration = modality.getFightDuration(fight.boxer1, fight.boxer2);
@@ -61,14 +62,16 @@ export function toFightCardTemplate(
 export function toFightCardExportData(fights: Fight[]) {
   return fights.map((fight) => ({
     Order: fight.order,
-    'Red Licence': `${fight.boxer1?.license}`,
-    'Red Boxer':
+    [`${i18next.t('template.selector.license')} (${i18next.t('template.fight_card.red_corner')})`]: `${fight.boxer1?.license}`,
+    [`${i18next.t('template.selector.full_name')} (${i18next.t('template.fight_card.red_corner')})`]:
       `${fight.boxer1?.firstName || ''} ${fight.boxer1?.lastName || ''}`.trim(),
-    'Red Club': fight.boxer1?.club || '',
-    'Blue Licence': `${fight.boxer2?.license}`,
-    'Blue Boxer':
+    [`${i18next.t('template.selector.gym')} (${i18next.t('template.fight_card.red_corner')})`]:
+      fight.boxer1?.club || '',
+    [`${i18next.t('template.selector.license')} (${i18next.t('template.fight_card.blue_corner')})`]: `${fight.boxer2?.license}`,
+    [`${i18next.t('template.selector.full_name')} (${i18next.t('template.fight_card.blue_corner')})`]:
       `${fight.boxer2?.firstName || ''} ${fight.boxer2?.lastName || ''}`.trim(),
-    'Blue Club': fight.boxer2?.club || '',
+    [`${i18next.t('template.selector.gym')} (${i18next.t('template.fight_card.blue_corner')})`]:
+      fight.boxer2?.club || '',
   }));
 }
 
