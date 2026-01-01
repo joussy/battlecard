@@ -69,7 +69,7 @@ export class ConfigService {
       websiteBaseUrl: Joi.string().required(),
       environment: Joi.string().valid('development', 'production'),
       enableOpenApi: Joi.boolean().default(false),
-      port: Joi.number().default(3000),
+      port: Joi.number().port().default(3000),
       fightCardShareSecret: Joi.string().required().min(12),
     });
   }
@@ -89,7 +89,9 @@ export class ConfigService {
 
         return parsedConfig;
       } catch {
-        this.logger.log('Failed to parse config file, using environment variables');
+        this.logger.log(
+          'Failed to parse config file, using environment variables',
+        );
       }
     }
     return null;
