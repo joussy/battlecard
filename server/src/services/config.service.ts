@@ -11,6 +11,7 @@ export class ConfigService {
   private readonly configPath: string;
   private readonly logger = new Logger(ConfigService.name);
   private readonly config: EnvConfig;
+  private readonly ENV_PREFIX = 'BATTLECARD_';
 
   constructor() {
     const fileConfig = this.loadFileConfig();
@@ -20,15 +21,35 @@ export class ConfigService {
       ...fileConfig,
       ...envConfig,
     };
-
     const schema = this.GetValidator();
-    const result = schema.validate(conf);
+    const result = schema.validate(conf, { abortEarly: false });
     if (result.error) {
-      this.logger.error('Validation failed:', result.error.details);
-      throw new Error('Invalid configuration');
+      this.displayValidationErrors(result.error.details);
+    } else {
+      this.logger.log('Configuration validated successfully');
     }
     this.config = result.value;
-    console.log(this.config);
+    // console.log('conf', this.config);
+  }
+
+  /**
+   * Display Joi validation errors in a user-friendly format and throw an error.
+   */
+  private displayValidationErrors(details: Joi.ValidationErrorItem[]): never {
+    const formattedErrors = details
+      .map((err, idx) => {
+        const path = err.path.join('.');
+        return `  ${idx + 1}. [${path}] ${err.message}`;
+      })
+      .join('\n');
+    const errorMsg = [
+      'Configuration validation failed with the following errors:',
+      formattedErrors,
+      '',
+      'Please check your configuration file or environment variables and fix the above issues.',
+      `If you are using environment variables, ensure they are prefixed with "${this.ENV_PREFIX}".`,
+    ].join('\n');
+    throw new Error(errorMsg);
   }
 
   private GetValidator() {
@@ -48,7 +69,7 @@ export class ConfigService {
       gotenbergUrl: Joi.string().required(),
       websiteBaseUrl: Joi.string().required(),
       environment: Joi.string().valid('development', 'production'),
-      enableOpenApi: Joi.bool().default(false),
+      enableOpenApi: Joi.boolean().default(false),
       port: Joi.number().default(3000),
     });
   }
@@ -74,17 +95,16 @@ export class ConfigService {
     return null;
   }
   private loadEnvConfig(): EnvConfig {
-    const ENV_PREFIX = 'BATTLECARD_';
     const envVars = Object.fromEntries(
       Object.entries(process.env)
         .filter(
           ([key, value]) =>
-            typeof value === 'string' && key.startsWith(ENV_PREFIX),
+            typeof value === 'string' && key.startsWith(this.ENV_PREFIX),
         )
-        .map(([key, value]) => [key.substring(ENV_PREFIX.length), value]),
+        .map(([key, value]) => [key.substring(this.ENV_PREFIX.length), value]),
     ) as Record<string, string>;
-
     const env = unflatten(envVars);
+    console.log('Loaded configuration:', envVars);
 
     return env as EnvConfig;
   }

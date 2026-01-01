@@ -45,12 +45,14 @@ async function bootstrap() {
       transform: true, // Automatically transform payloads to be objects typed according to their DTO classes
     }),
   );
-  const config = new ConfigService();
-  await app.listen(config.getConfig().port);
+  const configService = app.get(ConfigService);
+  await app.listen(configService.getConfig().port);
   const logger = new Logger(ConfigService.name);
-  logger.log(`Battlecard Server is running on port ${config.getConfig().port}`);
+  logger.log(
+    `Battlecard Server is running on port ${configService.getConfig().port}`,
+  );
   // Once the server is listening, write the OpenAPI document to disk
-  if (config.getConfig().enableOpenApi) {
+  if (configService.getConfig().enableOpenApi) {
     GenerateOpenApiSchema(app);
   } else {
     logger.log('OpenAPI generation is disabled.');
