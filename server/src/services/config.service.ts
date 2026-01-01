@@ -84,7 +84,7 @@ export class ConfigService {
 
     if (existsSync(configPath)) {
       try {
-        const configFile = readFileSync(this.configPath, 'utf8');
+        const configFile = readFileSync(configPath, 'utf8');
         const parsedConfig = JSON.parse(configFile) as EnvConfig;
 
         return parsedConfig;
