@@ -30,7 +30,6 @@ import { GotenbergService } from './services/gotenberg.service';
 import { SelectorExportService } from './services/selector-export.service';
 import { ShareController } from './controllers/share.controller';
 import { ShareService } from './services/share.service';
-import { ConfigSecretService } from './services/config-secret.service';
 import { ConfigService } from './services/config.service';
 import { AppConfigModule } from './app-config.module';
 import { QrCodeService } from './services/qrcode.service';
@@ -73,7 +72,6 @@ import { PlacesService } from './services/places.service';
   providers: [
     // ConfigService is now provided by AppConfigModule
     TypeOrmConfigService,
-    ConfigSecretService,
     GoogleStrategy,
     FightService,
     TournamentService,

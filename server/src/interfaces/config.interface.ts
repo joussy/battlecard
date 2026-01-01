@@ -1,9 +1,4 @@
 // Configuration read at startup
-export interface AppConfig {
-  // Secret used for sharing fight cards
-  fightCardShareSecret: string;
-}
-
 export interface EnvConfig {
   /** Geoapify API key for address autocomplete. Optional */
   geoapifyApiKey?: string;
@@ -48,4 +43,6 @@ export interface EnvConfig {
   enableOpenApi: boolean;
   /** Port on which the application listens */
   port: number;
+  /** Secret used for sharing fight cards */
+  fightCardShareSecret: string;
 }

@@ -21,7 +21,7 @@ export class ConfigService {
       ...fileConfig,
       ...envConfig,
     };
-    const schema = this.GetValidator();
+    const schema = this.getValidator();
     const result = schema.validate(conf, { abortEarly: false });
     if (result.error) {
       this.displayValidationErrors(result.error.details);
@@ -29,7 +29,6 @@ export class ConfigService {
       this.logger.log('Configuration validated successfully');
     }
     this.config = result.value;
-    // console.log('conf', this.config);
   }
 
   /**
@@ -52,7 +51,7 @@ export class ConfigService {
     throw new Error(errorMsg);
   }
 
-  private GetValidator() {
+  private getValidator() {
     return Joi.object<EnvConfig>({
       geoapifyApiKey: Joi.string().optional(),
       dbHost: Joi.string().required(),
@@ -71,6 +70,7 @@ export class ConfigService {
       environment: Joi.string().valid('development', 'production'),
       enableOpenApi: Joi.boolean().default(false),
       port: Joi.number().default(3000),
+      fightCardShareSecret: Joi.string().required().min(12),
     });
   }
 
@@ -104,7 +104,6 @@ export class ConfigService {
         .map(([key, value]) => [key.substring(this.ENV_PREFIX.length), value]),
     ) as Record<string, string>;
     const env = unflatten(envVars);
-    console.log('Loaded configuration:', envVars);
 
     return env as EnvConfig;
   }

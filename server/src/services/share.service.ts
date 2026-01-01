@@ -8,7 +8,6 @@ import { decryptToken, encryptToken } from '@/utils/crypto.utils';
 import { toSharedFightCardDto } from '@/adapters/share.adapter';
 import { ModalityService } from '@/modality/modality.service';
 import { ConfigService } from '@/services/config.service';
-import { ConfigSecretService } from '@/services/config-secret.service';
 
 @Injectable()
 export class ShareService {
@@ -19,11 +18,10 @@ export class ShareService {
     private readonly fightRepository: Repository<Fight>,
     private readonly modalityService: ModalityService,
     private readonly configService: ConfigService,
-    private readonly configSecretService: ConfigSecretService,
   ) {}
 
   private get secretKey(): string {
-    return this.configSecretService.getFightCardShareSecret();
+    return this.configService.getConfig().fightCardShareSecret;
   }
 
   getTournamentIdByFightCardToken(fightCardToken: string): string {
