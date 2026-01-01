@@ -11,6 +11,7 @@
       "license": "License",
       "last_name": "Last Name",
       "first_name": "First Name",
+      "full_name": "Boxer",
       "weight": "Weight",
       "category": "Category",
       "birth_date": "Birth Date",
