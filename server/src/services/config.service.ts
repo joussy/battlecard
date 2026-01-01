@@ -89,7 +89,7 @@ export class ConfigService {
 
         return parsedConfig;
       } catch {
-        this.logger.log('No config file found, using environment variables');
+        this.logger.log('Failed to parse config file, using environment variables');
       }
     }
     return null;
