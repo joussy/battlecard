@@ -1,6 +1,6 @@
 services:
   battlecard:
-    image: mcr.microsoft.com/vscode/devcontainers/typescript-node:22
+    image: mcr.microsoft.com/vscode/devcontainers/typescript-node:25.0
     volumes:
       - ../battlecard:/workspace/battlecard
     depends_on:
