@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
+import { ConfigService } from './config.service';
 
 @Injectable()
 export class GotenbergService {
@@ -14,7 +14,7 @@ export class GotenbergService {
     formData.append('landscape', 'true');
 
     // Send HTML to Gotenberg for PDF conversion
-    const gotenbergUrl = this.configService.get<string>('GOTENBERG_URL');
+    const gotenbergUrl = this.configService.getConfig().gotenbergUrl;
     if (!gotenbergUrl) {
       throw new Error('PDF generation service not available');
     }
@@ -45,7 +45,7 @@ export class GotenbergService {
     formData.append('skipNetworkIdleEvent', 'false');
 
     // Send HTML to Gotenberg for PNG conversion
-    const gotenbergUrl = this.configService.get<string>('GOTENBERG_URL');
+    const gotenbergUrl = this.configService.getConfig().gotenbergUrl;
     if (!gotenbergUrl) {
       throw new Error('Image generation service not available');
     }

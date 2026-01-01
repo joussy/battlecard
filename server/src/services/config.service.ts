@@ -1,142 +1,112 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'fs';
-import { join } from 'path';
-import { randomBytes } from 'crypto';
+import { EnvConfig } from '../interfaces/config.interface';
+import { unflatten } from 'flat';
+import Joi from 'joi';
+import { existsSync, readFileSync } from 'fs';
 import { homedir } from 'os';
-import {
-  AppConfig as FileConfig,
-  EnvConfig,
-} from '../interfaces/config.interface';
+import { join } from 'path';
 
-// This service manages application configuration
-// It reads from a JSON file and ensures that the required properties are present,
-// generating a new configuration if necessary.
 @Injectable()
 export class ConfigService {
-  private fileConfig: FileConfig;
   private readonly configPath: string;
   private readonly logger = new Logger(ConfigService.name);
-  private readonly envConfig: EnvConfig;
-  private readonly config: EnvConfig & FileConfig;
-  private readonly configDir: string;
+  private readonly config: EnvConfig;
+  private readonly ENV_PREFIX = 'BATTLECARD_';
 
   constructor() {
-    // Load the configuration from the file on startup
-    this.configDir = join(homedir(), '.config', 'battlecard');
-    this.configPath = join(this.configDir, 'config.json');
-    this.fileConfig = this.loadFileConfig();
-    this.envConfig = this.loadEnvConfig();
-    this.config = {
-      ...this.envConfig,
-      ...this.fileConfig,
+    const fileConfig = this.loadFileConfig();
+    const envConfig = this.loadEnvConfig();
+
+    const conf = {
+      ...fileConfig,
+      ...envConfig,
     };
-  }
-
-  private loadEnvConfig(): EnvConfig {
-    //check if required environment variables are set
-    const requiredEnvVars = [
-      'IMPORT_API_URL',
-      'IMPORT_API_HEADER_X_API_KEY',
-      'GOTENBERG_URL',
-      'GOOGLE_CLIENT_ID',
-      'WEBSITE_BASE_URL',
-      'DB_HOST',
-      'DB_PORT',
-      'DB_USER',
-      'DB_PASS',
-      'DB_NAME',
-      'JWT_SECRET',
-      'GOOGLE_CALLBACK_URL',
-      'GOOGLE_CLIENT_SECRET',
-    ];
-    requiredEnvVars.forEach((envVar) => {
-      if (!process.env[envVar]) {
-        throw new Error(`Missing required environment variable: ${envVar}`);
-      }
-    });
-    return {
-      geoapifyApiKey: process.env.GEOAPIFY_API_KEY,
-      importApiUrl: process.env.IMPORT_API_URL!,
-      importApiHeaderXApiKey: process.env.IMPORT_API_HEADER_X_API_KEY!,
-      gotenbergUrl: process.env.GOTENBERG_URL!,
-      googleClientId: process.env.GOOGLE_CLIENT_ID!,
-      websiteBaseUrl: process.env.WEBSITE_BASE_URL!,
-      dbHost: process.env.DB_HOST!,
-      dbPort: (() => {
-        const port = parseInt(process.env.DB_PORT!, 10);
-        if (isNaN(port)) {
-          throw new Error(`Invalid DB_PORT value: ${process.env.DB_PORT}`);
-        }
-        return port;
-      })(),
-      dbUser: process.env.DB_USER!,
-      dbPassword: process.env.DB_PASS!,
-      dbName: process.env.DB_NAME!,
-      jwtSecret: process.env.JWT_SECRET!,
-      googleCallbackUrl: process.env.GOOGLE_CALLBACK_URL!,
-      googleClientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-      environment:
-        process.env.NODE_ENV == 'development' ? 'development' : 'production',
-    };
-  }
-
-  private loadFileConfig(): FileConfig {
-    if (existsSync(this.configPath)) {
-      try {
-        const configFile = readFileSync(this.configPath, 'utf8');
-        const parsedConfig = JSON.parse(configFile) as FileConfig;
-
-        // Validate that required properties exist
-        if (!parsedConfig.fightCardShareSecret) {
-          return this.generateAndSaveConfig();
-        }
-        this.logger.log(`Loaded config from ${this.configPath}`);
-        return parsedConfig;
-      } catch (error) {
-        this.logger.warn(
-          'Failed to parse config file, generating new one:',
-          error,
-        );
-        this.logger.warn(
-          'Failed to parse config file, generating new one:',
-          error,
-        );
-        return this.generateAndSaveConfig();
-      }
+    const schema = this.getValidator();
+    const result = schema.validate(conf, { abortEarly: false });
+    if (result.error) {
+      this.displayValidationErrors(result.error.details);
     } else {
-      return this.generateAndSaveConfig();
+      this.logger.log('Configuration validated successfully');
     }
+    this.config = result.value;
   }
 
-  private generateAndSaveConfig(): FileConfig {
-    if (!existsSync(this.configDir)) {
-      mkdirSync(this.configDir, { recursive: true });
-    }
-
-    const newConfig: FileConfig = {
-      fightCardShareSecret: this.generateSecret(),
-    };
-
-    try {
-      this.logger.log('Writing config file at:', this.configPath);
-      writeFileSync(this.configPath, JSON.stringify(newConfig, null, 2));
-      this.logger.log('Generated new config file at:', this.configPath);
-    } catch (error) {
-      this.logger.error('Failed to write config file:', error);
-    }
-
-    return newConfig;
+  /**
+   * Display Joi validation errors in a user-friendly format and throw an error.
+   */
+  private displayValidationErrors(details: Joi.ValidationErrorItem[]): never {
+    const formattedErrors = details
+      .map((err, idx) => {
+        const path = err.path.join('.');
+        return `  ${idx + 1}. [${path}] ${err.message}`;
+      })
+      .join('\n');
+    const errorMsg = [
+      'Configuration validation failed with the following errors:',
+      formattedErrors,
+      '',
+      'Please check your configuration file or environment variables and fix the above issues.',
+      `If you are using environment variables, ensure they are prefixed with "${this.ENV_PREFIX}".`,
+    ].join('\n');
+    throw new Error(errorMsg);
   }
 
-  private generateSecret(): string {
-    return randomBytes(32).toString('hex');
+  private getValidator() {
+    return Joi.object<EnvConfig>({
+      geoapifyApiKey: Joi.string().optional(),
+      dbHost: Joi.string().required(),
+      dbPort: Joi.number().port().required(),
+      dbUser: Joi.string().required(),
+      dbPassword: Joi.string().required(),
+      dbName: Joi.string().required(),
+      googleClientId: Joi.string().required(),
+      googleClientSecret: Joi.string().required(),
+      googleCallbackUrl: Joi.string().required(),
+      jwtSecret: Joi.string().required(),
+      importApiUrl: Joi.string().required(),
+      importApiHeaderXApiKey: Joi.string().required(),
+      gotenbergUrl: Joi.string().required(),
+      websiteBaseUrl: Joi.string().required(),
+      environment: Joi.string().valid('development', 'production'),
+      enableOpenApi: Joi.boolean().default(false),
+      port: Joi.number().port().default(3000),
+      fightCardShareSecret: Joi.string().required().min(12),
+    });
   }
 
-  getConfig(): EnvConfig & FileConfig {
+  getConfig(): EnvConfig {
     return this.config;
   }
 
-  getFightCardShareSecret(): string {
-    return this.fileConfig.fightCardShareSecret;
+  private loadFileConfig(): EnvConfig | null {
+    const configDir = join(homedir(), '.config', 'battlecard');
+    const configPath = join(configDir, 'config.json');
+
+    if (existsSync(configPath)) {
+      try {
+        const configFile = readFileSync(configPath, 'utf8');
+        const parsedConfig = JSON.parse(configFile) as EnvConfig;
+
+        return parsedConfig;
+      } catch {
+        this.logger.log(
+          'Failed to parse config file, using environment variables',
+        );
+      }
+    }
+    return null;
+  }
+  private loadEnvConfig(): EnvConfig {
+    const envVars = Object.fromEntries(
+      Object.entries(process.env)
+        .filter(
+          ([key, value]) =>
+            typeof value === 'string' && key.startsWith(this.ENV_PREFIX),
+        )
+        .map(([key, value]) => [key.substring(this.ENV_PREFIX.length), value]),
+    ) as Record<string, string>;
+    const env = unflatten(envVars);
+
+    return env as EnvConfig;
   }
 }
