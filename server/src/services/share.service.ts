@@ -21,7 +21,7 @@ export class ShareService {
   ) {}
 
   private get secretKey(): string {
-    return this.configService.getFightCardShareSecret();
+    return this.configService.getConfig().fightCardShareSecret;
   }
 
   getTournamentIdByFightCardToken(fightCardToken: string): string {

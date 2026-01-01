@@ -5,11 +5,11 @@ dotenv.config();
 
 export const dataSourceOptions: DataSourceOptions = {
   type: 'postgres',
-  host: process.env.DB_HOST,
-  port: parseInt(process.env.DB_PORT || '5432'),
-  username: process.env.DB_USER,
-  password: process.env.DB_PASS,
-  database: process.env.DB_NAME,
+  host: process.env.BATTLECARD_dbHost,
+  port: parseInt(process.env.BATTLECARD_dbPort || '5432'),  
+  username: process.env.BATTLECARD_dbUser,
+  password: process.env.BATTLECARD_dbPassword,
+  database: process.env.BATTLECARD_dbName,
   synchronize: true,
   migrations: ['src/migrations/*.ts'],
   entities: ['src/entities/*.entity.ts'],

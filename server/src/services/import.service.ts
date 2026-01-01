@@ -15,10 +15,10 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { parseCsvAsync } from '@/utils/csv.utils';
 import { CsvBoxer, csvDelimiter } from '@/interfaces/csv.interface';
 import { toImportBoxerDto } from '@/adapters/boxer.adapter';
-import { ConfigService } from '@nestjs/config';
 import { parse, format } from 'date-fns';
 import { CreateBoxerDto } from '@/dto/boxer.dto';
 import { Gender } from '@/interfaces/modality.interface';
+import { ConfigService } from './config.service';
 
 @Injectable()
 export class ImportService {
@@ -302,14 +302,10 @@ export class ImportService {
     for (const id of ids) {
       try {
         this.logger.debug('Calling Import API to import boxer by ID:', id);
-        const url =
-          `${this.configService.get<string>('IMPORT_API_URL')}`.replace(
-            '{id}',
-            encodeURIComponent(id),
-          );
-        const apiKey = this.configService.get<string>(
-          'IMPORT_API_HEADER_X_API_KEY',
-        );
+        const url = this.configService
+          .getConfig()
+          .importApiUrl.replace('{id}', encodeURIComponent(id));
+        const apiKey = this.configService.getConfig().importApiHeaderXApiKey;
         response = await fetch(url, {
           method: 'GET',
           headers: {

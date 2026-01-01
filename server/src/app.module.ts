@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ConfigModule } from '@nestjs/config';
 import { User } from './entities/user.entity';
 import { Tournament } from './entities/tournament.entity';
 import { UserController } from './controllers/user.controller';
@@ -32,6 +31,7 @@ import { SelectorExportService } from './services/selector-export.service';
 import { ShareController } from './controllers/share.controller';
 import { ShareService } from './services/share.service';
 import { ConfigService } from './services/config.service';
+import { AppConfigModule } from './app-config.module';
 import { QrCodeService } from './services/qrcode.service';
 import { TypeOrmConfigService } from './services/typeorm-config.service';
 import { TemplateService } from './services/template.service';
@@ -40,10 +40,7 @@ import { PlacesService } from './services/places.service';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      envFilePath: '.env.local',
-      isGlobal: true,
-    }),
+    AppConfigModule,
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'public'),
     }),
@@ -52,9 +49,13 @@ import { PlacesService } from './services/places.service';
       useClass: TypeOrmConfigService,
     }),
     TypeOrmModule.forFeature([User, Tournament, Boxer, Fight, TournamentBoxer]),
-    JwtModule.register({
-      secret: process.env.JWT_SECRET,
-      signOptions: { expiresIn: '1d' },
+    JwtModule.registerAsync({
+      imports: [AppConfigModule],
+      inject: [ConfigService],
+      useFactory: (cfg: ConfigService) => ({
+        secret: cfg.getConfig().jwtSecret,
+        signOptions: { expiresIn: '1d' },
+      }),
     }),
   ],
   controllers: [
@@ -69,8 +70,8 @@ import { PlacesService } from './services/places.service';
     PlacesController,
   ],
   providers: [
+    // ConfigService is now provided by AppConfigModule
     TypeOrmConfigService,
-    ConfigService,
     GoogleStrategy,
     FightService,
     TournamentService,
@@ -91,6 +92,6 @@ import { PlacesService } from './services/places.service';
     ModalityService,
     PlacesService,
   ],
-  exports: [ModalityService, ConfigService],
+  exports: [ModalityService],
 })
 export class AppModule {}
