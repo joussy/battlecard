@@ -122,8 +122,7 @@
             <div>
                 <button
                     class="btn btn-outline-success"
-                    data-bs-toggle="offcanvas"
-                    data-bs-target="#boxerAddOffcanvasNavbar"
+                    @click="showAddBoxerOffcanvas = true"
                 >
                     <i class="bi bi-person-add me-2"></i>{{ $t("selector.addNewBoxer") }}
                 </button>
