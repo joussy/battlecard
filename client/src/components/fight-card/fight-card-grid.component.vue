@@ -52,13 +52,13 @@
                     :id="`fights-tr-red-${fight.id}`"
                     class="cell-red word-break-all"
                 >
-                    {{ getBoxerDisplayName(fight.boxer1) }}
+                    <GridBoxerCell :boxer="fight.boxer1" />
                 </td>
                 <td
                     :id="`fights-tr-blue-${fight.id}`"
                     class="cell-blue word-break-all"
                 >
-                    {{ getBoxerDisplayName(fight.boxer2) }}
+                    <GridBoxerCell :boxer="fight.boxer2" />
                 </td>
                 <td class="fight-extra-infos">
                     <div class="me-1">
@@ -109,8 +109,8 @@ import { getFightDurationAsString } from "@/utils/string.utils"
 import Sortable from "sortablejs"
 import IconComponent from "@/components/shared/core/icon.component.vue"
 import { useFightStore } from "@/stores/fight.store"
-import { getBoxerDisplayName } from "@/utils/labels.utils"
 import { Gender } from "@/api"
+import GridBoxerCell from "./grid-boxer-cell.vue"
 
 const { t: $t } = useI18n()
 
