@@ -1,3 +1,4 @@
+import { Transform } from 'class-transformer';
 import { IsUUID, IsString, IsNotEmpty, IsBoolean } from 'class-validator';
 
 export class GenerateFightCardTokenDto {
@@ -18,6 +19,7 @@ export class ExportWithQrCodeDto {
   tournamentId: string;
 
   @IsBoolean()
+  @Transform(({ value }) => value === 'true' || value === true)
   displayQrCode: boolean;
 }
 

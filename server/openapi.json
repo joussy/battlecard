@@ -792,6 +792,14 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "displayQrCode",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
           }
         ],
         "responses": {

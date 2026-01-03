@@ -229,13 +229,13 @@ export class ExportController {
   @Get('fightcard/html')
   @NoAuthRequired()
   async getTemplateHtml(
-    @Query() query: TournamentIdQueryDto,
+    @Query() query: ExportWithQrCodeDto,
     @Res() res: ExpressResponse,
   ): Promise<void> {
     try {
       const html = await this.fightExportService.generateHtml(
         query.tournamentId,
-        'https://example.com/fightcard',
+        query.displayQrCode ? 'https://example.com/fightcard' : undefined,
       );
       res.setHeader('Content-Type', 'text/html;charset=utf-8');
       res.send(html);

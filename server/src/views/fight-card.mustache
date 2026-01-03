@@ -3,49 +3,23 @@
 
 <head>
   <meta charset="utf-8" />
-</head>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
 
-<body>
-  <svg style="display:none;" aria-hidden="true">
-    <defs>
-      <symbol id="location-icon" viewBox="0 0 24 24" fill="none">
-        <path fill-rule="evenodd" clip-rule="evenodd"
-          d="M5 9.5C5 6.09371 8.00993 3 12 3C15.9901 3 19 6.09371 19 9.5C19 11.6449 17.6877 14.0406 15.9606 16.2611C14.5957 18.016 13.0773 19.5329 12 20.5944C10.9227 19.5329 9.40427 18.016 8.03935 16.2611C6.31229 14.0406 5 11.6449 5 9.5ZM12 1C6.99007 1 3 4.90629 3 9.5C3 12.3551 4.68771 15.2094 6.46065 17.4889C7.99487 19.4615 9.7194 21.1574 10.7973 22.2173C10.9831 22.4001 11.1498 22.564 11.2929 22.7071C11.4804 22.8946 11.7348 23 12 23C12.2652 23 12.5196 22.8946 12.7071 22.7071C12.8502 22.564 13.0169 22.4001 13.2027 22.2174L13.2028 22.2173C14.2806 21.1573 16.0051 19.4615 17.5394 17.4889C19.3123 15.2094 21 12.3551 21 9.5C21 4.90629 17.0099 1 12 1ZM12 12.5C13.3807 12.5 14.5 11.3807 14.5 10C14.5 8.61929 13.3807 7.5 12 7.5C10.6193 7.5 9.5 8.61929 9.5 10C9.5 11.3807 10.6193 12.5 12 12.5Z"
-          fill="#000000" />
-      </symbol>
-      <symbol id="calendar-icon" viewBox="0 0 24 24" fill="none">
-        <path fill-rule="evenodd" clip-rule="evenodd"
-          d="M7 2a1 1 0 0 0-1 1v1.001c-.961.014-1.34.129-1.721.333a2.272 2.272 0 0 0-.945.945C3.116 5.686 3 6.09 3 7.205v10.59c0 1.114.116 1.519.334 1.926.218.407.538.727.945.945.407.218.811.334 1.926.334h11.59c1.114 0 1.519-.116 1.926-.334.407-.218.727-.538.945-.945.218-.407.334-.811.334-1.926V7.205c0-1.115-.116-1.519-.334-1.926a2.272 2.272 0 0 0-.945-.945C19.34 4.13 18.961 4.015 18 4V3a1 1 0 1 0-2 0v1H8V3a1 1 0 0 0-1-1zM5 9v8.795c0 .427.019.694.049.849.012.06.017.074.049.134a.275.275 0 0 0 .124.125c.06.031.073.036.134.048.155.03.422.049.849.049h11.59c.427 0 .694-.019.849-.049a.353.353 0 0 0 .134-.049.275.275 0 0 0 .125-.124.353.353 0 0 0 .048-.134c.03-.155.049-.422.049-.849L19.004 9H5zm8.75 4a.75.75 0 0 0-.75.75v2.5c0 .414.336.75.75.75h2.5a.75.75 0 0 0 .75-.75v-2.5a.75.75 0 0 0-.75-.75h-2.5z"
-          fill="#000000"></path>
-      </symbol>
-    </defs>
-  </svg>
-  <style>
-    table,
-    th,
-    td {
-      border: 2px solid black;
+  <style type="text/css">
+    /* Restrict page to A4 landscape max-width for PDF export */
+    .a4-landscape {
+      max-width: 297mm;
+      font-family: "Times New Roman", Times, serif;
+    }
+
+    /* Ensure all table borders are solid black */
+    table.table,
+    table.table th,
+    table.table td {
+      border: 2px solid #000 !important;
       border-collapse: collapse;
-      padding: 5px;
-    }
-
-    .title {
-      text-align: center;
-      padding-bottom: 15px;
-      width: 100%;
-      min-height: 86px;
-    }
-
-    .table-container {
-      height: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin: 0;
-    }
-
-    .table-container>table {
-      width: 100%;
+      font-size: 1.15rem;
     }
 
     .cell-red {
@@ -56,61 +30,42 @@
       background-color: #1638972c !important;
     }
 
-    .qr-code {
-      position: absolute;
-      top: 5px;
-      right: 5px;
-      margin-top: 0px;
-      margin-bottom: 8px;
-      display: flex;
-    }
-
+    .qr-code,
     .qr-code svg {
       width: 100px;
       height: 100px;
     }
-
-    .header {
-      display: flex;
-      flex-direction: row;
-      width: 100%;
-      align-items: center;
-    }
-
-    .inline-icon {
-      vertical-align: middle;
-      margin-right: 2px;
-      height: 16px;
-      width: 16px;
-    }
   </style>
-  <div class="header">
-    <div class="title">
-      <div style="display: flex; align-items: center; justify-content: center; margin-bottom: 4px;">
-        <span style="font-size: 1.5rem;">{{title}}</span>
+</head>
+
+<body>
+  <div class="a4-landscape m-auto">
+    <div class="header d-flex">
+      {{#qrCodeSvg}}
+      <div class="qr-code"></div>
+      {{/qrCodeSvg}}
+      <div class="w-100 text-center">
+        <div class="d-flex align-items-baseline justify-content-center">
+          <span class="fs-2">{{title}}</span>
+          {{^qrCodeSvg}}
+          <span class="fs-5 ms-1 me-1">-</span>
+          <span class="fs-5">{{subtitle}} - {{formattedAddress}}</span>
+          {{/qrCodeSvg}}
+        </div>
+        {{#qrCodeSvg}}
+        <div>
+          <span class="fs-5">{{subtitle}} - {{formattedAddress}}</span>
+        </div>
+        {{/qrCodeSvg}}
       </div>
-      <div style="display: flex; align-items: center; justify-content: center; margin-bottom: 4px; font-size: 1.1rem;">
-        <svg class="inline-icon" viewBox="0 0 24 24" fill="none">
-          <use href="#location-icon" />
-        </svg>
-        <span>{{formattedAddress}}</span>
+      {{#qrCodeSvg}}
+      <div class="qr-code">
+        {{{qrCodeSvg}}}
       </div>
-      <div style="display: flex; align-items: center; justify-content: center; color: #555; font-size: 1.2rem;">
-        <svg class="inline-icon" viewBox="0 0 24 24" fill="none">
-          <use href="#calendar-icon" />
-        </svg>
-        <span>{{subtitle}}</span>
-      </div>
+      {{/qrCodeSvg}}
     </div>
-    {{#qrCodeSvg}}
-    <div class="qr-code">
-      {{{qrCodeSvg}}}
-    </div>
-    {{/qrCodeSvg}}
-  </div>
-  <div class="table-container">
-    <table>
-      <thead>
+    <table class="table table-sm table-bordered align-middle lh-1">
+      <thead class="table-light">
         <tr>
           <th>{{i18n.order}}</th>
           <th colspan=3>{{i18n.red_corner}}</th>
@@ -119,19 +74,21 @@
           <th>{{i18n.gender}}</th>
         </tr>
       </thead>
-      {{#fights}}
-      <tr>
-        <td>{{order}}</td>
-        <td class="cell-red">{{boxer1License}}</td>
-        <td class="cell-red">{{boxer1FirstName}} {{boxer1LastName}}</td>
-        <td class="cell-red">{{boxer1Club}}</td>
-        <td class="cell-blue">{{boxer2License}}</td>
-        <td class="cell-blue">{{boxer2FirstName}} {{boxer2LastName}}</td>
-        <td class="cell-blue">{{boxer2Club}}</td>
-        <td>{{fightDuration}}</td>
-        <td>{{gender}}</td>
-      </tr>
-      {{/fights}}
+      <tbody>
+        {{#fights}}
+        <tr>
+          <td>{{order}}</td>
+          <td class="cell-red">{{boxer1License}}</td>
+          <td class="cell-red">{{boxer1FirstName}} {{boxer1LastName}}</td>
+          <td class="cell-red">{{boxer1Club}}</td>
+          <td class="cell-blue">{{boxer2License}}</td>
+          <td class="cell-blue">{{boxer2FirstName}} {{boxer2LastName}}</td>
+          <td class="cell-blue">{{boxer2Club}}</td>
+          <td>{{fightDuration}}</td>
+          <td>{{gender}}</td>
+        </tr>
+        {{/fights}}
+      </tbody>
     </table>
   </div>
 </body>
