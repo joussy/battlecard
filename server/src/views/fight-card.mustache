@@ -10,7 +10,7 @@
     /* Restrict page to A4 landscape max-width for PDF export */
     .a4-landscape {
       max-width: 297mm;
-      font-family: "Times New Roman", Times, serif;
+      font-family: Arial, Helvetica, sans-serif, "Times New Roman", Times, serif;
     }
 
     /* Ensure all table borders are solid black */
@@ -19,7 +19,6 @@
     table.table td {
       border: 2px solid #000 !important;
       border-collapse: collapse;
-      font-size: 1.15rem;
     }
 
     .cell-red {
@@ -66,7 +65,7 @@
     </div>
     <table class="table table-sm table-bordered align-middle lh-1">
       <thead class="table-light">
-        <tr>
+        <tr class="text-center">
           <th>{{i18n.order}}</th>
           <th colspan=3>{{i18n.red_corner}}</th>
           <th colspan=3>{{i18n.blue_corner}}</th>
