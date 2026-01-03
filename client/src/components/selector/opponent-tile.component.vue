@@ -84,19 +84,30 @@
                     {{ $t("opponentTile.removeFromFightCard") }}
                 </button>
                 <button
-                    class="btn btn-outline-primary btn-sm"
-                    @click="goToOpponentTile()"
+                    class="btn btn-sm btn-outline-secondary"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
                 >
-                    <i class="bi bi-eye" />
-                    <span class="d-none d-sm-inline ms-1">{{ $t("opponentTile.watchProfile") }}</span>
+                    <i class="bi bi-three-dots-vertical"></i>
                 </button>
-                <button
-                    class="btn btn-outline-secondary btn-sm"
-                    @click="copyToClipboard()"
-                >
-                    <i class="bi bi-clipboard" />
-                    <span class="d-none d-sm-inline ms-2">{{ $t("opponentTile.copyClipboard") }}</span>
-                </button>
+                <ul class="dropdown-menu">
+                    <li>
+                        <a
+                            class="dropdown-item"
+                            @click="goToOpponentTile()"
+                        >
+                            <i class="bi bi-eye" />
+                            {{ $t("opponentTile.watchProfile") }}
+                        </a>
+                        <a
+                            class="dropdown-item"
+                            @click="copyToClipboard()"
+                        >
+                            <i class="bi bi-clipboard" />
+                            {{ $t("tournaments.copyClipboard") }}
+                        </a>
+                    </li>
+                </ul>
             </div>
         </div>
     </div>
@@ -113,9 +124,10 @@ import WeightBadgeComponent from "@/components/shared/badges/weight-badge.compon
 import AgeBadgeComponent from "@/components/shared/badges/age-badge.component.vue"
 import EligibilityDetailsComponent from "@/components/shared/badges/eligibility-details.component.vue"
 import { useFightStore } from "@/stores/fight.store"
-import { getBoxerDisplayName, getClipboardText } from "@/utils/labels.utils"
+import { useLabels } from "@/utils/labels.utils"
 import IconComponent from "@/components/shared/core/icon.component.vue"
 
+const { getBoxerDisplayName, getBoxerClipboardText } = useLabels()
 const { t: $t } = useI18n()
 
 interface Props {
@@ -156,7 +168,7 @@ const goToOpponentTile = () => {
 }
 
 const copyToClipboard = () => {
-    const text = getClipboardText(props.opponent)
+    const text = getBoxerClipboardText(props.opponent)
     navigator.clipboard.writeText(text)
 }
 </script>

@@ -48,7 +48,6 @@
                 </div>
                 <div class="border-top mt-2 pt-2 gap-2 d-flex justify-content-end">
                     <button
-                        v-if="selectedTournamentId != tournament.id"
                         class="btn btn-outline-primary btn-sm"
                         @click="setCurrentTournament(tournament)"
                     >
@@ -56,23 +55,30 @@
                         <span class="ms-1">{{ $t("tournaments.manage") }}</span>
                     </button>
                     <button
-                        class="btn btn-outline-success btn-sm"
-                        @click="editTournament(tournament)"
+                        class="btn btn-sm btn-outline-secondary"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
                     >
-                        <i class="bi bi-pencil" />
-                        <span class="d-none d-sm-inline ms-1">{{ $t("tournaments.edit") }}</span>
+                        <i class="bi bi-three-dots-vertical"></i>
                     </button>
-                    <button
-                        class="btn btn-outline-danger btn-sm"
-                        @click="deleteTournament(tournament)"
-                    >
-                        <i class="bi bi-trash" />
-                        <span class="d-none d-sm-inline ms-1">{{ $t("tournaments.delete") }}</span>
-                    </button>
-                    <button class="btn btn-outline-secondary btn-sm">
-                        <i class="bi bi-clipboard" />
-                        <span class="d-none d-md-inline ms-2">{{ $t("tournaments.copyClipboard") }}</span>
-                    </button>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a
+                                class="dropdown-item"
+                                @click="editTournament(tournament)"
+                            >
+                                <i class="bi bi-pencil" />
+                                {{ $t("tournaments.edit") }}
+                            </a>
+                            <a
+                                class="dropdown-item"
+                                @click="deleteTournament(tournament)"
+                            >
+                                <i class="bi bi-trash" />
+                                {{ $t("tournaments.delete") }}
+                            </a>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>

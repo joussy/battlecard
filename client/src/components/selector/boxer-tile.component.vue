@@ -41,19 +41,30 @@
                     <span class="ms-1">{{ $t("selector.selectOpponents") }}</span>
                 </button>
                 <button
-                    class="btn btn-outline-success btn-sm"
-                    @click="editBoxer()"
+                    class="btn btn-sm btn-outline-secondary"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
                 >
-                    <i class="bi bi-pencil" />
-                    <span class="ms-2">{{ $t("common.edit") }}</span>
+                    <i class="bi bi-three-dots-vertical"></i>
                 </button>
-                <button
-                    class="btn btn-outline-secondary btn-sm"
-                    @click="copyToClipboard()"
-                >
-                    <i class="bi bi-clipboard" />
-                    <span class="d-none d-sm-inline ms-2">{{ $t("tournaments.copyClipboard") }}</span>
-                </button>
+                <ul class="dropdown-menu">
+                    <li>
+                        <a
+                            class="dropdown-item"
+                            @click="editBoxer()"
+                        >
+                            <i class="bi bi-pencil" />
+                            {{ $t("common.edit") }}
+                        </a>
+                        <a
+                            class="dropdown-item"
+                            @click="copyToClipboard()"
+                        >
+                            <i class="bi bi-clipboard" />
+                            {{ $t("tournaments.copyClipboard") }}
+                        </a>
+                    </li>
+                </ul>
             </div>
         </div>
     </div>
@@ -71,9 +82,10 @@ import PossibleBadgeComponent from "@/components/shared/badges/possible-badge.co
 
 import IconComponent from "@/components/shared/core/icon.component.vue"
 import { useBoxerStore } from "@/stores/boxer.store"
-import { getBoxerDisplayName, getClipboardText } from "@/utils/labels.utils"
+import { useLabels } from "@/utils/labels.utils"
 
 const { t: $t } = useI18n()
+const { getBoxerDisplayName, getBoxerClipboardText } = useLabels()
 
 interface Props {
     boxer: Boxer
@@ -91,7 +103,7 @@ const props = withDefaults(defineProps<Props>(), {
 const boxerStore = useBoxerStore()
 
 const copyToClipboard = () => {
-    const text = getClipboardText(props.boxer)
+    const text = getBoxerClipboardText(props.boxer)
     navigator.clipboard.writeText(text)
 }
 

@@ -52,8 +52,6 @@
                         <i class="bi bi-file-earmark-pdf" />
                         {{ $t("selector.exportFormats.pdf") }}
                     </a>
-                </li>
-                <li>
                     <a
                         class="dropdown-item"
                         @click="$router.push({ name: 'import' })"

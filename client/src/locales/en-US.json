@@ -45,6 +45,15 @@
   "brand": {
     "name": "BattleCard"
   },
+  "clipboard": {
+    "duration": "Duration",
+    "redCorner": "Red Corner",
+    "blueCorner": "Blue Corner",
+    "male": "Male",
+    "female": "Female",
+    "record": "Record",
+    "fights": "fights"
+  },
   "common": {
     "loading": "Loading...",
     "save": "Save",
@@ -89,7 +98,13 @@
     "blue": "Blue",
     "noMatchesAvailable": "No matches available 😔",
     "addMoreBoxers": "Add more boxers to the selector to find suitable pairings.",
-    "addFight": "Add fight"
+    "addFight": "Add fight",
+    "changeOrder": "Change order",
+    "viewRedBoxerProfile": "View red boxer profile",
+    "viewBlueBoxerProfile": "View blue boxer profile",
+    "deleteFight": "Delete fight",
+    "invertCorners": "Invert blue/red corners",
+    "copyFightToClipboard": "Copy fight to clipboard"
   },
   "import": {
     "title": "Import boxers",

@@ -20,11 +20,7 @@
                     {{ $t("fightCard.blue") }}
                 </th>
                 <th
-                    class="fight-extra-infos"
-                    scope="col"
-                />
-                <th
-                    v-if="props.editionMode"
+                    class="d-none d-md-table-cell"
                     scope="col"
                 />
             </tr>
@@ -38,29 +34,76 @@
                     scope="row"
                     :class="{ handle: props.editionMode }"
                 >
-                    <div class="d-flex justify-content-center">
-                        {{ fight.order }}
-                    </div>
-                    <div
-                        v-if="props.editionMode"
-                        class="btn ms-0 p-0 d-flex justify-content-center"
-                    >
-                        <IconComponent name="drag-vertical" />
+                    <div class="d-flex flex-column justify-content-center align-items-center">
+                        <div>{{ fight.order }}</div>
+                        <button
+                            v-if="!props.editionMode"
+                            class="btn btn-sm btn-outline-secondary"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false"
+                        >
+                            <i class="bi bi-three-dots-vertical"></i>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a
+                                    class="dropdown-item"
+                                    @click="$router.push({ name: 'selector-tile', params: { id: fight.boxer1.id } })"
+                                >
+                                    <i class="bi bi-eye" />
+                                    {{ $t("fightCard.viewRedBoxerProfile") }}
+                                </a>
+                                <a
+                                    class="dropdown-item"
+                                    @click="$router.push({ name: 'selector-tile', params: { id: fight.boxer2.id } })"
+                                >
+                                    <i class="bi bi-eye" />
+                                    {{ $t("fightCard.viewBlueBoxerProfile") }}
+                                </a>
+                                <a
+                                    class="dropdown-item"
+                                    @click="removeFromFightCard(fight.id)"
+                                >
+                                    <i class="bi bi-trash" />
+                                    {{ $t("fightCard.deleteFight") }}
+                                </a>
+                                <a
+                                    class="dropdown-item"
+                                    @click="switchFight(fight.id)"
+                                >
+                                    <i class="bi bi-arrow-left-right" />
+                                    {{ $t("fightCard.invertCorners") }}
+                                </a>
+                                <a
+                                    class="dropdown-item"
+                                    @click="copyFightToClipboard(fight)"
+                                >
+                                    <i class="bi bi-clipboard" />
+                                    {{ $t("fightCard.copyFightToClipboard") }}
+                                </a>
+                            </li>
+                        </ul>
+                        <button
+                            v-if="props.editionMode"
+                            class="btn btn-sm btn-success"
+                        >
+                            <i class="bi bi-arrows-expand" />
+                        </button>
                     </div>
                 </th>
                 <td
                     :id="`fights-tr-red-${fight.id}`"
                     class="cell-red word-break-all"
                 >
-                    {{ getBoxerDisplayName(fight.boxer1) }}
+                    <GridBoxerCell :boxer="fight.boxer1" />
                 </td>
                 <td
                     :id="`fights-tr-blue-${fight.id}`"
                     class="cell-blue word-break-all"
                 >
-                    {{ getBoxerDisplayName(fight.boxer2) }}
+                    <GridBoxerCell :boxer="fight.boxer2" />
                 </td>
-                <td class="fight-extra-infos">
+                <td class="d-none d-md-table-cell">
                     <div class="me-1">
                         <i
                             v-if="fight.boxer1.gender == Gender.FEMALE"
@@ -75,26 +118,9 @@
                         ></span>
                     </div>
                     <div>
-                        <i class="bi bi-stopwatch me-1 d-none d-md-inline"></i>
+                        <i class="bi bi-stopwatch me-1 d-none d-lg-inline"></i>
                         <span>{{ getFightDurationAsString(fight.rounds, fight.roundDurationSeconds) }}</span>
                     </div>
-                </td>
-                <td
-                    v-if="props.editionMode"
-                    class="text-end"
-                >
-                    <button
-                        class="btn btn-sm btn-light m-1"
-                        @click="switchFight(fight.id)"
-                    >
-                        <i class="bi bi-arrow-left-right" />
-                    </button>
-                    <button
-                        class="btn btn-outline-danger btn-sm m-1"
-                        @click="removeFromFightCard(fight.id)"
-                    >
-                        <IconComponent name="headgear" />
-                    </button>
                 </td>
             </tr>
         </tbody>
@@ -107,12 +133,13 @@ import { useI18n } from "vue-i18n"
 import { Boxer, Fight } from "@/types/boxing.d"
 import { getFightDurationAsString } from "@/utils/string.utils"
 import Sortable from "sortablejs"
-import IconComponent from "@/components/shared/core/icon.component.vue"
 import { useFightStore } from "@/stores/fight.store"
-import { getBoxerDisplayName } from "@/utils/labels.utils"
 import { Gender } from "@/api"
+import GridBoxerCell from "./grid-boxer-cell.vue"
+import { useLabels } from "@/utils/labels.utils"
 
 const { t: $t } = useI18n()
+const { getFightClipboardText } = useLabels()
 
 interface Props {
     fightCard: (Fight & {
@@ -198,6 +225,11 @@ const destroySortable = () => {
 const removeFromFightCard = (fightId: string) => {
     emit("removeFromFightCard", fightId)
 }
+
+const copyFightToClipboard = (fight: Fight) => {
+    const text = getFightClipboardText(fight)
+    navigator.clipboard.writeText(text)
+}
 </script>
 
 <style lang="scss" scoped>
@@ -247,13 +279,5 @@ const removeFromFightCard = (fightId: string) => {
 
 [data-bs-theme="dark"] .halo {
     animation: halo-dark 1s ease-in-out;
-}
-
-.edition-mode .fight-extra-infos {
-    display: none;
-
-    @include media-breakpoint-up(md) {
-        display: block;
-    }
 }
 </style>
