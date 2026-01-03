@@ -8,7 +8,7 @@ import {
   ForbiddenException,
 } from '@nestjs/common';
 import { ShareService } from '@/services/share.service';
-import { GeneratedTokenDto } from '@/dto/share.dto';
+import { DownloadOptionsDto, GeneratedTokenDto } from '@/dto/share.dto';
 import { SharedFightCardDto } from '@/dto/tournament.dto';
 import { Response as ExpressResponse } from 'express';
 import { User } from '@/decorators/auth.decorator';
@@ -118,7 +118,17 @@ export class ShareController {
       const tournamentId = this.shareService.getTournamentIdByFightCardToken(
         body.fightCardToken,
       );
-      const pdfBuffer = await this.fightExportService.generatePdf(tournamentId);
+      const pdfBuffer = await this.fightExportService.generatePdf({
+        tournamentId: tournamentId,
+        displayBirthdate: false,
+        displayCategory: true,
+        displayDuration: true,
+        displayGender: true,
+        displayLicense: true,
+        displayWeight: true,
+        displayQrCode: false,
+        displayTitle: true,
+      });
       res.setHeader('Content-Type', 'application/pdf');
       res.setHeader(
         'Content-Disposition',
@@ -141,14 +151,17 @@ export class ShareController {
     },
   })
   async downloadSharedFightCardPng(
-    @Body() body: FightCardTokenDto,
+    @Body() body: FightCardTokenDto & DownloadOptionsDto,
     @Res() res: ExpressResponse,
   ): Promise<void> {
     try {
       const tournamentId = this.shareService.getTournamentIdByFightCardToken(
         body.fightCardToken,
       );
-      const pngBuffer = await this.fightExportService.generatePng(tournamentId);
+      const pngBuffer = await this.fightExportService.generatePng({
+        ...body,
+        tournamentId,
+      });
       res.setHeader('Content-Type', 'image/png');
       res.setHeader(
         'Content-Disposition',

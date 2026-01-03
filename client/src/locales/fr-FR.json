@@ -214,7 +214,14 @@
         "withQrCode": "Inclure le QR Code",
         "downloadTitle": "Télécharger",
         "downloadAndShareTitle": "Télécharger et partager",
-        "generateLinkButton": "Générer le lien"
+        "generateLinkButton": "Générer le lien",
+        "displayLicense": "Afficher la licence",
+        "displayWeight": "Afficher le poids",
+        "displayBirthdate": "Afficher la date de naissance",
+        "displayCategory": "Afficher la catégorie",
+        "displayGender": "Afficher le genre",
+        "displayDuration": "Afficher la durée",
+        "displayTitle": "Afficher le titre"
     },
     "sharedFightCard": {
         "download": "Télécharger",

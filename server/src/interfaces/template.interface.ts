@@ -1,3 +1,5 @@
+import { DownloadOptionsDto } from '@/dto/share.dto';
+
 export interface FightCardTemplate {
   title: string;
   subtitle: string;
@@ -16,6 +18,8 @@ export interface FightCardTemplate {
   }[];
   qrCodeSvg?: string;
   formattedAddress?: string;
+  downloadOptions: DownloadOptionsDto;
+  cornerColspan: number;
 }
 
 export interface FightCardI18nTemplate {

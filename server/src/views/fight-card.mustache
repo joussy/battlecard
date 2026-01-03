@@ -21,12 +21,22 @@
       border-collapse: collapse;
     }
 
+
     .cell-red {
       background-color: #97161618 !important;
     }
 
     .cell-blue {
       background-color: #1638972c !important;
+    }
+
+    /* Bootstrap-like visibility utilities for table cells */
+    .invisible-cell {
+      visibility: hidden !important;
+    }
+
+    .visible-cell {
+      visibility: visible !important;
     }
 
     .qr-code,
@@ -44,6 +54,7 @@
       <div class="qr-code"></div>
       {{/qrCodeSvg}}
       <div class="w-100 text-center">
+        {{#downloadOptions.displayTitle}}
         <div class="d-flex align-items-baseline justify-content-center">
           <span class="fs-2">{{title}}</span>
           {{^qrCodeSvg}}
@@ -56,6 +67,7 @@
           <span class="fs-5">{{subtitle}} - {{formattedAddress}}</span>
         </div>
         {{/qrCodeSvg}}
+        {{/downloadOptions.displayTitle}}
       </div>
       {{#qrCodeSvg}}
       <div class="qr-code">
@@ -67,24 +79,40 @@
       <thead class="table-light">
         <tr class="text-center">
           <th>{{i18n.order}}</th>
-          <th colspan=3>{{i18n.red_corner}}</th>
-          <th colspan=3>{{i18n.blue_corner}}</th>
-          <th>{{i18n.duration}}</th>
-          <th>{{i18n.gender}}</th>
+          <th colspan={{cornerColspan}}>{{i18n.red_corner}}</th>
+          <th colspan={{cornerColspan}}>{{i18n.blue_corner}}</th>
+          {{#downloadOptions.displayDuration}}<th>{{i18n.duration}}</th>{{/downloadOptions.displayDuration}}
+          {{#downloadOptions.displayGender}}<th>{{i18n.gender}}</th>{{/downloadOptions.displayGender}}
         </tr>
       </thead>
       <tbody>
         {{#fights}}
         <tr>
           <td>{{order}}</td>
+          {{#downloadOptions.displayLicense}}
           <td class="cell-red">{{boxer1License}}</td>
+          {{/downloadOptions.displayLicense}}
+          {{#downloadOptions.displayCategory}}
+          <td class="cell-red">{{boxer1Category}}</td>
+          {{/downloadOptions.displayCategory}}
           <td class="cell-red">{{boxer1FirstName}} {{boxer1LastName}}</td>
+          {{#downloadOptions.displayBirthdate}}
+          <td class="cell-red">{{boxer1Birthdate}}</td>
+          {{/downloadOptions.displayBirthdate}}
           <td class="cell-red">{{boxer1Club}}</td>
+          {{#downloadOptions.displayLicense}}
           <td class="cell-blue">{{boxer2License}}</td>
+          {{/downloadOptions.displayLicense}}
+          {{#downloadOptions.displayCategory}}
+          <td class="cell-blue">{{boxer2Category}}</td>
+          {{/downloadOptions.displayCategory}}
           <td class="cell-blue">{{boxer2FirstName}} {{boxer2LastName}}</td>
+          {{#downloadOptions.displayBirthdate}}
+          <td class="cell-blue">{{boxer2Birthdate}}</td>
+          {{/downloadOptions.displayBirthdate}}
           <td class="cell-blue">{{boxer2Club}}</td>
-          <td>{{fightDuration}}</td>
-          <td>{{gender}}</td>
+          {{#downloadOptions.displayDuration}}<td>{{fightDuration}}</td>{{/downloadOptions.displayDuration}}
+          {{#downloadOptions.displayGender}}<td>{{gender}}</td>{{/downloadOptions.displayGender}}
         </tr>
         {{/fights}}
       </tbody>

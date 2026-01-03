@@ -615,7 +615,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ExportWithQrCodeDto"
+                "$ref": "#/components/schemas/DownloadOptionsDto"
               }
             }
           }
@@ -650,7 +650,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ExportWithQrCodeDto"
+                "$ref": "#/components/schemas/DownloadOptionsDto"
               }
             }
           }
@@ -795,6 +795,62 @@
           },
           {
             "name": "displayQrCode",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "displayLicense",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "displayWeight",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "displayBirthdate",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "displayCategory",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "displayGender",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "displayDuration",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "displayTitle",
             "required": true,
             "in": "query",
             "schema": {
@@ -1267,16 +1323,6 @@
       "post": {
         "operationId": "ShareController_downloadSharedFightCardPng",
         "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/FightCardTokenDto"
-              }
-            }
-          }
-        },
         "responses": {
           "200": {
             "content": {
@@ -1981,7 +2027,7 @@
           "fightId"
         ]
       },
-      "ExportWithQrCodeDto": {
+      "DownloadOptionsDto": {
         "type": "object",
         "properties": {
           "tournamentId": {
@@ -1989,11 +2035,39 @@
           },
           "displayQrCode": {
             "type": "boolean"
+          },
+          "displayLicense": {
+            "type": "boolean"
+          },
+          "displayWeight": {
+            "type": "boolean"
+          },
+          "displayBirthdate": {
+            "type": "boolean"
+          },
+          "displayCategory": {
+            "type": "boolean"
+          },
+          "displayGender": {
+            "type": "boolean"
+          },
+          "displayDuration": {
+            "type": "boolean"
+          },
+          "displayTitle": {
+            "type": "boolean"
           }
         },
         "required": [
           "tournamentId",
-          "displayQrCode"
+          "displayQrCode",
+          "displayLicense",
+          "displayWeight",
+          "displayBirthdate",
+          "displayCategory",
+          "displayGender",
+          "displayDuration",
+          "displayTitle"
         ]
       },
       "SelectorExportDto": {

@@ -1,5 +1,11 @@
 import { Transform } from 'class-transformer';
-import { IsUUID, IsString, IsNotEmpty, IsBoolean } from 'class-validator';
+import {
+  IsUUID,
+  IsString,
+  IsNotEmpty,
+  IsBoolean,
+  IsOptional,
+} from 'class-validator';
 
 export class GenerateFightCardTokenDto {
   @IsUUID()
@@ -13,7 +19,7 @@ export class FightCardTokenDto {
   fightCardToken: string;
 }
 
-export class ExportWithQrCodeDto {
+export class DownloadOptionsDto {
   @IsUUID()
   @IsNotEmpty()
   tournamentId: string;
@@ -21,6 +27,41 @@ export class ExportWithQrCodeDto {
   @IsBoolean()
   @Transform(({ value }) => value === 'true' || value === true)
   displayQrCode: boolean;
+
+  @IsBoolean()
+  @Transform(({ value }) => value === 'true' || value === true)
+  @IsOptional()
+  displayLicense: boolean;
+
+  @IsBoolean()
+  @Transform(({ value }) => value === 'true' || value === true)
+  @IsOptional()
+  displayWeight: boolean;
+
+  @IsBoolean()
+  @Transform(({ value }) => value === 'true' || value === true)
+  @IsOptional()
+  displayBirthdate: boolean;
+
+  @IsBoolean()
+  @Transform(({ value }) => value === 'true' || value === true)
+  @IsOptional()
+  displayCategory: boolean;
+
+  @IsBoolean()
+  @Transform(({ value }) => value === 'true' || value === true)
+  @IsOptional()
+  displayGender: boolean;
+
+  @IsBoolean()
+  @Transform(({ value }) => value === 'true' || value === true)
+  @IsOptional()
+  displayDuration: boolean;
+
+  @IsBoolean()
+  @Transform(({ value }) => value === 'true' || value === true)
+  @IsOptional()
+  displayTitle: boolean;
 }
 
 export class SelectorExportDto {

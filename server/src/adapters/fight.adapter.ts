@@ -10,6 +10,7 @@ import { formatAddress } from '@/utils/addressUtils';
 import { CreateFightDto } from '@/dto/fight.dto';
 import { Gender } from '@/interfaces/modality.interface';
 import i18next from 'i18next';
+import { DownloadOptionsDto } from '@/dto/share.dto';
 
 export function toFightDto(fight: Fight, modality: IModality): FightDto {
   const fightDuration = modality.getFightDuration(fight.boxer1, fight.boxer2);
@@ -28,11 +29,17 @@ export function toFightCardTemplate(
   fights: Fight[],
   tournament: Tournament,
   modality: IModality,
+  downloadOptions: DownloadOptionsDto,
   qrCodeSvg?: string,
 ): Omit<FightCardTemplate, 'i18n'> {
+  let colspan = 2;
+  if (downloadOptions.displayLicense) colspan++;
+  if (downloadOptions.displayBirthdate) colspan++;
+  if (downloadOptions.displayCategory) colspan++;
   const template: Omit<FightCardTemplate, 'i18n'> = {
     subtitle: format(tournament.date, 'dd/MM/yyyy'),
     title: tournament.name,
+    cornerColspan: colspan,
     formattedAddress: formatAddress({
       street: tournament.address,
       city: tournament.city,
@@ -50,11 +57,20 @@ export function toFightCardTemplate(
         boxer2Club: fight.boxer2.club,
         boxer2FirstName: fight.boxer2.firstName,
         boxer2LastName: fight.boxer2.lastName,
+        boxer1Birthdate: fight.boxer1.birthDate
+          ? format(new Date(fight.boxer1.birthDate), 'dd/MM/yyyy')
+          : '',
+        boxer2Birthdate: fight.boxer2.birthDate
+          ? format(new Date(fight.boxer2.birthDate), 'dd/MM/yyyy')
+          : '',
+        boxer1Category: modality.getCategoryName(fight.boxer1, true),
+        boxer2Category: modality.getCategoryName(fight.boxer2, true),
         fightDuration: `${duration.rounds}x${duration.roundDurationAsSeconds / 60}'`,
         gender: fight.boxer1.gender === Gender.MALE ? '♂️' : '♀️',
       };
     }),
     qrCodeSvg: qrCodeSvg,
+    downloadOptions: downloadOptions,
   };
   return template;
 }
