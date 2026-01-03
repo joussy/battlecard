@@ -6,17 +6,17 @@
                 class="modal-title"
             >
                 <i class="bi bi-share me-2"></i>
-                {{ $t("share.generateLink") }}
+                {{ $t("share.downloadAndShareTitle") }}
             </h5>
         </template>
         <!-- Export Section -->
         <h6 class="fw-bold mb-3">
             <i class="bi bi-download me-2"></i>
-            {{ $t("share.downloadFormats") }}
+            {{ $t("share.downloadTitle") }}
         </h6>
         <div
             v-if="enableShareLink"
-            class="form-check form-switch m-4"
+            class="form-check form-switch"
         >
             <input
                 id="displayQrCode"
@@ -30,6 +30,62 @@
                 class="form-check-label"
             >
                 {{ $t("share.withQrCode") }}
+            </label>
+        </div>
+        <div class="form-check form-switch">
+            <input
+                id="displayQrCode"
+                class="form-check-input"
+                type="checkbox"
+                switch
+            />
+            <label
+                for="displayQrCode"
+                class="form-check-label"
+            >
+                Display License
+            </label>
+        </div>
+        <div class="form-check form-switch">
+            <input
+                id="displayQrCode"
+                class="form-check-input"
+                type="checkbox"
+                switch
+            />
+            <label
+                for="displayQrCode"
+                class="form-check-label"
+            >
+                Display Weight
+            </label>
+        </div>
+        <div class="form-check form-switch">
+            <input
+                id="displayQrCode"
+                class="form-check-input"
+                type="checkbox"
+                switch
+            />
+            <label
+                for="displayQrCode"
+                class="form-check-label"
+            >
+                Display Birth date
+            </label>
+        </div>
+        <div class="form-check form-switch">
+            <input
+                id="displayQrCode"
+                class="form-check-input"
+                type="checkbox"
+                switch
+            />
+            <label
+                for="displayQrCode"
+                class="form-check-label"
+            >
+                Display Category
             </label>
         </div>
         <div class="d-flex flex-wrap justify-content-around">
@@ -69,9 +125,6 @@
                 <i class="bi bi-link-45deg me-2"></i>
                 {{ $t("share.shareableLink") }}
             </h6>
-            <p class="text-muted small mb-3">
-                {{ $t("share.shareableLink") }}
-            </p>
 
             <!-- Generate Link Button -->
             <div
@@ -93,7 +146,7 @@
                         v-else
                         class="bi bi-link me-2"
                     ></i>
-                    {{ isGeneratingLink ? $t("common.loading") : $t("share.generateLink") }}
+                    {{ isGeneratingLink ? $t("common.loading") : $t("share.generateLinkButton") }}
                 </button>
             </div>
 
@@ -102,12 +155,6 @@
                 v-if="shareLink"
                 class="mt-3"
             >
-                <label
-                    for="shareLinkInput"
-                    class="form-label small text-muted"
-                >
-                    {{ $t("share.shareableLink") }}:
-                </label>
                 <div class="input-group">
                     <input
                         id="shareLinkInput"

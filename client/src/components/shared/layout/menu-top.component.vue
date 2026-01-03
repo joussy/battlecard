@@ -28,10 +28,7 @@
                 class="nav-link link-secondary"
                 active-class="active"
             >
-                <IconComponent
-                    name="group-of-people"
-                    class="user-logo"
-                />
+                <i class="bi bi-person"></i>
                 {{ $t("layout.selector") }}
             </router-link>
         </div>
@@ -44,10 +41,7 @@
                 class="nav-link link-secondary"
                 active-class="active"
             >
-                <IconComponent
-                    name="headgear"
-                    class="user-logo"
-                />
+                <i class="bi bi-table"></i>
                 {{ $t("layout.card") }}
                 <span class="badge rounded-pill bg-primary">{{ nbFights }}</span>
             </router-link>
@@ -99,5 +93,8 @@ const isTournamentSelected = computed((): boolean => {
 .user-logo {
     /* width: 30px; */
     max-height: 18px;
+}
+.nav {
+    height: 44px;
 }
 </style>

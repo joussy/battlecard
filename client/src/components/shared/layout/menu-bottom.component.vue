@@ -21,8 +21,8 @@
             :class="{ active: $route.path.startsWith('/selector') }"
         >
             <IconComponent
-                name="group-of-people"
-                :style="{ height: '38px' }"
+                name="headgear"
+                class="svg-2 mt-1"
             ></IconComponent>
             <div>{{ $t("layout.selector") }}</div>
         </router-link>
@@ -36,7 +36,7 @@
                 {{ getNbFights() }}
             </span>
             <IconComponent
-                name="headgear"
+                name="table"
                 class="svg-2 mt-1"
             ></IconComponent>
             <div>{{ $t("layout.card") }}</div>

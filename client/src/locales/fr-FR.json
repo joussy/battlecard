@@ -86,7 +86,6 @@
         "weightMeetsRequirements": "Ce boxeur répond aux exigences de poids, étant dans les 3 kg du poids de l'adversaire."
     },
     "fightCard": {
-        "edit": "Modifier",
         "matchmaker": "Générateur",
         "share": "Partager",
         "doneEditing": "J'ai fini de modifier",
@@ -140,7 +139,7 @@
     },
     "layout": {
         "events": "Événements",
-        "selector": "Sélecteur",
+        "selector": "Boxeurs",
         "card": "Carte",
         "settings": "Paramètres"
     },
@@ -208,13 +207,14 @@
         "french": "Français"
     },
     "share": {
-        "downloadFormats": "Formats de téléchargement",
-        "generateLink": "Générer un lien de partage",
         "shareableLink": "Lien partageable",
         "copyLink": "Copier le lien",
         "linkCopied": "Lien copié !",
         "downloadQrCode": "QR Code",
-        "withQrCode": "Inclure le QR Code"
+        "withQrCode": "Inclure le QR Code",
+        "downloadTitle": "Télécharger",
+        "downloadAndShareTitle": "Télécharger et partager",
+        "generateLinkButton": "Générer le lien"
     },
     "sharedFightCard": {
         "download": "Télécharger",

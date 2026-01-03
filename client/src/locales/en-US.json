@@ -86,7 +86,6 @@
     "weightMeetsRequirements": "This boxer meets the weight requirements, being within 3 kg of the opponent's weight."
   },
   "fightCard": {
-    "edit": "Edit",
     "matchmaker": "Matchmaker",
     "share": "Share",
     "doneEditing": "I'm Done editing",
@@ -140,7 +139,7 @@
   },
   "layout": {
     "events": "Events",
-    "selector": "Selector",
+    "selector": "Fighters",
     "card": "Card",
     "settings": "Settings"
   },
@@ -208,13 +207,14 @@
     "french": "Français"
   },
   "share": {
-    "downloadFormats": "Download Formats",
-    "generateLink": "Generate Share Link",
     "shareableLink": "Shareable Link",
     "copyLink": "Copy Link",
     "linkCopied": "Link copied!",
     "downloadQrCode": "QR Code",
-    "withQrCode": "Include QR Code"
+    "withQrCode": "Include QR Code",
+    "downloadTitle": "Download",
+    "downloadAndShareTitle": "Download and Share",
+    "generateLinkButton": "Generate Link"
   },
   "sharedFightCard": {
     "download": "Download",
