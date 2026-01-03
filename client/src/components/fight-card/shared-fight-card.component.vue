@@ -42,6 +42,7 @@
         <ShareComponent
             v-model="showShareOffcanvas"
             :enable-share-link="false"
+            :enable-download-options="false"
             :download-callback="downloadCallback"
         />
         <div class="mt-4 text-center">

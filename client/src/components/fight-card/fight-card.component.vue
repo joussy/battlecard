@@ -73,6 +73,7 @@
     <ShareComponent
         v-model="showShareModal"
         :enable-share-link="true"
+        :enable-download-options="true"
         :download-callback="downloadCallback"
     />
     <MatchupModalComponent v-model="showMatchupModal" />

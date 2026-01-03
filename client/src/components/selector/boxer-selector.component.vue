@@ -52,13 +52,6 @@
                         <i class="bi bi-file-earmark-pdf" />
                         {{ $t("selector.exportFormats.pdf") }}
                     </a>
-                    <a
-                        class="dropdown-item"
-                        @click="$router.push({ name: 'import' })"
-                    >
-                        <i class="bi bi-upload" />
-                        {{ $t("selector.importBoxers") }}
-                    </a>
                 </li>
             </ul>
             <button

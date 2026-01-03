@@ -14,7 +14,10 @@
             <i class="bi bi-download me-2"></i>
             {{ $t("share.downloadTitle") }}
         </h6>
-        <div class="row">
+        <div
+            v-if="enableDownloadOptions"
+            class="row"
+        >
             <div class="col-sm-6">
                 <div
                     v-if="enableShareLink"
@@ -273,6 +276,7 @@ const { t: $t } = useI18n()
 interface Props {
     downloadCallback: (fileType: string, downloadOptions: DownloadOptions) => Promise<void>
     enableShareLink: boolean
+    enableDownloadOptions: boolean
 }
 
 const props = defineProps<Props>()

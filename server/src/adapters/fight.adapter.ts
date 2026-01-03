@@ -35,6 +35,7 @@ export function toFightCardTemplate(
   let colspan = 2;
   if (downloadOptions.displayLicense) colspan++;
   if (downloadOptions.displayBirthdate) colspan++;
+  if (downloadOptions.displayWeight) colspan++;
   if (downloadOptions.displayCategory) colspan++;
   const template: Omit<FightCardTemplate, 'i18n'> = {
     subtitle: format(tournament.date, 'dd/MM/yyyy'),
@@ -65,6 +66,8 @@ export function toFightCardTemplate(
           : '',
         boxer1Category: modality.getCategoryName(fight.boxer1, true),
         boxer2Category: modality.getCategoryName(fight.boxer2, true),
+        boxer1Weight: `${fight.boxer1.weight?.toString()} kg`,
+        boxer2Weight: `${fight.boxer2.weight?.toString()} kg`,
         fightDuration: `${duration.rounds}x${duration.roundDurationAsSeconds / 60}'`,
         gender: fight.boxer1.gender === Gender.MALE ? '♂️' : '♀️',
       };
