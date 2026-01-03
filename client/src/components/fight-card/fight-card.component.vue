@@ -10,8 +10,8 @@
                 :disabled="getNbFights() == 0 && !editionMode"
                 @click="editionMode = !editionMode"
             >
-                <i class="me-1 bi bi-pencil" />
-                {{ $t("fightCard.edit") }}
+                <i class="me-1 bi bi-arrows-expand" />
+                {{ $t("fightCard.changeOrder") }}
             </button>
             <button
                 type="button"

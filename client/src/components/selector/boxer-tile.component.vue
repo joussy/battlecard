@@ -71,7 +71,7 @@ import PossibleBadgeComponent from "@/components/shared/badges/possible-badge.co
 
 import IconComponent from "@/components/shared/core/icon.component.vue"
 import { useBoxerStore } from "@/stores/boxer.store"
-import { getBoxerDisplayName, getClipboardText } from "@/utils/labels.utils"
+import { getBoxerDisplayName, getBoxerClipboardText } from "@/utils/labels.utils"
 
 const { t: $t } = useI18n()
 
@@ -91,7 +91,7 @@ const props = withDefaults(defineProps<Props>(), {
 const boxerStore = useBoxerStore()
 
 const copyToClipboard = () => {
-    const text = getClipboardText(props.boxer)
+    const text = getBoxerClipboardText(props.boxer)
     navigator.clipboard.writeText(text)
 }
 

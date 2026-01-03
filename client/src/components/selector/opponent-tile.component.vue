@@ -113,7 +113,7 @@ import WeightBadgeComponent from "@/components/shared/badges/weight-badge.compon
 import AgeBadgeComponent from "@/components/shared/badges/age-badge.component.vue"
 import EligibilityDetailsComponent from "@/components/shared/badges/eligibility-details.component.vue"
 import { useFightStore } from "@/stores/fight.store"
-import { getBoxerDisplayName, getClipboardText } from "@/utils/labels.utils"
+import { getBoxerDisplayName, getBoxerClipboardText } from "@/utils/labels.utils"
 import IconComponent from "@/components/shared/core/icon.component.vue"
 
 const { t: $t } = useI18n()
@@ -156,7 +156,7 @@ const goToOpponentTile = () => {
 }
 
 const copyToClipboard = () => {
-    const text = getClipboardText(props.opponent)
+    const text = getBoxerClipboardText(props.opponent)
     navigator.clipboard.writeText(text)
 }
 </script>
