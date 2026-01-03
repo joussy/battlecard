@@ -85,7 +85,7 @@
                         </ul>
                         <button
                             v-if="props.editionMode"
-                            class="btn btn-sm btn-outline-success"
+                            class="btn btn-sm btn-success"
                         >
                             <i class="bi bi-arrows-expand" />
                         </button>
