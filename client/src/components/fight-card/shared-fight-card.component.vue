@@ -92,7 +92,7 @@ import ShareComponent from "@/components/shared/core/share.component.vue"
 import IconComponent from "@/components/shared/core/icon.component.vue"
 import { downloadWithDom } from "@/utils/download.utils"
 
-const { t: $t } = useI18n()
+const { t: $t, locale } = useI18n()
 
 const route = useRoute()
 const showShareOffcanvas = ref(false)
@@ -102,14 +102,13 @@ const tournament = ref<SharedFightCard | null>(null)
 const accessDenied = ref(false)
 
 const tournamentDate = computed(() => {
-    //with date-fns
     return tournament.value?.tournamentDate
-        ? new Date(tournament.value.tournamentDate).toLocaleDateString("en-US", {
+        ? new Date(tournament.value.tournamentDate).toLocaleDateString(locale.value, {
               year: "numeric",
               month: "long",
               day: "numeric",
           })
-        : "Unknown Date"
+        : ""
 })
 
 onMounted(async () => {
