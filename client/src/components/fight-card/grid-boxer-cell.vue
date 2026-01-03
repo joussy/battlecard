@@ -1,6 +1,6 @@
 <template>
     <div class="d-flex flex-column align-items-start">
-        <span>{{ getBoxerDisplayName(props.boxer) }} </span>
+        <span>{{ getBoxerDisplayName(props.boxer) }}</span>
         <small class="d-none d-md-block mb-auto">{{ props.boxer.club }}</small>
         <div class="d-none d-lg-flex align-items-end justify-content-end gap-1 mt-1 w-100">
             <LinkedFightsBadgeComponent :boxer="props.boxer" />
@@ -23,5 +23,5 @@ interface Props {
 }
 
 const { getBoxerDisplayName } = useLabels()
-const props = withDefaults(defineProps<Props>(), {})
+const props = defineProps<Props>()
 </script>
