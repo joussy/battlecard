@@ -125,12 +125,13 @@ import { useFightStore } from "@/stores/fight.store"
 import { useBoxerStore } from "@/stores/boxer.store"
 import { useUiStore } from "@/stores/ui.store"
 import { useTournamentBoxerStore } from "@/stores/tournamentBoxer.store"
-import { getBoxerDisplayName, getBoxerClipboardText } from "@/utils/labels.utils"
+import { useLabels } from "@/utils/labels.utils"
 import { getBirthDateAndAge } from "@/utils/string.utils"
 
 const route = useRoute()
 const router = useRouter()
 
+const { getBoxerDisplayName, getBoxerClipboardText } = useLabels()
 const fightStore = useFightStore()
 const boxerStore = useBoxerStore()
 const uiStore = useUiStore()

@@ -45,6 +45,15 @@
     "brand": {
         "name": "BattleCard"
     },
+    "clipboard": {
+        "duration": "Durée",
+        "redCorner": "Coin rouge",
+        "blueCorner": "Coin bleu",
+        "male": "Homme",
+        "female": "Femme",
+        "record": "Palmarès",
+        "fights": "combats"
+    },
     "common": {
         "loading": "Chargement...",
         "save": "Enregistrer",
@@ -89,7 +98,13 @@
         "blue": "Bleu",
         "noMatchesAvailable": "Aucun match disponible 😔",
         "addMoreBoxers": "Ajoutez plus de boxeurs au sélecteur pour trouver des appariements appropriés.",
-        "addFight": "Ajouter le combat"
+        "addFight": "Ajouter le combat",
+        "changeOrder": "Changer l'ordre",
+        "viewRedBoxerProfile": "Voir le profil du boxeur rouge",
+        "viewBlueBoxerProfile": "Voir le profil du boxeur bleu",
+        "deleteFight": "Supprimer le combat",
+        "invertCorners": "Inverser les coins bleu/rouge",
+        "copyFightToClipboard": "Copier le combat dans le presse-papiers"
     },
     "import": {
         "title": "Importer des boxeurs",

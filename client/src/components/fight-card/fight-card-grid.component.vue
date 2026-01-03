@@ -51,35 +51,35 @@
                                     @click="$router.push({ name: 'selector-tile', params: { id: fight.boxer1.id } })"
                                 >
                                     <i class="bi bi-eye" />
-                                    View red boxer profile
+                                    {{ $t("fightCard.viewRedBoxerProfile") }}
                                 </a>
                                 <a
                                     class="dropdown-item"
                                     @click="$router.push({ name: 'selector-tile', params: { id: fight.boxer2.id } })"
                                 >
                                     <i class="bi bi-eye" />
-                                    View blue boxer profile
+                                    {{ $t("fightCard.viewBlueBoxerProfile") }}
                                 </a>
                                 <a
                                     class="dropdown-item"
                                     @click="removeFromFightCard(fight.id)"
                                 >
                                     <i class="bi bi-trash" />
-                                    Delete fight
+                                    {{ $t("fightCard.deleteFight") }}
                                 </a>
                                 <a
                                     class="dropdown-item"
                                     @click="switchFight(fight.id)"
                                 >
                                     <i class="bi bi-arrow-left-right" />
-                                    Invert blue/red corners
+                                    {{ $t("fightCard.invertCorners") }}
                                 </a>
                                 <a
                                     class="dropdown-item"
                                     @click="copyFightToClipboard(fight)"
                                 >
                                     <i class="bi bi-clipboard" />
-                                    Copy fight to clipboard
+                                    {{ $t("fightCard.copyFightToClipboard") }}
                                 </a>
                             </li>
                         </ul>
@@ -136,9 +136,10 @@ import Sortable from "sortablejs"
 import { useFightStore } from "@/stores/fight.store"
 import { Gender } from "@/api"
 import GridBoxerCell from "./grid-boxer-cell.vue"
-import { getFightClipboardText } from "@/utils/labels.utils"
+import { useLabels } from "@/utils/labels.utils"
 
 const { t: $t } = useI18n()
+const { getFightClipboardText } = useLabels()
 
 interface Props {
     fightCard: (Fight & {

@@ -71,9 +71,10 @@ import PossibleBadgeComponent from "@/components/shared/badges/possible-badge.co
 
 import IconComponent from "@/components/shared/core/icon.component.vue"
 import { useBoxerStore } from "@/stores/boxer.store"
-import { getBoxerDisplayName, getBoxerClipboardText } from "@/utils/labels.utils"
+import { useLabels } from "@/utils/labels.utils"
 
 const { t: $t } = useI18n()
+const { getBoxerDisplayName, getBoxerClipboardText } = useLabels()
 
 interface Props {
     boxer: Boxer

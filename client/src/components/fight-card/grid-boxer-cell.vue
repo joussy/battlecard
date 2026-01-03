@@ -13,7 +13,7 @@
 
 <script setup lang="ts">
 import { Boxer } from "@/types/boxing"
-import { getBoxerDisplayName } from "@/utils/labels.utils"
+import { useLabels } from "@/utils/labels.utils"
 import RecordBadgeComponent from "@/components/shared/badges/record-badge.component.vue"
 import AgeBadgeComponent from "@/components/shared/badges/age-badge.component.vue"
 import WeightBadgeComponent from "@/components/shared/badges/weight-badge.component.vue"
@@ -22,5 +22,6 @@ interface Props {
     boxer: Boxer
 }
 
+const { getBoxerDisplayName } = useLabels()
 const props = withDefaults(defineProps<Props>(), {})
 </script>
