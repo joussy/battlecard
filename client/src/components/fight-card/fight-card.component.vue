@@ -24,7 +24,7 @@
         </button>
         <button
             type="button"
-            :disabled="getNbFights() == 0 && !editionMode"
+            :disabled="getNbFights() == 0"
             class="btn btn-outline-secondary"
             @click="showShareModal = true"
         >

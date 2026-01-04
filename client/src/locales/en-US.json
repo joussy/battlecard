@@ -88,7 +88,7 @@
   "fightCard": {
     "matchmaker": "Matchmaker",
     "share": "Share",
-    "doneEditing": "Exit edition mode",
+    "doneEditing": "Exit editing mode",
     "emptyCard": "Your fight card is empty",
     "setupFirstFight": "Setup the first fight using the",
     "selector": "Selector",
@@ -98,7 +98,7 @@
     "noMatchesAvailable": "No matches available 😔",
     "addMoreBoxers": "Add more boxers to the selector to find suitable pairings.",
     "addFight": "Add fight",
-    "changeOrder": "Edition mode",
+    "changeOrder": "Editing mode",
     "viewRedBoxerProfile": "View red boxer profile",
     "viewBlueBoxerProfile": "View blue boxer profile",
     "deleteFight": "Delete fight",
