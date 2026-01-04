@@ -27,3 +27,4 @@ client/src/api
 *.sw?
 server/.config.json
 *.tsbuildinfo
+*.d.ts
