@@ -15,78 +15,136 @@
             {{ $t("share.downloadTitle") }}
         </h6>
         <div
-            v-if="enableShareLink"
-            class="form-check form-switch"
+            v-if="enableDownloadOptions"
+            class="row"
         >
-            <input
-                id="displayQrCode"
-                v-model="displayQrCode"
-                class="form-check-input"
-                type="checkbox"
-                switch
-            />
-            <label
-                for="displayQrCode"
-                class="form-check-label"
-            >
-                {{ $t("share.withQrCode") }}
-            </label>
-        </div>
-        <div class="form-check form-switch">
-            <input
-                id="displayQrCode"
-                class="form-check-input"
-                type="checkbox"
-                switch
-            />
-            <label
-                for="displayQrCode"
-                class="form-check-label"
-            >
-                Display License
-            </label>
-        </div>
-        <div class="form-check form-switch">
-            <input
-                id="displayQrCode"
-                class="form-check-input"
-                type="checkbox"
-                switch
-            />
-            <label
-                for="displayQrCode"
-                class="form-check-label"
-            >
-                Display Weight
-            </label>
-        </div>
-        <div class="form-check form-switch">
-            <input
-                id="displayQrCode"
-                class="form-check-input"
-                type="checkbox"
-                switch
-            />
-            <label
-                for="displayQrCode"
-                class="form-check-label"
-            >
-                Display Birth date
-            </label>
-        </div>
-        <div class="form-check form-switch">
-            <input
-                id="displayQrCode"
-                class="form-check-input"
-                type="checkbox"
-                switch
-            />
-            <label
-                for="displayQrCode"
-                class="form-check-label"
-            >
-                Display Category
-            </label>
+            <div class="col-sm-6">
+                <div
+                    v-if="enableShareLink"
+                    class="form-check form-switch"
+                >
+                    <input
+                        id="displayqrcode"
+                        v-model="displayQrCode"
+                        class="form-check-input"
+                        type="checkbox"
+                        switch
+                    />
+                    <label
+                        for="displayqrcode"
+                        class="form-check-label"
+                    >
+                        {{ $t("share.withQrCode") }}
+                    </label>
+                </div>
+                <div class="form-check form-switch">
+                    <input
+                        id="displaylicense"
+                        v-model="displayLicense"
+                        class="form-check-input"
+                        type="checkbox"
+                        switch
+                    />
+                    <label
+                        for="displaylicense"
+                        class="form-check-label"
+                    >
+                        {{ $t("share.displayLicense") }}
+                    </label>
+                </div>
+                <div class="form-check form-switch">
+                    <input
+                        id="displayweight"
+                        v-model="displayWeight"
+                        class="form-check-input"
+                        type="checkbox"
+                        switch
+                    />
+                    <label
+                        for="displayweight"
+                        class="form-check-label"
+                    >
+                        {{ $t("share.displayWeight") }}
+                    </label>
+                </div>
+                <div class="form-check form-switch">
+                    <input
+                        id="displaybirthdate"
+                        v-model="displayBirthdate"
+                        class="form-check-input"
+                        type="checkbox"
+                        switch
+                    />
+                    <label
+                        for="displaybirthdate"
+                        class="form-check-label"
+                    >
+                        {{ $t("share.displayBirthdate") }}
+                    </label>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="form-check form-switch">
+                    <input
+                        id="displaycategory"
+                        v-model="displayCategory"
+                        class="form-check-input"
+                        type="checkbox"
+                        switch
+                    />
+                    <label
+                        for="displaycategory"
+                        class="form-check-label"
+                    >
+                        {{ $t("share.displayCategory") }}
+                    </label>
+                </div>
+                <div class="form-check form-switch">
+                    <input
+                        id="displaygender"
+                        v-model="displayGender"
+                        class="form-check-input"
+                        type="checkbox"
+                        switch
+                    />
+                    <label
+                        for="displaygender"
+                        class="form-check-label"
+                    >
+                        {{ $t("share.displayGender") }}
+                    </label>
+                </div>
+                <div class="form-check form-switch">
+                    <input
+                        id="displayduration"
+                        v-model="displayDuration"
+                        class="form-check-input"
+                        type="checkbox"
+                        switch
+                    />
+                    <label
+                        for="displayduration"
+                        class="form-check-label"
+                    >
+                        {{ $t("share.displayDuration") }}
+                    </label>
+                </div>
+                <div class="form-check form-switch">
+                    <input
+                        id="displaytitle"
+                        v-model="displayTitle"
+                        class="form-check-input"
+                        type="checkbox"
+                        switch
+                    />
+                    <label
+                        for="displaytitle"
+                        class="form-check-label"
+                    >
+                        {{ $t("share.displayTitle") }}
+                    </label>
+                </div>
+            </div>
         </div>
         <div class="d-flex flex-wrap justify-content-around">
             <div
@@ -211,12 +269,14 @@ import { useI18n } from "vue-i18n"
 import { ShareOpenApi } from "@/api"
 import { useTournamentStore } from "@/stores/tournament.store"
 import ModalComponent from "./modal.component.vue"
+import { DownloadOptions } from "@/types/boxing"
 const showModal = defineModel<boolean>()
 const { t: $t } = useI18n()
 
 interface Props {
-    downloadCallback: (fileType: string, displayQrCode: boolean) => Promise<void>
+    downloadCallback: (fileType: string, downloadOptions: DownloadOptions) => Promise<void>
     enableShareLink: boolean
+    enableDownloadOptions: boolean
 }
 
 const props = defineProps<Props>()
@@ -224,6 +284,13 @@ const props = defineProps<Props>()
 // Reactive data
 const loadingFormat = ref<string | null>(null)
 const displayQrCode = ref(false)
+const displayLicense = ref(false)
+const displayWeight = ref(false)
+const displayBirthdate = ref(false)
+const displayCategory = ref(false)
+const displayGender = ref(false)
+const displayDuration = ref(false)
+const displayTitle = ref(false)
 const isGeneratingLink = ref(false)
 const shareLink = ref("")
 const qrCodePng = ref("")
@@ -253,7 +320,16 @@ const exportFile = (fileType: string) => {
     console.log(`Exporting as ${fileType}`)
     loadingFormat.value = fileType
 
-    const promise: Promise<void> = props.downloadCallback(fileType, displayQrCode.value)
+    const promise: Promise<void> = props.downloadCallback(fileType, {
+        displayQrCode: displayQrCode.value,
+        displayLicense: displayLicense.value,
+        displayWeight: displayWeight.value,
+        displayBirthdate: displayBirthdate.value,
+        displayCategory: displayCategory.value,
+        displayGender: displayGender.value,
+        displayDuration: displayDuration.value,
+        displayTitle: displayTitle.value,
+    })
 
     promise
         .then(() => {

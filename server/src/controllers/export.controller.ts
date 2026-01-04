@@ -16,11 +16,10 @@ import { SelectorExportService } from '@/services/selector-export.service';
 import { ShareService } from '@/services/share.service';
 import { DevOnlyGuard } from '@/guards/dev.guard';
 import {
-  ExportWithQrCodeDto,
+  DownloadOptionsDto,
   SelectorExportDto,
   SimpleTournamentDto,
 } from '@/dto/share.dto';
-import { TournamentIdQueryDto } from '@/dto/query.dto';
 import { NoAuthRequired, User } from '@/decorators/auth.decorator';
 
 @Controller('export')
@@ -42,7 +41,7 @@ export class ExportController {
     },
   })
   async getFightCardPdf(
-    @Body() body: ExportWithQrCodeDto,
+    @Body() body: DownloadOptionsDto,
     @User() user: AuthenticatedUser,
     @Res() res: ExpressResponse,
   ): Promise<void> {
@@ -61,7 +60,7 @@ export class ExportController {
       }
 
       const pdfBuffer = await this.fightExportService.generatePdf(
-        body.tournamentId,
+        body,
         fightCardShareUrl,
       );
       res.setHeader('Content-Type', 'application/pdf');
@@ -86,7 +85,7 @@ export class ExportController {
     },
   })
   async getFightCardPng(
-    @Body() body: ExportWithQrCodeDto,
+    @Body() body: DownloadOptionsDto,
     @User() user: AuthenticatedUser,
     @Res() res: ExpressResponse,
   ): Promise<void> {
@@ -104,7 +103,7 @@ export class ExportController {
         fightCardShareUrl = this.shareService.getFightCardShareUrl(token);
       }
       const pngBuffer = await this.fightExportService.generatePng(
-        body.tournamentId,
+        body,
         fightCardShareUrl,
       );
       res.setHeader('Content-Type', 'image/png');
@@ -229,12 +228,12 @@ export class ExportController {
   @Get('fightcard/html')
   @NoAuthRequired()
   async getTemplateHtml(
-    @Query() query: ExportWithQrCodeDto,
+    @Query() query: DownloadOptionsDto,
     @Res() res: ExpressResponse,
   ): Promise<void> {
     try {
       const html = await this.fightExportService.generateHtml(
-        query.tournamentId,
+        query,
         query.displayQrCode ? 'https://example.com/fightcard' : undefined,
       );
       res.setHeader('Content-Type', 'text/html;charset=utf-8');

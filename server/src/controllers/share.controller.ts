@@ -118,7 +118,17 @@ export class ShareController {
       const tournamentId = this.shareService.getTournamentIdByFightCardToken(
         body.fightCardToken,
       );
-      const pdfBuffer = await this.fightExportService.generatePdf(tournamentId);
+      const pdfBuffer = await this.fightExportService.generatePdf({
+        tournamentId: tournamentId,
+        displayBirthdate: false,
+        displayCategory: true,
+        displayDuration: true,
+        displayGender: true,
+        displayLicense: true,
+        displayWeight: true,
+        displayQrCode: false,
+        displayTitle: true,
+      });
       res.setHeader('Content-Type', 'application/pdf');
       res.setHeader(
         'Content-Disposition',
@@ -148,7 +158,17 @@ export class ShareController {
       const tournamentId = this.shareService.getTournamentIdByFightCardToken(
         body.fightCardToken,
       );
-      const pngBuffer = await this.fightExportService.generatePng(tournamentId);
+      const pngBuffer = await this.fightExportService.generatePng({
+        tournamentId: tournamentId,
+        displayBirthdate: false,
+        displayCategory: true,
+        displayDuration: true,
+        displayGender: true,
+        displayLicense: true,
+        displayWeight: true,
+        displayQrCode: false,
+        displayTitle: true,
+      });
       res.setHeader('Content-Type', 'image/png');
       res.setHeader(
         'Content-Disposition',

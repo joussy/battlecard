@@ -83,3 +83,14 @@ export interface SharedFightCard {
     fights: Fight[]
     tournamentDate?: string
 }
+
+export interface DownloadOptions {
+    displayQrCode: boolean
+    displayLicense: boolean
+    displayWeight: boolean
+    displayBirthdate: boolean
+    displayCategory: boolean
+    displayGender: boolean
+    displayDuration: boolean
+    displayTitle: boolean
+}

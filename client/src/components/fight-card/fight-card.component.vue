@@ -73,6 +73,7 @@
     <ShareComponent
         v-model="showShareModal"
         :enable-share-link="true"
+        :enable-download-options="true"
         :download-callback="downloadCallback"
     />
     <MatchupModalComponent v-model="showMatchupModal" />
@@ -81,7 +82,7 @@
 <script setup lang="ts">
 import { ref, computed, watch, onMounted } from "vue"
 import { useI18n } from "vue-i18n"
-import { Fight } from "@/types/boxing.d"
+import { DownloadOptions, Fight } from "@/types/boxing.d"
 import FightCardGridComponent from "@/components/fight-card/fight-card-grid.component.vue"
 import { useFightStore } from "@/stores/fight.store"
 import { useTournamentStore } from "@/stores/tournament.store"
@@ -149,7 +150,7 @@ const getNbFights = () => {
     return fightCard.value.length
 }
 
-const downloadCallback = async (fileType: string, displayQrCode: boolean): Promise<void> => {
+const downloadCallback = async (fileType: string, downloadOptions: DownloadOptions): Promise<void> => {
     let res: Blob | File | undefined
     if (fileType === "xlsx") {
         res = await ExportOpenApi.getFightCardXlsx({
@@ -161,11 +162,31 @@ const downloadCallback = async (fileType: string, displayQrCode: boolean): Promi
         })
     } else if (fileType === "pdf") {
         res = await ExportOpenApi.getFightCardPdf({
-            body: { tournamentId: tournamentId.value, displayQrCode },
+            body: {
+                tournamentId: tournamentId.value,
+                displayQrCode: downloadOptions.displayQrCode,
+                displayLicense: downloadOptions.displayLicense,
+                displayWeight: downloadOptions.displayWeight,
+                displayBirthdate: downloadOptions.displayBirthdate,
+                displayCategory: downloadOptions.displayCategory,
+                displayGender: downloadOptions.displayGender,
+                displayDuration: downloadOptions.displayDuration,
+                displayTitle: downloadOptions.displayTitle,
+            },
         })
     } else if (fileType === "png") {
         res = await ExportOpenApi.getFightCardPng({
-            body: { tournamentId: tournamentId.value, displayQrCode },
+            body: {
+                tournamentId: tournamentId.value,
+                displayQrCode: downloadOptions.displayQrCode,
+                displayLicense: downloadOptions.displayLicense,
+                displayWeight: downloadOptions.displayWeight,
+                displayBirthdate: downloadOptions.displayBirthdate,
+                displayCategory: downloadOptions.displayCategory,
+                displayGender: downloadOptions.displayGender,
+                displayDuration: downloadOptions.displayDuration,
+                displayTitle: downloadOptions.displayTitle,
+            },
         })
     } else {
         return Promise.reject(new Error("Unsupported file type"))

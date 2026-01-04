@@ -13,6 +13,7 @@ import {
 import { GotenbergService } from './gotenberg.service';
 import { QrCodeService } from './qrcode.service';
 import { TemplateService } from './template.service';
+import { DownloadOptionsDto } from '@/dto/share.dto';
 
 @Injectable()
 export class FightExportService {
@@ -28,17 +29,18 @@ export class FightExportService {
   ) {}
 
   async generatePdf(
-    tournamentId: string,
+    downloadOptions: DownloadOptionsDto,
     fightCardShareUrl?: string,
   ): Promise<Buffer> {
     const { fights, tournament, svgQrCode } = await this.getFightCardData(
-      tournamentId,
+      downloadOptions.tournamentId,
       fightCardShareUrl,
     );
     const template = toFightCardTemplate(
       fights,
       tournament,
       this.modalityService.getModality(),
+      downloadOptions,
       svgQrCode,
     );
     const html = this.templateService.generateFightCardHtml(template);
@@ -46,17 +48,18 @@ export class FightExportService {
     return this.gotenbergService.generatePdf(html);
   }
   async generateHtml(
-    tournamentId: string,
+    downloadOptions: DownloadOptionsDto,
     fightCardShareUrl?: string,
   ): Promise<string> {
     const { fights, tournament, svgQrCode } = await this.getFightCardData(
-      tournamentId,
+      downloadOptions.tournamentId,
       fightCardShareUrl,
     );
     const template = toFightCardTemplate(
       fights,
       tournament,
       this.modalityService.getModality(),
+      downloadOptions,
       svgQrCode,
     );
     const html = this.templateService.generateFightCardHtml(template);
@@ -65,17 +68,18 @@ export class FightExportService {
   }
 
   async generatePng(
-    tournamentId: string,
+    downloadOptions: DownloadOptionsDto,
     fightCardShareUrl?: string,
   ): Promise<Buffer> {
     const { fights, tournament, svgQrCode } = await this.getFightCardData(
-      tournamentId,
+      downloadOptions.tournamentId,
       fightCardShareUrl,
     );
     const template = toFightCardTemplate(
       fights,
       tournament,
       this.modalityService.getModality(),
+      downloadOptions,
       svgQrCode,
     );
     const html = this.templateService.generateFightCardHtml(template);

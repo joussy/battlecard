@@ -160,7 +160,6 @@
   "selector": {
     "addBoxer": "Add Boxer",
     "export": "Export",
-    "importBoxers": "Import boxers",
     "filters": "Filters",
     "searchPlaceholder": "Type the name of a boxer ...",
     "weightRange": "Weight Range (kg)",
@@ -214,7 +213,14 @@
     "withQrCode": "Include QR Code",
     "downloadTitle": "Download",
     "downloadAndShareTitle": "Download and Share",
-    "generateLinkButton": "Generate Link"
+    "generateLinkButton": "Generate Link",
+    "displayLicense": "Display License",
+    "displayWeight": "Display Weight",
+    "displayBirthdate": "Display Birth date",
+    "displayCategory": "Display Category",
+    "displayGender": "Display Gender",
+    "displayDuration": "Display Duration",
+    "displayTitle": "Display Title"
   },
   "sharedFightCard": {
     "download": "Download",

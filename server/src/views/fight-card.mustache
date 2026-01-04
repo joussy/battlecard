@@ -39,52 +39,89 @@
 
 <body>
   <div class="a4-landscape m-auto">
+    <!-- Header (2 display possible: QR code or no QR code) -->
+    {{#downloadOptions.displayTitle}}
+    <!-- Header With QR Code -->
+    {{#qrCodeSvg}}
     <div class="header d-flex">
-      {{#qrCodeSvg}}
       <div class="qr-code"></div>
-      {{/qrCodeSvg}}
-      <div class="w-100 text-center">
-        <div class="d-flex align-items-baseline justify-content-center">
-          <span class="fs-2">{{title}}</span>
-          {{^qrCodeSvg}}
-          <span class="fs-5 ms-1 me-1">-</span>
-          <span class="fs-5">{{subtitle}} - {{formattedAddress}}</span>
-          {{/qrCodeSvg}}
-        </div>
-        {{#qrCodeSvg}}
-        <div>
-          <span class="fs-5">{{subtitle}} - {{formattedAddress}}</span>
-        </div>
-        {{/qrCodeSvg}}
+      <div class="d-flex flex-column m-auto align-items-center">
+        <span class="fs-2">{{title}}</span>
+        <span class="fs-5">{{subtitle}} - {{formattedAddress}}</span>
       </div>
-      {{#qrCodeSvg}}
       <div class="qr-code">
         {{{qrCodeSvg}}}
       </div>
       {{/qrCodeSvg}}
     </div>
+    <!-- Header Without QR Code -->
+    {{^qrCodeSvg}}
+    <div class="header d-flex justify-content-between align-items-center">
+      <span class="fs-2">{{title}}</span>
+      <span class="fs-5">{{subtitle}} - {{formattedAddress}}</span>
+    </div>
+    {{/qrCodeSvg}}
+    {{/downloadOptions.displayTitle}}
+
+    <!-- Fight card table -->
     <table class="table table-sm table-bordered align-middle lh-1">
       <thead class="table-light">
         <tr class="text-center">
           <th>{{i18n.order}}</th>
-          <th colspan=3>{{i18n.red_corner}}</th>
-          <th colspan=3>{{i18n.blue_corner}}</th>
-          <th>{{i18n.duration}}</th>
-          <th>{{i18n.gender}}</th>
+          <th colspan={{cornerColspan}}>{{i18n.red_corner}}</th>
+          <th colspan={{cornerColspan}}>{{i18n.blue_corner}}</th>
+          {{#downloadOptions.displayDuration}}<th>{{i18n.duration}}</th>{{/downloadOptions.displayDuration}}
+          {{#downloadOptions.displayGender}}<th>{{i18n.gender}}</th>{{/downloadOptions.displayGender}}
         </tr>
       </thead>
       <tbody>
         {{#fights}}
         <tr>
           <td>{{order}}</td>
+          <!-- Red License -->
+          {{#downloadOptions.displayLicense}}
           <td class="cell-red">{{boxer1License}}</td>
+          {{/downloadOptions.displayLicense}}
+          <!-- Red Category -->
+          {{#downloadOptions.displayCategory}}
+          <td class="cell-red">{{boxer1Category}}</td>
+          {{/downloadOptions.displayCategory}}
+          <!-- Red Name -->
           <td class="cell-red">{{boxer1FirstName}} {{boxer1LastName}}</td>
+          <!-- Red Weight -->
+          {{#downloadOptions.displayWeight}}
+          <td class="cell-red text-nowrap">{{boxer1Weight}}</td>
+          {{/downloadOptions.displayWeight}}
+          <!-- Red Birthdate -->
+          {{#downloadOptions.displayBirthdate}}
+          <td class="cell-red">{{boxer1Birthdate}}</td>
+          {{/downloadOptions.displayBirthdate}}
+          <!-- Red Gym -->
           <td class="cell-red">{{boxer1Club}}</td>
+          <!-- Blue License -->
+          {{#downloadOptions.displayLicense}}
           <td class="cell-blue">{{boxer2License}}</td>
+          {{/downloadOptions.displayLicense}}
+          <!-- Blue Category -->
+          {{#downloadOptions.displayCategory}}
+          <td class="cell-blue">{{boxer2Category}}</td>
+          {{/downloadOptions.displayCategory}}
+          <!-- Blue Name -->
           <td class="cell-blue">{{boxer2FirstName}} {{boxer2LastName}}</td>
+          <!-- Blue Weight -->
+          {{#downloadOptions.displayWeight}}
+          <td class="cell-blue text-nowrap">{{boxer2Weight}}</td>
+          {{/downloadOptions.displayWeight}}
+          <!-- Blue Birthdate -->
+          {{#downloadOptions.displayBirthdate}}
+          <td class="cell-blue">{{boxer2Birthdate}}</td>
+          {{/downloadOptions.displayBirthdate}}
+          <!-- Blue Gym -->
           <td class="cell-blue">{{boxer2Club}}</td>
-          <td>{{fightDuration}}</td>
-          <td>{{gender}}</td>
+          <!-- Duration -->
+          {{#downloadOptions.displayDuration}}<td>{{fightDuration}}</td>{{/downloadOptions.displayDuration}}
+          <!-- Gender -->
+          {{#downloadOptions.displayGender}}<td>{{gender}}</td>{{/downloadOptions.displayGender}}
         </tr>
         {{/fights}}
       </tbody>

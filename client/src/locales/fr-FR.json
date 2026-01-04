@@ -160,7 +160,6 @@
     "selector": {
         "addBoxer": "Ajouter un boxeur",
         "export": "Exporter",
-        "importBoxers": "Importer des boxeurs",
         "filters": "Filtres",
         "searchPlaceholder": "Tapez le nom d'un boxeur ...",
         "weightRange": "Plage de poids (kg)",
@@ -214,7 +213,14 @@
         "withQrCode": "Inclure le QR Code",
         "downloadTitle": "Télécharger",
         "downloadAndShareTitle": "Télécharger et partager",
-        "generateLinkButton": "Générer le lien"
+        "generateLinkButton": "Générer le lien",
+        "displayLicense": "Afficher la licence",
+        "displayWeight": "Afficher le poids",
+        "displayBirthdate": "Afficher la date de naissance",
+        "displayCategory": "Afficher la catégorie",
+        "displayGender": "Afficher le genre",
+        "displayDuration": "Afficher la durée",
+        "displayTitle": "Afficher le titre"
     },
     "sharedFightCard": {
         "download": "Télécharger",
