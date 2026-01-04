@@ -214,4 +214,8 @@ export class OpponentDto extends BoxerDto {
   @IsOptional()
   @IsArray()
   modalityErrors?: ModalityErrorDao[];
+
+  /** Modality score for this opponent */
+  @IsNumber()
+  modalityScore: number;
 }

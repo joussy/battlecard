@@ -26,7 +26,7 @@
             </h5>
         </div>
         <!-- Modal -->
-        <div class="card mb-3">
+        <div class="card mb-4">
             <div class="card shadow rounded">
                 <div class="card-body p-3 p-md-3">
                     <div class="row">
@@ -56,14 +56,7 @@
                             {{ $t("matchupDetails.fights") }}
                         </p>
                     </div>
-                    <div class="d-flex flex- gap-2 align-items-start justify-content-end border-top mt-2 pt-2">
-                        <button
-                            class="btn btn-sm btn-outline-secondary"
-                            @click="copyToClipboard()"
-                        >
-                            <i class="bi bi-clipboard"></i>
-                            <span class="ms-2">{{ $t("opponentTile.copyClipboard") }}</span>
-                        </button>
+                    <div class="d-flex gap-2 align-items-start justify-content-end border-top mt-2 pt-2">
                         <div
                             class="btn btn-sm btn-outline-success"
                             @click="editBoxer()"
@@ -75,13 +68,31 @@
                             v-model="showEditOffcanvas"
                             @boxer-saved="fetchBoxerData()"
                         />
-                        <div
-                            class="btn btn-sm btn-outline-danger"
-                            @click="showDeleteConfirmModal = true"
+                        <button
+                            class="btn btn-sm btn-outline-secondary"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false"
                         >
-                            <i class="bi bi-trash"></i>
-                            <span class="d-none d-sm-inline ms-1">{{ $t("selector.deleteBoxer") }}</span>
-                        </div>
+                            <i class="bi bi-three-dots-vertical"></i>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a
+                                    class="dropdown-item"
+                                    @click="copyToClipboard()"
+                                >
+                                    <i class="bi bi-clipboard" />
+                                    {{ $t("tournaments.copyClipboard") }}
+                                </a>
+                                <a
+                                    class="dropdown-item text-danger"
+                                    @click="showDeleteConfirmModal = true"
+                                >
+                                    <i class="bi bi-trash" />
+                                    {{ $t("common.delete") }}
+                                </a>
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>
@@ -91,11 +102,33 @@
             :message="deleteMessage"
             @confirm="confirmDeleteBoxer"
         />
-        <h6 class="ps-1">{{ $t("selector.availableOpponents") }}</h6>
+        <h6 class="ps-1 text-center">{{ $t("selector.selectedOpponents") }}</h6>
+        <div
+            v-if="selectedOpponentsToDisplay.length > 0"
+            class="ps-0 pe-0 pt-0 pb-0 pb-2"
+        >
+            <div
+                v-for="opponent in selectedOpponentsToDisplay"
+                :key="opponent.id"
+            >
+                <OpponentTileComponent
+                    :boxer="boxer"
+                    :opponent="opponent"
+                />
+            </div>
+        </div>
+        <div
+            v-else
+            class="ps-3 pb-3 text-muted"
+        >
+            <i>{{ $t("selector.noSelectedOpponents") }}</i>
+        </div>
+
+        <h6 class="ps-1 text-center">{{ $t("selector.availableOpponents") }}</h6>
         <div>
             <div class="ps-0 pe-0 pt-0 pb-0">
                 <div
-                    v-for="opponent in opponentsToDisplay"
+                    v-for="opponent in availableOpponentsToDisplay"
                     :key="opponent.id"
                 >
                     <OpponentTileComponent
@@ -144,10 +177,22 @@ const boxer = ref<Boxer | undefined>(undefined)
 const boxerId = ref(String(route.params.id ?? ""))
 const loading = ref(false)
 
-const opponentsToDisplay = computed(() => {
+const availableOpponentsToDisplay = computed(() => {
+    if (!opponents.value) return [] as Opponent[]
+    return opponents.value
+        .filter((o) => {
+            if (uiStore.hideNonMatchableOpponents && !o.isEligible) return false
+            if (o.fightId) return false
+            return true
+        })
+        .sort((a, b) => b.modalityScore - a.modalityScore)
+})
+
+const selectedOpponentsToDisplay = computed(() => {
     if (!opponents.value) return [] as Opponent[]
     return opponents.value.filter((o) => {
         if (uiStore.hideNonMatchableOpponents && !o.isEligible) return false
+        if (!o.fightId) return false
         return true
     })
 })

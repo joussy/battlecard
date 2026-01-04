@@ -140,11 +140,13 @@ export class TournamentService {
       )?.length;
       const modality = this.modalityService.getModality();
       const modalityErrors = modality.getModalityErrors(mainBoxer, o);
+      const modalityScore = modality.getModalityScore(mainBoxer, o);
       return toOpponentDto(
         o,
         modality,
         selectedFights,
         modalityErrors,
+        modalityScore,
         fightId,
       );
     });

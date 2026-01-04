@@ -32,6 +32,7 @@ export default class ApiAdapter {
             isEligible: opponent.isEligible,
             fightId: opponent.fightId,
             modalityErrors: opponent.modalityErrors,
+            modalityScore: opponent.modalityScore,
         }
     }
 

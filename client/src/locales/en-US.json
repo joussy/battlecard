@@ -191,7 +191,9 @@
       "pdf": "PDF"
     },
     "deleteBoxer": "Delete",
-    "deleteBoxerConfirmation": "Delete boxer ?"
+    "deleteBoxerConfirmation": "Delete boxer ?",
+    "selectedOpponents": "Selected opponents",
+    "noSelectedOpponents": "No opponents have been selected yet"
   },
   "settings": {
     "account": "Account",
