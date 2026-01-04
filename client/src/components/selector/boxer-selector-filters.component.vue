@@ -151,6 +151,7 @@
             <select
                 ref="ms"
                 multiple="multiple"
+                class="form-control"
             >
                 <option value="1">First</option>
                 <option value="2">Second</option>
@@ -294,7 +295,6 @@ let msInstance = null
 onMounted(() => {
     msInstance = multipleSelect(ms.value, {
         placeholder: "Select fruits",
-        classes: "form-control",
         // ...other options
     })
 })

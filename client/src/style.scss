@@ -1,5 +1,16 @@
-@import 'multiple-select-vanilla/dist/styles/css/multiple-select.css';
 @import "./bootstrap.scss";
+$ms-primary-color: orange;
+$ms-checkbox-color: orange;
+@import 'multiple-select-vanilla/dist/styles/sass/themes/bootstrap.scss';
+
+// Override multiple-select choice border (bugfix)
+.ms-parent.form-control {
+  .ms-choice {
+    border: 0px !important;
+    //same padding as bootstrap form-control
+    padding: 0.375rem 0.75rem !important;
+  }
+}
 
 // Define custom container max-widths
 .max-width-md {

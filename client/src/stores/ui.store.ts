@@ -146,7 +146,10 @@ export const useUiStore = defineStore("ui", () => {
             if (theme.value != "auto") {
                 return
             }
-            document.documentElement.setAttribute("data-bs-theme", e.matches ? "dark" : "light")
+            var darkModeOn = e.matches
+            document.documentElement.setAttribute("data-bs-theme", darkModeOn ? "dark" : "light")
+            if (darkModeOn) document.body.classList.add("ms-dark-mode")
+            else document.body.classList.remove("ms-dark-mode")
         })
     }
 
@@ -172,6 +175,8 @@ export const useUiStore = defineStore("ui", () => {
             appliedTheme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"
         }
         document.documentElement.setAttribute("data-bs-theme", appliedTheme)
+        if (appliedTheme == "dark") document.body.classList.add("ms-dark-mode")
+        else document.body.classList.remove("ms-dark-mode")
     }
 
     function setLanguage(lang: UiLanguage) {
