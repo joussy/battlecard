@@ -153,10 +153,13 @@
                 multiple="multiple"
                 class="form-control"
             >
-                <option value="1">First</option>
-                <option value="2">Second</option>
-                <option value="3">Third</option>
-                <option value="4">Fourth</option>
+                <option
+                    v-for="club in availableClubs"
+                    :key="club.value"
+                    :value="club.value"
+                >
+                    {{ club.label }}
+                </option>
             </select>
         </div>
         <hr />
@@ -294,7 +297,7 @@ let msInstance = null
 
 onMounted(() => {
     msInstance = multipleSelect(ms.value, {
-        placeholder: "Select fruits",
+        placeholder: "Select gyms",
         // ...other options
     })
 })
