@@ -160,7 +160,6 @@
   "selector": {
     "addBoxer": "Add Boxer",
     "export": "Export",
-    "importBoxers": "Import boxers",
     "filters": "Filters",
     "searchPlaceholder": "Type the name of a boxer ...",
     "weightRange": "Weight Range (kg)",
