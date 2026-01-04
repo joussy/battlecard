@@ -3,6 +3,7 @@
         class="card mb-2"
         :class="{
             'border-success': props.opponent.fightId,
+            'border-3': props.opponent.fightId,
         }"
     >
         <div class="card-body pt-1 pb-1">

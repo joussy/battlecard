@@ -192,7 +192,7 @@
     },
     "deleteBoxer": "Supprimer",
     "deleteBoxerConfirmation": "Supprimer le boxeur ?",
-    "selectedOpponents": "Available opponents",
+    "selectedOpponents": "Adversaires sélectionnés",
     "noSelectedOpponents": "Aucun adversaire n'a été sélectionné pour ce boxeur"
   },
   "settings": {

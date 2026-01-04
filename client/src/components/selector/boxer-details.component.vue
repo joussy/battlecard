@@ -102,33 +102,11 @@
             :message="deleteMessage"
             @confirm="confirmDeleteBoxer"
         />
-        <h6 class="ps-1 text-center">{{ $t("selector.selectedOpponents") }}</h6>
-        <div
-            v-if="selectedOpponentsToDisplay.length > 0"
-            class="ps-0 pe-0 pt-0 pb-0 pb-2"
-        >
-            <div
-                v-for="opponent in selectedOpponentsToDisplay"
-                :key="opponent.id"
-            >
-                <OpponentTileComponent
-                    :boxer="boxer"
-                    :opponent="opponent"
-                />
-            </div>
-        </div>
-        <div
-            v-else
-            class="ps-3 pb-3 text-muted"
-        >
-            <i>{{ $t("selector.noSelectedOpponents") }}</i>
-        </div>
-
-        <h6 class="ps-1 text-center">{{ $t("selector.availableOpponents") }}</h6>
-        <div>
-            <div class="ps-0 pe-0 pt-0 pb-0">
+        <div v-if="selectedOpponentsToDisplay.length > 0">
+            <h6 class="ps-1 text-center">{{ $t("selector.selectedOpponents") }}</h6>
+            <div class="pb-2">
                 <div
-                    v-for="opponent in availableOpponentsToDisplay"
+                    v-for="opponent in selectedOpponentsToDisplay"
                     :key="opponent.id"
                 >
                     <OpponentTileComponent
@@ -136,6 +114,18 @@
                         :opponent="opponent"
                     />
                 </div>
+            </div>
+        </div>
+        <h6 class="ps-1 text-center">{{ $t("selector.availableOpponents") }}</h6>
+        <div>
+            <div
+                v-for="opponent in availableOpponentsToDisplay"
+                :key="opponent.id"
+            >
+                <OpponentTileComponent
+                    :boxer="boxer"
+                    :opponent="opponent"
+                />
             </div>
         </div>
     </div>
