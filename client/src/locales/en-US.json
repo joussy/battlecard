@@ -88,7 +88,7 @@
   "fightCard": {
     "matchmaker": "Matchmaker",
     "share": "Share",
-    "doneEditing": "Exit edition mode",
+    "doneEditing": "Exit editing mode",
     "emptyCard": "Your fight card is empty",
     "setupFirstFight": "Setup the first fight using the",
     "selector": "Selector",
