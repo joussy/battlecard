@@ -1323,6 +1323,16 @@
       "post": {
         "operationId": "ShareController_downloadSharedFightCardPng",
         "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FightCardTokenDto"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "content": {

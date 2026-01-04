@@ -8,7 +8,7 @@ import {
   ForbiddenException,
 } from '@nestjs/common';
 import { ShareService } from '@/services/share.service';
-import { DownloadOptionsDto, GeneratedTokenDto } from '@/dto/share.dto';
+import { GeneratedTokenDto } from '@/dto/share.dto';
 import { SharedFightCardDto } from '@/dto/tournament.dto';
 import { Response as ExpressResponse } from 'express';
 import { User } from '@/decorators/auth.decorator';
@@ -151,7 +151,7 @@ export class ShareController {
     },
   })
   async downloadSharedFightCardPng(
-    @Body() body: FightCardTokenDto & DownloadOptionsDto,
+    @Body() body: FightCardTokenDto,
     @Res() res: ExpressResponse,
   ): Promise<void> {
     try {
@@ -159,8 +159,15 @@ export class ShareController {
         body.fightCardToken,
       );
       const pngBuffer = await this.fightExportService.generatePng({
-        ...body,
-        tournamentId,
+        tournamentId: tournamentId,
+        displayBirthdate: false,
+        displayCategory: true,
+        displayDuration: true,
+        displayGender: true,
+        displayLicense: true,
+        displayWeight: true,
+        displayQrCode: false,
+        displayTitle: true,
       });
       res.setHeader('Content-Type', 'image/png');
       res.setHeader(
