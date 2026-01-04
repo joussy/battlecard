@@ -154,7 +154,7 @@
     "opponentTile": {
         "addToFightCard": "Ajouter à la carte de combat",
         "removeFromFightCard": "Retirer de la carte de combat",
-        "watchProfile": "Voir le profil",
+        "watchProfile": "Voir le profil"
     },
     "selector": {
         "addBoxer": "Ajouter un boxeur",
@@ -189,10 +189,8 @@
             "png": "PNG",
             "pdf": "PDF"
         },
-        "deleteBoxer": "Supprimer",
         "deleteBoxerConfirmation": "Supprimer le boxeur ?",
-        "selectedOpponents": "Adversaires sélectionnés",
-        "noSelectedOpponents": "Aucun adversaire n'a été sélectionné pour ce boxeur"
+        "selectedOpponents": "Adversaires sélectionnés"
     },
     "settings": {
         "account": "Compte",

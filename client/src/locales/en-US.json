@@ -154,8 +154,7 @@
   "opponentTile": {
     "addToFightCard": "Add to fight card",
     "removeFromFightCard": "Remove from fight card",
-    "watchProfile": "Watch Profile",
-    "copyClipboard": "Copy to clipboard"
+    "watchProfile": "Watch Profile"
   },
   "selector": {
     "addBoxer": "Add Boxer",
@@ -190,10 +189,8 @@
       "png": "PNG",
       "pdf": "PDF"
     },
-    "deleteBoxer": "Delete",
     "deleteBoxerConfirmation": "Delete boxer ?",
-    "selectedOpponents": "Selected opponents",
-    "noSelectedOpponents": "No opponents have been selected yet"
+    "selectedOpponents": "Selected opponents"
   },
   "settings": {
     "account": "Account",
