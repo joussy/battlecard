@@ -1,72 +1,72 @@
 <template>
     <TournamentHeaderComponent />
-    <div :class="{ 'edition-mode': editionMode }">
-        <div class="d-flex align-items-center mb-3">
-            <div class="flex-grow-1"></div>
-            <button
-                type="button"
-                class="btn btn-outline-success ms-2"
-                :class="{ active: editionMode }"
-                :disabled="getNbFights() == 0 && !editionMode"
-                @click="editionMode = !editionMode"
-            >
-                <i class="me-1 bi bi-arrows-expand" />
-                {{ $t("fightCard.changeOrder") }}
-            </button>
-            <button
-                type="button"
-                class="btn btn-outline-purple ms-2"
-                @click="showMatchupModal = true"
-            >
-                <i class="me-1 bi bi-magic" />
-                {{ $t("fightCard.matchmaker") }}
-            </button>
-            <button
-                type="button"
-                :disabled="getNbFights() == 0 && !editionMode"
-                class="btn btn-outline-secondary ms-2"
-                @click="showShareModal = true"
-            >
-                <i class="me-1 bi bi-share" />
-                {{ $t("fightCard.share") }}
-            </button>
-            <div
-                v-if="editionMode"
-                id="editModeToast"
-                class="d-md-none toast show bg-success text-white position-fixed top-0 start-50 translate-middle-x mt-5"
-                role="alert"
-            >
-                <div
-                    class="toast-body text-center"
-                    @click="editionMode = false"
-                >
-                    {{ $t("fightCard.doneEditing") }}
-                </div>
+    <div
+        v-if="!editionMode"
+        class="d-flex align-items-center gap-1"
+    >
+        <div class="flex-grow-1"></div>
+        <button
+            type="button"
+            class="btn btn-outline-success"
+            :disabled="getNbFights() == 0"
+            @click="editionMode = !editionMode"
+        >
+            <i class="me-0 bi bi-arrows-expand" />
+            {{ $t("fightCard.changeOrder") }}
+        </button>
+        <button
+            type="button"
+            class="btn btn-outline-purple"
+            @click="showMatchupModal = true"
+        >
+            <i class="me-1 bi bi-magic" />
+            {{ $t("fightCard.matchmaker") }}
+        </button>
+        <button
+            type="button"
+            :disabled="getNbFights() == 0 && !editionMode"
+            class="btn btn-outline-secondary"
+            @click="showShareModal = true"
+        >
+            <i class="me-1 bi bi-share" />
+            {{ $t("fightCard.share") }}
+        </button>
+    </div>
+    <div
+        v-else
+        class="d-flex justify-content-center"
+    >
+        <button
+            type="button"
+            class="btn btn-outline-success active"
+            @click="editionMode = false"
+        >
+            <i class="me-1 bi bi-arrows-expand" />
+            {{ $t("fightCard.doneEditing") }}
+        </button>
+    </div>
+    <div class="border border-light-subtle rounded-3 p-1 mt-2">
+        <FightCardGridComponent
+            :fight-card="fightCard"
+            :edition-mode="editionMode"
+            @switch-fight="handleSwitchFight"
+            @remove-from-fight-card="handleRemoveFromFightCard"
+        />
+        <div
+            v-if="fightCard.length == 0"
+            class="justify-content-center m-4 text-center"
+        >
+            <div class="mb-4">
+                <i>{{ $t("fightCard.emptyCard") }}</i>
             </div>
-        </div>
-        <div class="border border-light-subtle rounded-3 p-1">
-            <FightCardGridComponent
-                :fight-card="fightCard"
-                :edition-mode="editionMode"
-                @switch-fight="handleSwitchFight"
-                @remove-from-fight-card="handleRemoveFromFightCard"
-            />
-            <div
-                v-if="fightCard.length == 0"
-                class="justify-content-center m-4 text-center"
-            >
-                <div class="mb-4">
-                    <i>{{ $t("fightCard.emptyCard") }}</i>
-                </div>
-                <div>
-                    {{ $t("fightCard.setupFirstFight") }}
-                    <router-link
-                        :to="{ name: 'selector' }"
-                        :class="{ active: $route.path.startsWith('/selector') }"
-                    >
-                        {{ $t("fightCard.selector") }}
-                    </router-link>
-                </div>
+            <div>
+                {{ $t("fightCard.setupFirstFight") }}
+                <router-link
+                    :to="{ name: 'selector' }"
+                    :class="{ active: $route.path.startsWith('/selector') }"
+                >
+                    {{ $t("fightCard.selector") }}
+                </router-link>
             </div>
         </div>
     </div>
@@ -76,7 +76,7 @@
         :enable-download-options="true"
         :download-callback="downloadCallback"
     />
-    <MatchupModalComponent v-model="showMatchupModal" />
+    <MatchmakerComponent v-model="showMatchupModal" />
 </template>
 
 <script setup lang="ts">
@@ -87,7 +87,7 @@ import FightCardGridComponent from "@/components/fight-card/fight-card-grid.comp
 import { useFightStore } from "@/stores/fight.store"
 import { useTournamentStore } from "@/stores/tournament.store"
 import ShareComponent from "@/components/shared/core/share.component.vue"
-import MatchupModalComponent from "@/components/tournament/matchup-modal.component.vue"
+import MatchmakerComponent from "@/components/tournament/matchmaker-modal.component.vue"
 import TournamentHeaderComponent from "@/components/shared/layout/tournament-header.component.vue"
 import { downloadWithDom } from "@/utils/download.utils"
 import { ExportOpenApi } from "@/api"

@@ -35,10 +35,7 @@
                 </div>
             </div>
             <div class="row pt-1 pb-1">
-                <div>
-                    <i class="bi bi-stopwatch me-1"></i>
-                    {{ $t("matchupDetails.fightDuration") }}: {{ getFightDuration(props.fight) }}
-                </div>
+                <div>{{ $t("matchupDetails.fightDuration") }}: {{ getFightDuration(props.fight) }}</div>
                 <div>{{ $t("matchupDetails.weightDifference") }}: {{ getWeightDifference(props.fight) }}</div>
                 <div>{{ $t("matchupDetails.ageDifference") }}: {{ getAgeDifferenceLocal(props.fight) }}</div>
                 <div>{{ $t("matchupDetails.fightCountDifference") }}: {{ getNbFightsDifference(props.fight) }}</div>

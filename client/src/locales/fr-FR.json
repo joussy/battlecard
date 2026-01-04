@@ -88,7 +88,7 @@
   "fightCard": {
     "matchmaker": "Générateur",
     "share": "Partager",
-    "doneEditing": "J'ai fini de modifier",
+    "doneEditing": "Quitter le mode édition",
     "emptyCard": "Votre carte de combat est vide",
     "setupFirstFight": "Configurez le premier combat en utilisant le",
     "selector": "Sélecteur",
@@ -98,7 +98,7 @@
     "noMatchesAvailable": "Aucun match disponible 😔",
     "addMoreBoxers": "Ajoutez plus de boxeurs au sélecteur pour trouver des appariements appropriés.",
     "addFight": "Ajouter le combat",
-    "changeOrder": "Changer l'ordre",
+    "changeOrder": "Mode édition",
     "viewRedBoxerProfile": "Voir le profil du boxeur rouge",
     "viewBlueBoxerProfile": "Voir le profil du boxeur bleu",
     "deleteFight": "Supprimer le combat",
