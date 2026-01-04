@@ -1,18 +1,19 @@
+@import 'multiple-select-vanilla/dist/styles/css/multiple-select.css';
 @import "./bootstrap.scss";
 
 // Define custom container max-widths
 .max-width-md {
-    width: 100%;
-    margin-left: auto;
-    margin-right: auto;
-  
-    max-width: map-get($container-max-widths, md);
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+
+  max-width: map-get($container-max-widths, md);
 }
 
 // Disable link styles globally
 a:link {
-    text-decoration: none;
-  }
+  text-decoration: none;
+}
 
 // Disable hover styles for specific elements
 .no-hover-style:hover {
@@ -21,7 +22,7 @@ a:link {
   border-color: inherit !important;
 }
 
-.text-decoration-none{
+.text-decoration-none {
   text-decoration: none;
   color: initial;
 }

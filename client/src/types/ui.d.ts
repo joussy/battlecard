@@ -14,6 +14,7 @@ export interface FacetFilters {
     age: { min: number | null; max: number | null }
     nbFights: { min: number | null; max: number | null }
     gender?: Gender
+    clubs?: string[]
 }
 export interface FacetSort {
     by: "weight" | "age" | "nbFights" | "name"
