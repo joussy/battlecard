@@ -87,4 +87,24 @@ export class BeaModality extends BaseModality {
     const categoryName = shortText ? category.shortName : category.name;
     return categoryName;
   }
+
+  getModalityScore(boxer1: Boxer, boxer2: Boxer): number {
+    let score = 0;
+    const ageDifference = Math.abs(
+      differenceInDays(boxer1.birthDate, boxer2.birthDate),
+    );
+    score += (Math.max(0, 730 - ageDifference) / 730) * 40;
+
+    if (boxer1.weight !== undefined && boxer2.weight !== undefined) {
+      const weightDifference = Math.abs(boxer1.weight - boxer2.weight);
+      score += (Math.max(0, 12 - weightDifference) / 12) * 40;
+    } else {
+      score += 20; // Partial score if weight is unknown
+    }
+
+    const fightsDifference = Math.abs(boxer1.nbFights - boxer2.nbFights);
+    score += (Math.max(0, 6 - fightsDifference) / 6) * 20;
+
+    return score;
+  }
 }

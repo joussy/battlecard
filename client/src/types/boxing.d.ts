@@ -24,6 +24,7 @@ export interface Opponent extends Boxer {
     modalityErrors: Readonly<ModalityError[]>
     weightDifference: number
     isEligible: boolean
+    modalityScore: number
     fightId?: string
 }
 

@@ -1791,6 +1791,10 @@
             "items": {
               "$ref": "#/components/schemas/ModalityErrorDao"
             }
+          },
+          "modalityScore": {
+            "type": "number",
+            "description": "Modality score for this opponent"
           }
         },
         "required": [
@@ -1805,7 +1809,8 @@
           "category",
           "categoryShort",
           "weightDifference",
-          "isEligible"
+          "isEligible",
+          "modalityScore"
         ]
       },
       "FightDto": {

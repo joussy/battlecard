@@ -62,13 +62,6 @@
                                 </a>
                                 <a
                                     class="dropdown-item"
-                                    @click="removeFromFightCard(fight.id)"
-                                >
-                                    <i class="bi bi-trash" />
-                                    {{ $t("fightCard.deleteFight") }}
-                                </a>
-                                <a
-                                    class="dropdown-item"
                                     @click="switchFight(fight.id)"
                                 >
                                     <i class="bi bi-arrow-left-right" />
@@ -80,6 +73,13 @@
                                 >
                                     <i class="bi bi-clipboard" />
                                     {{ $t("fightCard.copyFightToClipboard") }}
+                                </a>
+                                <a
+                                    class="dropdown-item text-danger"
+                                    @click="removeFromFightCard(fight.id)"
+                                >
+                                    <i class="bi bi-trash" />
+                                    {{ $t("fightCard.deleteFight") }}
                                 </a>
                             </li>
                         </ul>

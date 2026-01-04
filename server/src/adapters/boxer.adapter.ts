@@ -58,6 +58,7 @@ export function toOpponentDto(
   modality: IModality,
   selectedFights: number,
   modalityErrors: ModalityError[],
+  modalityScore: number,
   fightId?: string,
 ): OpponentDto {
   return {
@@ -68,6 +69,7 @@ export function toOpponentDto(
     fightId: fightId,
     selectedFights: selectedFights,
     modalityErrors: modalityErrors,
+    modalityScore: modalityScore,
   };
 }
 
