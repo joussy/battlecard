@@ -88,7 +88,7 @@
   "fightCard": {
     "matchmaker": "Matchmaker",
     "share": "Share",
-    "doneEditing": "I'm Done editing",
+    "doneEditing": "Exit editing mode",
     "emptyCard": "Your fight card is empty",
     "setupFirstFight": "Setup the first fight using the",
     "selector": "Selector",
@@ -98,7 +98,7 @@
     "noMatchesAvailable": "No matches available 😔",
     "addMoreBoxers": "Add more boxers to the selector to find suitable pairings.",
     "addFight": "Add fight",
-    "changeOrder": "Change order",
+    "changeOrder": "Editing mode",
     "viewRedBoxerProfile": "View red boxer profile",
     "viewBlueBoxerProfile": "View blue boxer profile",
     "deleteFight": "Delete fight",
@@ -154,8 +154,7 @@
   "opponentTile": {
     "addToFightCard": "Add to fight card",
     "removeFromFightCard": "Remove from fight card",
-    "watchProfile": "Watch Profile",
-    "copyClipboard": "Copy to clipboard"
+    "watchProfile": "Watch Profile"
   },
   "selector": {
     "addBoxer": "Add Boxer",
@@ -190,10 +189,8 @@
       "png": "PNG",
       "pdf": "PDF"
     },
-    "deleteBoxer": "Delete",
     "deleteBoxerConfirmation": "Delete boxer ?",
-    "selectedOpponents": "Selected opponents",
-    "noSelectedOpponents": "No opponents have been selected yet"
+    "selectedOpponents": "Selected opponents"
   },
   "settings": {
     "account": "Account",
