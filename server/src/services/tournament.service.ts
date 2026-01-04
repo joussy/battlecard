@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Not, Repository } from 'typeorm';
 import { Tournament } from '../entities/tournament.entity';
 import { TournamentBoxer } from '../entities/tournament_boxer.entity';
 import { Boxer } from '../entities/boxer.entity';
@@ -121,8 +121,14 @@ export class TournamentService {
     const boxerIds = tournamentBoxers
       .map((tb) => tb.boxerId)
       .filter((id) => id !== boxerId);
-    let boxers = await this.boxerRepository.findByIds(boxerIds);
-    boxers = boxers.filter((b) => b.gender === mainBoxer.gender);
+
+    const boxers = await this.boxerRepository.find({
+      where: boxerIds.map((id) => ({
+        id,
+        club: Not(mainBoxer.club),
+        gender: mainBoxer.gender,
+      })),
+    });
     if (boxers.length === 0) {
       return [];
     }
