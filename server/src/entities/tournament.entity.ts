@@ -33,4 +33,6 @@ export class Tournament {
 
   @Column({ nullable: true })
   city?: string;
+  @Column({ type: 'text', nullable: true })
+  additionalInfo?: string;
 }

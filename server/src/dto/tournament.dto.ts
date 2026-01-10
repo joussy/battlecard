@@ -6,6 +6,7 @@ import {
   MaxLength,
   IsArray,
   ValidateNested,
+  MinLength,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import { FightDto } from './fight.dto';
@@ -22,23 +23,24 @@ export class CreateTournamentDto {
   @IsNotEmpty()
   date: string;
 
-  /** Tournament address (optional) */
-  @IsOptional()
+  /** Tournament address */
   @IsString()
   @MaxLength(200)
-  address?: string;
+  address: string;
 
-  /** Tournament zip code (optional) */
-  @IsOptional()
+  /** Tournament zip code */
   @IsString()
   @MaxLength(10)
-  zipCode?: string;
+  @MinLength(0)
+  zipCode: string;
 
-  /** Tournament city (optional) */
-  @IsOptional()
+  /** Tournament city */
   @IsString()
   @MaxLength(100)
-  city?: string;
+  city: string;
+  /** Additional info */
+  @IsString()
+  additionalInfo: string;
 }
 
 export class UpdateTournamentDto extends CreateTournamentDto {}
@@ -52,14 +54,16 @@ export class TournamentDto {
   userId: string;
   /** Tournament date (YYYY-MM-DD) */
   date: string;
-  /** Tournament address (optional) */
-  address?: string;
-  /** Tournament zip code (optional) */
-  zipCode?: string;
-  /** Tournament city (optional) */
-  city?: string;
+  /** Tournament address */
+  address: string;
+  /** Tournament zip code */
+  zipCode: string;
+  /** Tournament city */
+  city: string;
   /** Formatted address combining street, city, and zipCode */
   formattedAddress?: string;
+  /** Additional info */
+  additionalInfo: string;
 }
 
 export class SharedFightCardDto {
@@ -73,8 +77,22 @@ export class SharedFightCardDto {
   @Type(() => FightDto)
   fights: FightDto[];
 
-  /** Tournament date (optional) */
+  /** Tournament date*/
   @IsOptional()
   @IsString()
   tournamentDate?: string;
+
+  /** Additional info */
+  @IsString()
+  additionalInfo: string;
+
+  @IsString()
+  @IsOptional()
+  address: string;
+  @IsString()
+  @IsOptional()
+  zipCode: string;
+  @IsString()
+  @IsOptional()
+  city: string;
 }

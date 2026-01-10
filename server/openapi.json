@@ -1503,26 +1503,34 @@
           },
           "address": {
             "type": "string",
-            "description": "Tournament address (optional)"
+            "description": "Tournament address"
           },
           "zipCode": {
             "type": "string",
-            "description": "Tournament zip code (optional)"
+            "description": "Tournament zip code"
           },
           "city": {
             "type": "string",
-            "description": "Tournament city (optional)"
+            "description": "Tournament city"
           },
           "formattedAddress": {
             "type": "string",
             "description": "Formatted address combining street, city, and zipCode"
+          },
+          "additionalInfo": {
+            "type": "string",
+            "description": "Additional info"
           }
         },
         "required": [
           "id",
           "name",
           "userId",
-          "date"
+          "date",
+          "address",
+          "zipCode",
+          "city",
+          "additionalInfo"
         ]
       },
       "CreateTournamentDto": {
@@ -1538,20 +1546,28 @@
           },
           "address": {
             "type": "string",
-            "description": "Tournament address (optional)"
+            "description": "Tournament address"
           },
           "zipCode": {
             "type": "string",
-            "description": "Tournament zip code (optional)"
+            "description": "Tournament zip code"
           },
           "city": {
             "type": "string",
-            "description": "Tournament city (optional)"
+            "description": "Tournament city"
+          },
+          "additionalInfo": {
+            "type": "string",
+            "description": "Additional info"
           }
         },
         "required": [
           "name",
-          "date"
+          "date",
+          "address",
+          "zipCode",
+          "city",
+          "additionalInfo"
         ]
       },
       "UpdateTournamentDto": {
@@ -1567,20 +1583,28 @@
           },
           "address": {
             "type": "string",
-            "description": "Tournament address (optional)"
+            "description": "Tournament address"
           },
           "zipCode": {
             "type": "string",
-            "description": "Tournament zip code (optional)"
+            "description": "Tournament zip code"
           },
           "city": {
             "type": "string",
-            "description": "Tournament city (optional)"
+            "description": "Tournament city"
+          },
+          "additionalInfo": {
+            "type": "string",
+            "description": "Additional info"
           }
         },
         "required": [
           "name",
-          "date"
+          "date",
+          "address",
+          "zipCode",
+          "city",
+          "additionalInfo"
         ]
       },
       "Gender": {
@@ -2363,12 +2387,29 @@
           },
           "tournamentDate": {
             "type": "string",
-            "description": "Tournament date (optional)"
+            "description": "Tournament date"
+          },
+          "additionalInfo": {
+            "type": "string",
+            "description": "Additional info"
+          },
+          "address": {
+            "type": "string"
+          },
+          "zipCode": {
+            "type": "string"
+          },
+          "city": {
+            "type": "string"
           }
         },
         "required": [
           "tournamentName",
-          "fights"
+          "fights",
+          "additionalInfo",
+          "address",
+          "zipCode",
+          "city"
         ]
       },
       "GenerateFightCardTokenDto": {

@@ -16,5 +16,9 @@ export function toSharedFightCardDto(
       ? format(new Date(tournament.date), 'dd/MM/yyyy')
       : undefined,
     fights: fights.map((fight) => toFightDto(fight, modality)),
+    additionalInfo: tournament.additionalInfo || '',
+    address: tournament.address || '',
+    zipCode: tournament.zipCode || '',
+    city: tournament.city || '',
   };
 }

@@ -1,6 +1,6 @@
 <template>
     <template v-if="tournament">
-        <div class="d-flex mb-3 justify-content-between align-items-center">
+        <div class="d-flex mb-2 justify-content-between align-items-center">
             <router-link
                 :to="{ path: '/' }"
                 class="d-flex align-items-center text-decoration-none"
@@ -20,9 +20,25 @@
                 {{ $t("sharedFightCard.download") }}
             </button>
         </div>
-        <div class="d-flex mb-3 justify-content-between align-items-center">
-            <h5>{{ tournament?.tournamentName }}</h5>
+        <div class="d-flex mb-1 justify-content-between align-items-baseline">
+            <h5>{{ tournament.tournamentName }}</h5>
             {{ tournamentDate }}
+        </div>
+        <div
+            v-if="fullAddress"
+            class="mb-3"
+        >
+            <i class="bi bi-geo-alt-fill me-2"></i>
+            <a
+                :href="`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(fullAddress)}`"
+                target="_blank"
+                rel="noopener noreferrer"
+            >
+                {{ fullAddress }}
+            </a>
+        </div>
+        <div class="mb-3 fst-italic text-muted">
+            {{ tournament.additionalInfo }}
         </div>
         <div class="border border-light-subtle rounded-3 p-1">
             <FightCardGridComponent
@@ -91,6 +107,7 @@ import ApiAdapter from "@/adapters/api.adapter"
 import ShareComponent from "@/components/shared/core/share.component.vue"
 import IconComponent from "@/components/shared/core/icon.component.vue"
 import { downloadWithDom } from "@/utils/download.utils"
+import { getFullAddress } from "@/utils/string.utils"
 
 const { t: $t, locale } = useI18n()
 
@@ -100,6 +117,13 @@ const showShareOffcanvas = ref(false)
 const roToken = ref<string | null>(null)
 const tournament = ref<SharedFightCard | null>(null)
 const accessDenied = ref(false)
+
+const fullAddress = computed(() => {
+    if (!tournament.value) {
+        return ""
+    }
+    return getFullAddress(tournament.value.address, tournament.value.zipCode, tournament.value.city)
+})
 
 const tournamentDate = computed(() => {
     return tournament.value?.tournamentDate

@@ -24,3 +24,16 @@ export function getAgeDifference(date1: Date, date2: Date): string {
     const duration = intervalToDuration({ start, end })
     return formatDuration(duration, { format: ["years", "months", "days"] })
 }
+
+export function getFullAddress(
+    address: string | undefined,
+    zipCode: string | undefined,
+    city: string | undefined
+): string {
+    // Build a pretty address string, skipping empty parts and using proper separators
+    const parts = []
+    if (address) parts.push(address.trim())
+    if (zipCode) parts.push(zipCode.trim())
+    if (city) parts.push(city.trim())
+    return parts.filter(Boolean).join(", ")
+}

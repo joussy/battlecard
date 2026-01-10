@@ -3,7 +3,7 @@ export function formatAddress(properties?: {
   city?: string;
   zipCode?: string;
 }): string {
-  return [properties?.street, properties?.city, properties?.zipCode]
+  return [properties?.street, properties?.zipCode, properties?.city]
     .filter(Boolean)
     .join(', ');
 }

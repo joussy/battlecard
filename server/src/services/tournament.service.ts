@@ -208,6 +208,7 @@ export class TournamentService {
       address: 'Gymnase Louis Volcair',
       zipCode: '35200',
       city: 'Rennes',
+      additionalInfo: 'Weight-in at 6 PM.',
     };
     const dbTournament = await this.tournamentRepository.save(
       toTournamentFromCreateDto(fakeTournament, user.id),

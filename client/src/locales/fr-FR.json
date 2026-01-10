@@ -244,6 +244,7 @@
         "checkLink": "Veuillez vérifier le lien ou contacter le propriétaire de la carte de combat."
     },
     "tournamentAdd": {
+        "additionalInfoExportNotice": "Cette information sera affichée sur la carte de combat exportée.",
         "addEvent": "Ajouter un nouvel événement",
         "editEvent": "Modifier l'événement",
         "name": "Nom",
@@ -256,7 +257,8 @@
         "updateEvent": "Mettre à jour l'événement",
         "validation": {
             "required": "Ce champ est requis"
-        }
+        },
+        "additionalInfo": "Informations importantes"
     },
     "tournaments": {
         "addTournament": "Ajouter un tournoi",

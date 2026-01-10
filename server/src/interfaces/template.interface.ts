@@ -20,6 +20,7 @@ export interface FightCardTemplate {
   formattedAddress?: string;
   downloadOptions: DownloadOptionsDto;
   cornerColspan: number;
+  additionalInfo?: string;
 }
 
 export interface FightCardI18nTemplate {
