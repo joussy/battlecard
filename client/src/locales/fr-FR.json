@@ -86,7 +86,11 @@
         "weightMeetsRequirements": "Ce boxeur répond aux exigences de poids, étant dans les 3 kg du poids de l'adversaire."
     },
     "fightCard": {
+        "analyticsBoxersPerClub": "Nombre de boxeurs engagés par club",
+        "nbBoxers": "Nombre de boxeurs",
         "matchmaker": "Générateur",
+        "analyticsGenderStats": "Boxeurs par genre",
+        "analyticsTotalFightDuration": "Durée totale des combats",
         "share": "Partager",
         "doneEditing": "Quitter le mode édition",
         "emptyCard": "Votre carte de combat est vide",
@@ -103,7 +107,8 @@
         "viewBlueBoxerProfile": "Voir le profil du boxeur bleu",
         "deleteFight": "Supprimer le combat",
         "invertCorners": "Inverser les coins bleu/rouge",
-        "copyFightToClipboard": "Copier le combat dans le presse-papiers"
+        "copyFightToClipboard": "Copier le combat dans le presse-papiers",
+        "analytics": "Statistiques"
     },
     "import": {
         "title": "Importer des boxeurs",

@@ -86,6 +86,10 @@
     "weightMeetsRequirements": "This boxer meets the weight requirements, being within 3 kg of the opponent's weight."
   },
   "fightCard": {
+    "analyticsBoxersPerClub": "Number of boxers per club",
+    "analyticsGenderStats": "Boxers by gender",
+    "analyticsTotalFightDuration": "Total fight duration",
+    "nbBoxers": "Number of boxers",
     "matchmaker": "Matchmaker",
     "share": "Share",
     "doneEditing": "Exit editing mode",
@@ -103,7 +107,8 @@
     "viewBlueBoxerProfile": "View blue boxer profile",
     "deleteFight": "Delete fight",
     "invertCorners": "Invert blue/red corners",
-    "copyFightToClipboard": "Copy fight to clipboard"
+    "copyFightToClipboard": "Copy fight to clipboard",
+    "analytics": "Analytics"
   },
   "import": {
     "title": "Import boxers",
