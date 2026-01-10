@@ -80,6 +80,7 @@
             :edition-mode="editionMode"
             @switch-fight="handleSwitchFight"
             @remove-from-fight-card="handleRemoveFromFightCard"
+            @show-fight-details-modal="openFightDetailsModal"
         />
         <div
             v-if="fightCard.length == 0"
@@ -106,6 +107,10 @@
         :download-callback="downloadCallback"
     />
     <MatchmakerComponent v-model="showMatchupModal" />
+    <FightDetailsModalComponent
+        v-model="showFightDetailsModal"
+        :fight-id="selectedFightId"
+    />
     <AnalyticsComponent v-model="showAnalyticsModal" />
 </template>
 
@@ -122,12 +127,14 @@ import AnalyticsComponent from "@/components/tournament/analytics-modal.componen
 import TournamentHeaderComponent from "@/components/shared/layout/tournament-header.component.vue"
 import { downloadWithDom } from "@/utils/download.utils"
 import { ExportOpenApi } from "@/api"
+import FightDetailsModalComponent from "@/components/fight-card/fight-details-modal.component.vue"
 
 const { t: $t } = useI18n()
 const showShareModal = ref(false)
 const showMatchupModal = ref(false)
 const showAnalyticsModal = ref(false)
-
+const showFightDetailsModal = ref(false)
+const selectedFightId = ref<string | undefined>(undefined)
 const fightStore = useFightStore()
 const tournamentStore = useTournamentStore()
 
@@ -225,5 +232,10 @@ const downloadCallback = async (fileType: string, downloadOptions: DownloadOptio
     }
     console.log("Downloaded file:", res)
     downloadWithDom(res, `fight-card.${fileType}`)
+}
+
+const openFightDetailsModal = (fightId: string) => {
+    selectedFightId.value = fightId
+    showFightDetailsModal.value = true
 }
 </script>

@@ -48,11 +48,22 @@
                             <li>
                                 <a
                                     class="dropdown-item"
+                                    @click="showFightDetailsModal(fight.id)"
+                                >
+                                    <i class="bi bi-info-circle" />
+                                    {{ $t("fightCard.viewFightDetails") }}
+                                </a>
+                            </li>
+                            <li>
+                                <a
+                                    class="dropdown-item"
                                     @click="$router.push({ name: 'selector-tile', params: { id: fight.boxer1.id } })"
                                 >
                                     <i class="bi bi-eye" />
                                     {{ $t("fightCard.viewRedBoxerProfile") }}
                                 </a>
+                            </li>
+                            <li>
                                 <a
                                     class="dropdown-item"
                                     @click="$router.push({ name: 'selector-tile', params: { id: fight.boxer2.id } })"
@@ -60,6 +71,8 @@
                                     <i class="bi bi-eye" />
                                     {{ $t("fightCard.viewBlueBoxerProfile") }}
                                 </a>
+                            </li>
+                            <li>
                                 <a
                                     class="dropdown-item"
                                     @click="switchFight(fight.id)"
@@ -67,6 +80,8 @@
                                     <i class="bi bi-arrow-left-right" />
                                     {{ $t("fightCard.invertCorners") }}
                                 </a>
+                            </li>
+                            <li>
                                 <a
                                     class="dropdown-item"
                                     @click="copyFightToClipboard(fight)"
@@ -74,6 +89,8 @@
                                     <i class="bi bi-clipboard" />
                                     {{ $t("fightCard.copyFightToClipboard") }}
                                 </a>
+                            </li>
+                            <li>
                                 <a
                                     class="dropdown-item text-danger"
                                     @click="removeFromFightCard(fight.id)"
@@ -156,6 +173,7 @@ const props = withDefaults(defineProps<Props>(), {
 const emit = defineEmits<{
     switchFight: [fightId: string]
     removeFromFightCard: [fightId: string]
+    showFightDetailsModal: [fightId: string]
 }>()
 
 const fightStore = useFightStore()
@@ -229,6 +247,10 @@ const removeFromFightCard = (fightId: string) => {
 const copyFightToClipboard = (fight: Fight) => {
     const text = getFightClipboardText(fight)
     navigator.clipboard.writeText(text)
+}
+
+const showFightDetailsModal = (fightId: string) => {
+    emit("showFightDetailsModal", fightId)
 }
 </script>
 
