@@ -8,6 +8,7 @@
     "createOne": "Create one",
     "license": "License",
     "lastName": "Last Name",
+    "nbFights": "Record",
     "firstName": "First Name",
     "gender": "Gender",
     "female": "Female",
@@ -17,6 +18,7 @@
     "club": "Club",
     "saveBoxer": "Save Boxer",
     "validation": {
+      "nbFightsPositive": "Record must be a positive number",
       "required": "This field is required",
       "weightRequired": "This field is required and must be a number greater than or equal to 1",
       "validNumber": "Please enter a valid number (digits only, with optional comma or dot)"

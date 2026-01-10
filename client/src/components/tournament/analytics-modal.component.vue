@@ -40,11 +40,11 @@
                 <div class="mb-4">
                     <h6>{{ $t("fightCard.analyticsGenderStats") }}</h6>
                     <div class="d-flex gap-4 justify-content-center">
-                        <div class="stat-box bg-light border rounded p-3 text-center">
+                        <div class="stat-box border rounded p-3 text-center">
                             <div class="fw-bold">{{ $t("clipboard.female") }}</div>
                             <div class="display-6">{{ genderStats.female }}</div>
                         </div>
-                        <div class="stat-box bg-light border rounded p-3 text-center">
+                        <div class="stat-box border rounded p-3 text-center">
                             <div class="fw-bold">{{ $t("clipboard.male") }}</div>
                             <div class="display-6">{{ genderStats.male }}</div>
                         </div>

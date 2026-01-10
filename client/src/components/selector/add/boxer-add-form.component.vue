@@ -196,6 +196,28 @@
                 >{{ errors.club }}</span
             >
         </div>
+        <div class="mb-3">
+            <label
+                for="nbFights"
+                class="form-label"
+            >
+                <i class="bi bi-trophy me-2"></i>{{ $t("addBoxer.nbFights") }}
+            </label>
+            <input
+                v-model="nbFights"
+                class="form-control"
+                type="number"
+                min="0"
+                :class="{
+                    'is-invalid': errors.nbFights?.length ?? 0 > 0,
+                }"
+            />
+            <span
+                name="nbFights"
+                class="invalid-feedback"
+                >{{ errors.nbFights }}</span
+            >
+        </div>
         <button
             type="submit"
             class="btn btn-success"
@@ -248,6 +270,16 @@ defineRule("genderRequired", (value: string) => {
     }
     return true
 })
+defineRule("nbFightsRequired", (value: string) => {
+    if (value === undefined || value === null || value === "") {
+        return $t("addBoxer.validation.required")
+    }
+    const num = Number(value)
+    if (!Number.isInteger(num) || num < 0) {
+        return $t("addBoxer.validation.nbFightsPositive")
+    }
+    return true
+})
 
 const props = defineProps<{ boxer?: Boxer | null }>()
 const emit = defineEmits<{ (e: "boxer-saved", payload: unknown): void }>()
@@ -263,6 +295,7 @@ const { defineField, handleSubmit, errors } = useForm({
         club: "required",
         birthdate: "required",
         gender: "genderRequired",
+        nbFights: "nbFightsRequired",
     },
 })
 
@@ -274,6 +307,7 @@ const [license] = defineField("license")
 const [club] = defineField("club")
 const [gender] = defineField("gender")
 const [birthdate] = defineField("birthdate")
+const [nbFights] = defineField("nbFights")
 
 const clubsAutoCompleteList = ref<string[]>([])
 
@@ -288,6 +322,7 @@ watch(
         club.value = b?.club ?? ""
         birthdate.value = isValid(b?.birthDate) ? format(b!.birthDate, "yyyy-MM-dd") : ""
         gender.value = b ? b.gender : ""
+        nbFights.value = b?.nbFights ?? 0
     },
     { immediate: true }
 )
@@ -305,7 +340,7 @@ const onSubmit = handleSubmit(async (form: GenericObject) => {
         gender: form.gender == Gender.FEMALE ? Gender.FEMALE : Gender.MALE,
         weight: parseInt(form.weight),
         license: form.license,
-        nbFights: 0,
+        nbFights: parseInt(form.nbFights),
         tournamentId: tournamentStore.currentTournamentId,
     }
 

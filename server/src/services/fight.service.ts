@@ -210,12 +210,18 @@ export class FightService {
           // Check modality errors for this pair
           const modalityErrors = modality.getModalityErrors(boxer1, boxer2);
           const fightDuration = modality.getFightDuration(boxer1, boxer2);
+          const selectedFightsBoxer1 = existingFights.filter(
+            (f) => f.boxer1Id === boxer1.id || f.boxer2Id === boxer1.id,
+          )?.length;
+          const selectedFightsBoxer2 = existingFights.filter(
+            (f) => f.boxer1Id === boxer2.id || f.boxer2Id === boxer2.id,
+          )?.length;
           if (modalityErrors.length === 0) {
             // Create a virtual fight for this valid matchup
             const virtualFight = {
               id: `virtual-${boxer1.id}-${boxer2.id}`,
-              boxer1: toBoxerDto(boxer1, modality),
-              boxer2: toBoxerDto(boxer2, modality),
+              boxer1: toBoxerDto(boxer1, modality, selectedFightsBoxer1),
+              boxer2: toBoxerDto(boxer2, modality, selectedFightsBoxer2),
               tournamentId,
               order: validMatchups.length + 1,
               rounds: fightDuration.rounds,
@@ -227,6 +233,15 @@ export class FightService {
         }
       }
     }
+
+    // Sort validMatchups by ascending sum of selectedFights for boxer1 and boxer2
+    validMatchups.sort((a, b) => {
+      const aSum =
+        (a.boxer1.selectedFights ?? 0) + (a.boxer2.selectedFights ?? 0);
+      const bSum =
+        (b.boxer1.selectedFights ?? 0) + (b.boxer2.selectedFights ?? 0);
+      return aSum - bSum;
+    });
 
     return validMatchups;
   }

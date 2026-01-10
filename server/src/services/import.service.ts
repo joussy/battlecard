@@ -261,7 +261,7 @@ export class ImportService {
           lastName: boxer.lastName,
           firstName: boxer.firstName,
           birthDate: boxer.birthDate,
-          nbFights: 0,
+          nbFights: boxer.fightRecord,
           club: boxer.club,
           weight: boxer.weight,
           gender: boxer.gender as Gender,
