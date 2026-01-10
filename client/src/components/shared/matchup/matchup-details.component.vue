@@ -32,6 +32,16 @@
                         <i class="bi bi-person-vcard"></i> {{ boxer.license }} -
                         {{ boxer.category }}
                     </div>
+                    <div>
+                        <PossibleBadgeComponent
+                            v-if="boxer.eligibleFights !== undefined"
+                            :eligible-opponents="boxer.eligibleFights"
+                            class="me-1"
+                        />
+                    </div>
+                    <div>
+                        <LinkedFightsBadgeComponent :boxer="boxer" />
+                    </div>
                 </div>
             </div>
             <div class="row pt-1 pb-1">
@@ -53,6 +63,8 @@ import {
 } from "@/utils/string.utils"
 import { Gender } from "@/api"
 import IconComponent from "@/components/shared/core/icon.component.vue"
+import PossibleBadgeComponent from "@/components/shared/badges/possible-badge.component.vue"
+import LinkedFightsBadgeComponent from "@/components/shared/badges/linked-fights-badge.component.vue"
 
 const { t: $t } = useI18n()
 

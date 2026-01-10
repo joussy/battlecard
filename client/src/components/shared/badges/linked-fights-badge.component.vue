@@ -16,15 +16,11 @@
 
 <script setup lang="ts">
 import { Boxer } from "@/types/boxing"
-import { ModalityErrorDao } from "@/api"
 import IconComponent from "@/components/shared/core/icon.component.vue"
 
 interface Props {
     boxer: Boxer
-    modalityErrors?: ModalityErrorDao[] | null
 }
 
-withDefaults(defineProps<Props>(), {
-    modalityErrors: null,
-})
+withDefaults(defineProps<Props>(), {})
 </script>
