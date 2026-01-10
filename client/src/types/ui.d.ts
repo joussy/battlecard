@@ -16,7 +16,7 @@ export interface FacetFilters {
     gender?: Gender
 }
 export interface FacetSort {
-    by: "weight" | "age" | "nbFights" | "name"
+    by: "weight" | "age" | "nbFights" | "name" | "club"
     direction: "asc" | "desc"
 }
 export interface Facets {

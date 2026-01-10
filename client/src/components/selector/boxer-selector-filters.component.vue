@@ -209,6 +209,21 @@
                         >{{ $t("import.fights") }}</label
                     >
                 </div>
+                <div class="form-check">
+                    <input
+                        id="sortClub"
+                        v-model="facets.sort.by"
+                        class="form-check-input"
+                        type="radio"
+                        name="sortBy"
+                        value="club"
+                    />
+                    <label
+                        class="form-check-label"
+                        for="sortClub"
+                        >{{ $t("selector.club") }}</label
+                    >
+                </div>
                 <!-- Direction toggle -->
                 <div class="mt-2">
                     <div

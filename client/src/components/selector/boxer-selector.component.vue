@@ -212,6 +212,17 @@ function filterWithFacets(boxers: Boxer[]) {
             })
         } else if (by === "nbFights") {
             filteredBoxers.sort((a, b) => a.nbFights - b.nbFights)
+        } else if (by === "club") {
+            filteredBoxers.sort((a, b) => {
+                const clubA = (a.club || "").toLowerCase()
+                const clubB = (b.club || "").toLowerCase()
+                if (clubA === clubB) {
+                    const nameA = `${a.firstName} ${a.lastName}`.toLowerCase()
+                    const nameB = `${b.firstName} ${b.lastName}`.toLowerCase()
+                    return nameA.localeCompare(nameB)
+                }
+                return clubA.localeCompare(clubB)
+            })
         }
         if (facets.sort.direction === "desc") {
             filteredBoxers.reverse()
