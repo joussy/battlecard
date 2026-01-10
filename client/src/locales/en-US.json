@@ -195,7 +195,8 @@
       "pdf": "PDF"
     },
     "deleteBoxerConfirmation": "Delete boxer ?",
-    "selectedOpponents": "Selected opponents"
+    "selectedOpponents": "Selected opponents",
+    "club": "Gym"
   },
   "settings": {
     "account": "Account",
