@@ -1516,13 +1516,21 @@
           "formattedAddress": {
             "type": "string",
             "description": "Formatted address combining street, city, and zipCode"
+          },
+          "additionalInfo": {
+            "type": "string",
+            "description": "Additional info (optional)"
           }
         },
         "required": [
           "id",
           "name",
           "userId",
-          "date"
+          "date",
+          "address",
+          "zipCode",
+          "city",
+          "additionalInfo"
         ]
       },
       "CreateTournamentDto": {
@@ -1547,11 +1555,19 @@
           "city": {
             "type": "string",
             "description": "Tournament city (optional)"
+          },
+          "additionalInfo": {
+            "type": "string",
+            "description": "Additional info (optional)"
           }
         },
         "required": [
           "name",
-          "date"
+          "date",
+          "address",
+          "zipCode",
+          "city",
+          "additionalInfo"
         ]
       },
       "UpdateTournamentDto": {
@@ -1576,11 +1592,19 @@
           "city": {
             "type": "string",
             "description": "Tournament city (optional)"
+          },
+          "additionalInfo": {
+            "type": "string",
+            "description": "Additional info (optional)"
           }
         },
         "required": [
           "name",
-          "date"
+          "date",
+          "address",
+          "zipCode",
+          "city",
+          "additionalInfo"
         ]
       },
       "Gender": {
@@ -2364,11 +2388,28 @@
           "tournamentDate": {
             "type": "string",
             "description": "Tournament date (optional)"
+          },
+          "additionalInfo": {
+            "type": "string",
+            "description": "Additional info (optional)"
+          },
+          "address": {
+            "type": "string"
+          },
+          "zipCode": {
+            "type": "string"
+          },
+          "city": {
+            "type": "string"
           }
         },
         "required": [
           "tournamentName",
-          "fights"
+          "fights",
+          "additionalInfo",
+          "address",
+          "zipCode",
+          "city"
         ]
       },
       "GenerateFightCardTokenDto": {

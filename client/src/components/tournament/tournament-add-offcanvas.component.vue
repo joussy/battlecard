@@ -36,6 +36,22 @@
             </div>
             <div class="mb-3">
                 <label
+                    for="additionalInfo"
+                    class="form-label"
+                >
+                    <i class="bi bi-info-circle me-2"></i>{{ $t("tournamentAdd.additionalInfo") }}
+                </label>
+                <textarea
+                    v-model="additionalInfo"
+                    class="form-control"
+                    rows="3"
+                ></textarea>
+                <div class="form-text text-muted">
+                    {{ $t("tournamentAdd.additionalInfoExportNotice") }}
+                </div>
+            </div>
+            <div class="mb-3">
+                <label
                     for="date"
                     class="form-label"
                 >
@@ -167,7 +183,7 @@ const [date] = defineField("date")
 const [address] = defineField("address")
 const [zipCode] = defineField("zipCode")
 const [city] = defineField("city")
-
+const [additionalInfo] = defineField("additionalInfo")
 const mode = computed<"create" | "edit">(() => (props.tournament ? "edit" : "create"))
 
 // Sync prop into fields
@@ -180,6 +196,7 @@ watch(
         address.value = t?.address || ""
         zipCode.value = t?.zipCode || ""
         city.value = t?.city || ""
+        additionalInfo.value = t?.additionalInfo || ""
     },
     { immediate: true }
 )
@@ -188,9 +205,10 @@ const onSubmit = handleSubmit(async (form: GenericObject) => {
     const formTournament = {
         name: form.name,
         date: form.date,
-        address: form.address || undefined,
-        zipCode: form.zipCode || undefined,
-        city: form.city || undefined,
+        address: form.address || "",
+        zipCode: form.zipCode || "",
+        city: form.city || "",
+        additionalInfo: form.additionalInfo || "",
     }
     let tournamentId = ""
     if (props.tournament) {

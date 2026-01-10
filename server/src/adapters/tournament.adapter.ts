@@ -12,14 +12,15 @@ export function toTournamentDto(tournament: Tournament): TournamentDto {
     name: tournament.name,
     userId: tournament.userId,
     date: tournament.date,
-    address: tournament.address,
-    zipCode: tournament.zipCode,
-    city: tournament.city,
+    address: tournament.address || '',
+    zipCode: tournament.zipCode || '',
+    city: tournament.city || '',
     formattedAddress: formatAddress({
       street: tournament.address,
       city: tournament.city,
       zipCode: tournament.zipCode,
     }),
+    additionalInfo: tournament.additionalInfo || '',
   };
 }
 
@@ -35,6 +36,7 @@ export function toTournament(
   entity.address = tournament.address;
   entity.zipCode = tournament.zipCode;
   entity.city = tournament.city;
+  entity.additionalInfo = tournament.additionalInfo;
   return entity;
 }
 
@@ -49,6 +51,7 @@ export function toTournamentFromCreateDto(
   entity.address = tournament.address;
   entity.zipCode = tournament.zipCode;
   entity.city = tournament.city;
+  entity.additionalInfo = tournament.additionalInfo;
   return entity;
 }
 
@@ -63,5 +66,6 @@ export function toTournamentFromUpdateDto(
   entity.address = tournament.address;
   entity.zipCode = tournament.zipCode;
   entity.city = tournament.city;
+  entity.additionalInfo = tournament.additionalInfo;
   return entity;
 }

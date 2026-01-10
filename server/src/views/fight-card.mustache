@@ -46,8 +46,9 @@
     <div class="header d-flex">
       <div class="qr-code"></div>
       <div class="d-flex flex-column m-auto align-items-center">
-        <span class="fs-2">{{title}}</span>
+        <span class="fs-3">{{title}}</span>
         <span class="fs-5">{{subtitle}} - {{formattedAddress}}</span>
+        <span class="fs-6 fst-italic">{{additionalInfo}}</span>
       </div>
       <div class="qr-code">
         {{{qrCodeSvg}}}
@@ -58,7 +59,10 @@
     {{^qrCodeSvg}}
     <div class="header d-flex justify-content-between align-items-center">
       <span class="fs-2">{{title}}</span>
-      <span class="fs-5">{{subtitle}} - {{formattedAddress}}</span>
+      <div>
+        <div class="fs-5">{{subtitle}} - {{formattedAddress}}</div>
+        <div class="fs-6 fst-italic text-end">{{additionalInfo}}</div>
+      </div>
     </div>
     {{/qrCodeSvg}}
     {{/downloadOptions.displayTitle}}

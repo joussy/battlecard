@@ -41,6 +41,7 @@ export function toFightCardTemplate(
     subtitle: format(tournament.date, 'dd/MM/yyyy'),
     title: tournament.name,
     cornerColspan: colspan,
+    additionalInfo: tournament.additionalInfo,
     formattedAddress: formatAddress({
       street: tournament.address,
       city: tournament.city,

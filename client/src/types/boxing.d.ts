@@ -77,12 +77,17 @@ export interface Tournament {
     zipCode?: string
     city?: string
     formattedAddress?: string
+    additionalInfo: string
 }
 
 export interface SharedFightCard {
     tournamentName: string
     fights: Fight[]
     tournamentDate?: string
+    additionalInfo: string
+    address?: string
+    zipCode?: string
+    city?: string
 }
 
 export interface DownloadOptions {

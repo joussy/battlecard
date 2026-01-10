@@ -66,6 +66,7 @@ export default class ApiAdapter {
             zipCode: tournament.zipCode,
             city: tournament.city,
             formattedAddress: tournament.formattedAddress,
+            additionalInfo: tournament.additionalInfo,
         }
     }
 
@@ -75,9 +76,10 @@ export default class ApiAdapter {
             name: tournament.name,
             userId: tournament.userId,
             date: tournament.date,
-            address: tournament.address,
-            zipCode: tournament.zipCode,
-            city: tournament.city,
+            address: tournament.address || "",
+            zipCode: tournament.zipCode || "",
+            city: tournament.city || "",
+            additionalInfo: tournament.additionalInfo,
         }
     }
 
@@ -85,9 +87,10 @@ export default class ApiAdapter {
         return {
             name: tournament.name,
             date: tournament.date,
-            address: tournament.address,
-            zipCode: tournament.zipCode,
-            city: tournament.city,
+            address: tournament.address || "",
+            zipCode: tournament.zipCode || "",
+            city: tournament.city || "",
+            additionalInfo: tournament.additionalInfo,
         }
     }
 
@@ -109,6 +112,10 @@ export default class ApiAdapter {
             tournamentName: sharedFightCardApi.tournamentName,
             fights: sharedFightCardApi.fights.map(ApiAdapter.toFight),
             tournamentDate: sharedFightCardApi.tournamentDate,
+            additionalInfo: sharedFightCardApi.additionalInfo,
+            address: sharedFightCardApi.address,
+            zipCode: sharedFightCardApi.zipCode,
+            city: sharedFightCardApi.city,
         }
     }
 }

@@ -244,6 +244,8 @@
     "checkLink": "Please check the link or contact the owner of the fight card."
   },
   "tournamentAdd": {
+    "additionalInfo": "Additional information",
+    "additionalInfoExportNotice": "This information will be displayed in the exported fight card.",
     "addEvent": "Add new event",
     "editEvent": "Edit event",
     "name": "Name",
@@ -256,7 +258,8 @@
     "updateEvent": "Update event",
     "validation": {
       "required": "This field is required"
-    }
+    },
+    "additionalInfo": "Additional infos"
   },
   "tournaments": {
     "addTournament": "Add tournament",
