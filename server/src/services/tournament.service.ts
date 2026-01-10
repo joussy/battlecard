@@ -91,14 +91,28 @@ export class TournamentService {
     if (boxerIds.length === 0) return [];
     const boxers = await this.boxerRepository.findByIds(boxerIds);
     return boxers.map((b) => {
-      const selectedFights = fights.filter(
-        (f) => f.boxer1Id === b.id || f.boxer2Id === b.id,
-      ).length;
-      return toBoxerDto(b, this.modalityService.getModality(), selectedFights);
+      const possibleOpponents = this.getPossibleOpponents(
+        b,
+        fights,
+        boxers.filter((other) => other.id !== b.id),
+      );
+      const eligibleOpponents = possibleOpponents.filter(
+        (o) => o.modalityErrors?.length == 0,
+      );
+      return toBoxerDto(
+        b,
+        this.modalityService.getModality(),
+        fights.filter((f) => this.IsBoxerInFight(b.id, f)).length,
+        eligibleOpponents.length,
+      );
     });
   }
 
-  async getPossibleOpponents(
+  private IsBoxerInFight(boxerId: string, fight: Fight): boolean {
+    return fight.boxer1Id === boxerId || fight.boxer2Id === boxerId;
+  }
+
+  async fetchAndGetPossibleOpponents(
     boxerId: string,
     tournamentId: string,
     user: AuthenticatedUser,
@@ -135,28 +149,41 @@ export class TournamentService {
     const fights = await this.fightRepository.find({
       where: [{ tournamentId }],
     });
-    const opponents = boxers.map((o) => {
+    const opponents = this.getPossibleOpponents(mainBoxer, fights, boxers);
+    return opponents;
+  }
+
+  getPossibleOpponents(
+    boxer: Boxer,
+    fights: Fight[],
+    opponents: Boxer[],
+  ): OpponentDto[] {
+    const possibleOpponents: OpponentDto[] = [];
+    for (const opponent of opponents) {
       const fightId = fights.find(
         (f) =>
-          (f.boxer1Id === boxerId && f.boxer2Id === o.id) ||
-          (f.boxer2Id === boxerId && f.boxer1Id === o.id),
+          (f.boxer1Id === boxer.id && f.boxer2Id === opponent.id) ||
+          (f.boxer2Id === boxer.id && f.boxer1Id === opponent.id),
       )?.id;
-      const selectedFights = fights.filter(
-        (f) => f.boxer1Id === o.id || f.boxer2Id === o.id,
-      )?.length;
       const modality = this.modalityService.getModality();
-      const modalityErrors = modality.getModalityErrors(mainBoxer, o);
-      const modalityScore = modality.getModalityScore(mainBoxer, o);
-      return toOpponentDto(
-        o,
-        modality,
-        selectedFights,
-        modalityErrors,
-        modalityScore,
-        fightId,
+      const modalityErrors = modality.getModalityErrors(boxer, opponent);
+      const modalityScore = modality.getModalityScore(boxer, opponent);
+      const selectedFights = fights.filter(
+        (f) => f.boxer1Id === opponent.id || f.boxer2Id === opponent.id,
+      )?.length;
+      possibleOpponents.push(
+        toOpponentDto(
+          opponent,
+          modality,
+          selectedFights,
+          modalityErrors,
+          modalityScore,
+          fightId,
+        ),
       );
-    });
-    return opponents;
+    }
+
+    return possibleOpponents;
   }
 
   async validateTournamentAccess(

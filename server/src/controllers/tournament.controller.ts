@@ -100,7 +100,7 @@ export class TournamentController {
       params.tournamentId,
       user.id,
     );
-    return this.tournamentService.getPossibleOpponents(
+    return this.tournamentService.fetchAndGetPossibleOpponents(
       params.boxerId,
       params.tournamentId,
       user,

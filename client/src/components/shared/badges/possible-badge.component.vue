@@ -1,16 +1,26 @@
 <template>
     <span class="badge text-bg-light">
-        <IconComponent name="group-of-people" />
-        <span class="number-text">{{ selected }}</span>
+        <i
+            class="bi bi-badge"
+            :class="iconClass()"
+        ></i>
     </span>
 </template>
 
 <script setup lang="ts">
-import IconComponent from "@/components/shared/core/icon.component.vue"
-
 interface Props {
-    selected: number
+    eligibleOpponents: number
 }
 
-defineProps<Props>()
+const props = defineProps<Props>()
+const iconClass = function (): string {
+    //if no fight, if one fight, if more than one fight
+    if (props.eligibleOpponents === 0) {
+        return "bi-reception-0 text-danger"
+    } else if (props.eligibleOpponents === 1) {
+        return "bi-reception-3"
+    } else {
+        return "bi-reception-4 text-success"
+    }
+}
 </script>
