@@ -4,10 +4,7 @@
         modal-dialog-class="modal-fullscreen-sm-down"
     >
         <div class="header-modal d-flex">
-            <h5 class="modal-title flex-grow-1">
-                <i class="bi bi-info-circle me-1"></i>
-                {{ $t("fightcard.fightDetails") }}
-            </h5>
+            <h5 class="modal-title flex-grow-1"></h5>
             <button
                 type="button"
                 class="btn-close"
