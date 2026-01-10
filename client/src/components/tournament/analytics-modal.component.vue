@@ -78,7 +78,9 @@ const boxersByClub = computed(() => {
             clubMap[fight.boxer2.club].add(fight.boxer2.id)
         }
     }
-    return Object.entries(clubMap).map(([club, ids]) => ({ club, count: ids.size }))
+    return Object.entries(clubMap)
+        .map(([club, ids]) => ({ club, count: ids.size }))
+        .sort((a, b) => a.club.localeCompare(b.club))
 })
 
 const genderStats = computed(() => {
