@@ -2,7 +2,7 @@
     <TournamentHeaderComponent />
     <div
         v-if="!editionMode"
-        class="d-flex gap-1"
+        class="d-flex align-items-center gap-1"
     >
         <div class="flex-grow-1"></div>
         <button
