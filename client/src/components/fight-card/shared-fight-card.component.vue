@@ -44,6 +44,7 @@
             <FightCardGridComponent
                 :fight-card="tournament?.fights || []"
                 :edition-mode="false"
+                :read-only="true"
             />
             <div
                 v-if="tournament?.fights.length == 0"
@@ -126,13 +127,15 @@ const fullAddress = computed(() => {
 })
 
 const tournamentDate = computed(() => {
-    return tournament.value?.tournamentDate
-        ? new Date(tournament.value.tournamentDate).toLocaleDateString(locale.value, {
-              year: "numeric",
-              month: "long",
-              day: "numeric",
-          })
-        : ""
+    const dateStr = tournament.value?.tournamentDate
+    if (!dateStr) return ""
+    const date = new Date(dateStr)
+    if (isNaN(date.getTime())) return ""
+    return date.toLocaleDateString(locale.value, {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+    })
 })
 
 onMounted(async () => {

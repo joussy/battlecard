@@ -37,7 +37,7 @@
                     <div class="d-flex flex-column justify-content-center align-items-center">
                         <div>{{ fight.order }}</div>
                         <button
-                            v-if="!props.editionMode"
+                            v-if="!props.editionMode && !props.readOnly"
                             class="btn btn-sm btn-outline-secondary"
                             data-bs-toggle="dropdown"
                             aria-expanded="false"
@@ -164,10 +164,12 @@ interface Props {
         boxer2: Boxer
     })[]
     editionMode?: boolean
+    readOnly?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
     editionMode: false,
+    readOnly: false,
 })
 
 const emit = defineEmits<{
