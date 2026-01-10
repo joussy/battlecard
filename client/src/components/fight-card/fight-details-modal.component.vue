@@ -3,7 +3,7 @@
         v-model="showModal"
         modal-dialog-class="modal-fullscreen-sm-down"
     >
-        <div class="header-modal d-flex">
+        <div class="fightdetails-header d-flex">
             <h5 class="modal-title flex-grow-1"></h5>
             <button
                 type="button"
@@ -49,6 +49,7 @@ import { Fight } from "@/types/boxing"
 import MatchupDetailsComponent from "@/components/shared/matchup/matchup-details.component.vue"
 import { useTournamentStore } from "@/stores/tournament.store"
 import ModalComponent from "../shared/core/modal.component.vue"
+import { log } from "node:console"
 
 const { t: $t } = useI18n()
 const showModal = defineModel<boolean>()
@@ -77,11 +78,9 @@ watch(
 
 function loadFights() {
     if (!tournamentStore.currentTournamentId) {
-        console.error("No tournament selected")
         return
     }
     if (props.fightId === undefined) {
-        console.error("No fight ID provided to FightDetailsModalComponent")
         return
     }
     fights.value = fightStore.fights
