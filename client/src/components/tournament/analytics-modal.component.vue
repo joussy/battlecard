@@ -9,11 +9,14 @@
                 {{ $t("fightCard.analytics") }}
             </h5>
         </template>
-        <div>
+        <div class="d-flex flex-column justify-content-center align-items-center min-vh-50">
             <div>
                 <div class="analytics-header d-flex justify-content-between"></div>
             </div>
-            <div class="analytics-content mt-3">
+            <div
+                class="analytics-content mt-3 w-100"
+                style="max-width: 600px"
+            >
                 <div class="mb-4">
                     <h6>{{ $t("fightCard.analyticsTotalFightDuration") }}</h6>
                     <div class="fs-4 text-center">
@@ -22,7 +25,7 @@
                 </div>
                 <h6>{{ $t("fightCard.analyticsBoxersPerClub") }}</h6>
                 <div class="table-responsive">
-                    <table class="table table-striped table-bordered table-hover align-middle w-auto">
+                    <table class="table table-striped table-bordered table-hover align-middle w-auto mx-auto">
                         <tbody>
                             <tr
                                 v-for="row in boxersByClub"
@@ -36,7 +39,7 @@
                 </div>
                 <div class="mb-4">
                     <h6>{{ $t("fightCard.analyticsGenderStats") }}</h6>
-                    <div class="d-flex gap-4">
+                    <div class="d-flex gap-4 justify-content-center">
                         <div class="stat-box bg-light border rounded p-3 text-center">
                             <div class="fw-bold">{{ $t("clipboard.female") }}</div>
                             <div class="display-6">{{ genderStats.female }}</div>
@@ -84,20 +87,22 @@ const boxersByClub = computed(() => {
 })
 
 const genderStats = computed(() => {
-    let male = 0
-    let female = 0
-    // Count gender only for boxers actually engaged in fights
+    const maleIds = new Set<string>()
+    const femaleIds = new Set<string>()
+    // Count each boxer only once for gender, using their id
     for (const fight of fightStore.fights) {
-        if (fight.boxer1 && fight.boxer1.gender) {
-            if (fight.boxer1.gender === "male" || fight.boxer1.gender === "MALE") male++
-            else if (fight.boxer1.gender === "female" || fight.boxer1.gender === "FEMALE") female++
+        if (fight.boxer1 && fight.boxer1.id && fight.boxer1.gender) {
+            if (fight.boxer1.gender === "male" || fight.boxer1.gender === "MALE") maleIds.add(fight.boxer1.id)
+            else if (fight.boxer1.gender === "female" || fight.boxer1.gender === "FEMALE")
+                femaleIds.add(fight.boxer1.id)
         }
-        if (fight.boxer2 && fight.boxer2.gender) {
-            if (fight.boxer2.gender === "male" || fight.boxer2.gender === "MALE") male++
-            else if (fight.boxer2.gender === "female" || fight.boxer2.gender === "FEMALE") female++
+        if (fight.boxer2 && fight.boxer2.id && fight.boxer2.gender) {
+            if (fight.boxer2.gender === "male" || fight.boxer2.gender === "MALE") maleIds.add(fight.boxer2.id)
+            else if (fight.boxer2.gender === "female" || fight.boxer2.gender === "FEMALE")
+                femaleIds.add(fight.boxer2.id)
         }
     }
-    return { male, female }
+    return { male: maleIds.size, female: femaleIds.size }
 })
 
 const totalFightDuration = computed(() => {
