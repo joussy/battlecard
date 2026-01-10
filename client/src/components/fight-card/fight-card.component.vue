@@ -31,33 +31,35 @@
             <i class="me-1 bi bi-share" />
             {{ $t("fightCard.share") }}
         </button>
-        <button
-            type="button"
-            :disabled="getNbFights() == 0"
-            class="btn btn-outline-secondary"
-            data-bs-toggle="dropdown"
-            aria-expanded="false"
-        >
-            <i class="me-1 bi bi-three-dots-vertical" />
-        </button>
-        <ul class="dropdown-menu">
-            <li>
-                <a
-                    class="dropdown-item d-sm-none"
-                    @click="showMatchupModal = true"
-                >
-                    <i class="bi bi-magic" />
-                    {{ $t("fightCard.matchmaker") }}
-                </a>
-                <a
-                    class="dropdown-item"
-                    @click="showAnalyticsModal = true"
-                >
-                    <i class="bi bi-bar-chart" />
-                    {{ $t("fightCard.analytics") }}
-                </a>
-            </li>
-        </ul>
+        <div class="dropdown">
+            <button
+                type="button"
+                :disabled="getNbFights() == 0"
+                class="btn btn-outline-secondary"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+            >
+                <i class="me-1 bi bi-three-dots-vertical" />
+            </button>
+            <ul class="dropdown-menu">
+                <li>
+                    <a
+                        class="dropdown-item d-sm-none"
+                        @click="showMatchupModal = true"
+                    >
+                        <i class="bi bi-magic" />
+                        {{ $t("fightCard.matchmaker") }}
+                    </a>
+                    <a
+                        class="dropdown-item"
+                        @click="showAnalyticsModal = true"
+                    >
+                        <i class="bi bi-bar-chart" />
+                        {{ $t("fightCard.analytics") }}
+                    </a>
+                </li>
+            </ul>
+        </div>
     </div>
     <div
         v-else
