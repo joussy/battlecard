@@ -91,7 +91,6 @@
     "analyticsBoxersPerClub": "Number of boxers per club",
     "analyticsGenderStats": "Boxers on fight card",
     "analyticsTotalFightDuration": "Total fight duration",
-    "nbBoxers": "Number of boxers",
     "matchmaker": "Matchmaker",
     "share": "Share",
     "doneEditing": "Exit editing mode",
@@ -112,6 +111,9 @@
     "copyFightToClipboard": "Copy fight to clipboard",
     "analytics": "Analytics",
     "viewFightDetails": "Fight details"
+  },
+  "fightcard": {
+    "fight": "Fight"
   },
   "import": {
     "title": "Import boxers",
@@ -276,8 +278,5 @@
     "createFakeTournamentCTA": "Create a fake tournament",
     "confirmDeleteMessage": "Do you really want to delete the tournament '{name}' ?",
     "delete": "Delete"
-  },
-  "fightcard": {
-    "fight": "Fight"
   }
 }

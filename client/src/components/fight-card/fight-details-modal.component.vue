@@ -49,7 +49,6 @@ import { Fight } from "@/types/boxing"
 import MatchupDetailsComponent from "@/components/shared/matchup/matchup-details.component.vue"
 import { useTournamentStore } from "@/stores/tournament.store"
 import ModalComponent from "../shared/core/modal.component.vue"
-import { log } from "node:console"
 
 const { t: $t } = useI18n()
 const showModal = defineModel<boolean>()
