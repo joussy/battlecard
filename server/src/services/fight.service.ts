@@ -234,6 +234,15 @@ export class FightService {
       }
     }
 
+    // Sort validMatchups by ascending sum of selectedFights for boxer1 and boxer2
+    validMatchups.sort((a, b) => {
+      const aSum =
+        (a.boxer1.selectedFights ?? 0) + (a.boxer2.selectedFights ?? 0);
+      const bSum =
+        (b.boxer1.selectedFights ?? 0) + (b.boxer2.selectedFights ?? 0);
+      return aSum - bSum;
+    });
+
     return validMatchups;
   }
 }
