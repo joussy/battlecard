@@ -63,7 +63,7 @@
         "delete": "Supprimer",
         "edit": "Modifier",
         "kg": "kg",
-        "of": "de"
+        "of": "/"
     },
     "confirmModal": {
         "confirm": "Supprimer",
@@ -89,9 +89,8 @@
     },
     "fightCard": {
         "analyticsBoxersPerClub": "Nombre de boxeurs engagés par club",
-        "nbBoxers": "Nombre de boxeurs",
         "matchmaker": "Générateur",
-        "analyticsGenderStats": "Boxeurs par genre",
+        "analyticsGenderStats": "Boxeurs engagés",
         "analyticsTotalFightDuration": "Durée totale des combats",
         "share": "Partager",
         "doneEditing": "Quitter le mode édition",
@@ -110,7 +109,11 @@
         "deleteFight": "Supprimer le combat",
         "invertCorners": "Inverser les coins bleu/rouge",
         "copyFightToClipboard": "Copier le combat dans le presse-papiers",
-        "analytics": "Statistiques"
+        "analytics": "Statistiques",
+        "viewFightDetails": "Détails du combat"
+    },
+    "fightcard": {
+        "fight": "Combat"
     },
     "import": {
         "title": "Importer des boxeurs",

@@ -63,7 +63,7 @@
     "delete": "Delete",
     "edit": "Edit",
     "kg": "kg",
-    "of": "of"
+    "of": "/"
   },
   "confirmModal": {
     "confirm": "Confirm",
@@ -89,9 +89,8 @@
   },
   "fightCard": {
     "analyticsBoxersPerClub": "Number of boxers per club",
-    "analyticsGenderStats": "Boxers by gender",
+    "analyticsGenderStats": "Boxers on fight card",
     "analyticsTotalFightDuration": "Total fight duration",
-    "nbBoxers": "Number of boxers",
     "matchmaker": "Matchmaker",
     "share": "Share",
     "doneEditing": "Exit editing mode",
@@ -110,7 +109,11 @@
     "deleteFight": "Delete fight",
     "invertCorners": "Invert blue/red corners",
     "copyFightToClipboard": "Copy fight to clipboard",
-    "analytics": "Analytics"
+    "analytics": "Analytics",
+    "viewFightDetails": "Fight details"
+  },
+  "fightcard": {
+    "fight": "Fight"
   },
   "import": {
     "title": "Import boxers",

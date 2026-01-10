@@ -5,7 +5,7 @@
         class="modal fade"
         tabindex="-1"
     >
-        <div class="modal-dialog modal-dialog-centered">
+        <div :class="['modal-dialog', 'modal-dialog-centered', props.modalDialogClass]">
             <div class="modal-content">
                 <div
                     v-if="slots.header"
@@ -36,6 +36,9 @@ const model = defineModel<boolean>()
 const modal = ref<Modal | null>(null)
 const modalEl = ref<HTMLElement | null>(null)
 const slots = useSlots()
+const props = defineProps<{
+    modalDialogClass?: string
+}>()
 
 watch(
     () => model.value,
