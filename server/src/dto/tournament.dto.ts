@@ -23,22 +23,22 @@ export class CreateTournamentDto {
   @IsNotEmpty()
   date: string;
 
-  /** Tournament address (optional) */
+  /** Tournament address */
   @IsString()
   @MaxLength(200)
   address: string;
 
-  /** Tournament zip code (optional) */
+  /** Tournament zip code */
   @IsString()
   @MaxLength(10)
   @MinLength(0)
   zipCode: string;
 
-  /** Tournament city (optional) */
+  /** Tournament city */
   @IsString()
   @MaxLength(100)
   city: string;
-  /** Additional info (optional) */
+  /** Additional info */
   @IsString()
   additionalInfo: string;
 }
@@ -54,15 +54,15 @@ export class TournamentDto {
   userId: string;
   /** Tournament date (YYYY-MM-DD) */
   date: string;
-  /** Tournament address (optional) */
+  /** Tournament address */
   address: string;
-  /** Tournament zip code (optional) */
+  /** Tournament zip code */
   zipCode: string;
-  /** Tournament city (optional) */
+  /** Tournament city */
   city: string;
   /** Formatted address combining street, city, and zipCode */
   formattedAddress?: string;
-  /** Additional info (optional) */
+  /** Additional info */
   additionalInfo: string;
 }
 
@@ -77,12 +77,12 @@ export class SharedFightCardDto {
   @Type(() => FightDto)
   fights: FightDto[];
 
-  /** Tournament date (optional) */
+  /** Tournament date*/
   @IsOptional()
   @IsString()
   tournamentDate?: string;
 
-  /** Additional info (optional) */
+  /** Additional info */
   @IsString()
   additionalInfo: string;
 

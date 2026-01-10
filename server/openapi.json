@@ -1503,15 +1503,15 @@
           },
           "address": {
             "type": "string",
-            "description": "Tournament address (optional)"
+            "description": "Tournament address"
           },
           "zipCode": {
             "type": "string",
-            "description": "Tournament zip code (optional)"
+            "description": "Tournament zip code"
           },
           "city": {
             "type": "string",
-            "description": "Tournament city (optional)"
+            "description": "Tournament city"
           },
           "formattedAddress": {
             "type": "string",
@@ -1519,7 +1519,7 @@
           },
           "additionalInfo": {
             "type": "string",
-            "description": "Additional info (optional)"
+            "description": "Additional info"
           }
         },
         "required": [
@@ -1546,19 +1546,19 @@
           },
           "address": {
             "type": "string",
-            "description": "Tournament address (optional)"
+            "description": "Tournament address"
           },
           "zipCode": {
             "type": "string",
-            "description": "Tournament zip code (optional)"
+            "description": "Tournament zip code"
           },
           "city": {
             "type": "string",
-            "description": "Tournament city (optional)"
+            "description": "Tournament city"
           },
           "additionalInfo": {
             "type": "string",
-            "description": "Additional info (optional)"
+            "description": "Additional info"
           }
         },
         "required": [
@@ -1583,19 +1583,19 @@
           },
           "address": {
             "type": "string",
-            "description": "Tournament address (optional)"
+            "description": "Tournament address"
           },
           "zipCode": {
             "type": "string",
-            "description": "Tournament zip code (optional)"
+            "description": "Tournament zip code"
           },
           "city": {
             "type": "string",
-            "description": "Tournament city (optional)"
+            "description": "Tournament city"
           },
           "additionalInfo": {
             "type": "string",
-            "description": "Additional info (optional)"
+            "description": "Additional info"
           }
         },
         "required": [
@@ -2387,11 +2387,11 @@
           },
           "tournamentDate": {
             "type": "string",
-            "description": "Tournament date (optional)"
+            "description": "Tournament date"
           },
           "additionalInfo": {
             "type": "string",
-            "description": "Additional info (optional)"
+            "description": "Additional info"
           },
           "address": {
             "type": "string"

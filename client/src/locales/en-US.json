@@ -258,8 +258,7 @@
     "updateEvent": "Update event",
     "validation": {
       "required": "This field is required"
-    },
-    "additionalInfo": "Additional infos"
+    }
   },
   "tournaments": {
     "addTournament": "Add tournament",
