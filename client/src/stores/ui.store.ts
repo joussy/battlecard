@@ -24,7 +24,7 @@ export const useUiStore = defineStore("ui", () => {
         }
     }
     const theme = ref<UiTheme>(initialUiStore.theme || "auto")
-    const language = ref<UiLanguage>(initialUiStore.language || "en")
+    const language = ref<UiLanguage>(initialUiStore.language || getDefaultLanguage())
     const hideNonMatchableOpponents = ref(initialUiStore.hideNonMatchableOpponents ?? false)
     const hideFightersWithNoMatch = ref(initialUiStore.hideFightersWithNoMatch ?? false)
     const jwtToken = ref<string | undefined>(initialUiStore.jwtToken)
@@ -163,7 +163,14 @@ export const useUiStore = defineStore("ui", () => {
     function setLanguage(lang: UiLanguage) {
         language.value = lang
         locale.value = lang
-        // Update i18n locale - this will be handled by the component that calls this
+    }
+
+    function getDefaultLanguage(): UiLanguage {
+        if (!initialUiStore.language && typeof navigator !== "undefined" && navigator.language) {
+            // Use only the language part (e.g., 'en' from 'en-US')
+            return navigator.language.split("-")[0] as UiLanguage
+        }
+        return "en"
     }
 
     return {
