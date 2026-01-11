@@ -9,12 +9,11 @@ export const useTournamentStore = defineStore("tournament", () => {
     const tournaments = ref<Tournament[]>([])
     const loading = ref(false)
     const error = ref<string | null>(null)
-    // Map to uiStore's currentTournamentId
-    const uiStore = useUiStore()
+    // Map to uiStore's currentTournamentId without initializing uiStore at store setup time
     const currentTournamentId = computed({
-        get: () => uiStore.currentTournamentId,
+        get: () => useUiStore().currentTournamentId,
         set: (val: string | null) => {
-            uiStore.currentTournamentId = val
+            useUiStore().currentTournamentId = val
         },
     })
 
