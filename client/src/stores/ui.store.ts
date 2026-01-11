@@ -12,23 +12,42 @@ export const useUiStore = defineStore("ui", () => {
 
     const restored = ref<boolean>(false)
     const account = ref<UserAccount | null>(null)
-    const theme = ref<UiTheme>("auto")
-    const language = ref<UiLanguage>("en")
-    const hideNonMatchableOpponents = ref(false)
-    const hideFightersWithNoMatch = ref(false)
-    const jwtToken = ref<string | undefined>(undefined)
-    const facets = ref<Facets | null>(null)
-    const currentTournamentId = ref<string | null>(localStorage.getItem("currentTournamentId"))
 
-    // Watch for changes and update localStorage
-    watch(currentTournamentId, (newVal) => {
-        if (newVal !== null && newVal !== undefined) {
-            console.log("Setting currentTournamentId in localStorage:", newVal)
-            localStorage.setItem("currentTournamentId", newVal)
-        } else {
-            localStorage.removeItem("currentTournamentId")
+    // Load from localStorage 'uiStore' key if available
+    let initialUiStore: Partial<UiStorage> = {}
+    if (typeof window !== "undefined") {
+        const uiStoreStr = localStorage.getItem("uiStore")
+        if (uiStoreStr) {
+            try {
+                initialUiStore = JSON.parse(uiStoreStr)
+            } catch {}
         }
-    })
+    }
+    const theme = ref<UiTheme>(initialUiStore.theme || "auto")
+    const language = ref<UiLanguage>(initialUiStore.language || "en")
+    const hideNonMatchableOpponents = ref(initialUiStore.hideNonMatchableOpponents ?? false)
+    const hideFightersWithNoMatch = ref(initialUiStore.hideFightersWithNoMatch ?? false)
+    const jwtToken = ref<string | undefined>(initialUiStore.jwtToken)
+    const facets = ref<Facets | null>(initialUiStore.facets ?? null)
+    const currentTournamentId = ref<string | null>(initialUiStore.currentTournamentId ?? null)
+
+    // Watch for changes and update 'uiStore' localStorage key
+    watch(
+        [theme, language, hideNonMatchableOpponents, hideFightersWithNoMatch, jwtToken, facets, currentTournamentId],
+        () => {
+            const localStorageData: UiStorage = {
+                theme: theme.value,
+                language: language.value,
+                hideNonMatchableOpponents: hideNonMatchableOpponents.value,
+                hideFightersWithNoMatch: hideFightersWithNoMatch.value,
+                jwtToken: jwtToken.value,
+                facets: facets.value,
+                currentTournamentId: currentTournamentId.value,
+            }
+            localStorage.setItem("uiStore", JSON.stringify(localStorageData))
+        },
+        { deep: true }
+    )
 
     function authenticate() {
         const width = 500
@@ -114,41 +133,22 @@ export const useUiStore = defineStore("ui", () => {
     }
 
     async function loadUiStore() {
-        let localStorageData: UiStorage | undefined
-        console.debug("loading ui ... ")
-        const localStorageDataString = localStorage.getItem("uiStore")
-        if (localStorageDataString) {
-            localStorageData = JSON.parse(localStorageDataString)
-        }
-        if (localStorageData) {
-            theme.value = localStorageData.theme
-            language.value = localStorageData.language || "en"
-            hideNonMatchableOpponents.value = localStorageData.hideNonMatchableOpponents
-            hideFightersWithNoMatch.value = localStorageData.hideFightersWithNoMatch
-            jwtToken.value = localStorageData.jwtToken
-            clearFacets()
-            if (localStorageData.facets) {
-                facets.value = localStorageData.facets
-            }
-            if (jwtToken.value) {
-                await setTokenAndFetchUser()
-            }
-            console.debug("store loaded")
-        } else {
-            console.debug("no store available ... ")
-            // Set default language based on browser language
-            const browserLang = navigator.language.split("-")[0] as UiLanguage
-            if (browserLang === "fr" || browserLang === "en") {
-                language.value = browserLang
-            } else {
-                language.value = "en"
-            }
+        if (jwtToken.value) {
+            await setTokenAndFetchUser()
         }
         listenWindowThemeChanges()
         setTheme(theme.value)
         setLanguage(language.value)
         restored.value = true
-        return localStorageData
+        return {
+            theme: theme.value,
+            language: language.value,
+            hideNonMatchableOpponents: hideNonMatchableOpponents.value,
+            hideFightersWithNoMatch: hideFightersWithNoMatch.value,
+            jwtToken: jwtToken.value,
+            facets: facets.value,
+            currentTournamentId: currentTournamentId.value,
+        }
     }
 
     function listenWindowThemeChanges() {
@@ -158,19 +158,6 @@ export const useUiStore = defineStore("ui", () => {
             }
             document.documentElement.setAttribute("data-bs-theme", e.matches ? "dark" : "light")
         })
-    }
-
-    function saveUiStore() {
-        if (!restored.value) return
-        const localStorageData: UiStorage = {
-            theme: theme.value,
-            language: language.value,
-            hideNonMatchableOpponents: hideNonMatchableOpponents.value,
-            hideFightersWithNoMatch: hideFightersWithNoMatch.value,
-            jwtToken: jwtToken.value,
-            facets: facets.value,
-        }
-        localStorage.setItem("uiStore", JSON.stringify(localStorageData))
     }
 
     function setTheme(t: UiTheme) {
@@ -205,7 +192,6 @@ export const useUiStore = defineStore("ui", () => {
         clearFacet,
         loadUiStore,
         listenWindowThemeChanges,
-        saveUiStore,
         setTheme,
         setLanguage,
     }

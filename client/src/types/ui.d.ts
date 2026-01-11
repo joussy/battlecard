@@ -5,6 +5,7 @@ export interface UiStorage {
     hideNonMatchableOpponents: boolean
     hideFightersWithNoMatch: boolean
     facets: Facets | null
+    currentTournamentId: string | null
 }
 
 // Facet interfaces
