@@ -1,5 +1,8 @@
 <template>
-    <ModalComponent v-model="showModal">
+    <ModalComponent
+        v-model="showModal"
+        modal-dialog-class="modal-fullscreen-sm-down"
+    >
         <template #header>
             <h5
                 id="matchupModalLabel"

@@ -17,7 +17,7 @@
             class="d-flex flex-column align-items-center justify-content-center mt-3 gap-1"
         >
             <button
-                class="btn btn-primary"
+                class="btn btn-secondary"
                 :disabled="!canGoPrevious"
                 @click="goToPrevious"
             >
@@ -28,7 +28,7 @@
                 {{ fights.length }}
             </div>
             <button
-                class="btn btn-primary"
+                class="btn btn-secondary"
                 :disabled="!canGoNext"
                 @click="goToNext"
             >

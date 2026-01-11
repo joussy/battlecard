@@ -1,4 +1,5 @@
 import { differenceInYears, format, formatDuration, intervalToDuration } from "date-fns"
+import { getDateFnsLocale } from "./date.utils"
 
 export function getFightDurationAsString(rounds: number, roundDurationAsSeconds: number): string {
     const minutes = Math.floor(roundDurationAsSeconds / 60)
@@ -22,7 +23,7 @@ export function getAgeDifference(date1: Date, date2: Date): string {
     const start = date1 < date2 ? date1 : date2
     const end = date1 < date2 ? date2 : date1
     const duration = intervalToDuration({ start, end })
-    return formatDuration(duration, { format: ["years", "months", "days"] })
+    return formatDuration(duration, { format: ["years", "months", "days"], locale: getDateFnsLocale() })
 }
 
 export function getFullAddress(
