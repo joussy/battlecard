@@ -1,36 +1,48 @@
 import { defineStore } from "pinia"
+import { ref, computed } from "vue"
 import type { Tournament } from "@/types/boxing.d"
 import ApiAdapter from "@/adapters/api.adapter"
 import { TournamentOpenApi } from "@/api"
+import { useUiStore } from "./ui.store"
 
-export const useTournamentStore = defineStore("tournament", {
-    state: () => ({
-        tournaments: [] as Tournament[],
-        loading: false,
-        error: null as string | null,
-        currentTournamentId: undefined as string | undefined,
-    }),
-    actions: {
-        async fetchTournaments() {
-            this.loading = true
-            this.error = null
-            try {
-                const apiTournaments = await TournamentOpenApi.findAll()
-                if (apiTournaments) {
-                    this.tournaments = apiTournaments.map(ApiAdapter.toTournament)
-                }
-            } catch (e: unknown) {
-                this.error = e instanceof Error ? e.message : "Unknown error"
-            } finally {
-                this.loading = false
+export const useTournamentStore = defineStore("tournament", () => {
+    const tournaments = ref<Tournament[]>([])
+    const loading = ref(false)
+    const error = ref<string | null>(null)
+    // Map to uiStore's currentTournamentId
+    const uiStore = useUiStore()
+    const currentTournamentId = computed({
+        get: () => uiStore.currentTournamentId,
+        set: (val: string | null) => {
+            uiStore.currentTournamentId = val
+        },
+    })
+
+    async function fetchTournaments() {
+        loading.value = true
+        error.value = null
+        try {
+            const apiTournaments = await TournamentOpenApi.findAll()
+            if (apiTournaments) {
+                tournaments.value = apiTournaments.map(ApiAdapter.toTournament)
             }
-        },
-        setCurrentTournament(tournamentId?: string) {
-            this.currentTournamentId = tournamentId
-        },
-        getCurrentTournament(): Tournament | undefined {
-            const tournament = this.tournaments.find((t) => t.id === this.currentTournamentId)
-            return tournament
-        },
-    },
+        } catch (e: unknown) {
+            error.value = e instanceof Error ? e.message : "Unknown error"
+        } finally {
+            loading.value = false
+        }
+    }
+
+    const getCurrentTournament = computed(() => {
+        return tournaments.value.find((t) => t.id === currentTournamentId.value)
+    })
+
+    return {
+        tournaments,
+        loading,
+        error,
+        currentTournamentId,
+        fetchTournaments,
+        getCurrentTournament,
+    }
 })

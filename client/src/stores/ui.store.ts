@@ -1,9 +1,8 @@
 import { defineStore } from "pinia"
-import { ref } from "vue"
+import { ref, watch } from "vue"
 import { useRouter } from "vue-router"
 import type { UiTheme, UiLanguage, UiStorage, Facets } from "@/types/ui"
 import type { UserAccount } from "@/types/user"
-import { useTournamentStore } from "./tournament.store"
 import { User, UserOpenApi } from "@/api"
 import { useI18n } from "vue-i18n"
 
@@ -19,6 +18,17 @@ export const useUiStore = defineStore("ui", () => {
     const hideFightersWithNoMatch = ref(false)
     const jwtToken = ref<string | undefined>(undefined)
     const facets = ref<Facets | null>(null)
+    const currentTournamentId = ref<string | null>(localStorage.getItem("currentTournamentId"))
+
+    // Watch for changes and update localStorage
+    watch(currentTournamentId, (newVal) => {
+        if (newVal !== null && newVal !== undefined) {
+            console.log("Setting currentTournamentId in localStorage:", newVal)
+            localStorage.setItem("currentTournamentId", newVal)
+        } else {
+            localStorage.removeItem("currentTournamentId")
+        }
+    })
 
     function authenticate() {
         const width = 500
@@ -152,13 +162,11 @@ export const useUiStore = defineStore("ui", () => {
 
     function saveUiStore() {
         if (!restored.value) return
-        const tournamentStore = useTournamentStore()
         const localStorageData: UiStorage = {
             theme: theme.value,
             language: language.value,
             hideNonMatchableOpponents: hideNonMatchableOpponents.value,
             hideFightersWithNoMatch: hideFightersWithNoMatch.value,
-            currentTournamentId: tournamentStore.currentTournamentId || null,
             jwtToken: jwtToken.value,
             facets: facets.value,
         }
@@ -185,6 +193,7 @@ export const useUiStore = defineStore("ui", () => {
         account,
         theme,
         language,
+        currentTournamentId,
         hideNonMatchableOpponents,
         hideFightersWithNoMatch,
         jwtToken,

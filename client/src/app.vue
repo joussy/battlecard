@@ -60,10 +60,10 @@ onMounted(async () => {
         { deep: true }
     )
 
-    const localStorageData = await uiStore.loadUiStore()
-    if (localStorageData?.currentTournamentId) {
-        tournamentStore.setCurrentTournament(localStorageData.currentTournamentId)
-    }
+    await uiStore.loadUiStore()
+    // if (localStorageData?.currentTournamentId) {
+    //     tournamentStore.setCurrentTournament(localStorageData.currentTournamentId)
+    // }
 })
 </script>
 

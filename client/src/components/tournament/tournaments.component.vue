@@ -123,7 +123,7 @@ onMounted(() => {
 })
 
 const setCurrentTournament = (tournament: Tournament) => {
-    tournamentStore.setCurrentTournament(tournament.id)
+    tournamentStore.currentTournamentId = tournament.id
     router.push("selector")
 }
 
@@ -136,7 +136,7 @@ const onTournamentSaved = async (tournamentId: string) => {
     await tournamentStore.fetchTournaments()
     tournamentToEdit.value = null
     if (selectedTournamentId.value == tournamentId) {
-        tournamentStore.setCurrentTournament(tournamentId)
+        tournamentStore.currentTournamentId = tournamentId
     }
 }
 const deleteTournament = (tournament: Tournament) => {
@@ -151,7 +151,7 @@ const confirmDeleteTournament = async () => {
     const id = tournamentToDelete.value.id
     await TournamentOpenApi.delete({ path: { id } })
     if (selectedTournamentId.value == id) {
-        tournamentStore.setCurrentTournament()
+        tournamentStore.currentTournamentId = null
     }
     tournamentStore.fetchTournaments()
     // clear selection

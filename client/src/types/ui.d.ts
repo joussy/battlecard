@@ -4,7 +4,6 @@ export interface UiStorage {
     language: UiLanguage
     hideNonMatchableOpponents: boolean
     hideFightersWithNoMatch: boolean
-    currentTournamentId: string | null
     facets: Facets | null
 }
 
