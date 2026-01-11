@@ -71,7 +71,7 @@ defineEmits<{
 
 const createFakeTournament = async () => {
     const tournament = await TournamentOpenApi.createFake()
-    tournamentStore.setCurrentTournament(tournament?.id)
+    tournamentStore.currentTournamentId = tournament?.id || null
     router.push("selector")
 }
 </script>
