@@ -59,9 +59,7 @@
 import { useI18n } from "vue-i18n"
 import { TournamentOpenApi } from "@/api"
 import { useTournamentStore } from "@/stores/tournament.store"
-import { useRouter } from "vue-router"
 
-const router = useRouter()
 const { t: $t } = useI18n()
 const tournamentStore = useTournamentStore()
 
@@ -70,9 +68,8 @@ defineEmits<{
 }>()
 
 const createFakeTournament = async () => {
-    const tournament = await TournamentOpenApi.createFake()
-    tournamentStore.currentTournamentId = tournament?.id || null
-    router.push("selector")
+    await TournamentOpenApi.createFake()
+    tournamentStore.fetchTournaments()
 }
 </script>
 
