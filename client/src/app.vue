@@ -42,28 +42,11 @@ onMounted(async () => {
                     await fightStore.fetchFights()
                 }
             }
-            uiStore.saveUiStore()
         },
         { immediate: true }
     )
 
-    watch(
-        () => [
-            uiStore.facets,
-            uiStore.theme,
-            uiStore.hideNonMatchableOpponents,
-            uiStore.hideFightersWithNoMatch,
-            uiStore.jwtToken,
-            uiStore.language,
-        ],
-        () => uiStore.saveUiStore(),
-        { deep: true }
-    )
-
-    const localStorageData = await uiStore.loadUiStore()
-    if (localStorageData?.currentTournamentId) {
-        tournamentStore.setCurrentTournament(localStorageData.currentTournamentId)
-    }
+    await uiStore.loadUiStore()
 })
 </script>
 

@@ -235,7 +235,6 @@ function filterWithFacets(boxers: Boxer[]) {
 }
 
 function setBoxersToDisplay() {
-    console.debug("Setting boxers to display with search query:", boxersStore.boxers)
     let filteredBoxers = filterWithFacets(boxersStore.boxers)
     if (!searchQuery.value) {
         boxersToDisplay.value = [...filteredBoxers]
