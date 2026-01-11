@@ -140,15 +140,6 @@ export const useUiStore = defineStore("ui", () => {
         setTheme(theme.value)
         setLanguage(language.value)
         restored.value = true
-        return {
-            theme: theme.value,
-            language: language.value,
-            hideNonMatchableOpponents: hideNonMatchableOpponents.value,
-            hideFightersWithNoMatch: hideFightersWithNoMatch.value,
-            jwtToken: jwtToken.value,
-            facets: facets.value,
-            currentTournamentId: currentTournamentId.value,
-        }
     }
 
     function listenWindowThemeChanges() {
