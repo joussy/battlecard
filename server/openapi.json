@@ -22,10 +22,19 @@
         ]
       }
     },
-    "/api/auth/google": {
+    "/api/auth/{provider}": {
       "get": {
-        "operationId": "AuthController_googleAuth",
-        "parameters": [],
+        "operationId": "AuthController_redirectToProvider",
+        "parameters": [
+          {
+            "name": "provider",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "default": {
             "description": ""
@@ -39,9 +48,9 @@
         ]
       }
     },
-    "/api/auth/google/callback": {
+    "/api/auth/oauth/callback": {
       "get": {
-        "operationId": "AuthController_googleAuthRedirect",
+        "operationId": "AuthController_handleCallback",
         "parameters": [],
         "responses": {
           "default": {

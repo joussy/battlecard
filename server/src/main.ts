@@ -12,8 +12,12 @@ import { writeFileSync, readFileSync, existsSync } from 'fs';
 import i18next from 'i18next';
 import i18nMiddleware from './middleware/i18n.middleware';
 // Import JSON translation files
-import en from './locales/en-US.json';
-import fr from './locales/fr-FR.json';
+import en from '@/locales/en-US.json';
+import fr from '@/locales/fr-FR.json';
+import * as passport from 'passport';
+import { registerOidcStrategies } from '@/auth/oidc-strategy.strategy';
+import { OidcConfigurationService } from './auth/oidc-configuration.service';
+import session from 'express-session';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -33,9 +37,22 @@ async function bootstrap() {
     },
     debug: false,
   });
-
+  const config = new ConfigService();
+  const oidcConfigurationService = app.get(OidcConfigurationService);
+  const oidcProviders = await oidcConfigurationService.getOidcProviders();
+  await registerOidcStrategies(oidcProviders);
   // Apply middleware to set i18next language from Accept-Language header
   app.use(i18nMiddleware);
+  app.use(
+    session({
+      secret: config.getConfig().jwtSecret,
+      resave: false,
+      saveUninitialized: false,
+      cookie: { secure: config.getConfig().environment === 'production' },
+    }),
+  );
+  app.use(passport.initialize());
+  app.use(passport.session());
 
   // Enable global validation with class-validator
   app.useGlobalPipes(
@@ -80,7 +97,8 @@ function generateOpenApiSchema(app: INestApplication) {
     if (existsSync(outPath)) {
       const oldContent = readFileSync(outPath, 'utf8');
       if (oldContent !== newContent) {
-        console.log('OpenAPI document has changed; updating', outPath);
+        const logger = new Logger(ConfigService.name);
+        logger.log('OpenAPI document has changed; updating', outPath);
         writeFileSync(outPath, newContent);
       }
     } else {

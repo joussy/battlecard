@@ -59,9 +59,6 @@ export class ConfigService {
       dbUser: Joi.string().required(),
       dbPassword: Joi.string().required(),
       dbName: Joi.string().required(),
-      googleClientId: Joi.string().required(),
-      googleClientSecret: Joi.string().required(),
-      googleCallbackUrl: Joi.string().required(),
       jwtSecret: Joi.string().required(),
       importApiUrl: Joi.string().required(),
       importApiHeaderXApiKey: Joi.string().required(),
@@ -71,6 +68,20 @@ export class ConfigService {
       enableOpenApi: Joi.boolean().default(false),
       port: Joi.number().port().default(3000),
       fightCardShareSecret: Joi.string().required().min(12),
+      oauth: Joi.object()
+        .pattern(
+          Joi.string(),
+          Joi.object({
+            clientId: Joi.string().required(),
+            clientSecret: Joi.string().required(),
+            callbackUrl: Joi.string().required(),
+            issuerUrl: Joi.string().required(),
+            tokenUrl: Joi.string().required(),
+            userInfoUrl: Joi.string().required(),
+            scope: Joi.string().required(),
+          }),
+        )
+        .optional(),
     });
   }
 

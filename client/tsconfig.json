@@ -9,15 +9,39 @@
         "resolveJsonModule": true,
         "isolatedModules": true,
         "esModuleInterop": true,
-        "lib": ["ESNext", "DOM", "DOM.Iterable"],
+        "lib": [
+            "ESNext",
+            "DOM",
+            "DOM.Iterable"
+        ],
         "skipLibCheck": true,
         "noEmit": true,
         "paths": {
-            "@/shared/*": ["../server/src/shared/*"],
-            "@/*": ["./src/*", "./dist/*"],
+            "@/shared/*": [
+                "../server/src/shared/*"
+            ],
+            "@/*": [
+                "./src/*",
+                "./dist/*"
+            ],
         }
     },
-    "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "../server/src/shared/**/*.ts", "../shared/**/*.d.ts", "src/locales/*.json"],
-    "exclude": ["src/api/**/*"],
-    "references": [{ "path": "./tsconfig.node.json" }]
+    "include": [
+        "src/**/*.ts",
+        "src/**/*.d.ts",
+        "src/**/*.tsx",
+        "src/**/*.vue",
+        "../server/src/shared/**/*.ts",
+        "../shared/**/*.d.ts",
+        "src/locales/*.json",
+        "../server/src/auth/oidc-strategy.strategy.ts"
+    ],
+    "exclude": [
+        "src/api/**/*"
+    ],
+    "references": [
+        {
+            "path": "./tsconfig.node.json"
+        }
+    ]
 }

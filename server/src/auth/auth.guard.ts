@@ -1,13 +1,11 @@
 // jwt-auth.guard.ts
 import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { AuthGuard } from '@nestjs/passport';
+import { SessionData } from 'express-session';
 
 @Injectable()
-export class JwtAuthGuard extends AuthGuard('jwt') implements CanActivate {
-  constructor(private reflector: Reflector) {
-    super();
-  }
+export class AuthGuard implements CanActivate {
+  constructor(private reflector: Reflector) {}
 
   canActivate(context: ExecutionContext) {
     const isPublic = this.reflector.getAllAndOverride<boolean>('isPublic', [
@@ -18,7 +16,8 @@ export class JwtAuthGuard extends AuthGuard('jwt') implements CanActivate {
     if (isPublic) {
       return true;
     }
+    const request = context.switchToHttp().getRequest<SessionData>();
 
-    return super.canActivate(context);
+    return !!request?.user?.id;
   }
 }
