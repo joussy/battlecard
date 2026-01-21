@@ -14,8 +14,6 @@ import i18nMiddleware from './middleware/i18n.middleware';
 // Import JSON translation files
 import en from '@/locales/en-US.json';
 import fr from '@/locales/fr-FR.json';
-import * as passport from 'passport';
-import { registerOidcStrategies } from '@/auth/oidc-strategy.strategy';
 import { OidcConfigurationService } from './auth/oidc-configuration.service';
 import session from 'express-session';
 
@@ -39,8 +37,7 @@ async function bootstrap() {
   });
   const config = new ConfigService();
   const oidcConfigurationService = app.get(OidcConfigurationService);
-  const oidcProviders = await oidcConfigurationService.getOidcProviders();
-  await registerOidcStrategies(oidcProviders);
+  await oidcConfigurationService.registerOidcStrategies();
   // Apply middleware to set i18next language from Accept-Language header
   app.use(i18nMiddleware);
   app.use(
@@ -51,8 +48,6 @@ async function bootstrap() {
       cookie: { secure: config.getConfig().environment === 'production' },
     }),
   );
-  app.use(passport.initialize());
-  app.use(passport.session());
 
   // Enable global validation with class-validator
   app.useGlobalPipes(

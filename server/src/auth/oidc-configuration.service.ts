@@ -1,47 +1,60 @@
-import { OAuthClientConfig } from '@/interfaces/auth.interface';
 import { ConfigService } from '@/services/config.service';
 import { Injectable } from '@nestjs/common';
 import * as client from 'openid-client';
-
+import { OAuthClientConfig } from '@/interfaces/auth.interface';
+import passport from 'passport';
+import {
+  StrategyOptions,
+  Strategy,
+  VerifyFunction,
+} from 'openid-client/passport';
+import { OAuthProviderConfig } from '@/interfaces/config.interface';
 @Injectable()
 export class OidcConfigurationService {
   constructor(private readonly configService: ConfigService) {}
   public oidcProviders: OAuthClientConfig[] = [];
-  private initialized: boolean = false;
 
-  public async getOidcProviders() {
-    if (!this.initialized) {
-      this.oidcProviders = await this.createOidcClients();
-      this.initialized = true;
+  public async registerOidcStrategies() {
+    const appConfig = this.configService.getConfig();
+
+    for (const providerName in appConfig.oauth) {
+      const provider: OAuthProviderConfig = appConfig.oauth[providerName];
+
+      const config = await client.discovery(
+        new URL(provider.issuerUrl),
+        provider.clientId,
+        provider.clientSecret,
+      );
+
+      const verify: VerifyFunction = (
+        tokens: client.TokenEndpointResponse &
+          client.TokenEndpointResponseHelpers,
+        verified: passport.AuthenticateCallback,
+      ) => {
+        const claims = tokens.claims();
+        verified(null, null, claims);
+      };
+      const callbackUrl =
+        appConfig.websiteBaseUrl.replace(/\/$/, '') +
+        '/' +
+        provider.callbackUrl.replace(/^\//, '');
+
+      const strategyOptions: StrategyOptions = {
+        config,
+        scope: provider.scope,
+        callbackURL: callbackUrl,
+      };
+      const strategy = new Strategy(strategyOptions, verify);
+
+      passport.use(providerName, strategy);
+
+      passport.serializeUser((user: Express.User, cb) => {
+        cb(null, user);
+      });
+
+      passport.deserializeUser((user: Express.User, cb) => {
+        return cb(null, user);
+      });
     }
-    return this.oidcProviders;
-  }
-
-  private async createOidcClients(): Promise<OAuthClientConfig[]> {
-    const providerConfigs = this.configService.getConfig().oauth;
-    if (!providerConfigs) {
-      return [];
-    }
-
-    const clients = await Promise.all(
-      Object.entries(providerConfigs).map(async ([name, provider]) => {
-        if (!provider.issuerUrl) {
-          throw new Error('Only OIDC issuers are supported in this example');
-        }
-
-        const configuration = await client.discovery(
-          new URL(provider.issuerUrl),
-          provider.clientId,
-          provider.clientSecret,
-        );
-
-        return {
-          name: name,
-          client: configuration,
-          scope: provider.scope,
-        };
-      }),
-    );
-    return clients;
   }
 }

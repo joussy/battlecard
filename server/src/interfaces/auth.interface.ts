@@ -5,6 +5,8 @@ export interface OAuthClientConfig {
   name: string;
   client: client.Configuration;
   scope: string;
+  callbackUrl: string;
+  issuerUrl?: string;
 }
 
 interface OAuthSessionData {

@@ -22,9 +22,9 @@
         ]
       }
     },
-    "/api/auth/{provider}": {
+    "/api/auth/{provider}/login": {
       "get": {
-        "operationId": "AuthController_redirectToProvider",
+        "operationId": "AuthController_login",
         "parameters": [
           {
             "name": "provider",
@@ -40,33 +40,20 @@
             "description": ""
           }
         },
-        "security": [
-          {}
-        ],
         "tags": [
           "Auth"
         ]
       }
     },
-    "/api/auth/oauth/callback": {
+    "/api/auth/{provider}/callback": {
       "get": {
-        "operationId": "AuthController_handleCallback",
+        "operationId": "AuthController_callback",
         "parameters": [],
         "responses": {
           "default": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
+            "description": ""
           }
         },
-        "security": [
-          {}
-        ],
         "tags": [
           "Auth"
         ]
