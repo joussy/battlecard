@@ -17,7 +17,6 @@
         "client": "cd client && npm install"
     },
     "remoteEnv": {
-        "BATTLECARD_googleCallbackUrl": "http://localhost:5173/api/auth/google/callback",
         "BATTLECARD_dbHost": "postgres",
         "BATTLECARD_dbPort": "5432",
         "BATTLECARD_dbUser": "postgres",

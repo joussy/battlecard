@@ -14,6 +14,7 @@ import i18nMiddleware from './middleware/i18n.middleware';
 // Import JSON translation files
 import en from './locales/en-US.json';
 import fr from './locales/fr-FR.json';
+import session from 'express-session';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -33,9 +34,18 @@ async function bootstrap() {
     },
     debug: false,
   });
+  const config = new ConfigService();
 
   // Apply middleware to set i18next language from Accept-Language header
   app.use(i18nMiddleware);
+  app.use(
+    session({
+      secret: config.getConfig().jwtSecret,
+      resave: false,
+      saveUninitialized: false,
+      cookie: { secure: config.getConfig().environment === 'production' },
+    }),
+  );
 
   // Enable global validation with class-validator
   app.useGlobalPipes(
@@ -80,7 +90,8 @@ function generateOpenApiSchema(app: INestApplication) {
     if (existsSync(outPath)) {
       const oldContent = readFileSync(outPath, 'utf8');
       if (oldContent !== newContent) {
-        console.log('OpenAPI document has changed; updating', outPath);
+        const logger = new Logger(ConfigService.name);
+        logger.log('OpenAPI document has changed; updating', outPath);
         writeFileSync(outPath, newContent);
       }
     } else {
