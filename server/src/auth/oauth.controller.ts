@@ -4,17 +4,20 @@ import {
   Req,
   Param,
   UseGuards,
-  Res,
   Redirect,
 } from '@nestjs/common';
 import * as client from 'openid-client';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '@/entities/user.entity';
+import { UserSession } from '@/decorators/auth.decorator';
 import { Repository } from 'typeorm';
 import { OidcConfigurationService } from './oidc-configuration.service';
 import { NoAuthRequired } from '@/decorators/auth.decorator';
 import { OAuthGuard } from './oauth.guard';
-import { BattlecardSessionRequest } from '@/dto/session.dto';
+import {
+  AuthenticatedUser,
+  BattlecardSessionRequest,
+} from '@/interfaces/auth.interface';
 
 @Controller('oauth')
 export class OAuthController {
@@ -27,8 +30,8 @@ export class OAuthController {
   @NoAuthRequired()
   @UseGuards(OAuthGuard)
   @Redirect('/', 302)
-  handleCallback(@Req() req: BattlecardSessionRequest) {
-    console.log('User info:', req.session.user);
+  handleCallback(@UserSession() user: AuthenticatedUser) {
+    console.log('User info:', user);
   }
 
   @NoAuthRequired()

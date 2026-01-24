@@ -1,5 +1,4 @@
 export interface UiStorage {
-    jwtToken: string | undefined
     theme: UiTheme
     language: UiLanguage
     hideNonMatchableOpponents: boolean

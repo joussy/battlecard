@@ -20,7 +20,7 @@ import {
   SelectorExportDto,
   SimpleTournamentDto,
 } from '@/dto/share.dto';
-import { NoAuthRequired, User } from '@/decorators/auth.decorator';
+import { NoAuthRequired, UserSession } from '@/decorators/auth.decorator';
 
 @Controller('export')
 export class ExportController {
@@ -42,7 +42,7 @@ export class ExportController {
   })
   async getFightCardPdf(
     @Body() body: DownloadOptionsDto,
-    @User() user: AuthenticatedUser,
+    @UserSession() user: AuthenticatedUser,
     @Res() res: ExpressResponse,
   ): Promise<void> {
     try {
@@ -86,7 +86,7 @@ export class ExportController {
   })
   async getFightCardPng(
     @Body() body: DownloadOptionsDto,
-    @User() user: AuthenticatedUser,
+    @UserSession() user: AuthenticatedUser,
     @Res() res: ExpressResponse,
   ): Promise<void> {
     try {
@@ -129,7 +129,7 @@ export class ExportController {
   })
   async getBattlecard(
     @Body() body: SelectorExportDto,
-    @User() user: AuthenticatedUser,
+    @UserSession() user: AuthenticatedUser,
     @Res() res: ExpressResponse,
   ) {
     try {
@@ -164,7 +164,7 @@ export class ExportController {
   })
   async getFightCardCsv(
     @Body() body: SimpleTournamentDto,
-    @User() user: AuthenticatedUser,
+    @UserSession() user: AuthenticatedUser,
     @Res() res: ExpressResponse,
   ): Promise<void> {
     try {
@@ -198,7 +198,7 @@ export class ExportController {
   })
   async getFightCardXlsx(
     @Body() body: SimpleTournamentDto,
-    @User() user: AuthenticatedUser,
+    @UserSession() user: AuthenticatedUser,
     @Res() res: ExpressResponse,
   ): Promise<void> {
     try {
@@ -254,7 +254,7 @@ export class ExportController {
   })
   async getSelectorPdf(
     @Body() body: SelectorExportDto,
-    @User() user: AuthenticatedUser,
+    @UserSession() user: AuthenticatedUser,
     @Res() res: ExpressResponse,
   ): Promise<void> {
     try {
@@ -289,7 +289,7 @@ export class ExportController {
   })
   async getSelectorPng(
     @Body() body: SelectorExportDto,
-    @User() user: AuthenticatedUser,
+    @UserSession() user: AuthenticatedUser,
     @Res() res: ExpressResponse,
   ): Promise<void> {
     try {
@@ -324,7 +324,7 @@ export class ExportController {
   })
   async getSelectorCsv(
     @Body() body: SelectorExportDto,
-    @User() user: AuthenticatedUser,
+    @UserSession() user: AuthenticatedUser,
     @Res() res: ExpressResponse,
   ): Promise<void> {
     try {
@@ -359,7 +359,7 @@ export class ExportController {
   })
   async getSelectorXlsx(
     @Body() body: SelectorExportDto,
-    @User() user: AuthenticatedUser,
+    @UserSession() user: AuthenticatedUser,
     @Res() res: ExpressResponse,
   ): Promise<void> {
     try {

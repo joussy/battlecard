@@ -11,7 +11,7 @@ import { ShareService } from '@/services/share.service';
 import { GeneratedTokenDto } from '@/dto/share.dto';
 import { SharedFightCardDto } from '@/dto/tournament.dto';
 import { Response as ExpressResponse } from 'express';
-import { User } from '@/decorators/auth.decorator';
+import { UserSession } from '@/decorators/auth.decorator';
 import { AuthenticatedUser } from '@/interfaces/auth.interface';
 import { FightExportService } from '@/services/fight-export.service';
 import { QrCodeService } from '@/services/qrcode.service';
@@ -55,7 +55,7 @@ export class ShareController {
   @Post('fightcard/generateRoToken')
   async generateFightCardToken(
     @Body() body: GenerateFightCardTokenDto,
-    @User() user: AuthenticatedUser,
+    @UserSession() user: AuthenticatedUser,
   ): Promise<GeneratedTokenDto> {
     const token = await this.shareService.generateFightCardToken(
       body.tournamentId,

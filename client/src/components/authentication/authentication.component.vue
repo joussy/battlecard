@@ -123,15 +123,14 @@ const setLanguage = (language: UiLanguage) => {
 onMounted(async () => {
     window.addEventListener("message", async (event) => {
         if (event.data && event.data.token) {
-            uiStore.jwtToken = event.data.token
-            await uiStore.setTokenAndFetchUser()
+            await uiStore.fetchUser()
             router.push({ name: "tournaments" })
         }
     })
     const urlParams = new URLSearchParams(window.location.search)
     const token = urlParams.get("token")
     if (token) {
-        await uiStore.setTokenAndFetchUser()
+        await uiStore.fetchUser()
         router.push({ name: "tournaments" })
     }
 })

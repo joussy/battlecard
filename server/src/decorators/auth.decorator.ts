@@ -7,7 +7,7 @@ import { ApiSecurity } from '@nestjs/swagger';
  * Custom decorator to extract the user id from the request object.
  * Usage: @User() user: AuthenticatedUser
  */
-export const User = createParamDecorator(
+export const UserSession = createParamDecorator(
   (data: keyof AuthenticatedUser, ctx: ExecutionContext) => {
     const request = ctx
       .switchToHttp()

@@ -1,5 +1,5 @@
 import { IS_PUBLIC_KEY } from '@/decorators/auth.decorator';
-import { BattlecardSessionRequest } from '@/dto/session.dto';
+import { BattlecardSessionRequest } from '@/interfaces/auth.interface';
 import {
   CanActivate,
   ExecutionContext,
@@ -25,6 +25,7 @@ export class AuthenticatedOnlyGuard implements CanActivate {
     const request = context
       .switchToHttp()
       .getRequest<BattlecardSessionRequest>();
+    console.log('AuthenticatedOnlyGuard: Checking session', request.session);
     // Express session authentication: check if user exists in session
     if (request.session && request.session.user) {
       return true;

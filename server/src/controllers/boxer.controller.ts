@@ -10,7 +10,7 @@ import {
 import { BoxerService } from '../services/boxer.service';
 import { ModalityService } from '../modality/modality.service';
 import { BoxerDto } from '@/dto/boxer.dto';
-import { User } from '../decorators/auth.decorator';
+import { UserSession } from '../decorators/auth.decorator';
 import { AuthenticatedUser } from '../interfaces/auth.interface';
 import { CreateBoxerDto, UpdateBoxerDto } from '@/dto/boxer.dto';
 import { IdParamsDto } from '@/dto/params.dto';
@@ -25,7 +25,7 @@ export class BoxerController {
   @Post()
   async create(
     @Body() boxer: CreateBoxerDto,
-    @User() user: AuthenticatedUser,
+    @UserSession() user: AuthenticatedUser,
   ): Promise<BoxerDto> {
     return this.boxerService.create(boxer, user);
   }
@@ -33,7 +33,7 @@ export class BoxerController {
   @Get(':id')
   async getBoxer(
     @Param() params: IdParamsDto,
-    @User() user: AuthenticatedUser,
+    @UserSession() user: AuthenticatedUser,
   ): Promise<BoxerDto> {
     return this.boxerService.getBoxer(params.id, user);
   }
@@ -42,7 +42,7 @@ export class BoxerController {
   async update(
     @Param() params: IdParamsDto,
     @Body() boxer: UpdateBoxerDto,
-    @User() user: AuthenticatedUser,
+    @UserSession() user: AuthenticatedUser,
   ): Promise<BoxerDto> {
     return this.boxerService.update(params.id, boxer, user);
   }
@@ -50,7 +50,7 @@ export class BoxerController {
   @Delete(':id')
   async delete(
     @Param() params: IdParamsDto,
-    @User() user: AuthenticatedUser,
+    @UserSession() user: AuthenticatedUser,
   ): Promise<void> {
     return this.boxerService.delete(params.id, user);
   }

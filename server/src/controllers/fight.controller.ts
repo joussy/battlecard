@@ -20,7 +20,7 @@ import {
   DeleteFightsDto,
 } from '@/dto/fight.dto';
 import { TournamentIdParamsDto } from '@/dto/params.dto';
-import { User } from '@/decorators/auth.decorator';
+import { UserSession } from '@/decorators/auth.decorator';
 import { toFightDto } from '@/adapters/fight.adapter';
 
 @Controller('fights')
@@ -35,7 +35,7 @@ export class FightController {
   @Post()
   async create(
     @Body() fight: CreateFightDto,
-    @User() user: AuthenticatedUser,
+    @UserSession() user: AuthenticatedUser,
     @Res() res: Response,
   ): Promise<any> {
     try {
@@ -62,7 +62,7 @@ export class FightController {
   @Delete()
   async deleteMany(
     @Body() dto: DeleteFightsDto,
-    @User() user: AuthenticatedUser,
+    @UserSession() user: AuthenticatedUser,
   ): Promise<void> {
     const fight = await this.fightService.findById(dto.ids[0], user);
     await this.fightService.deleteMany(dto.ids, user);
@@ -72,7 +72,7 @@ export class FightController {
   @Post('reorder')
   async reorderFight(
     @Body() body: ReorderFightDto,
-    @User() user: AuthenticatedUser,
+    @UserSession() user: AuthenticatedUser,
   ): Promise<void> {
     return this.fightService.reorderFight(body.fightId, body.newIndex, user);
   }
@@ -80,7 +80,7 @@ export class FightController {
   @Post('switch')
   async switch(
     @Body() body: SwitchFightDto,
-    @User() user: AuthenticatedUser,
+    @UserSession() user: AuthenticatedUser,
   ): Promise<FightDto> {
     const updated = await this.fightService.switch(body.fightId, user);
     return toFightDto(updated, this.modalityService.getModality());
@@ -88,7 +88,7 @@ export class FightController {
 
   @Get('matchups/:tournamentId')
   async getMatchups(
-    @User() user: AuthenticatedUser,
+    @UserSession() user: AuthenticatedUser,
     @Param() params: TournamentIdParamsDto,
   ): Promise<FightDto[]> {
     const fights = await this.fightService.getMatchups(

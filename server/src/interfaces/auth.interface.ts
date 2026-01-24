@@ -1,5 +1,6 @@
 import * as client from 'openid-client';
 import 'express-session';
+import { SessionData } from 'express-session';
 
 export interface OAuthClientConfig {
   name: string;
@@ -24,4 +25,8 @@ declare module 'express-session' {
     oauth?: OAuthSessionData;
     user: AuthenticatedUser;
   }
+}
+
+export interface BattlecardSessionRequest extends Request {
+  session: SessionData;
 }

@@ -4,5 +4,4 @@ export interface UserAccount {
     email: string | null
     picture: string | null
     apiEnabled: boolean
-    authToken: string
 }
