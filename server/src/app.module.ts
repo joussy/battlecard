@@ -34,6 +34,7 @@ import { PlacesService } from './services/places.service';
 import { OidcConfigurationService } from './auth/oidc-configuration.service';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthenticatedOnlyGuard } from './guards/authenticated-only.guard';
+import { Session } from './entities/session.entity';
 
 @Module({
   imports: [
@@ -45,7 +46,14 @@ import { AuthenticatedOnlyGuard } from './guards/authenticated-only.guard';
       imports: [AppModule],
       useClass: TypeOrmConfigService,
     }),
-    TypeOrmModule.forFeature([User, Tournament, Boxer, Fight, TournamentBoxer]),
+    TypeOrmModule.forFeature([
+      User,
+      Tournament,
+      Boxer,
+      Fight,
+      TournamentBoxer,
+      Session,
+    ]),
   ],
   controllers: [
     UserController,

@@ -15,6 +15,9 @@ import i18nMiddleware from './middleware/i18n.middleware';
 import en from './locales/en-US.json';
 import fr from './locales/fr-FR.json';
 import session from 'express-session';
+import { TypeormStore } from 'connect-typeorm';
+import { DataSource } from 'typeorm';
+import { Session } from './entities/session.entity';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -35,6 +38,8 @@ async function bootstrap() {
     debug: false,
   });
   const config = new ConfigService();
+  const dataSource = app.get(DataSource);
+  const sessionRepository = dataSource.getRepository(Session);
 
   // Apply middleware to set i18next language from Accept-Language header
   app.use(i18nMiddleware);
@@ -44,6 +49,10 @@ async function bootstrap() {
       resave: false,
       saveUninitialized: false,
       cookie: { secure: config.getConfig().environment === 'production' },
+      store: new TypeormStore({
+        cleanupLimit: 2,
+        ttl: 86400, // 1 day in seconds
+      }).connect(sessionRepository),
     }),
   );
 

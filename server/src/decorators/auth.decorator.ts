@@ -1,4 +1,7 @@
-import { AuthenticatedUser } from '@/interfaces/auth.interface';
+import {
+  AuthenticatedUser,
+  BattlecardSessionRequest,
+} from '@/interfaces/auth.interface';
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 import { applyDecorators, SetMetadata } from '@nestjs/common';
 import { ApiSecurity } from '@nestjs/swagger';
@@ -9,10 +12,8 @@ import { ApiSecurity } from '@nestjs/swagger';
  */
 export const UserSession = createParamDecorator(
   (data: keyof AuthenticatedUser, ctx: ExecutionContext) => {
-    const request = ctx
-      .switchToHttp()
-      .getRequest<{ user?: AuthenticatedUser }>();
-    return data ? request.user?.[data] : request.user;
+    const request = ctx.switchToHttp().getRequest<BattlecardSessionRequest>();
+    return request?.session?.user;
   },
 );
 
