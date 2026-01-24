@@ -45,7 +45,7 @@ async function bootstrap() {
   app.use(i18nMiddleware);
   app.use(
     session({
-      secret: config.getConfig().jwtSecret,
+      secret: config.getConfig().sessionSecret,
       resave: false,
       saveUninitialized: false,
       cookie: { secure: config.getConfig().environment === 'production' },

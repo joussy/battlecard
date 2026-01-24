@@ -24,7 +24,7 @@ export interface AuthenticatedUser {
 declare module 'express-session' {
   interface SessionData {
     oauth?: OAuthSessionData;
-    user: AuthenticatedUser;
+    user?: AuthenticatedUser;
   }
 }
 

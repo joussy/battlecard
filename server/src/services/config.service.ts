@@ -59,7 +59,7 @@ export class ConfigService {
       dbUser: Joi.string().required(),
       dbPassword: Joi.string().required(),
       dbName: Joi.string().required(),
-      jwtSecret: Joi.string().required(),
+      sessionSecret: Joi.string().required(),
       importApiUrl: Joi.string().required(),
       importApiHeaderXApiKey: Joi.string().required(),
       gotenbergUrl: Joi.string().required(),

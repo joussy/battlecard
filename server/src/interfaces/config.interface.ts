@@ -38,8 +38,8 @@ export interface EnvConfig {
   oauth?: Record<string, OAuthProviderConfig>;
 
   // JWT configuration
-  /** Secret key used for signing JWT tokens */
-  jwtSecret: string;
+  /** Secret key used for signing Express cookies */
+  sessionSecret: string;
 
   // External API configuration
   /** URL for the external import API service */
