@@ -22,9 +22,9 @@
         ]
       }
     },
-    "/api/auth/{provider}": {
+    "/api/oauth/{provider}": {
       "get": {
-        "operationId": "AuthController_redirectToProvider",
+        "operationId": "OAuthController_redirectToProvider",
         "parameters": [
           {
             "name": "provider",
@@ -44,13 +44,13 @@
           {}
         ],
         "tags": [
-          "Auth"
+          "OAuth"
         ]
       }
     },
-    "/api/auth/oauth/callback": {
+    "/api/oauth/callback": {
       "get": {
-        "operationId": "AuthController_handleCallback",
+        "operationId": "OAuthController_handleCallback",
         "parameters": [],
         "responses": {
           "default": {
@@ -68,7 +68,7 @@
           {}
         ],
         "tags": [
-          "Auth"
+          "OAuth"
         ]
       }
     },

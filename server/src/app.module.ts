@@ -5,7 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Tournament } from './entities/tournament.entity';
 import { UserController } from './controllers/user.controller';
-import { AuthController } from './auth/auth.controller';
+import { OAuthController } from './auth/oauth.controller';
 import { TournamentController } from './controllers/tournament.controller';
 import { Boxer } from './entities/boxer.entity';
 import { BoxerController } from './controllers/boxer.controller';
@@ -13,7 +13,6 @@ import { Fight } from './entities/fight.entity';
 import { TournamentBoxer } from './entities/tournament_boxer.entity';
 import { FightController } from './controllers/fight.controller';
 import { ExportController } from './controllers/export.controller';
-import { APP_GUARD } from '@nestjs/core';
 import { ModalityService } from './modality/modality.service';
 import { FightService } from './services/fight.service';
 import { TournamentService } from './services/tournament.service';
@@ -33,6 +32,8 @@ import { TemplateService } from './services/template.service';
 import { PlacesController } from './controllers/places.controller';
 import { PlacesService } from './services/places.service';
 import { OidcConfigurationService } from './auth/oidc-configuration.service';
+import { APP_GUARD } from '@nestjs/core';
+import { AuthenticatedOnlyGuard } from './guards/authenticated-only.guard';
 
 @Module({
   imports: [
@@ -48,7 +49,7 @@ import { OidcConfigurationService } from './auth/oidc-configuration.service';
   ],
   controllers: [
     UserController,
-    AuthController,
+    OAuthController,
     TournamentController,
     BoxerController,
     FightController,
@@ -74,6 +75,10 @@ import { OidcConfigurationService } from './auth/oidc-configuration.service';
     TemplateService,
     ModalityService,
     PlacesService,
+    {
+      provide: APP_GUARD,
+      useClass: AuthenticatedOnlyGuard,
+    },
   ],
   exports: [ModalityService],
 })
