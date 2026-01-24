@@ -22,19 +22,10 @@
         ]
       }
     },
-    "/api/oauth/{provider}": {
+    "/api/oauth/callback": {
       "get": {
-        "operationId": "OAuthController_redirectToProvider",
-        "parameters": [
-          {
-            "name": "provider",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
+        "operationId": "OAuthController_handleCallback",
+        "parameters": [],
         "responses": {
           "default": {
             "description": ""
@@ -48,10 +39,19 @@
         ]
       }
     },
-    "/api/oauth/callback": {
+    "/api/oauth/{provider}": {
       "get": {
-        "operationId": "OAuthController_handleCallback",
-        "parameters": [],
+        "operationId": "OAuthController_getRedirectionUrl",
+        "parameters": [
+          {
+            "name": "provider",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "default": {
             "description": "",

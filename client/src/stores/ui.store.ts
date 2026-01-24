@@ -49,18 +49,6 @@ export const useUiStore = defineStore("ui", () => {
         { deep: true }
     )
 
-    function authenticate() {
-        const width = 500
-        const height = 600
-        const left = window.screenX + (window.outerWidth - width) / 2
-        const top = window.screenY + (window.outerHeight - height) / 2
-        window.open(
-            "/api/auth/google",
-            "GoogleAuth",
-            `width=${width},height=${height},left=${left},top=${top},resizable,scrollbars=yes,status=1`
-        )
-    }
-
     async function setTokenAndFetchUser() {
         if (!jwtToken.value) {
             console.warn("No JWT token set, cannot fetch user profile.")
@@ -183,7 +171,6 @@ export const useUiStore = defineStore("ui", () => {
         hideFightersWithNoMatch,
         jwtToken,
         facets,
-        authenticate,
         setTokenAndFetchUser,
         logout,
         clearFacets,

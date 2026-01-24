@@ -21,7 +21,7 @@
                 <button
                     v-if="!uiStore.account"
                     class="btn btn-warning w-100 mb-3"
-                    @click="signInWithGoogle()"
+                    @click="signInWithProvider('google')"
                 >
                     <i class="bi bi-google me-2" />{{ $t("authentication.signInWithGoogle") }}
                 </button>
@@ -98,12 +98,18 @@ import { useRouter } from "vue-router"
 import { useUiStore } from "@/stores/ui.store"
 import IconComponent from "@/components/shared/core/icon.component.vue"
 import { UiLanguage } from "@/types/ui"
+import { OAuthOpenApi } from "@/api"
 
 const router = useRouter()
 const uiStore = useUiStore()
 
-const signInWithGoogle = () => {
-    uiStore.authenticate()
+const signInWithProvider = async (provider: string) => {
+    const redirectionUrl = await OAuthOpenApi.getRedirectionUrl({ path: { provider } })
+    if (!redirectionUrl) {
+        console.error("Failed to get redirection URL for OAuth provider.")
+        return
+    }
+    window.open(redirectionUrl, "_self")
 }
 
 const logout = () => {

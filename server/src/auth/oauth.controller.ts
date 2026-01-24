@@ -1,12 +1,20 @@
-import { Controller, Get, Req, Res, Param, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Req,
+  Param,
+  UseGuards,
+  Res,
+  Redirect,
+} from '@nestjs/common';
 import * as client from 'openid-client';
-import { Response as ExpressResponse, Request } from 'express';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '@/entities/user.entity';
 import { Repository } from 'typeorm';
 import { OidcConfigurationService } from './oidc-configuration.service';
 import { NoAuthRequired } from '@/decorators/auth.decorator';
 import { OAuthGuard } from './oauth.guard';
+import { BattlecardSessionRequest } from '@/dto/session.dto';
 
 @Controller('oauth')
 export class OAuthController {
@@ -15,17 +23,24 @@ export class OAuthController {
     @InjectRepository(User) private readonly userRepository: Repository<User>,
   ) {}
 
-  @Get(':provider')
+  @Get('callback')
   @NoAuthRequired()
-  async redirectToProvider(
+  @UseGuards(OAuthGuard)
+  @Redirect('/', 302)
+  handleCallback(@Req() req: BattlecardSessionRequest) {
+    console.log('User info:', req.session.user);
+  }
+
+  @NoAuthRequired()
+  @Get(':provider')
+  async getRedirectionUrl(
     @Param('provider') provider: string,
-    @Req() req: Request,
-    @Res() res: ExpressResponse,
+    @Req() req: BattlecardSessionRequest,
   ) {
     const oidcProviders =
       await this.oidcConfigurationService.getOidcProviders();
     const providerClient = oidcProviders.find((p) => p.name === provider);
-    if (!providerClient) throw new Error('Unknown provider');
+    if (!providerClient) throw new Error(`Unknown provider: ${provider}`);
     const code_verifier: string = client.randomPKCECodeVerifier();
     const code_challenge: string =
       await client.calculatePKCECodeChallenge(code_verifier);
@@ -46,29 +61,10 @@ export class OAuthController {
        */
       parameters.state = client.randomState();
       req.session.oauth.state = parameters.state;
+      req.session.oauth.provider = provider;
     }
 
     const url = client.buildAuthorizationUrl(providerClient.client, parameters);
-    return res.redirect(url.toString());
-  }
-
-  @Get('callback')
-  @NoAuthRequired()
-  @UseGuards(OAuthGuard)
-  handleCallback(@Req() req: Request & { session: any }) {
-    console.log('User info:', {
-      email: req.session.email,
-      name: req.session.name,
-      picture: req.session.picture,
-    });
-    // Return HTML that posts the token to the opener and closes the popup
-    return `<!DOCTYPE html>
-<html><body>
-<script>
-  window.opener && window.opener.postMessage({ }, '*');
-  window.close();
-</script>
-<p>Authentication successful. You can close this window.</p>
-</body></html>`;
+    return url.toString();
   }
 }

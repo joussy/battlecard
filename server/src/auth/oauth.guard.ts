@@ -17,6 +17,7 @@ export class OAuthGuard implements CanActivate {
     const req = context.switchToHttp().getRequest<Request>();
     const res = context.switchToHttp().getResponse<Response>();
     if (req.session?.user) {
+      console.log('User already authenticated', req.session);
       return true;
     }
     // If not authenticated, start OIDC flow
@@ -39,7 +40,7 @@ export class OAuthGuard implements CanActivate {
         await client.calculatePKCECodeChallenge(code_verifier);
       const parameters: Record<string, string> = {
         scope: providerClient.scope,
-        redirect_uri: `http://localhost:5173/api/auth/oauth/callback`,
+        redirect_uri: `http://localhost:5173/api/oauth/callback`,
         code_challenge,
         code_challenge_method: 'S256',
       };
