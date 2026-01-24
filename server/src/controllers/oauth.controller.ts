@@ -18,7 +18,7 @@ import {
   AuthenticatedUser,
   BattlecardSessionRequest,
 } from '@/interfaces/auth.interface';
-import { OAuthLogoutDto } from '@/dto/oauth.dto';
+import { AvailableProvidersDto, OAuthLogoutDto } from '@/dto/oauth.dto';
 
 @Controller('oauth')
 export class OAuthController {
@@ -54,6 +54,16 @@ export class OAuthController {
       return { url: endSessionEndpoint };
     }
     return { url: '/' };
+  }
+
+  @NoAuthRequired()
+  @Get('availableProviders')
+  async getProviders(): Promise<AvailableProvidersDto> {
+    const oidcProviders =
+      await this.oidcConfigurationService.getOidcProviders();
+    return {
+      providers: oidcProviders.map((p) => p.name),
+    };
   }
 
   @NoAuthRequired()

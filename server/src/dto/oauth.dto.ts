@@ -4,3 +4,8 @@ export class OAuthLogoutDto {
   @IsString()
   url: string;
 }
+
+export class AvailableProvidersDto {
+  @IsString({ each: true })
+  providers: string[];
+}

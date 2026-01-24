@@ -63,6 +63,30 @@
         ]
       }
     },
+    "/api/oauth/availableProviders": {
+      "get": {
+        "operationId": "OAuthController_getProviders",
+        "parameters": [],
+        "responses": {
+          "default": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AvailableProvidersDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {}
+        ],
+        "tags": [
+          "OAuth"
+        ]
+      }
+    },
     "/api/oauth/{provider}": {
       "get": {
         "operationId": "OAuthController_getRedirectionUrl",
@@ -1524,6 +1548,20 @@
         },
         "required": [
           "url"
+        ]
+      },
+      "AvailableProvidersDto": {
+        "type": "object",
+        "properties": {
+          "providers": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "providers"
         ]
       },
       "TournamentDto": {

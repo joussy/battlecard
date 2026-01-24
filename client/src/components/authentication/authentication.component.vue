@@ -11,20 +11,26 @@
             <p class="lead text-muted mb-0">{{ $t("authentication.tagline") }}</p>
         </div>
         <div
-            class="card p-4 shadow w-100"
+            class="p-4 shadow w-100"
             style="max-width: 400px"
         >
-            <div class="text-center">
-                <span class="h6">{{ $t("authentication.signIn") }}</span>
-            </div>
+            <div class="text-center"></div>
             <div class="card-body">
-                <button
+                <div
                     v-if="!uiStore.isAuthenticated"
-                    class="btn btn-warning w-100 mb-3"
-                    @click="signInWithProvider('google')"
+                    class="d-flex flex-column row-gap-3"
                 >
-                    <i class="bi bi-google me-2" />{{ $t("authentication.signInWithGoogle") }}
-                </button>
+                    <button
+                        v-for="provider in providers"
+                        :key="provider"
+                        class="btn btn-contrast w-100"
+                        @click="signInWithProvider(provider)"
+                    >
+                        <i :class="getProviderIcon(provider) + ' me-2'" />{{
+                            $t("authentication.signInWith", { provider: capitalize(provider) })
+                        }}
+                    </button>
+                </div>
                 <div
                     v-else
                     class="d-flex flex-column align-items-center"
@@ -93,7 +99,7 @@
     </div>
 </template>
 <script setup lang="ts">
-import { onMounted } from "vue"
+import { onMounted, ref } from "vue"
 import { useRouter } from "vue-router"
 import { useUiStore } from "@/stores/ui.store"
 import IconComponent from "@/components/shared/core/icon.component.vue"
@@ -102,6 +108,8 @@ import { OAuthOpenApi } from "@/api"
 
 const router = useRouter()
 const uiStore = useUiStore()
+
+const providers = ref<string[]>([])
 
 const signInWithProvider = async (provider: string) => {
     const redirectionUrl = await OAuthOpenApi.getRedirectionUrl({ path: { provider } })
@@ -120,7 +128,35 @@ const setLanguage = (language: UiLanguage) => {
     uiStore.setLanguage(language)
 }
 
+const capitalize = (str: string) => {
+    return str.charAt(0).toUpperCase() + str.slice(1)
+}
+
+const getProviderIcon = (provider: string): string => {
+    const icons: Record<string, string> = {
+        google: "bi bi-google",
+        microsoft: "bi bi-microsoft",
+        github: "bi bi-github",
+        facebook: "bi bi-facebook",
+        twitter: "bi bi-twitter",
+        linkedin: "bi bi-linkedin",
+        apple: "bi bi-apple",
+        amazon: "bi bi-amazon",
+        discord: "bi bi-discord",
+        slack: "bi bi-slack",
+    }
+    const providerLower = provider.toLowerCase()
+    for (const [key, icon] of Object.entries(icons)) {
+        if (providerLower.includes(key)) {
+            return icon
+        }
+    }
+    return "bi bi-box-arrow-in-right"
+}
+
 onMounted(async () => {
+    const providersRes = await OAuthOpenApi.getProviders()
+    providers.value = providersRes?.providers ?? []
     window.addEventListener("message", async (event) => {
         if (event.data && event.data.token) {
             await uiStore.fetchUser()

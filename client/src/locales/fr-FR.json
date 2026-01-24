@@ -28,9 +28,9 @@
         "welcome": "Bienvenue sur BattleCard",
         "tagline": "Générez facilement des cartes de combat pour vos tournois de boxe.",
         "signIn": "Connectez-vous pour créer votre carte des combats",
-        "signInWithGoogle": "Se connecter avec Google",
         "signOut": "Se déconnecter",
-        "demoNotice": "BattleCard est un projet de démonstration. Toutes les données sont à des fins de test uniquement."
+        "demoNotice": "BattleCard est un projet de démonstration. Toutes les données sont à des fins de test uniquement.",
+        "signInWith": "Se connecter avec {provider}"
     },
     "badges": {},
     "boxerImport": {
@@ -205,7 +205,7 @@
     },
     "settings": {
         "account": "Compte",
-        "signInWithGoogle": "Se connecter avec Google",
+        "signInWith": "Se connecter avec ",
         "general": "Général",
         "theme": "Thème",
         "auto": "Auto",
