@@ -74,7 +74,6 @@ export class ConfigService {
           Joi.object({
             clientId: Joi.string().required(),
             clientSecret: Joi.string().required(),
-            callbackUrl: Joi.string().required(),
             issuerUrl: Joi.string().required(),
             tokenUrl: Joi.string().required(),
             userInfoUrl: Joi.string().required(),

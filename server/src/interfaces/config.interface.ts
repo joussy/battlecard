@@ -8,8 +8,6 @@ export interface OAuthProviderConfig {
   clientId: string;
   /** Client secret issued by the OAuth provider */
   clientSecret: string;
-  /** Redirect URI for OAuth callback */
-  callbackUrl: string;
   /** Authorization endpoint URL for initiating OAuth flow */
   issuerUrl: string;
   /** Token endpoint URL for exchanging code for access token */
