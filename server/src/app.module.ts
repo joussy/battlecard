@@ -69,7 +69,6 @@ import { Session } from './entities/session.entity';
   providers: [
     TypeOrmConfigService,
     OidcConfigurationService,
-    TypeOrmConfigService,
     ConfigService,
     FightService,
     TournamentService,
