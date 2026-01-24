@@ -66,7 +66,7 @@ export const useUiStore = defineStore("ui", () => {
     }
 
     async function logout() {
-        var res = await OAuthOpenApi.logout()
+        const res = await OAuthOpenApi.logout()
         if (res?.url) {
             window.location.href = res.url
         } else {
