@@ -5,6 +5,7 @@ import {
   Param,
   UseGuards,
   Redirect,
+  Logger,
 } from '@nestjs/common';
 import * as client from 'openid-client';
 import { UserSession } from '@/decorators/auth.decorator';
@@ -20,6 +21,8 @@ import { ConfigService } from '@/services/config.service';
 
 @Controller('oauth')
 export class OAuthController {
+  private readonly logger = new Logger(OAuthController.name);
+
   constructor(
     private readonly oidcConfigurationService: OidcConfigurationService,
     private readonly configService: ConfigService,
@@ -30,7 +33,7 @@ export class OAuthController {
   @UseGuards(OAuthGuard)
   @Redirect('/', 302)
   handleCallback(@UserSession() user: AuthenticatedUser) {
-    console.log('User info:', user);
+    this.logger.debug('User authenticated', user);
   }
 
   @NoAuthRequired()

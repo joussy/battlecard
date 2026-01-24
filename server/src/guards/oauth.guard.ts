@@ -1,4 +1,9 @@
-import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
+import {
+  Injectable,
+  CanActivate,
+  ExecutionContext,
+  Logger,
+} from '@nestjs/common';
 import { Request, Response } from 'express';
 import * as client from 'openid-client';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -9,6 +14,8 @@ import { ConfigService } from '@/services/config.service';
 
 @Injectable()
 export class OAuthGuard implements CanActivate {
+  private readonly logger = new Logger(OAuthGuard.name);
+
   constructor(
     private readonly oidcConfigurationService: OidcConfigurationService,
     @InjectRepository(User) private readonly userRepository: Repository<User>,
@@ -19,7 +26,7 @@ export class OAuthGuard implements CanActivate {
     const req = context.switchToHttp().getRequest<Request>();
     const res = context.switchToHttp().getResponse<Response>();
     if (req.session?.user) {
-      console.log('User already authenticated', req.session);
+      this.logger.debug('User already authenticated', req.session.user);
       return true;
     }
     // If not authenticated, start OIDC flow
@@ -80,12 +87,11 @@ export class OAuthGuard implements CanActivate {
       new URL(providerClient.client.serverMetadata().userinfo_endpoint!),
       'GET',
     );
-    const { email, name, picture } =
-      (await protectedResourceResponse.json()) as {
-        email: string;
-        name: string;
-        picture?: string;
-      };
+    const { email } = (await protectedResourceResponse.json()) as {
+      email: string;
+      name: string;
+      picture?: string;
+    };
     const user = await this.userRepository.findOneBy({ email });
     if (!user) {
       res.status(401).send('User not found');

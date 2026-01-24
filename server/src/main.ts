@@ -108,7 +108,7 @@ function generateOpenApiSchema(app: INestApplication) {
     }
   } catch (err) {
     // Don't fail startup if writing the file fails; log and continue
-    console.error('Failed to write OpenAPI document:', err);
+    Logger.error('Failed to write OpenAPI document:', err);
   }
 }
 

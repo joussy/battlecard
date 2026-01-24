@@ -4,6 +4,7 @@ import {
   randomBytes,
   createHash,
 } from 'crypto';
+import { Logger } from '@nestjs/common';
 
 const ALGORITHM: string = 'aes-256-cbc';
 
@@ -19,7 +20,7 @@ export function encryptToken(secretKey: string, payload: string): string {
     // Prepend IV to encrypted data
     return iv.toString('hex') + ':' + encrypted;
   } catch (error) {
-    console.error('Error generating token:', error);
+    Logger.error('Error generating token:', error);
     throw new Error('Failed to generate share token');
   }
 }
@@ -42,7 +43,7 @@ export function decryptToken(secretKey: string, token: string): string {
 
     return decrypted;
   } catch (error) {
-    console.error('Error decrypting token:', error);
+    Logger.error('Error decrypting token:', error);
     throw new Error('Invalid share token');
   }
 }

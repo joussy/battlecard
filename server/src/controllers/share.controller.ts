@@ -6,6 +6,7 @@ import {
   Body,
   Res,
   ForbiddenException,
+  Logger,
 } from '@nestjs/common';
 import { ShareService } from '@/services/share.service';
 import { GeneratedTokenDto } from '@/dto/share.dto';
@@ -28,6 +29,8 @@ import {
 @ApiTags('share')
 @Controller('share')
 export class ShareController {
+  private readonly logger = new Logger(ShareController.name);
+
   constructor(
     private readonly shareService: ShareService,
     private readonly fightExportService: FightExportService,
@@ -47,7 +50,7 @@ export class ShareController {
       );
       return data;
     } catch (err) {
-      console.error('Error fetching shared fight card:', err);
+      this.logger.error('Error fetching shared fight card:', err);
       throw new ForbiddenException('Forbidden');
     }
   }
@@ -96,7 +99,7 @@ export class ShareController {
       );
       res.send(xlsxBuffer);
     } catch (err) {
-      console.error('Error generating XLSX:', err);
+      this.logger.error('Error generating XLSX:', err);
       res.status(502).json({ error: 'Error generating XLSX.' });
     }
   }
@@ -136,7 +139,7 @@ export class ShareController {
       );
       res.send(pdfBuffer);
     } catch (err) {
-      console.error('Error generating PDF:', err);
+      this.logger.error('Error generating PDF:', err);
       res.status(502).json({ error: 'Error generating PDF.' });
     }
   }
@@ -176,7 +179,7 @@ export class ShareController {
       );
       res.send(pngBuffer);
     } catch (err) {
-      console.error('Error generating PNG:', err);
+      this.logger.error('Error generating PNG:', err);
       res.status(502).json({ error: 'Error generating PNG.' });
     }
   }
@@ -206,7 +209,7 @@ export class ShareController {
       );
       res.send(csvBuffer);
     } catch (err) {
-      console.error('Error generating CSV:', err);
+      this.logger.error('Error generating CSV:', err);
       res.status(502).json({ error: 'Error generating CSV.' });
     }
   }
