@@ -19,7 +19,7 @@
             </div>
             <div class="card-body">
                 <button
-                    v-if="!uiStore.account"
+                    v-if="!uiStore.isAuthenticated"
                     class="btn btn-warning w-100 mb-3"
                     @click="signInWithProvider('google')"
                 >
@@ -30,8 +30,8 @@
                     class="d-flex flex-column align-items-center"
                 >
                     <img
-                        v-if="uiStore.account.picture"
-                        :src="uiStore.account.picture"
+                        v-if="uiStore.account!.picture"
+                        :src="uiStore.account!.picture"
                         class="rounded-circle mb-2 avatar-icon"
                         alt="User Avatar"
                     />
@@ -40,12 +40,12 @@
                         class="bi bi-person-circle mb-2"
                         :style="{ 'font-size': '2.5rem' }"
                     />
-                    <strong>{{ uiStore.account?.name }}</strong>
+                    <strong>{{ uiStore.account!.name }}</strong>
                     <div
                         class="text-muted"
                         style="font-size: 0.85rem"
                     >
-                        {{ uiStore.account?.email }}
+                        {{ uiStore.account!.email }}
                     </div>
                     <button
                         class="btn btn-danger mt-3"

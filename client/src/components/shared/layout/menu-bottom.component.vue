@@ -3,7 +3,7 @@
         class="bottom-menu d-md-none d-flex justify-content-around z-2 fixed-bottom border-top shadow-sm bg-light-subtle pb-2"
     >
         <router-link
-            v-if="uiStore.account != null"
+            v-if="uiStore.isAuthenticated"
             :to="{ name: 'tournaments' }"
             class="nav-link text-center"
             :class="{ active: $route.path.startsWith('/tournaments') }"
@@ -15,7 +15,7 @@
             <div>{{ $t("layout.events") }}</div>
         </router-link>
         <router-link
-            v-if="uiStore.account && tournamentStore.currentTournamentId"
+            v-if="uiStore.isAuthenticated && tournamentStore.currentTournamentId"
             :to="{ name: 'selector' }"
             class="nav-link text-center"
             :class="{ active: $route.path.startsWith('/selector') }"
@@ -27,7 +27,7 @@
             <div>{{ $t("layout.selector") }}</div>
         </router-link>
         <router-link
-            v-if="uiStore.account && tournamentStore.currentTournamentId"
+            v-if="uiStore.isAuthenticated && tournamentStore.currentTournamentId"
             :to="{ name: 'card' }"
             class="nav-link text-center position-relative"
             active-class="active"

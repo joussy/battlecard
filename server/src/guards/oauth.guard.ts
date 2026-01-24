@@ -4,7 +4,7 @@ import * as client from 'openid-client';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '@/entities/user.entity';
 import { Repository } from 'typeorm';
-import { OidcConfigurationService } from './oidc-configuration.service';
+import { OidcConfigurationService } from '../services/oidc-configuration.service';
 
 @Injectable()
 export class OAuthGuard implements CanActivate {

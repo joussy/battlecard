@@ -26,7 +26,7 @@ onMounted(async () => {
         () => [uiStore.restored],
         async () => {
             console.log("UI store restored:", uiStore.restored)
-            if (uiStore.account) {
+            if (uiStore.isAuthenticated) {
                 await tournamentStore.fetchTournaments()
             }
         }
@@ -35,7 +35,7 @@ onMounted(async () => {
     watch(
         () => tournamentStore.currentTournamentId,
         async () => {
-            if (uiStore.account) {
+            if (uiStore.isAuthenticated) {
                 if (!tournamentStore.currentTournamentId) {
                     router.push("tournaments")
                 } else {

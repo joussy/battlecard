@@ -49,6 +49,7 @@ export const useUiStore = defineStore("ui", () => {
     )
 
     async function fetchUser() {
+        console.log("Fetching user info...")
         let user: User | undefined
         try {
             user = await UserOpenApi.getMe()
@@ -113,6 +114,9 @@ export const useUiStore = defineStore("ui", () => {
     }
 
     async function loadUiStore() {
+        if (restored.value) {
+            return
+        }
         await fetchUser()
         listenWindowThemeChanges()
         setTheme(theme.value)

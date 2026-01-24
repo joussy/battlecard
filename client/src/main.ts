@@ -79,7 +79,6 @@ const router = createRouter({
 
 clientOpenApi.setConfig({
     baseUrl: "/",
-    auth: () => useUiStore().jwtToken,
 })
 
 clientOpenApi.interceptors.request.use((request) => {

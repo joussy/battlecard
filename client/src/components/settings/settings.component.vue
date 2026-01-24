@@ -19,12 +19,12 @@
                         :style="{ 'font-size': '2.5rem' }"
                     />
                     <div class="flex-grow-1">
-                        <strong>{{ uiStore.account?.name }}</strong>
+                        <strong>{{ uiStore.account.name }}</strong>
                         <div
                             class="text-muted"
                             style="font-size: 0.85rem"
                         >
-                            {{ uiStore.account?.email }}
+                            {{ uiStore.account.email }}
                         </div>
                     </div>
                     <button

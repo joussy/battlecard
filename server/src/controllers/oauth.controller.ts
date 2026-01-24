@@ -11,9 +11,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '@/entities/user.entity';
 import { UserSession } from '@/decorators/auth.decorator';
 import { Repository } from 'typeorm';
-import { OidcConfigurationService } from './oidc-configuration.service';
+import { OidcConfigurationService } from '../services/oidc-configuration.service';
 import { NoAuthRequired } from '@/decorators/auth.decorator';
-import { OAuthGuard } from './oauth.guard';
+import { OAuthGuard } from '../guards/oauth.guard';
 import {
   AuthenticatedUser,
   BattlecardSessionRequest,
