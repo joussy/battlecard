@@ -4,7 +4,7 @@ import type { Router, RouteLocationNormalized, NavigationGuardNext } from "vue-r
 export default function setupAuthRedirect(router: Router) {
     const uiStore = useUiStore()
     // Also check on each route
-    router.beforeEach(async (to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext) => {
+    router.beforeEach((to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext) => {
         const requiresAuth = to.meta?.requiresAuth !== false
         console.log("Auth Redirect Check:", { to: to.name, requiresAuth, isAuthenticated: uiStore.isAuthenticated })
         if (!uiStore.isAuthenticated && requiresAuth) {

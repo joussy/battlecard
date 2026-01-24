@@ -3,14 +3,12 @@ import { computed, ref, watch } from "vue"
 import type { UiTheme, UiLanguage, UiStorage, Facets } from "@/types/ui"
 import type { UserAccount } from "@/types/user"
 import { OAuthOpenApi, User, UserOpenApi } from "@/api"
-import { useI18n } from "vue-i18n"
 
 export const useUiStore = defineStore("ui", () => {
-    const { locale } = useI18n()
-
     const restored = ref<boolean>(false)
     const account = ref<UserAccount | null>(null)
     const isAuthenticated = computed(() => account.value !== null)
+    let authCheckInterval: NodeJS.Timeout | null = null
 
     // Load from localStorage 'uiStore' key if available
     let initialUiStore: Partial<UiStorage> = {}
@@ -141,7 +139,8 @@ export const useUiStore = defineStore("ui", () => {
 
     function setLanguage(lang: UiLanguage) {
         language.value = lang
-        locale.value = lang
+        // We cannot use I18n here since stores are initialized before plugins
+        // I18n will be updated from the store watcher in app.vue
     }
 
     function getDefaultLanguage(): UiLanguage {
@@ -150,6 +149,20 @@ export const useUiStore = defineStore("ui", () => {
             return navigator.language.split("-")[0] as UiLanguage
         }
         return "en"
+    }
+
+    const startAuthCheck = () => {
+        // Then check every minute (30 seconds * 1000 milliseconds)
+        authCheckInterval = setInterval(() => {
+            fetchUser()
+        }, 30 * 1000)
+    }
+
+    const stopAuthCheck = () => {
+        if (authCheckInterval) {
+            clearInterval(authCheckInterval)
+            authCheckInterval = null
+        }
     }
 
     return {
@@ -169,5 +182,7 @@ export const useUiStore = defineStore("ui", () => {
         setTheme,
         setLanguage,
         loadUiStore,
+        startAuthCheck,
+        stopAuthCheck,
     }
 })

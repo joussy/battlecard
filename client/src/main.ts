@@ -116,11 +116,9 @@ const app = createApp(App)
 app.use(pinia)
 app.use(i18n)
 app.use(router)
-
-app.mount("#app")
-
 //Loading the UI store before to ensure navigation guards have access to it
 await useUiStore().loadUiStore()
-
+app.mount("#app")
+console.log("Vue app mounted")
 setupAuthRedirect(router)
 setupNoSelectedTournamentRedirect(router)
