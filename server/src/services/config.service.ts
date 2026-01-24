@@ -75,8 +75,8 @@ export class ConfigService {
             clientId: Joi.string().required(),
             clientSecret: Joi.string().required(),
             issuerUrl: Joi.string().required(),
-            tokenUrl: Joi.string().required(),
-            userInfoUrl: Joi.string().required(),
+            tokenUrl: Joi.string().optional(),
+            userInfoUrl: Joi.string().optional(),
             scope: Joi.string().required(),
           }),
         )

@@ -119,6 +119,5 @@ app.use(router)
 //Loading the UI store before to ensure navigation guards have access to it
 await useUiStore().loadUiStore()
 app.mount("#app")
-console.log("Vue app mounted")
 setupAuthRedirect(router)
 setupNoSelectedTournamentRedirect(router)

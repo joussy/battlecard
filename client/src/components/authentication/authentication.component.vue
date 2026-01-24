@@ -11,10 +11,18 @@
             <p class="lead text-muted mb-0">{{ $t("authentication.tagline") }}</p>
         </div>
         <div
+            v-if="providerError"
+            class="alert alert-danger m-0"
+            role="alert"
+        >
+            <i class="bi bi-exclamation-triangle-fill"></i>
+            {{ $t("authentication.serviceUnavailable") }}
+        </div>
+        <div
+            v-else
             class="p-4 shadow w-100"
             style="max-width: 400px"
         >
-            <div class="text-center"></div>
             <div class="card-body">
                 <div
                     v-if="!uiStore.isAuthenticated"
@@ -110,6 +118,7 @@ const router = useRouter()
 const uiStore = useUiStore()
 
 const providers = ref<string[]>([])
+const providerError = ref<boolean>(false)
 
 const signInWithProvider = async (provider: string) => {
     const redirectionUrl = await OAuthOpenApi.getRedirectionUrl({ path: { provider } })
@@ -155,8 +164,16 @@ const getProviderIcon = (provider: string): string => {
 }
 
 onMounted(async () => {
-    const providersRes = await OAuthOpenApi.getProviders()
-    providers.value = providersRes?.providers ?? []
+    try {
+        const providersRes = await OAuthOpenApi.getProviders()
+        providers.value = providersRes?.providers ?? []
+        if (providers.value.length === 0) {
+            providerError.value = true
+        }
+    } catch (error) {
+        console.error("Failed to fetch authentication providers:", error)
+        providerError.value = true
+    }
     window.addEventListener("message", async (event) => {
         if (event.data && event.data.token) {
             await uiStore.fetchUser()

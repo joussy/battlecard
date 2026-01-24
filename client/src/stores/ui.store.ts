@@ -49,10 +49,8 @@ export const useUiStore = defineStore("ui", () => {
         let user: User | undefined
         try {
             user = await UserOpenApi.getMe()
-        } catch (ex) {
-            const res = ex as Response
+        } catch {
             account.value = null
-            console.warn("Failed to fetch user info:", res.status, res.statusText)
         }
         if (user) {
             account.value = {

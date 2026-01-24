@@ -30,10 +30,6 @@ export class OidcConfigurationService {
 
     const clients = await Promise.all(
       Object.entries(providerConfigs).map(async ([name, provider]) => {
-        if (!provider.issuerUrl) {
-          throw new Error('Only OIDC issuers are supported in this example');
-        }
-
         const configuration = await client.discovery(
           new URL(provider.issuerUrl),
           provider.clientId,

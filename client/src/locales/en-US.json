@@ -30,7 +30,8 @@
     "signIn": "Sign in to create your fight cards",
     "signOut": "Sign out",
     "demoNotice": "BattleCard is a demo project. All data is for testing purposes only.",
-    "signInWith": "Sign in with {provider}"
+    "signInWith": "Sign in with {provider}",
+    "serviceUnavailable": "The application is currently unavailable. Please try again later."
   },
   "badges": {},
   "boxerImport": {

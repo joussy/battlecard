@@ -30,7 +30,8 @@
         "signIn": "Connectez-vous pour créer votre carte des combats",
         "signOut": "Se déconnecter",
         "demoNotice": "BattleCard est un projet de démonstration. Toutes les données sont à des fins de test uniquement.",
-        "signInWith": "Se connecter avec {provider}"
+        "signInWith": "Se connecter avec {provider}",
+        "serviceUnavailable": "L'application est actuellement indisponible. Veuillez réessayer plus tard."
     },
     "badges": {},
     "boxerImport": {
