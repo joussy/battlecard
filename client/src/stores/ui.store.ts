@@ -3,7 +3,7 @@ import { computed, ref, watch } from "vue"
 import { useRouter } from "vue-router"
 import type { UiTheme, UiLanguage, UiStorage, Facets } from "@/types/ui"
 import type { UserAccount } from "@/types/user"
-import { User, UserOpenApi } from "@/api"
+import { OAuthOpenApi, User, UserOpenApi } from "@/api"
 import { useI18n } from "vue-i18n"
 
 export const useUiStore = defineStore("ui", () => {
@@ -75,8 +75,12 @@ export const useUiStore = defineStore("ui", () => {
         }
     }
 
-    function logout() {
+    async function logout() {
         account.value = null
+        var res = await OAuthOpenApi.logout()
+        if (res?.url) {
+            window.location.href = res.url
+        }
     }
 
     function clearFacets() {

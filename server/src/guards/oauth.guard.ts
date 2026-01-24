@@ -88,6 +88,7 @@ export class OAuthGuard implements CanActivate {
       id: user.id,
       email: user.email,
       apiEnabled: user.apiEnabled,
+      oauthProvider: provider,
     };
     return true;
   }

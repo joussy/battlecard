@@ -18,6 +18,7 @@ export interface AuthenticatedUser {
   id: string;
   email: string;
   apiEnabled: boolean;
+  oauthProvider?: string;
 }
 
 declare module 'express-session' {
@@ -27,6 +28,6 @@ declare module 'express-session' {
   }
 }
 
-export interface BattlecardSessionRequest extends Request {
+export type BattlecardSessionRequest = Express.Request & {
   session: SessionData;
-}
+};

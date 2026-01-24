@@ -17,6 +17,11 @@ export class OidcConfigurationService {
     return this.oidcProviders;
   }
 
+  public async getOidcProvider(name: string) {
+    this.oidcProviders = await this.getOidcProviders();
+    return this.oidcProviders.find((p) => p.name === name);
+  }
+
   private async createOidcClients(): Promise<OAuthClientConfig[]> {
     const providerConfigs = this.configService.getConfig().oauth;
     if (!providerConfigs) {

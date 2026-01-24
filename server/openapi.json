@@ -39,6 +39,30 @@
         ]
       }
     },
+    "/api/oauth/logout": {
+      "get": {
+        "operationId": "OAuthController_logout",
+        "parameters": [],
+        "responses": {
+          "default": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthLogoutDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {}
+        ],
+        "tags": [
+          "OAuth"
+        ]
+      }
+    },
     "/api/oauth/{provider}": {
       "get": {
         "operationId": "OAuthController_getRedirectionUrl",
@@ -1489,6 +1513,17 @@
           "apiEnabled",
           "created",
           "updated"
+        ]
+      },
+      "OAuthLogoutDto": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "url"
         ]
       },
       "TournamentDto": {

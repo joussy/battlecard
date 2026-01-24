@@ -18,6 +18,7 @@ import {
   AuthenticatedUser,
   BattlecardSessionRequest,
 } from '@/interfaces/auth.interface';
+import { OAuthLogoutDto } from '@/dto/oauth.dto';
 
 @Controller('oauth')
 export class OAuthController {
@@ -32,6 +33,27 @@ export class OAuthController {
   @Redirect('/', 302)
   handleCallback(@UserSession() user: AuthenticatedUser) {
     console.log('User info:', user);
+  }
+
+  @NoAuthRequired()
+  @Get('logout')
+  async logout(@Req() req: BattlecardSessionRequest): Promise<OAuthLogoutDto> {
+    const providerName = req.session?.user?.oauthProvider;
+    req.session.destroy(() => {});
+
+    // Optionally notify OIDC provider (end_session_endpoint)
+    if (!providerName) {
+      return { url: '/' };
+    }
+    const providerClient =
+      await this.oidcConfigurationService.getOidcProvider(providerName);
+    const endSessionEndpoint =
+      providerClient?.client.serverMetadata().end_session_endpoint;
+
+    if (endSessionEndpoint) {
+      return { url: endSessionEndpoint };
+    }
+    return { url: '/' };
   }
 
   @NoAuthRequired()
