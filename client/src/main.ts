@@ -114,10 +114,13 @@ const i18n = createI18n<[MessageSchema], "en" | "fr">({
 
 const app = createApp(App)
 app.use(pinia)
-app.use(router)
 app.use(i18n)
+app.use(router)
 
 app.mount("#app")
+
+//Loading the UI store before to ensure navigation guards have access to it
+await useUiStore().loadUiStore()
 
 setupAuthRedirect(router)
 setupNoSelectedTournamentRedirect(router)

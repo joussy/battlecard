@@ -1,6 +1,5 @@
 import { defineStore } from "pinia"
 import { computed, ref, watch } from "vue"
-import { useRouter } from "vue-router"
 import type { UiTheme, UiLanguage, UiStorage, Facets } from "@/types/ui"
 import type { UserAccount } from "@/types/user"
 import { OAuthOpenApi, User, UserOpenApi } from "@/api"
@@ -8,7 +7,6 @@ import { useI18n } from "vue-i18n"
 
 export const useUiStore = defineStore("ui", () => {
     const { locale } = useI18n()
-    const router = useRouter()
 
     const restored = ref<boolean>(false)
     const account = ref<UserAccount | null>(null)
@@ -56,13 +54,7 @@ export const useUiStore = defineStore("ui", () => {
         } catch (ex) {
             const res = ex as Response
             account.value = null
-            if (res.status === 401) {
-                console.warn("Unauthorized access, session may be invalid.")
-                // redirect to auth page if router available
-                if (router) {
-                    router.push({ name: "auth" })
-                }
-            }
+            console.warn("Failed to fetch user info:", res.status, res.statusText)
         }
         if (user) {
             account.value = {
@@ -76,10 +68,11 @@ export const useUiStore = defineStore("ui", () => {
     }
 
     async function logout() {
-        account.value = null
         var res = await OAuthOpenApi.logout()
         if (res?.url) {
             window.location.href = res.url
+        } else {
+            account.value = null
         }
     }
 

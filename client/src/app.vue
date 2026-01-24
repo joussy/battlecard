@@ -45,8 +45,6 @@ onMounted(async () => {
         },
         { immediate: true }
     )
-
-    await uiStore.loadUiStore()
 })
 </script>
 
