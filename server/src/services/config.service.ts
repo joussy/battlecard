@@ -63,7 +63,7 @@ export class ConfigService {
       importApiUrl: Joi.string().required(),
       importApiHeaderXApiKey: Joi.string().required(),
       gotenbergUrl: Joi.string().required(),
-      websiteBaseUrl: Joi.string().required(),
+      websiteBaseUrl: Joi.string().required().replace(/\/+$/, ''),
       environment: Joi.string().valid('development', 'production'),
       enableOpenApi: Joi.boolean().default(false),
       port: Joi.number().port().default(3000),

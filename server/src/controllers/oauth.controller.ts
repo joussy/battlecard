@@ -7,10 +7,7 @@ import {
   Redirect,
 } from '@nestjs/common';
 import * as client from 'openid-client';
-import { InjectRepository } from '@nestjs/typeorm';
-import { User } from '@/entities/user.entity';
 import { UserSession } from '@/decorators/auth.decorator';
-import { Repository } from 'typeorm';
 import { OidcConfigurationService } from '../services/oidc-configuration.service';
 import { NoAuthRequired } from '@/decorators/auth.decorator';
 import { OAuthGuard } from '../guards/oauth.guard';
@@ -19,12 +16,13 @@ import {
   BattlecardSessionRequest,
 } from '@/interfaces/auth.interface';
 import { AvailableProvidersDto, OAuthLogoutDto } from '@/dto/oauth.dto';
+import { ConfigService } from '@/services/config.service';
 
 @Controller('oauth')
 export class OAuthController {
   constructor(
     private readonly oidcConfigurationService: OidcConfigurationService,
-    @InjectRepository(User) private readonly userRepository: Repository<User>,
+    private readonly configService: ConfigService,
   ) {}
 
   @Get('callback')
@@ -82,7 +80,7 @@ export class OAuthController {
 
     const parameters: Record<string, string> = {
       scope: providerClient.scope,
-      redirect_uri: `http://localhost:5173/api/oauth/callback`,
+      redirect_uri: `${this.configService.getConfig().websiteBaseUrl}/api/oauth/callback`,
       code_challenge,
       code_challenge_method: 'S256',
     };

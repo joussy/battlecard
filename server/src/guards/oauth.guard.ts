@@ -5,12 +5,14 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '@/entities/user.entity';
 import { Repository } from 'typeorm';
 import { OidcConfigurationService } from '../services/oidc-configuration.service';
+import { ConfigService } from '@/services/config.service';
 
 @Injectable()
 export class OAuthGuard implements CanActivate {
   constructor(
     private readonly oidcConfigurationService: OidcConfigurationService,
     @InjectRepository(User) private readonly userRepository: Repository<User>,
+    private readonly configService: ConfigService,
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -40,7 +42,7 @@ export class OAuthGuard implements CanActivate {
         await client.calculatePKCECodeChallenge(code_verifier);
       const parameters: Record<string, string> = {
         scope: providerClient.scope,
-        redirect_uri: `http://localhost:5173/api/oauth/callback`,
+        redirect_uri: `${this.configService.getConfig().websiteBaseUrl}/api/oauth/callback`,
         code_challenge,
         code_challenge_method: 'S256',
       };
@@ -57,9 +59,14 @@ export class OAuthGuard implements CanActivate {
       return false;
     }
     // Handle callback and token exchange
+    const protocol = req.secure ? 'https' : 'http';
+    const currentUrl = new URL(
+      req.originalUrl || req.url,
+      `${protocol}://${req.headers.host}`,
+    );
     const tokens = await client.authorizationCodeGrant(
       providerClient.client,
-      new URL(req.url, `http://${req.headers.host}`),
+      currentUrl,
       {
         pkceCodeVerifier: req.session.oauth.code_verifier,
         expectedState: req.session.oauth.state,
