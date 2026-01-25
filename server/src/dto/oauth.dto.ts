@@ -14,5 +14,5 @@ export class OidcProviderDto {
   name: string;
 
   @IsString()
-  displayName?: string;
+  displayName: string;
 }

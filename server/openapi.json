@@ -1594,7 +1594,8 @@
           }
         },
         "required": [
-          "name"
+          "name",
+          "displayName"
         ]
       },
       "AvailableProvidersDto": {
