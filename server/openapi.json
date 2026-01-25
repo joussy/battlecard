@@ -70,6 +70,32 @@
         ]
       }
     },
+    "/api/oauth/backchannel-logout/{provider}": {
+      "post": {
+        "operationId": "OAuthController_backChannelLogout",
+        "parameters": [
+          {
+            "name": "provider",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
+        "security": [
+          {}
+        ],
+        "tags": [
+          "OAuth"
+        ]
+      }
+    },
     "/api/oauth/availableProviders": {
       "get": {
         "operationId": "OAuthController_getProviders",

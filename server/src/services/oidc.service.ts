@@ -6,6 +6,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '@/entities/user.entity';
 import { Repository } from 'typeorm';
 import { OAuthSessionData } from '@/interfaces/auth.interface';
+import { jwtVerify } from 'jose';
 
 @Injectable()
 export class OidcService {
@@ -24,6 +25,28 @@ export class OidcService {
       this.initialized = true;
     }
     return this.oidcProviders;
+  }
+
+  public async handleBackChannelLogout(
+    providerName: string,
+    logoutToken: string,
+  ): Promise<void> {
+    //get issuer from JWT token
+    const providerClient = await this.getOidcProvider(providerName);
+    if (!providerClient) {
+      throw new Error(`Unknown provider: ${providerName}`);
+    }
+    const jwksCache = client.getJwksCache(providerClient.client);
+    const jwksKey = jwksCache?.jwks?.keys[0];
+    if (!jwksKey) {
+      throw new Error('No JWKS keys found for provider');
+    }
+    const tokenSet = await jwtVerify(logoutToken, jwksKey);
+    const sid = tokenSet.payload.sid as string;
+    if (!sid) {
+      throw new Error('No sid claim found in logout token');
+    }
+    console.log(`Handle back-channel logout for sid: ${sid}`);
   }
 
   public async getOidcProvider(name: string) {

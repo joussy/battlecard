@@ -30,7 +30,7 @@ import { TypeOrmConfigService } from './services/typeorm-config.service';
 import { TemplateService } from './services/template.service';
 import { PlacesController } from './controllers/places.controller';
 import { PlacesService } from './services/places.service';
-import { OidcService } from './services/oidc-configuration.service';
+import { OidcService } from './services/oidc.service';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthenticatedOnlyGuard } from './guards/authenticated-only.guard';
 import { Session } from './entities/session.entity';

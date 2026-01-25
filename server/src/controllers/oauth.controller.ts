@@ -6,8 +6,10 @@ import {
   Redirect,
   Logger,
   Res,
+  Post,
+  Body,
 } from '@nestjs/common';
-import { OidcService } from '../services/oidc-configuration.service';
+import { OidcService } from '../services/oidc.service';
 import { NoAuthRequired } from '@/decorators/auth.decorator';
 import { BattlecardSessionRequest } from '@/interfaces/auth.interface';
 import { AvailableProvidersDto, OAuthLogoutDto } from '@/dto/oauth.dto';
@@ -105,6 +107,21 @@ export class OAuthController {
       return { url: endSessionEndpoint };
     }
     return { url: '/' };
+  }
+
+  @NoAuthRequired()
+  @Post('backchannel-logout/:provider')
+  async backChannelLogout(
+    @Body() body: { logout_token: string },
+    @Param('provider') provider: string,
+  ): Promise<void> {
+    console.log(
+      `Received back-channel logout for provider: ${provider}: ${body.logout_token}`,
+    );
+    await this.oidcConfigurationService.handleBackChannelLogout(
+      provider,
+      body.logout_token,
+    );
   }
 
   @NoAuthRequired()
