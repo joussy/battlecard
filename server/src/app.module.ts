@@ -24,14 +24,13 @@ import { GotenbergService } from './services/gotenberg.service';
 import { SelectorExportService } from './services/selector-export.service';
 import { ShareController } from './controllers/share.controller';
 import { ShareService } from './services/share.service';
-import { ConfigService } from './services/config.service';
 import { AppConfigModule } from './app-config.module';
 import { QrCodeService } from './services/qrcode.service';
 import { TypeOrmConfigService } from './services/typeorm-config.service';
 import { TemplateService } from './services/template.service';
 import { PlacesController } from './controllers/places.controller';
 import { PlacesService } from './services/places.service';
-import { OidcConfigurationService } from './services/oidc-configuration.service';
+import { OidcService } from './services/oidc-configuration.service';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthenticatedOnlyGuard } from './guards/authenticated-only.guard';
 import { Session } from './entities/session.entity';
@@ -68,7 +67,7 @@ import { Session } from './entities/session.entity';
   ],
   providers: [
     TypeOrmConfigService,
-    OidcConfigurationService,
+    OidcService,
     FightService,
     TournamentService,
     BoxerService,

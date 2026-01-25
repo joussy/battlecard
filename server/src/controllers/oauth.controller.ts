@@ -3,37 +3,87 @@ import {
   Get,
   Req,
   Param,
-  UseGuards,
   Redirect,
   Logger,
+  Res,
 } from '@nestjs/common';
-import * as client from 'openid-client';
-import { UserSession } from '@/decorators/auth.decorator';
-import { OidcConfigurationService } from '../services/oidc-configuration.service';
+import { OidcService } from '../services/oidc-configuration.service';
 import { NoAuthRequired } from '@/decorators/auth.decorator';
-import { OAuthGuard } from '../guards/oauth.guard';
-import {
-  AuthenticatedUser,
-  BattlecardSessionRequest,
-} from '@/interfaces/auth.interface';
+import { BattlecardSessionRequest } from '@/interfaces/auth.interface';
 import { AvailableProvidersDto, OAuthLogoutDto } from '@/dto/oauth.dto';
 import { ConfigService } from '@/services/config.service';
+import { Response as ExpressResponse, Request } from 'express';
 
 @Controller('oauth')
 export class OAuthController {
   private readonly logger = new Logger(OAuthController.name);
 
   constructor(
-    private readonly oidcConfigurationService: OidcConfigurationService,
+    private readonly oidcConfigurationService: OidcService,
     private readonly configService: ConfigService,
   ) {}
 
   @Get('callback')
   @NoAuthRequired()
-  @UseGuards(OAuthGuard)
   @Redirect('/', 302)
-  handleCallback(@UserSession() user: AuthenticatedUser) {
-    this.logger.debug('User authenticated', user);
+  async handleCallback(
+    @Req() req: Request,
+    @Res() res: ExpressResponse,
+  ): Promise<boolean> {
+    if (req.session?.user) {
+      this.logger.debug('User already authenticated', req.session.user);
+      return true;
+    }
+    // If not authenticated, start OIDC flow
+    const provider = req.session?.oauth?.provider;
+    if (!provider) {
+      res.status(401).send('Provider not specified');
+      return false;
+    }
+    const oidcProviders =
+      await this.oidcConfigurationService.getOidcProviders();
+    const providerClient = oidcProviders.find((p) => p.name === provider);
+    if (!providerClient) {
+      res.status(401).send('Unknown provider');
+      return false;
+    }
+    if (!req.session.oauth) {
+      // Start OIDC redirect
+      try {
+        const { url, oauth } =
+          await this.oidcConfigurationService.buildAuthorizationUrl(provider);
+        req.session.oauth = oauth;
+        res.redirect(url);
+        return false;
+      } catch (err) {
+        this.logger.error('Failed to build authorization URL:', err);
+        res.status(500).send('Failed to initialize authentication');
+        return false;
+      }
+    }
+    // Handle callback and token exchange
+    const protocol = req.secure ? 'https' : 'http';
+    const currentUrl = new URL(
+      req.originalUrl || req.url,
+      `${protocol}://${req.headers.host}`,
+    );
+
+    try {
+      const userData = await this.oidcConfigurationService.handleCallback(
+        currentUrl,
+        req.session.oauth,
+      );
+      req.session.oauth = undefined;
+      req.session.user = {
+        ...userData,
+        oauthProvider: provider,
+      };
+      return true;
+    } catch (err) {
+      this.logger.error('Authentication failed:', err);
+      res.status(401).send('Authentication failed');
+      return false;
+    }
   }
 
   @NoAuthRequired()
@@ -71,36 +121,11 @@ export class OAuthController {
   @Get(':provider')
   async getRedirectionUrl(
     @Param('provider') provider: string,
-    @Req() req: BattlecardSessionRequest,
+    @Req() req: Request,
   ) {
-    const oidcProviders =
-      await this.oidcConfigurationService.getOidcProviders();
-    const providerClient = oidcProviders.find((p) => p.name === provider);
-    if (!providerClient) throw new Error(`Unknown provider: ${provider}`);
-    const code_verifier: string = client.randomPKCECodeVerifier();
-    const code_challenge: string =
-      await client.calculatePKCECodeChallenge(code_verifier);
-
-    const parameters: Record<string, string> = {
-      scope: providerClient.scope,
-      redirect_uri: `${this.configService.getConfig().websiteBaseUrl}/api/oauth/callback`,
-      code_challenge,
-      code_challenge_method: 'S256',
-    };
-    req.session.oauth = { code_verifier, provider };
-    if (!providerClient.client.serverMetadata().supportsPKCE()) {
-      /**
-       * We cannot be sure the server supports PKCE so we're going to use state too.
-       * Use of PKCE is backwards compatible even if the AS doesn't support it which
-       * is why we're using it regardless. Like PKCE, random state must be generated
-       * for every redirect to the authorization_endpoint.
-       */
-      parameters.state = client.randomState();
-      req.session.oauth.state = parameters.state;
-      req.session.oauth.provider = provider;
-    }
-
-    const url = client.buildAuthorizationUrl(providerClient.client, parameters);
-    return url.toString();
+    const { url, oauth } =
+      await this.oidcConfigurationService.buildAuthorizationUrl(provider);
+    req.session.oauth = oauth;
+    return url;
   }
 }

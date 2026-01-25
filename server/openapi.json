@@ -28,7 +28,14 @@
         "parameters": [],
         "responses": {
           "default": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
           }
         },
         "security": [

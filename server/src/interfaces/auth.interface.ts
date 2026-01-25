@@ -8,7 +8,7 @@ export interface OAuthClientConfig {
   scope: string;
 }
 
-interface OAuthSessionData {
+export interface OAuthSessionData {
   code_verifier?: string;
   state?: string;
   provider?: string;

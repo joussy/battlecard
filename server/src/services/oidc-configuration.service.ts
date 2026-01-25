@@ -1,13 +1,22 @@
 import { OAuthClientConfig } from '@/interfaces/auth.interface';
 import { ConfigService } from '@/services/config.service';
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import * as client from 'openid-client';
+import { InjectRepository } from '@nestjs/typeorm';
+import { User } from '@/entities/user.entity';
+import { Repository } from 'typeorm';
+import { OAuthSessionData } from '@/interfaces/auth.interface';
 
 @Injectable()
-export class OidcConfigurationService {
-  constructor(private readonly configService: ConfigService) {}
+export class OidcService {
+  private readonly logger = new Logger(OidcService.name);
   public oidcProviders: OAuthClientConfig[] = [];
   private initialized: boolean = false;
+
+  constructor(
+    private readonly configService: ConfigService,
+    @InjectRepository(User) private readonly userRepository: Repository<User>,
+  ) {}
 
   public async getOidcProviders() {
     if (!this.initialized) {
@@ -44,5 +53,92 @@ export class OidcConfigurationService {
       }),
     );
     return clients;
+  }
+
+  async buildAuthorizationUrl(
+    providerName: string,
+  ): Promise<{ url: string; oauth: OAuthSessionData }> {
+    const oidcProviders = await this.getOidcProviders();
+    const providerClient = oidcProviders.find((p) => p.name === providerName);
+    if (!providerClient) {
+      throw new Error(`Unknown provider: ${providerName}`);
+    }
+
+    const code_verifier: string = client.randomPKCECodeVerifier();
+    const code_challenge: string =
+      await client.calculatePKCECodeChallenge(code_verifier);
+
+    const parameters: Record<string, string> = {
+      scope: providerClient.scope,
+      redirect_uri: `${this.configService.getConfig().websiteBaseUrl}/api/oauth/callback`,
+      code_challenge,
+      code_challenge_method: 'S256',
+    };
+
+    const oauth: OAuthSessionData = { code_verifier, provider: providerName };
+
+    if (!providerClient.client.serverMetadata().supportsPKCE()) {
+      parameters.state = client.randomState();
+      oauth.state = parameters.state;
+    }
+
+    const url = client.buildAuthorizationUrl(providerClient.client, parameters);
+    return { url: url.toString(), oauth };
+  }
+
+  async handleCallback(
+    currentUrl: URL,
+    oauth: OAuthSessionData,
+  ): Promise<{ email: string; id: string; apiEnabled: boolean }> {
+    const provider = oauth?.provider;
+    if (!provider) {
+      throw new Error('Provider not found in session');
+    }
+
+    const oidcProviders = await this.getOidcProviders();
+    const providerClient = oidcProviders.find((p) => p.name === provider);
+    if (!providerClient) {
+      throw new Error('Unknown provider');
+    }
+
+    // Remove state param if not used, otherwise openid-client throws error. Needed for Authentik
+    const stateres = currentUrl.searchParams.get('state');
+    if (!stateres) {
+      currentUrl.searchParams.delete('state');
+    }
+
+    const tokens = await client.authorizationCodeGrant(
+      providerClient.client,
+      currentUrl,
+      {
+        pkceCodeVerifier: oauth.code_verifier,
+        expectedState: oauth.state,
+      },
+    );
+
+    // Fetch user info
+    const protectedResourceResponse = await client.fetchProtectedResource(
+      providerClient.client,
+      tokens.access_token,
+      new URL(providerClient.client.serverMetadata().userinfo_endpoint!),
+      'GET',
+    );
+
+    const { email } = (await protectedResourceResponse.json()) as {
+      email: string;
+      name: string;
+      picture?: string;
+    };
+
+    const user = await this.userRepository.findOneBy({ email });
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    return {
+      id: user.id,
+      email: user.email,
+      apiEnabled: user.apiEnabled,
+    };
   }
 }
