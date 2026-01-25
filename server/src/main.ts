@@ -14,6 +14,11 @@ import i18nMiddleware from './middleware/i18n.middleware';
 // Import JSON translation files
 import en from './locales/en-US.json';
 import fr from './locales/fr-FR.json';
+import session from 'express-session';
+import { TypeormStore } from 'connect-typeorm';
+import { DataSource } from 'typeorm';
+import { Session } from './entities/session.entity';
+import { SessionExpiredFilter } from './guards/session-expired.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -33,9 +38,30 @@ async function bootstrap() {
     },
     debug: false,
   });
+  const config = app.get(ConfigService);
+  const dataSource = app.get(DataSource);
+  const sessionRepository = dataSource.getRepository(Session);
 
   // Apply middleware to set i18next language from Accept-Language header
   app.use(i18nMiddleware);
+  // Convert sessionTTLInHours from hours to seconds for session store
+  const sessionTtlSeconds = config.getConfig().sessionTTLInHours * 3600;
+  app.use(
+    session({
+      secret: config.getConfig().sessionSecret,
+      resave: false,
+      saveUninitialized: false,
+      cookie: {
+        secure: config.getConfig().environment === 'production',
+        httpOnly: true,
+        maxAge: sessionTtlSeconds * 1000, // Convert seconds to milliseconds
+      },
+      store: new TypeormStore({
+        cleanupLimit: 2,
+        ttl: sessionTtlSeconds, // Configurable session TTL in seconds
+      }).connect(sessionRepository),
+    }),
+  );
 
   // Enable global validation with class-validator
   app.useGlobalPipes(
@@ -45,6 +71,9 @@ async function bootstrap() {
       transform: true, // Automatically transform payloads to be objects typed according to their DTO classes
     }),
   );
+
+  app.useGlobalFilters(new SessionExpiredFilter());
+
   const configService = app.get(ConfigService);
   await app.listen(configService.getConfig().port);
   const logger = new Logger(ConfigService.name);
@@ -80,7 +109,8 @@ function generateOpenApiSchema(app: INestApplication) {
     if (existsSync(outPath)) {
       const oldContent = readFileSync(outPath, 'utf8');
       if (oldContent !== newContent) {
-        console.log('OpenAPI document has changed; updating', outPath);
+        const logger = new Logger(ConfigService.name);
+        logger.log('OpenAPI document has changed; updating', outPath);
         writeFileSync(outPath, newContent);
       }
     } else {
@@ -88,7 +118,7 @@ function generateOpenApiSchema(app: INestApplication) {
     }
   } catch (err) {
     // Don't fail startup if writing the file fails; log and continue
-    console.error('Failed to write OpenAPI document:', err);
+    Logger.error('Failed to write OpenAPI document:', err);
   }
 }
 

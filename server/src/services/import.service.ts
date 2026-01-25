@@ -22,6 +22,8 @@ import { ConfigService } from './config.service';
 
 @Injectable()
 export class ImportService {
+  private readonly logger = new Logger(ImportService.name);
+
   constructor(
     private readonly boxerService: BoxerService,
     private readonly tournamentService: TournamentService,
@@ -29,7 +31,6 @@ export class ImportService {
     private readonly boxerRepository: Repository<Boxer>,
     private readonly configService: ConfigService,
   ) {}
-  private readonly logger = new Logger(ImportService.name);
 
   async previewBoxersFromCsv(
     payload: string,
@@ -318,12 +319,12 @@ export class ImportService {
         continue;
       }
       if (!response) {
-        console.error('Import API response error:', response);
+        this.logger.error('Import API response error:', response);
         continue;
       }
       const responseText = await response.text();
       if (!responseText || responseText.length === 0) {
-        console.error('No data found in Import API response for ID:', id);
+        this.logger.error('No data found in Import API response for ID:', id);
         continue;
       }
       this.logger.debug('Import API response received for ID:', id);
@@ -331,7 +332,7 @@ export class ImportService {
       try {
         parsed = JSON.parse(responseText);
       } catch (e) {
-        console.error(
+        this.logger.error(
           'Failed to parse JSON from Import API response for ID:',
           id,
           e,
@@ -339,7 +340,7 @@ export class ImportService {
         continue;
       }
       if (!parsed || typeof parsed !== 'object') {
-        console.error('No boxers found in Import API response for ID:', id);
+        this.logger.error('No boxers found in Import API response for ID:', id);
         continue;
       }
       // Optionally, add more property checks here to validate CsvBoxer shape

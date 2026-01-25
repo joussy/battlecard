@@ -1,17 +1,14 @@
 import { defineStore } from "pinia"
-import { ref, watch } from "vue"
-import { useRouter } from "vue-router"
+import { computed, ref, watch } from "vue"
 import type { UiTheme, UiLanguage, UiStorage, Facets } from "@/types/ui"
 import type { UserAccount } from "@/types/user"
-import { User, UserOpenApi } from "@/api"
-import { useI18n } from "vue-i18n"
+import { OAuthOpenApi, User, UserOpenApi } from "@/api"
 
 export const useUiStore = defineStore("ui", () => {
-    const { locale } = useI18n()
-    const router = useRouter()
-
     const restored = ref<boolean>(false)
     const account = ref<UserAccount | null>(null)
+    const isAuthenticated = computed(() => account.value !== null)
+    let authCheckInterval: NodeJS.Timeout | null = null
 
     // Load from localStorage 'uiStore' key if available
     let initialUiStore: Partial<UiStorage> = {}
@@ -27,20 +24,18 @@ export const useUiStore = defineStore("ui", () => {
     const language = ref<UiLanguage>(initialUiStore.language || getDefaultLanguage())
     const hideNonMatchableOpponents = ref(initialUiStore.hideNonMatchableOpponents ?? false)
     const hideFightersWithNoMatch = ref(initialUiStore.hideFightersWithNoMatch ?? false)
-    const jwtToken = ref<string | undefined>(initialUiStore.jwtToken)
     const facets = ref<Facets | null>(initialUiStore.facets ?? null)
     const currentTournamentId = ref<string | null>(initialUiStore.currentTournamentId ?? null)
 
     // Watch for changes and update 'uiStore' localStorage key
     watch(
-        [theme, language, hideNonMatchableOpponents, hideFightersWithNoMatch, jwtToken, facets, currentTournamentId],
+        [theme, language, hideNonMatchableOpponents, hideFightersWithNoMatch, facets, currentTournamentId],
         () => {
             const localStorageData: UiStorage = {
                 theme: theme.value,
                 language: language.value,
                 hideNonMatchableOpponents: hideNonMatchableOpponents.value,
                 hideFightersWithNoMatch: hideFightersWithNoMatch.value,
-                jwtToken: jwtToken.value,
                 facets: facets.value,
                 currentTournamentId: currentTournamentId.value,
             }
@@ -49,53 +44,31 @@ export const useUiStore = defineStore("ui", () => {
         { deep: true }
     )
 
-    function authenticate() {
-        const width = 500
-        const height = 600
-        const left = window.screenX + (window.outerWidth - width) / 2
-        const top = window.screenY + (window.outerHeight - height) / 2
-        window.open(
-            "/api/auth/google",
-            "GoogleAuth",
-            `width=${width},height=${height},left=${left},top=${top},resizable,scrollbars=yes,status=1`
-        )
-    }
-
-    async function setTokenAndFetchUser() {
-        if (!jwtToken.value) {
-            console.warn("No JWT token set, cannot fetch user profile.")
-            return
-        }
+    async function fetchUser() {
         let user: User | undefined
         try {
             user = await UserOpenApi.getMe()
-        } catch (ex) {
-            const res = ex as Response
+        } catch {
             account.value = null
-            if (res.status === 401) {
-                console.warn("Unauthorized access, JWT token may be invalid.")
-                jwtToken.value = undefined
-                // redirect to auth page if router available
-                if (router) {
-                    router.push({ name: "auth" })
-                }
-            }
         }
-        if (user && jwtToken.value) {
+        if (user) {
             account.value = {
                 id: user.id,
                 name: user.name,
                 email: user.email,
                 picture: user.picture || null,
                 apiEnabled: user.apiEnabled,
-                authToken: jwtToken.value,
             }
         }
     }
 
-    function logout() {
-        jwtToken.value = undefined
-        account.value = null
+    async function logout() {
+        const res = await OAuthOpenApi.logout()
+        if (res?.url) {
+            window.location.href = res.url
+        } else {
+            account.value = null
+        }
     }
 
     function clearFacets() {
@@ -133,9 +106,10 @@ export const useUiStore = defineStore("ui", () => {
     }
 
     async function loadUiStore() {
-        if (jwtToken.value) {
-            await setTokenAndFetchUser()
+        if (restored.value) {
+            return
         }
+        await fetchUser()
         listenWindowThemeChanges()
         setTheme(theme.value)
         setLanguage(language.value)
@@ -162,7 +136,8 @@ export const useUiStore = defineStore("ui", () => {
 
     function setLanguage(lang: UiLanguage) {
         language.value = lang
-        locale.value = lang
+        // We cannot use I18n here since stores are initialized before plugins
+        // I18n will be updated from the store watcher in app.vue
     }
 
     function getDefaultLanguage(): UiLanguage {
@@ -173,6 +148,20 @@ export const useUiStore = defineStore("ui", () => {
         return "en"
     }
 
+    const startAuthCheck = () => {
+        // Then check every 30 seconds (30 seconds * 1000 milliseconds)
+        authCheckInterval = setInterval(() => {
+            fetchUser()
+        }, 30 * 1000)
+    }
+
+    const stopAuthCheck = () => {
+        if (authCheckInterval) {
+            clearInterval(authCheckInterval)
+            authCheckInterval = null
+        }
+    }
+
     return {
         restored,
         account,
@@ -181,16 +170,16 @@ export const useUiStore = defineStore("ui", () => {
         currentTournamentId,
         hideNonMatchableOpponents,
         hideFightersWithNoMatch,
-        jwtToken,
+        isAuthenticated,
         facets,
-        authenticate,
-        setTokenAndFetchUser,
+        fetchUser,
         logout,
         clearFacets,
         clearFacet,
-        loadUiStore,
-        listenWindowThemeChanges,
         setTheme,
         setLanguage,
+        loadUiStore,
+        startAuthCheck,
+        stopAuthCheck,
     }
 })

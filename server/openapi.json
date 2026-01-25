@@ -22,10 +22,67 @@
         ]
       }
     },
-    "/api/auth/google": {
+    "/api/oauth/callback": {
       "get": {
-        "operationId": "AuthController_googleAuth",
+        "operationId": "OAuthController_handleCallback",
         "parameters": [],
+        "responses": {
+          "default": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {}
+        ],
+        "tags": [
+          "OAuth"
+        ]
+      }
+    },
+    "/api/oauth/logout": {
+      "get": {
+        "operationId": "OAuthController_logout",
+        "parameters": [],
+        "responses": {
+          "default": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthLogoutDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {}
+        ],
+        "tags": [
+          "OAuth"
+        ]
+      }
+    },
+    "/api/oauth/backchannel-logout/{provider}": {
+      "post": {
+        "operationId": "OAuthController_backChannelLogout",
+        "parameters": [
+          {
+            "name": "provider",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "default": {
             "description": ""
@@ -35,14 +92,47 @@
           {}
         ],
         "tags": [
-          "Auth"
+          "OAuth"
         ]
       }
     },
-    "/api/auth/google/callback": {
+    "/api/oauth/availableProviders": {
       "get": {
-        "operationId": "AuthController_googleAuthRedirect",
+        "operationId": "OAuthController_getProviders",
         "parameters": [],
+        "responses": {
+          "default": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AvailableProvidersDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {}
+        ],
+        "tags": [
+          "OAuth"
+        ]
+      }
+    },
+    "/api/oauth/{provider}": {
+      "get": {
+        "operationId": "OAuthController_getRedirectionUrl",
+        "parameters": [
+          {
+            "name": "provider",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "default": {
             "description": "",
@@ -59,7 +149,7 @@
           {}
         ],
         "tags": [
-          "Auth"
+          "OAuth"
         ]
       }
     },
@@ -1480,6 +1570,46 @@
           "apiEnabled",
           "created",
           "updated"
+        ]
+      },
+      "OAuthLogoutDto": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "url"
+        ]
+      },
+      "OidcProviderDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "displayName": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "displayName"
+        ]
+      },
+      "AvailableProvidersDto": {
+        "type": "object",
+        "properties": {
+          "providers": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OidcProviderDto"
+            }
+          }
+        },
+        "required": [
+          "providers"
         ]
       },
       "TournamentDto": {

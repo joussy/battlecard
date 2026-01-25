@@ -29,3 +29,17 @@ a:link {
 .bi-badge {
   font-size: 17px;
 }
+
+.btn-contrast {
+  --bs-btn-color: #fff;
+  --bs-btn-bg: #495057;
+  --bs-btn-border-color: #495057;
+}
+
+@media (prefers-color-scheme: dark) {
+  .btn-contrast {
+    --bs-btn-color: #000;
+    --bs-btn-bg: #f8f9fa;
+    --bs-btn-border-color: #f8f9fa;
+  }
+}

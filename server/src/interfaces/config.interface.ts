@@ -1,4 +1,25 @@
 // Configuration read at startup
+
+/**
+ * Configuration for a single OAuth provider (Google, GitHub, etc.)
+ */
+export interface OAuthProviderConfig {
+  /** Client ID issued by the OAuth provider */
+  clientId: string;
+  /** Client secret issued by the OAuth provider */
+  clientSecret: string;
+  /** Authorization endpoint URL for initiating OAuth flow */
+  issuerUrl: string;
+  /** Token endpoint URL for exchanging code for access token */
+  tokenUrl: string;
+  /** User info endpoint URL for fetching authenticated user profile */
+  userInfoUrl: string;
+  /** Scopes requested during OAuth flow (space-separated) */
+  scope: string;
+  /** Optional display name for the provider */
+  displayName?: string;
+}
+
 export interface EnvConfig {
   /** Geoapify API key for address autocomplete. Optional */
   geoapifyApiKey?: string;
@@ -15,16 +36,12 @@ export interface EnvConfig {
   dbName: string;
 
   // Google OAuth configuration
-  /** Google OAuth client ID for authentication */
-  googleClientId: string;
-  /** Google OAuth client secret for authentication */
-  googleClientSecret: string;
-  /** Google OAuth callback URL for authentication flow */
-  googleCallbackUrl: string;
+  /** OAuth provider configurations (generic) */
+  oauth?: Record<string, OAuthProviderConfig>;
 
   // JWT configuration
-  /** Secret key used for signing JWT tokens */
-  jwtSecret: string;
+  /** Secret key used for signing Express cookies */
+  sessionSecret: string;
 
   // External API configuration
   /** URL for the external import API service */
@@ -45,4 +62,6 @@ export interface EnvConfig {
   port: number;
   /** Secret used for sharing fight cards */
   fightCardShareSecret: string;
+  /** Session time-to-live in hours (e.g., 24 for 1 day) */
+  sessionTTLInHours: number;
 }

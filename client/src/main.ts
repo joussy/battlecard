@@ -1,124 +1,36 @@
 import { createApp } from "vue"
-import { createRouter, Router } from "vue-router"
-import { createWebHashHistory } from "vue-router"
 import App from "./app.vue"
-import FightCardComponent from "@/components/fight-card/fight-card.component.vue"
-import SettingsComponent from "@/components/settings/settings.component.vue"
-import BoxerSelectorComponent from "@/components/selector/boxer-selector.component.vue"
-import AuthComponent from "@/components/authentication/authentication.component.vue"
-import ImportPage from "@/components/import/import.component.vue"
-import setupAuthRedirect from "@/router/auth-redirect"
-
 import "./style.scss"
 import "bootstrap-icons/font/bootstrap-icons.css"
-import BoxerTileDetailsComponent from "@/components/selector/boxer-details.component.vue"
-import TournamentsComponent from "@/components/tournament/tournaments.component.vue"
-import { createPinia } from "pinia"
-import SharedFightCardComponent from "./components/fight-card/shared-fight-card.component.vue"
-import { client as clientOpenApi } from "./api/client.gen"
 import { useUiStore } from "./stores/ui.store"
-import { createI18n } from "vue-i18n"
-import enUS from "./locales/en-US.json"
-import frFR from "./locales/fr-FR.json"
-import setupNoSelectedTournamentRedirect from "./router/no-selected-tournament-redirect"
+import { createAppRouter, setupAuthRedirect, setupNoSelectedTournamentRedirect } from "./bootstrap/router"
+import { setupApiClient } from "./bootstrap/api-client"
+import { createPiniaWithRouter } from "./bootstrap/pinia"
+import { createI18nInstance } from "./bootstrap/i18n"
 
-declare module "pinia" {
-    export interface PiniaCustomProperties {
-        router: Router
-    }
+async function bootstrap() {
+    // Create the Vue Router instance with all routes and scroll behavior
+    const router = createAppRouter()
+    // Set up API client interceptors and config, including session and locale handling
+    setupApiClient(router)
+    // Create Pinia store and inject router for use in stores
+    const pinia = createPiniaWithRouter(router)
+    // Create the i18n instance for localization
+    const i18n = createI18nInstance()
+
+    // Create the Vue app root instance
+    const app = createApp(App)
+    app.use(pinia)
+    app.use(i18n)
+    app.use(router)
+
+    // Load UI store before mounting to ensure navigation guards have access to state
+    await useUiStore().loadUiStore()
+    // Mount the app to the DOM
+    app.mount("#app")
+    // Set up navigation guards for authentication and tournament selection
+    setupAuthRedirect(router)
+    setupNoSelectedTournamentRedirect(router)
 }
 
-const routes = [
-    { path: "/", redirect: { name: "auth" } },
-    {
-        path: "/tournaments",
-        name: "tournaments",
-        component: TournamentsComponent,
-        meta: { requiresSelectedTournament: false },
-    },
-    {
-        path: "/selector",
-        name: "selector",
-        component: BoxerSelectorComponent,
-        meta: { requiresSelectedTournament: true },
-    },
-    {
-        path: "/selector/tile/:id",
-        name: "selector-tile",
-        component: BoxerTileDetailsComponent,
-        meta: { requiresSelectedTournament: true },
-    },
-    { path: "/settings", name: "settings", component: SettingsComponent, meta: { requiresSelectedTournament: false } },
-    { path: "/card", name: "card", component: FightCardComponent, meta: { requiresSelectedTournament: true } },
-    {
-        path: "/auth",
-        name: "auth",
-        component: AuthComponent,
-        meta: { hideMenu: true, requiresAuth: false, requiresSelectedTournament: false },
-    },
-    {
-        path: "/shared-card/:roToken",
-        name: "shared-card",
-        component: SharedFightCardComponent,
-        meta: { requiresAuth: false, hideMenu: true },
-    },
-    { path: "/import", name: "import", component: ImportPage },
-]
-
-const router = createRouter({
-    history: createWebHashHistory(),
-
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    scrollBehavior(to, from, savedPosition) {
-        if (from.name == "selector-tile" && to.name == "selector-tile") {
-            return { top: 0 }
-        }
-    },
-    routes,
-})
-
-clientOpenApi.setConfig({
-    baseUrl: "/",
-    auth: () => useUiStore().jwtToken,
-})
-
-clientOpenApi.interceptors.request.use((request) => {
-    const locale = useUiStore().language
-    if (locale) {
-        request.headers.append("Accept-Language", locale)
-    }
-    return request
-})
-
-clientOpenApi.interceptors.response.use((response) => {
-    if (response.status >= 400) {
-        throw response
-    }
-    return response
-})
-
-const pinia = createPinia()
-pinia.use(() => ({ router }))
-
-// Initialize i18n with default locale
-type MessageSchema = typeof enUS
-const i18n = createI18n<[MessageSchema], "en" | "fr">({
-    availableLocales: ["en-US", "fr-FR"],
-    locale: "en", // Default, will be updated from store
-    fallbackLocale: "en",
-    legacy: false,
-    messages: {
-        fr: frFR,
-        en: enUS,
-    },
-})
-
-const app = createApp(App)
-app.use(pinia)
-app.use(router)
-app.use(i18n)
-
-app.mount("#app")
-
-setupAuthRedirect(router)
-setupNoSelectedTournamentRedirect(router)
+bootstrap()

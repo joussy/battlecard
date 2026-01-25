@@ -11,27 +11,41 @@
             <p class="lead text-muted mb-0">{{ $t("authentication.tagline") }}</p>
         </div>
         <div
-            class="card p-4 shadow w-100"
+            v-if="providerErrorMessage"
+            class="alert alert-danger m-0"
+            role="alert"
+        >
+            <i class="bi bi-exclamation-triangle-fill"></i>
+            {{ providerErrorMessage }}
+        </div>
+        <div
+            v-else
+            class="p-4 shadow w-100"
             style="max-width: 400px"
         >
-            <div class="text-center">
-                <span class="h6">{{ $t("authentication.signIn") }}</span>
-            </div>
             <div class="card-body">
-                <button
-                    v-if="!uiStore.account"
-                    class="btn btn-warning w-100 mb-3"
-                    @click="signInWithGoogle()"
+                <div
+                    v-if="!uiStore.isAuthenticated"
+                    class="d-flex flex-column row-gap-3"
                 >
-                    <i class="bi bi-google me-2" />{{ $t("authentication.signInWithGoogle") }}
-                </button>
+                    <button
+                        v-for="provider in providers"
+                        :key="provider.name"
+                        class="btn btn-contrast w-100"
+                        @click="signInWithProvider(provider.name)"
+                    >
+                        <i :class="getProviderIcon(provider.displayName) + ' me-2'" />{{
+                            $t("authentication.signInWith", { provider: provider.displayName })
+                        }}
+                    </button>
+                </div>
                 <div
                     v-else
                     class="d-flex flex-column align-items-center"
                 >
                     <img
-                        v-if="uiStore.account.picture"
-                        :src="uiStore.account.picture"
+                        v-if="uiStore.account!.picture"
+                        :src="uiStore.account!.picture"
                         class="rounded-circle mb-2 avatar-icon"
                         alt="User Avatar"
                     />
@@ -40,12 +54,12 @@
                         class="bi bi-person-circle mb-2"
                         :style="{ 'font-size': '2.5rem' }"
                     />
-                    <strong>{{ uiStore.account?.name }}</strong>
+                    <strong>{{ uiStore.account!.name }}</strong>
                     <div
                         class="text-muted"
                         style="font-size: 0.85rem"
                     >
-                        {{ uiStore.account?.email }}
+                        {{ uiStore.account!.email }}
                     </div>
                     <button
                         class="btn btn-danger mt-3"
@@ -93,17 +107,34 @@
     </div>
 </template>
 <script setup lang="ts">
-import { onMounted } from "vue"
+import { onMounted, ref } from "vue"
 import { useRouter } from "vue-router"
 import { useUiStore } from "@/stores/ui.store"
 import IconComponent from "@/components/shared/core/icon.component.vue"
 import { UiLanguage } from "@/types/ui"
+import { OAuthOpenApi, OidcProviderDto } from "@/api"
+import { useI18n } from "vue-i18n"
 
 const router = useRouter()
 const uiStore = useUiStore()
+const $t = useI18n().t
 
-const signInWithGoogle = () => {
-    uiStore.authenticate()
+const providers = ref<OidcProviderDto[]>([])
+const providerErrorMessage = ref<string>("")
+
+const signInWithProvider = async (provider: string) => {
+    providerErrorMessage.value = ""
+    try {
+        const redirectionUrl = await OAuthOpenApi.getRedirectionUrl({ path: { provider } })
+        if (!redirectionUrl) {
+            providerErrorMessage.value = $t("authentication.serviceUnavailable")
+            return
+        }
+        window.open(redirectionUrl, "_self")
+    } catch (error) {
+        providerErrorMessage.value = $t("authentication.serviceUnavailable")
+        console.error("Failed to get redirection URL for OAuth provider:", error)
+    }
 }
 
 const logout = () => {
@@ -114,18 +145,43 @@ const setLanguage = (language: UiLanguage) => {
     uiStore.setLanguage(language)
 }
 
-onMounted(async () => {
-    window.addEventListener("message", async (event) => {
-        if (event.data && event.data.token) {
-            uiStore.jwtToken = event.data.token
-            await uiStore.setTokenAndFetchUser()
-            router.push({ name: "tournaments" })
+const getProviderIcon = (provider: string): string => {
+    const icons: Record<string, string> = {
+        google: "bi bi-google",
+        microsoft: "bi bi-microsoft",
+        github: "bi bi-github",
+        facebook: "bi bi-facebook",
+        twitter: "bi bi-twitter",
+        linkedin: "bi bi-linkedin",
+        apple: "bi bi-apple",
+        amazon: "bi bi-amazon",
+        discord: "bi bi-discord",
+        slack: "bi bi-slack",
+    }
+    const providerLower = provider.toLowerCase()
+    for (const [key, icon] of Object.entries(icons)) {
+        if (providerLower.includes(key)) {
+            return icon
         }
-    })
+    }
+    return "bi bi-box-arrow-in-right"
+}
+
+onMounted(async () => {
+    try {
+        const providersRes = await OAuthOpenApi.getProviders()
+        providers.value = providersRes?.providers ?? []
+        if (providers.value.length === 0) {
+            providerErrorMessage.value = $t("authentication.serviceUnavailable")
+        }
+    } catch (error) {
+        console.error("Failed to fetch authentication providers:", error)
+        providerErrorMessage.value = $t("authentication.serviceUnavailable")
+    }
     const urlParams = new URLSearchParams(window.location.search)
     const token = urlParams.get("token")
     if (token) {
-        await uiStore.setTokenAndFetchUser()
+        await uiStore.fetchUser()
         router.push({ name: "tournaments" })
     }
 })

@@ -10,7 +10,7 @@ import {
   Logger,
 } from '@nestjs/common';
 import { ModalityService } from '../modality/modality.service';
-import { User } from '@/decorators/auth.decorator';
+import { UserSession } from '@/decorators/auth.decorator';
 import { AuthenticatedUser } from '@/interfaces/auth.interface';
 import { TournamentService } from '@/services/tournament.service';
 import { ImportService } from '@/services/import.service';
@@ -40,7 +40,7 @@ export class ImportController {
   @Post()
   async importBoxers(
     @Body() dto: ImportBoxersDto,
-    @User() user: AuthenticatedUser,
+    @UserSession() user: AuthenticatedUser,
   ): Promise<ImportBoxersResponseDto> {
     return this.importService.importBoxers(
       dto.boxers,
@@ -118,7 +118,7 @@ export class ImportController {
   @Post('previewFromApi')
   async previewFromApi(
     @Body() dto: PreviewBoxersApiDto,
-    @User() user: AuthenticatedUser,
+    @UserSession() user: AuthenticatedUser,
   ): Promise<PreviewBoxersResponseDto> {
     if (!user.apiEnabled) {
       this.logger.error('API access is not enabled for user:', user.id);

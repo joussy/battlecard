@@ -1,4 +1,5 @@
 import { DataSource } from 'typeorm';
+import { Logger } from '@nestjs/common';
 import { User } from './entities/user.entity';
 import { Tournament } from './entities/tournament.entity';
 import { Boxer } from './entities/boxer.entity';
@@ -8,6 +9,8 @@ import * as dotenv from 'dotenv';
 import { mockBoxers } from './mock/boxers.mock';
 import { mockFights } from './mock/fights.mock';
 dotenv.config({ path: '.env.local' });
+
+const logger = new Logger('Seed');
 
 const dataSource = new DataSource({
   type: 'postgres',
@@ -50,7 +53,7 @@ async function seed() {
       picture: picture,
       apiEnabled: true,
     });
-    console.log(`Mock user created with email: ${userEmail}`);
+    logger.debug(`Mock user created with email: ${userEmail}`);
   }
   if (!user) {
     throw new Error(
@@ -101,18 +104,18 @@ async function seed() {
   );
   await fightRepo.save(fights);
 
-  console.log(`Database seeded with mock data for user {email} !`, user.email);
+  logger.debug(`Database seeded with mock data for user {email} !`, user.email);
   await dataSource.destroy();
 }
 
 async function promptDeletion() {
-  console.warn(
+  logger.warn(
     '\n⚠️  WARNING: This operation will DELETE ALL tournament, boxer, and fight data in your database!',
   );
-  console.warn(
+  logger.warn(
     'All tables (fight, tournament_boxer, boxer, tournament) will be truncated and replaced with mock data.',
   );
-  console.warn('If you wish to keep your data, stop this script now (Ctrl+C).');
+  logger.warn('If you wish to keep your data, stop this script now (Ctrl+C).');
   process.stdout.write('Type YES to continue: ');
   const userInput = await new Promise((resolve) => {
     process.stdin.resume();
@@ -124,7 +127,7 @@ async function promptDeletion() {
     });
   });
   if (userInput !== 'YES') {
-    console.log('Aborted by user.');
+    logger.debug('Aborted by user.');
     process.exit(0);
   }
 }
@@ -132,6 +135,6 @@ async function promptDeletion() {
 promptDeletion()
   .then(() => seed())
   .catch((e) => {
-    console.error(e);
+    logger.error(e);
     process.exit(1);
   });

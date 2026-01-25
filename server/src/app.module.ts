@@ -5,11 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Tournament } from './entities/tournament.entity';
 import { UserController } from './controllers/user.controller';
-import { GoogleStrategy } from './auth/google.strategy';
-import { AuthController } from './auth/auth.controller';
-import { AuthService } from './auth/auth.service';
-import { JwtModule } from '@nestjs/jwt';
-import { JwtStrategy } from './auth/jwt.strategy';
+import { OAuthController } from './controllers/oauth.controller';
 import { TournamentController } from './controllers/tournament.controller';
 import { Boxer } from './entities/boxer.entity';
 import { BoxerController } from './controllers/boxer.controller';
@@ -17,8 +13,6 @@ import { Fight } from './entities/fight.entity';
 import { TournamentBoxer } from './entities/tournament_boxer.entity';
 import { FightController } from './controllers/fight.controller';
 import { ExportController } from './controllers/export.controller';
-import { APP_GUARD } from '@nestjs/core';
-import { JwtAuthGuard } from './auth/jwt-auth.guard';
 import { ModalityService } from './modality/modality.service';
 import { FightService } from './services/fight.service';
 import { TournamentService } from './services/tournament.service';
@@ -30,13 +24,16 @@ import { GotenbergService } from './services/gotenberg.service';
 import { SelectorExportService } from './services/selector-export.service';
 import { ShareController } from './controllers/share.controller';
 import { ShareService } from './services/share.service';
-import { ConfigService } from './services/config.service';
 import { AppConfigModule } from './app-config.module';
 import { QrCodeService } from './services/qrcode.service';
 import { TypeOrmConfigService } from './services/typeorm-config.service';
 import { TemplateService } from './services/template.service';
 import { PlacesController } from './controllers/places.controller';
 import { PlacesService } from './services/places.service';
+import { OidcService } from './services/oidc.service';
+import { APP_GUARD } from '@nestjs/core';
+import { AuthenticatedOnlyGuard } from './guards/authenticated-only.guard';
+import { Session } from './entities/session.entity';
 
 @Module({
   imports: [
@@ -48,19 +45,18 @@ import { PlacesService } from './services/places.service';
       imports: [AppModule],
       useClass: TypeOrmConfigService,
     }),
-    TypeOrmModule.forFeature([User, Tournament, Boxer, Fight, TournamentBoxer]),
-    JwtModule.registerAsync({
-      imports: [AppConfigModule],
-      inject: [ConfigService],
-      useFactory: (cfg: ConfigService) => ({
-        secret: cfg.getConfig().jwtSecret,
-        signOptions: { expiresIn: '1d' },
-      }),
-    }),
+    TypeOrmModule.forFeature([
+      User,
+      Tournament,
+      Boxer,
+      Fight,
+      TournamentBoxer,
+      Session,
+    ]),
   ],
   controllers: [
     UserController,
-    AuthController,
+    OAuthController,
     TournamentController,
     BoxerController,
     FightController,
@@ -70,27 +66,24 @@ import { PlacesService } from './services/places.service';
     PlacesController,
   ],
   providers: [
-    // ConfigService is now provided by AppConfigModule
     TypeOrmConfigService,
-    GoogleStrategy,
+    OidcService,
     FightService,
     TournamentService,
     BoxerService,
-    AuthService,
     ImportService,
     FightExportService,
     GotenbergService,
     SelectorExportService,
     ShareService,
     QrCodeService,
-    JwtStrategy,
-    {
-      provide: APP_GUARD,
-      useClass: JwtAuthGuard,
-    },
     TemplateService,
     ModalityService,
     PlacesService,
+    {
+      provide: APP_GUARD,
+      useClass: AuthenticatedOnlyGuard,
+    },
   ],
   exports: [ModalityService],
 })

@@ -3,12 +3,10 @@
 @import "bootstrap/scss/maps";
 
 // Extend the $theme-colors map
-$theme-colors: map-merge(
-  $theme-colors,
-  (
-    "purple": #6f42c1
-  )
-);
+$theme-colors: map-merge($theme-colors,
+    ("purple": #6f42c1));
+
+/* Custom adaptive buttons */
 
 @import "bootstrap/scss/mixins";
 @import "bootstrap/scss/bootstrap";

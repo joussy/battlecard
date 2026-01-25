@@ -25,3 +25,9 @@ export class FightCardTokenParamsDto {
   @IsNotEmpty()
   fightCardToken: string;
 }
+
+export class GenericStringParamsDto {
+  @IsString()
+  @IsNotEmpty()
+  id: string;
+}

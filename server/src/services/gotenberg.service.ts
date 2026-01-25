@@ -1,8 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from './config.service';
 
 @Injectable()
 export class GotenbergService {
+  private readonly logger = new Logger(GotenbergService.name);
+
   constructor(private readonly configService: ConfigService) {}
 
   async generatePdf(html: string): Promise<Buffer> {
@@ -28,7 +30,7 @@ export class GotenbergService {
     );
 
     if (!gotenbergRes.ok) {
-      console.error('Gotenberg response error:', gotenbergRes.statusText);
+      this.logger.error('Gotenberg response error:', gotenbergRes.statusText);
       throw new Error('Failed to generate PDF with Gotenberg.');
     }
 
@@ -59,7 +61,7 @@ export class GotenbergService {
     );
 
     if (!gotenbergRes.ok) {
-      console.error('Gotenberg response error:', gotenbergRes.statusText);
+      this.logger.error('Gotenberg response error:', gotenbergRes.statusText);
       throw new Error('Failed to generate PNG with Gotenberg.');
     }
 

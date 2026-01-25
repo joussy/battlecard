@@ -3,15 +3,8 @@
         <div class="card mb-3">
             <div class="card-header"><i class="bi bi-person me-2" />{{ $t("settings.account") }}</div>
             <div class="card-body">
-                <button
-                    v-if="!uiStore.account"
-                    class="btn btn-warning ms-2"
-                    @click="signInWithGoogle()"
-                >
-                    <i class="bi bi-google me-2" />{{ $t("settings.signInWithGoogle") }}
-                </button>
                 <div
-                    v-else
+                    v-if="uiStore.account"
                     class="d-flex flex-row align-items-center"
                 >
                     <img
@@ -26,12 +19,12 @@
                         :style="{ 'font-size': '2.5rem' }"
                     />
                     <div class="flex-grow-1">
-                        <strong>{{ uiStore.account?.name }}</strong>
+                        <strong>{{ uiStore.account.name }}</strong>
                         <div
                             class="text-muted"
                             style="font-size: 0.85rem"
                         >
-                            {{ uiStore.account?.email }}
+                            {{ uiStore.account.email }}
                         </div>
                     </div>
                     <button
@@ -159,31 +152,13 @@ const setLanguage = (language: UiLanguage) => {
     uiStore.setLanguage(language)
 }
 
-const signInWithGoogle = () => {
-    uiStore.authenticate()
-}
-
 const logout = () => {
     uiStore.logout()
-    // Redirect to authentication page
     router.push({ name: "auth" })
 }
 
 onMounted(async () => {
-    // Listen for token from popup
-    window.addEventListener("message", async (event) => {
-        if (event.data && event.data.token) {
-            uiStore.jwtToken = event.data.token
-            await uiStore.setTokenAndFetchUser()
-        }
-    })
-    // (Optional: handle token in URL for fallback)
-    const urlParams = new URLSearchParams(window.location.search)
-    const token = urlParams.get("token")
-    if (token) {
-        await uiStore.setTokenAndFetchUser()
-        window.history.replaceState({}, document.title, window.location.pathname)
-    }
+    await uiStore.fetchUser()
 })
 </script>
 <style lang="scss">

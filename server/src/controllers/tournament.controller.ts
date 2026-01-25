@@ -8,7 +8,7 @@ import {
   Put,
 } from '@nestjs/common';
 import { ModalityService } from '../modality/modality.service';
-import { User } from '@/decorators/auth.decorator';
+import { UserSession } from '@/decorators/auth.decorator';
 import { AuthenticatedUser } from '@/interfaces/auth.interface';
 import { TournamentService } from '../services/tournament.service';
 import { BoxerDto, OpponentDto } from '@/dto/boxer.dto';
@@ -35,12 +35,16 @@ export class TournamentController {
   ) {}
 
   @Get()
-  async findAll(@User() user: AuthenticatedUser): Promise<TournamentDto[]> {
+  async findAll(
+    @UserSession() user: AuthenticatedUser,
+  ): Promise<TournamentDto[]> {
     return this.tournamentService.findAll(user);
   }
 
   @Post('fake')
-  async createFake(@User() user: AuthenticatedUser): Promise<TournamentDto> {
+  async createFake(
+    @UserSession() user: AuthenticatedUser,
+  ): Promise<TournamentDto> {
     const tournament = await this.tournamentService.createFake(user);
     await this.boxerService.createFakeForTournament(tournament, user);
 
@@ -50,7 +54,7 @@ export class TournamentController {
   @Post()
   async create(
     @Body() tournament: CreateTournamentDto,
-    @User() user: AuthenticatedUser,
+    @UserSession() user: AuthenticatedUser,
   ): Promise<TournamentDto> {
     return this.tournamentService.create(tournament, user);
   }
@@ -59,7 +63,7 @@ export class TournamentController {
   async update(
     @Param() params: IdParamsDto,
     @Body() tournament: UpdateTournamentDto,
-    @User() user: AuthenticatedUser,
+    @UserSession() user: AuthenticatedUser,
   ): Promise<TournamentDto> {
     await this.tournamentService.validateTournamentAccess(params.id, user.id);
     return this.tournamentService.update(params.id, tournament, user);
@@ -68,7 +72,7 @@ export class TournamentController {
   @Delete(':id')
   async delete(
     @Param() params: IdParamsDto,
-    @User() user: AuthenticatedUser,
+    @UserSession() user: AuthenticatedUser,
   ): Promise<void> {
     await this.tournamentService.validateTournamentAccess(params.id, user.id);
 
@@ -78,7 +82,7 @@ export class TournamentController {
   @Get(':tournamentId/boxers')
   async getBoxersForTournament(
     @Param() params: TournamentIdParamsDto,
-    @User() user: AuthenticatedUser,
+    @UserSession() user: AuthenticatedUser,
   ): Promise<BoxerDto[]> {
     await this.tournamentService.validateTournamentAccess(
       params.tournamentId,
@@ -94,7 +98,7 @@ export class TournamentController {
   @Get(':tournamentId/opponents/:boxerId')
   async getPossibleOpponents(
     @Param() params: TournamentBoxerParamsDto,
-    @User() user: AuthenticatedUser,
+    @UserSession() user: AuthenticatedUser,
   ): Promise<OpponentDto[]> {
     await this.tournamentService.validateTournamentAccess(
       params.tournamentId,
@@ -110,7 +114,7 @@ export class TournamentController {
   @Get(':tournamentId/fights')
   async getFightsByTournamentId(
     @Param() params: TournamentIdParamsDto,
-    @User() user: AuthenticatedUser,
+    @UserSession() user: AuthenticatedUser,
   ): Promise<FightDto[]> {
     await this.tournamentService.validateTournamentAccess(
       params.tournamentId,

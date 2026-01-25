@@ -7,7 +7,7 @@
             />
         </div>
         <div
-            v-if="uiStore.account != null"
+            v-if="uiStore.isAuthenticated"
             class="nav-item"
         >
             <router-link
@@ -20,7 +20,7 @@
             </router-link>
         </div>
         <div
-            v-if="uiStore.account != null && isTournamentSelected"
+            v-if="uiStore.isAuthenticated && isTournamentSelected"
             class="nav-item"
         >
             <router-link
@@ -33,7 +33,7 @@
             </router-link>
         </div>
         <div
-            v-if="uiStore.account != null && isTournamentSelected"
+            v-if="uiStore.isAuthenticated && isTournamentSelected"
             class="nav-item"
         >
             <router-link
