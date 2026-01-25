@@ -18,6 +18,7 @@ import session from 'express-session';
 import { TypeormStore } from 'connect-typeorm';
 import { DataSource } from 'typeorm';
 import { Session } from './entities/session.entity';
+import { SessionExpiredFilter } from './guards/session-expired.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -64,6 +65,9 @@ async function bootstrap() {
       transform: true, // Automatically transform payloads to be objects typed according to their DTO classes
     }),
   );
+
+  app.useGlobalFilters(new SessionExpiredFilter());
+
   const configService = app.get(ConfigService);
   await app.listen(configService.getConfig().port);
   const logger = new Logger(ConfigService.name);

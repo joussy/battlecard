@@ -90,6 +90,15 @@ clientOpenApi.interceptors.request.use((request) => {
 })
 
 clientOpenApi.interceptors.response.use((response) => {
+    const sessionExpired = response.headers.get("X-Session-Expired")
+    const routeRequiresAuth = router.currentRoute.value.meta.requiresAuth
+    if (sessionExpired == "true" && routeRequiresAuth === true) {
+        router.push({ name: "auth" })
+    }
+    return response
+})
+
+clientOpenApi.interceptors.response.use((response) => {
     if (response.status >= 400) {
         throw response
     }

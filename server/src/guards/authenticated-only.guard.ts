@@ -1,13 +1,14 @@
 import { IS_PUBLIC_KEY } from '@/decorators/auth.decorator';
+import { SessionExpiredException } from '@/exceptions/session-expired.exception';
 import { BattlecardSessionRequest } from '@/interfaces/auth.interface';
-import {
-  CanActivate,
-  ExecutionContext,
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core/services/reflector.service';
 
+/**
+ * Guard to allow access only to authenticated users.
+ * Checks for the presence of a user in the session.
+ * Public routes (marked with @Public) are exempted from this check.
+ */
 @Injectable()
 export class AuthenticatedOnlyGuard implements CanActivate {
   constructor(private reflector: Reflector) {}
@@ -29,6 +30,6 @@ export class AuthenticatedOnlyGuard implements CanActivate {
     if (request.session && request.session.user) {
       return true;
     }
-    throw new UnauthorizedException('User is not authenticated');
+    throw new SessionExpiredException();
   }
 }
