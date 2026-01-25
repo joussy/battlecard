@@ -131,7 +131,7 @@ export class OidcService {
   }
 
   async handleCallback(
-    currentUrl: URL,
+    incUrl: string,
     oauth: OAuthSessionData,
   ): Promise<{ email: string; id: string; apiEnabled: boolean }> {
     const provider = oauth?.provider;
@@ -144,6 +144,11 @@ export class OidcService {
     if (!providerClient) {
       throw new Error('Unknown provider');
     }
+
+    const currentUrl = new URL(
+      incUrl,
+      this.configService.getConfig().websiteBaseUrl,
+    );
 
     // Remove state param if not used, otherwise openid-client throws error. Needed for Authentik
     const stateres = currentUrl.searchParams.get('state');

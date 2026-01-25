@@ -14,12 +14,16 @@ import { NoAuthRequired } from '@/decorators/auth.decorator';
 import { BattlecardSessionRequest } from '@/interfaces/auth.interface';
 import { AvailableProvidersDto, OAuthLogoutDto } from '@/dto/oauth.dto';
 import { Response as ExpressResponse, Request } from 'express';
+import { ConfigService } from '@/services/config.service';
 
 @Controller('oauth')
 export class OAuthController {
   private readonly logger = new Logger(OAuthController.name);
 
-  constructor(private readonly oidcConfigurationService: OidcService) {}
+  constructor(
+    private readonly oidcConfigurationService: OidcService,
+    private readonly configService: ConfigService,
+  ) {}
 
   @Get('callback')
   @NoAuthRequired()
@@ -46,11 +50,7 @@ export class OAuthController {
       return false;
     }
     // Handle callback and token exchange
-    const protocol = req.secure ? 'https' : 'http';
-    const currentUrl = new URL(
-      req.originalUrl || req.url,
-      `${protocol}://${req.headers.host}`,
-    );
+    const currentUrl = req.originalUrl || req.url;
 
     if (!req.session.oauth) {
       res.status(400).send('OAuth session data missing');
