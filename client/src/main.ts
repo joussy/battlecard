@@ -18,14 +18,13 @@ async function bootstrap() {
     const pinia = createPiniaWithRouter(router)
     // Create the i18n instance for localization
     const i18n = createI18nInstance()
+
     // Create the Vue app root instance
     const app = createApp(App)
-    // Register Pinia (state management)
     app.use(pinia)
-    // Register i18n (internationalization)
     app.use(i18n)
-    // Register router (routing)
     app.use(router)
+
     // Load UI store before mounting to ensure navigation guards have access to state
     await useUiStore().loadUiStore()
     // Mount the app to the DOM
