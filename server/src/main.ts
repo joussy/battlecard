@@ -38,7 +38,7 @@ async function bootstrap() {
     },
     debug: false,
   });
-  const config = new ConfigService();
+  const config = app.get(ConfigService);
   const dataSource = app.get(DataSource);
   const sessionRepository = dataSource.getRepository(Session);
 
@@ -51,7 +51,11 @@ async function bootstrap() {
       secret: config.getConfig().sessionSecret,
       resave: false,
       saveUninitialized: false,
-      cookie: { secure: config.getConfig().environment === 'production' },
+      cookie: {
+        secure: config.getConfig().environment === 'production',
+        httpOnly: true,
+        maxAge: sessionTtlSeconds * 1000, // Convert seconds to milliseconds
+      },
       store: new TypeormStore({
         cleanupLimit: 2,
         ttl: sessionTtlSeconds, // Configurable session TTL in seconds

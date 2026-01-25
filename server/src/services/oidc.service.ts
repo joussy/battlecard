@@ -46,7 +46,7 @@ export class OidcService {
     if (!sid) {
       throw new Error('No sid claim found in logout token');
     }
-    console.log(`Handle back-channel logout for sid: ${sid}`);
+    this.logger.log(`Handle back-channel logout for sid: ${sid}`);
   }
 
   public async getOidcProvider(name: string) {
@@ -139,12 +139,17 @@ export class OidcService {
         expectedState: oauth.state,
       },
     );
+    const userEndpoint =
+      providerClient.client.serverMetadata().userinfo_endpoint;
 
+    if (!userEndpoint) {
+      throw new Error('Userinfo endpoint not found in provider metadata');
+    }
     // Fetch user info
     const protectedResourceResponse = await client.fetchProtectedResource(
       providerClient.client,
       tokens.access_token,
-      new URL(providerClient.client.serverMetadata().userinfo_endpoint!),
+      new URL(userEndpoint),
       'GET',
     );
 

@@ -13,7 +13,7 @@ import { ApiSecurity } from '@nestjs/swagger';
 export const UserSession = createParamDecorator(
   (data: keyof AuthenticatedUser, ctx: ExecutionContext) => {
     const request = ctx.switchToHttp().getRequest<BattlecardSessionRequest>();
-    return request?.session?.user;
+    return data ? request?.session?.user?.[data] : request?.session?.user;
   },
 );
 

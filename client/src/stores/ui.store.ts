@@ -149,7 +149,7 @@ export const useUiStore = defineStore("ui", () => {
     }
 
     const startAuthCheck = () => {
-        // Then check every minute (30 seconds * 1000 milliseconds)
+        // Then check every 30 seconds (30 seconds * 1000 milliseconds)
         authCheckInterval = setInterval(() => {
             fetchUser()
         }, 30 * 1000)

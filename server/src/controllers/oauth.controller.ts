@@ -13,17 +13,13 @@ import { OidcService } from '../services/oidc.service';
 import { NoAuthRequired } from '@/decorators/auth.decorator';
 import { BattlecardSessionRequest } from '@/interfaces/auth.interface';
 import { AvailableProvidersDto, OAuthLogoutDto } from '@/dto/oauth.dto';
-import { ConfigService } from '@/services/config.service';
 import { Response as ExpressResponse, Request } from 'express';
 
 @Controller('oauth')
 export class OAuthController {
   private readonly logger = new Logger(OAuthController.name);
 
-  constructor(
-    private readonly oidcConfigurationService: OidcService,
-    private readonly configService: ConfigService,
-  ) {}
+  constructor(private readonly oidcConfigurationService: OidcService) {}
 
   @Get('callback')
   @NoAuthRequired()
@@ -49,26 +45,17 @@ export class OAuthController {
       res.status(401).send('Unknown provider');
       return false;
     }
-    if (!req.session.oauth) {
-      // Start OIDC redirect
-      try {
-        const { url, oauth } =
-          await this.oidcConfigurationService.buildAuthorizationUrl(provider);
-        req.session.oauth = oauth;
-        res.redirect(url);
-        return false;
-      } catch (err) {
-        this.logger.error('Failed to build authorization URL:', err);
-        res.status(500).send('Failed to initialize authentication');
-        return false;
-      }
-    }
     // Handle callback and token exchange
     const protocol = req.secure ? 'https' : 'http';
     const currentUrl = new URL(
       req.originalUrl || req.url,
       `${protocol}://${req.headers.host}`,
     );
+
+    if (!req.session.oauth) {
+      res.status(400).send('OAuth session data missing');
+      return false;
+    }
 
     try {
       const userData = await this.oidcConfigurationService.handleCallback(
@@ -115,7 +102,7 @@ export class OAuthController {
     @Body() body: { logout_token: string },
     @Param('provider') provider: string,
   ): Promise<void> {
-    console.log(
+    this.logger.log(
       `Received back-channel logout for provider: ${provider}: ${body.logout_token}`,
     );
     await this.oidcConfigurationService.handleBackChannelLogout(
