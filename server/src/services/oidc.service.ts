@@ -151,6 +151,22 @@ export class OidcService {
       currentUrl.searchParams.delete('state');
     }
 
+    //massive console log to understand why client is not working with pkce
+    this.logger.debug(
+      `Handling callback for provider: ${provider}, URL: ${currentUrl.toString()}`,
+    );
+    this.logger.debug(`OAuth Data: ${JSON.stringify(oauth)}`);
+    this.logger.debug(`Provider Client: ${JSON.stringify(providerClient)}`);
+    this.logger.debug(
+      `Provider Metadata: ${JSON.stringify(
+        providerClient.client.serverMetadata(),
+      )}`,
+    );
+    this.logger.debug(`Current URL: ${currentUrl.toString()}`);
+    this.logger.debug(`Code Verifier: ${oauth.code_verifier}`);
+    this.logger.debug(`State: ${oauth.state}`);
+    this.logger.debug(`oauth: ${JSON.stringify(oauth)}`);
+
     const tokens = await client.authorizationCodeGrant(
       providerClient.client,
       currentUrl,
