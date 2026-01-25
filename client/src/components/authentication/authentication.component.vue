@@ -11,12 +11,12 @@
             <p class="lead text-muted mb-0">{{ $t("authentication.tagline") }}</p>
         </div>
         <div
-            v-if="providerError"
+            v-if="providerErrorMessage"
             class="alert alert-danger m-0"
             role="alert"
         >
             <i class="bi bi-exclamation-triangle-fill"></i>
-            {{ $t("authentication.serviceUnavailable") }}
+            {{ providerErrorMessage }}
         </div>
         <div
             v-else
@@ -113,20 +113,28 @@ import { useUiStore } from "@/stores/ui.store"
 import IconComponent from "@/components/shared/core/icon.component.vue"
 import { UiLanguage } from "@/types/ui"
 import { OAuthOpenApi, OidcProviderDto } from "@/api"
+import { useI18n } from "vue-i18n"
 
 const router = useRouter()
 const uiStore = useUiStore()
+const $t = useI18n().t
 
 const providers = ref<OidcProviderDto[]>([])
-const providerError = ref<boolean>(false)
+const providerErrorMessage = ref<string>("")
 
 const signInWithProvider = async (provider: string) => {
-    const redirectionUrl = await OAuthOpenApi.getRedirectionUrl({ path: { provider } })
-    if (!redirectionUrl) {
-        console.error("Failed to get redirection URL for OAuth provider.")
-        return
+    providerErrorMessage.value = ""
+    try {
+        const redirectionUrl = await OAuthOpenApi.getRedirectionUrl({ path: { provider } })
+        if (!redirectionUrl) {
+            providerErrorMessage.value = $t("authentication.serviceUnavailable")
+            return
+        }
+        window.open(redirectionUrl, "_self")
+    } catch (error) {
+        providerErrorMessage.value = $t("authentication.serviceUnavailable")
+        console.error("Failed to get redirection URL for OAuth provider:", error)
     }
-    window.open(redirectionUrl, "_self")
 }
 
 const logout = () => {
@@ -135,10 +143,6 @@ const logout = () => {
 
 const setLanguage = (language: UiLanguage) => {
     uiStore.setLanguage(language)
-}
-
-const capitalize = (str: string) => {
-    return str.charAt(0).toUpperCase() + str.slice(1)
 }
 
 const getProviderIcon = (provider: string): string => {
@@ -168,18 +172,12 @@ onMounted(async () => {
         const providersRes = await OAuthOpenApi.getProviders()
         providers.value = providersRes?.providers ?? []
         if (providers.value.length === 0) {
-            providerError.value = true
+            providerErrorMessage.value = $t("authentication.serviceUnavailable")
         }
     } catch (error) {
         console.error("Failed to fetch authentication providers:", error)
-        providerError.value = true
+        providerErrorMessage.value = $t("authentication.serviceUnavailable")
     }
-    window.addEventListener("message", async (event) => {
-        if (event.data && event.data.token) {
-            await uiStore.fetchUser()
-            router.push({ name: "tournaments" })
-        }
-    })
     const urlParams = new URLSearchParams(window.location.search)
     const token = urlParams.get("token")
     if (token) {
