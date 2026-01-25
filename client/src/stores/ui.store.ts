@@ -45,7 +45,6 @@ export const useUiStore = defineStore("ui", () => {
     )
 
     async function fetchUser() {
-        console.log("Fetching user info...")
         let user: User | undefined
         try {
             user = await UserOpenApi.getMe()

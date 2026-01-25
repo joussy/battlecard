@@ -71,6 +71,11 @@ export class OAuthGuard implements CanActivate {
       req.originalUrl || req.url,
       `${protocol}://${req.headers.host}`,
     );
+    // Remove state param if not used, otherwise openid-client throws error. Needed for Authentik
+    const stateres = currentUrl.searchParams.get('state');
+    if (!stateres) {
+      currentUrl.searchParams.delete('state');
+    }
     const tokens = await client.authorizationCodeGrant(
       providerClient.client,
       currentUrl,
