@@ -91,10 +91,30 @@ export class OidcService {
     const code_verifier: string = client.randomPKCECodeVerifier();
     const code_challenge: string =
       await client.calculatePKCECodeChallenge(code_verifier);
+    const redirectUri = `${this.configService.getConfig().websiteBaseUrl}/api/oauth/callback`;
+    //massive console log to understand why client is not working with pkce
+    this.logger.debug(
+      `Building authorization URL for provider: ${providerName}`,
+    );
+    this.logger.debug(`Code Verifier: ${code_verifier}`);
+    this.logger.debug(`Code Challenge: ${code_challenge}`);
+    this.logger.debug(`Provider Client: ${JSON.stringify(providerClient)}`);
+    this.logger.debug(
+      `Provider Metadata: ${JSON.stringify(
+        providerClient.client.serverMetadata(),
+      )}`,
+    );
+    this.logger.debug(
+      `Website Base URL: ${this.configService.getConfig().websiteBaseUrl}`,
+    );
+    this.logger.debug(`Redirect URI: ${redirectUri}`);
+    this.logger.debug(
+      `Config: ${JSON.stringify(this.configService.getConfig())}`,
+    );
 
     const parameters: Record<string, string> = {
       scope: providerClient.scope,
-      redirect_uri: `${this.configService.getConfig().websiteBaseUrl}/api/oauth/callback`,
+      redirect_uri: redirectUri,
       code_challenge,
       code_challenge_method: 'S256',
     };
