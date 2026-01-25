@@ -3,11 +3,10 @@ import App from "./app.vue"
 import "./style.scss"
 import "bootstrap-icons/font/bootstrap-icons.css"
 import { useUiStore } from "./stores/ui.store"
-import { createAppRouter } from "./bootstrap/router"
+import { createAppRouter, setupAuthRedirect, setupNoSelectedTournamentRedirect } from "./bootstrap/router"
 import { setupApiClient } from "./bootstrap/api-client"
 import { createPiniaWithRouter } from "./bootstrap/pinia"
 import { createI18nInstance } from "./bootstrap/i18n"
-import { setupAuthRedirect, setupNoSelectedTournamentRedirect } from "./bootstrap/redirect"
 
 async function bootstrap() {
     // Create the Vue Router instance with all routes and scroll behavior

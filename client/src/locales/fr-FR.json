@@ -27,7 +27,6 @@
     "authentication": {
         "welcome": "Bienvenue sur BattleCard",
         "tagline": "Générez facilement des cartes de combat pour vos tournois de boxe.",
-        "signIn": "Connectez-vous pour créer votre carte des combats",
         "signOut": "Se déconnecter",
         "demoNotice": "BattleCard est un projet de démonstration. Toutes les données sont à des fins de test uniquement.",
         "signInWith": "Se connecter avec {provider}",
@@ -206,7 +205,6 @@
     },
     "settings": {
         "account": "Compte",
-        "signInWith": "Se connecter avec ",
         "general": "Général",
         "theme": "Thème",
         "auto": "Auto",

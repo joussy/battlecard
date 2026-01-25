@@ -30,7 +30,7 @@
                 >
                     <button
                         v-for="provider in providers"
-                        :key="provider"
+                        :key="provider.name"
                         class="btn btn-contrast w-100"
                         @click="signInWithProvider(provider.name)"
                     >
