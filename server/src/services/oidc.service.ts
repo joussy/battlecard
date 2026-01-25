@@ -72,7 +72,8 @@ export class OidcService {
           name: name,
           client: configuration,
           scope: provider.scope,
-        };
+          displayName: provider.displayName,
+        } as OAuthClientConfig;
       }),
     );
     return clients;

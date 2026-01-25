@@ -6,6 +6,13 @@ export class OAuthLogoutDto {
 }
 
 export class AvailableProvidersDto {
-  @IsString({ each: true })
-  providers: string[];
+  providers: OidcProviderDto[];
+}
+
+export class OidcProviderDto {
+  @IsString()
+  name: string;
+
+  @IsString()
+  displayName?: string;
 }

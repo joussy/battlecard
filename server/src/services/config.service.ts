@@ -26,9 +26,22 @@ export class ConfigService {
     if (result.error) {
       this.displayValidationErrors(result.error.details);
     } else {
+      this.postValidationTransform(result.value);
       this.logger.log('Configuration validated successfully');
     }
     this.config = result.value;
+  }
+  /** Perform any necessary transformations on the configuration after validation */
+  postValidationTransform(value: EnvConfig) {
+    // set oauth display names if not provided
+    if (value.oauth) {
+      for (const [key, provider] of Object.entries(value.oauth)) {
+        if (!provider.displayName) {
+          provider.displayName =
+            key.charAt(0).toUpperCase() + key.slice(1).toLowerCase();
+        }
+      }
+    }
   }
 
   /**
@@ -60,6 +73,7 @@ export class ConfigService {
       dbPassword: Joi.string().required(),
       dbName: Joi.string().required(),
       sessionSecret: Joi.string().required(),
+      sessionTTLInHours: Joi.number().integer().min(1).default(24), // Session TTL in hours, default 24h
       importApiUrl: Joi.string().required(),
       importApiHeaderXApiKey: Joi.string().required(),
       gotenbergUrl: Joi.string().required(),
@@ -78,6 +92,7 @@ export class ConfigService {
             tokenUrl: Joi.string().optional(),
             userInfoUrl: Joi.string().optional(),
             scope: Joi.string().required(),
+            displayName: Joi.string().optional(),
           }),
         )
         .optional(),

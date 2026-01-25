@@ -130,7 +130,10 @@ export class OAuthController {
     const oidcProviders =
       await this.oidcConfigurationService.getOidcProviders();
     return {
-      providers: oidcProviders.map((p) => p.name),
+      providers: oidcProviders.map((p) => ({
+        name: p.name,
+        displayName: p.displayName,
+      })),
     };
   }
 

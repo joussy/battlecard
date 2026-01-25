@@ -32,10 +32,10 @@
                         v-for="provider in providers"
                         :key="provider"
                         class="btn btn-contrast w-100"
-                        @click="signInWithProvider(provider)"
+                        @click="signInWithProvider(provider.name)"
                     >
-                        <i :class="getProviderIcon(provider) + ' me-2'" />{{
-                            $t("authentication.signInWith", { provider: capitalize(provider) })
+                        <i :class="getProviderIcon(provider.displayName) + ' me-2'" />{{
+                            $t("authentication.signInWith", { provider: provider.displayName })
                         }}
                     </button>
                 </div>
@@ -112,12 +112,12 @@ import { useRouter } from "vue-router"
 import { useUiStore } from "@/stores/ui.store"
 import IconComponent from "@/components/shared/core/icon.component.vue"
 import { UiLanguage } from "@/types/ui"
-import { OAuthOpenApi } from "@/api"
+import { OAuthOpenApi, OidcProviderDto } from "@/api"
 
 const router = useRouter()
 const uiStore = useUiStore()
 
-const providers = ref<string[]>([])
+const providers = ref<OidcProviderDto[]>([])
 const providerError = ref<boolean>(false)
 
 const signInWithProvider = async (provider: string) => {

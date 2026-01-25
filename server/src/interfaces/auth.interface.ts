@@ -6,6 +6,7 @@ export interface OAuthClientConfig {
   name: string;
   client: client.Configuration;
   scope: string;
+  displayName: string;
 }
 
 export interface OAuthSessionData {

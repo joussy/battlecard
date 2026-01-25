@@ -16,6 +16,8 @@ export interface OAuthProviderConfig {
   userInfoUrl: string;
   /** Scopes requested during OAuth flow (space-separated) */
   scope: string;
+  /** Optional display name for the provider */
+  displayName?: string;
 }
 
 export interface EnvConfig {
@@ -60,4 +62,6 @@ export interface EnvConfig {
   port: number;
   /** Secret used for sharing fight cards */
   fightCardShareSecret: string;
+  /** Session time-to-live in hours (e.g., 24 for 1 day) */
+  sessionTTLInHours: number;
 }

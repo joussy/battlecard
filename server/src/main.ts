@@ -44,6 +44,8 @@ async function bootstrap() {
 
   // Apply middleware to set i18next language from Accept-Language header
   app.use(i18nMiddleware);
+  // Convert sessionTTLInHours from hours to seconds for session store
+  const sessionTtlSeconds = config.getConfig().sessionTTLInHours * 3600;
   app.use(
     session({
       secret: config.getConfig().sessionSecret,
@@ -52,7 +54,7 @@ async function bootstrap() {
       cookie: { secure: config.getConfig().environment === 'production' },
       store: new TypeormStore({
         cleanupLimit: 2,
-        ttl: 86400, // 1 day in seconds
+        ttl: sessionTtlSeconds, // Configurable session TTL in seconds
       }).connect(sessionRepository),
     }),
   );
