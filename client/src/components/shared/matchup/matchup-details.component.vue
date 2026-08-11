@@ -1,5 +1,5 @@
 <template>
-    <div class="border container">
+    <div class="border container rounded">
         <div class="row">
             <div
                 v-for="(boxer, index) in [props.fight.boxer1, props.fight.boxer2]"
@@ -85,7 +85,8 @@ const getFightDuration = (fight: Fight): string => {
 const getWeightDifference = (fight: Fight): string => {
     const weight1 = fight.boxer1.weight
     const weight2 = fight.boxer2.weight
-    return `${Math.abs(weight1 - weight2)} kg`
+    const diff = Math.abs(weight1 - weight2)
+    return `${diff.toFixed(2)} kg`
 }
 
 const getAgeDifferenceLocal = (fight: Fight): string => {

@@ -253,6 +253,7 @@ function setBoxersToDisplay() {
         ],
         threshold: 0.3,
         ignoreLocation: true,
+        ignoreDiacritics: true,
         distance: 100,
     })
     boxersToDisplay.value = [...fuse.search(searchQuery.value).map((result) => result.item)]

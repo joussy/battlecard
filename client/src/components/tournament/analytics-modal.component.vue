@@ -62,6 +62,7 @@ import { useTournamentStore } from "@/stores/tournament.store"
 import ModalComponent from "../shared/core/modal.component.vue"
 import { useFightStore } from "@/stores/fight.store"
 import { formatDuration, intervalToDuration } from "date-fns"
+import { getDateFnsLocale } from "@/utils/date.utils"
 
 const { t: $t } = useI18n()
 const showModal = defineModel<boolean>()
@@ -119,7 +120,8 @@ const totalFightDuration = computed(() => {
 
 const formattedTotalFightDuration = computed(() => {
     const duration = intervalToDuration({ start: 0, end: totalFightDuration.value * 1000 })
-    return formatDuration(duration, { format: ["hours", "minutes", "seconds"] })
+    const dateFnsLocale = getDateFnsLocale()
+    return formatDuration(duration, { format: ["hours", "minutes", "seconds"], locale: dateFnsLocale })
 })
 
 watch(
